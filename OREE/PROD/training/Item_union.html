@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+
+<html lang="en"
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+
+    <table border="0" class="linetb" style="width:670px;">
+        <thead>
+            <tr>
+                <th style="display:none;" colspan="4">row</th>
+                <th colspan="4">Item No.</th>
+                <th colspan="4">Quantity</th>
+                <th colspan="3">Box #</th>
+                <th colspan="3">Dimensions <br /> CM (L/W/H)</th>
+                <th colspan="3">KGS</th>
+            </tr>
+        </thead>
+    
+        <#list record.custbody_package_detail_script?split("~~") as itemrow>
+
+                    <#if itemrow !="">                       
+                                <tr>                                 
+                                     <#list itemrow?split("^") as item>                                              
+                                                <td style="display:none;" colspan="4">  ${item}</td>                                                                                                        
+                                      </#list>
+                                </tr>
+                   </#if>
+    </#list>
+         
+    </table>
+
+
+    for (var j = 0; j < prodocts_to_jason.length; j++) {
+    if (arr[j] == undefined) { var curr_arr = '1' }
+    else { var curr_arr = arr[j] }
+
+    prodocts_to += curr_arr + '^';
+    prodocts_to += prodocts_to_jason[j].item + '^';
+    prodocts_to += prodocts_to_jason[j].qty + '^';
+    prodocts_to += prodocts_to_jason[j].box + '^';
+    prodocts_to += prodocts_to_jason[j].dimensions + '^';
+    prodocts_to += prodocts_to_jason[j].kgs + '~~';
+    }
+
+
+
+</body>
+</html>
+
+<!--
+var rec = nlapiLoadRecord(nlapiGetRecordType(),nlapiGetRecordId())
+var count = rec.getLineItemCount('item');
+var itemArr = new Array();
+var qntArr = new Array();
+for (var i = 0 ; i<count;i++){
+
+    itemArr.push(rec.getLineItemValue('item','item',i+1))
+
+//itemArr[i]=rec.getLineItemValue('item','item',i+1);
+
+qntArr[i]=rec.getLineItemValue('item','quantity',i+1);
+}
+
+
+  var  counter = {};
+itemArr.forEach(function(i) { counter[i] = (counter[i]||0) + 1;});
+console.log(counter);
+
+
+    var arrl = rec.lineitems;
+    arrl.item.length
+    var item = arrl.item["pop"]()
+-->
+uniqueCount = ["a","b","c","d","d","e","a","b","c","f","g","h","h","h","e","a"];
+var  count = {};
+uniqueCount.forEach(function(i) { count[i] = (count[i]||0) + 1;});
+console.log(count);
+
+
+var arr = ['a','b','c','d','d','e','a','b','c','f','g','h','h','h','e','a'];
+var map = arr.reduce(function(prev, cur) {
+  prev[cur] = (prev[cur] || 0) + 1;
+  return prev;
+}, {});
+
+// map is an associative array mapping the elements to their frequency:
+document.write(JSON.stringify(map));

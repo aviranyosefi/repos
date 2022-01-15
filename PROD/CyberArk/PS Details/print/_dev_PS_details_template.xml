@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+<head>
+  
+	<link name="arial" type="font" subtype="truetype"
+		src="https://system.na2.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/arial.ttf"
+		src-bold="https://system.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/arialb.ttf"
+		src-italic="https://system.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/ariali.ttf"
+		src-bolditalic="https://system.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/arialbi.ttf"
+	/>
+
+    <style type="text/css">
+        body {
+            font-size: 10pt;
+        }
+        .white-bg {
+            background-color:white;
+        }
+        .lightblue {
+            color: white;
+            background-color: #607799 !important;
+        }
+        .lighterblue-bg {
+            background-color: #dfe3ea !important;
+        }
+        .title {
+            font-size: 14pt;
+        }
+        table {
+            table-layout: auto;
+        }
+        th {
+            font-weight: bold;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+        }
+        td {
+            padding: 4px 6px;
+            vertical-align: middle;
+        }
+        b {
+            font-weight: bold;
+        }
+        table.header {
+            width: 100%;
+            table-layout: fixed;
+        }
+        table.header td {
+            padding: 0px;
+            font-size: 10pt;
+        }
+        table.footer  {
+            width: 100%;
+        }
+        table.footer td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+        table.itemtable {
+            border: 0px;
+            background-color:#bfbfbf;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            table-layout: fixed;
+			font-size: 8pt;
+        }
+        table.itemtable td {
+        }
+        table.itemtable th {
+            color: white;
+            background-color: #607799;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        table.total {
+            page-break-inside: avoid;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            width:49.5%;
+        }
+        table.total td {
+        }
+        tr.totalrow {
+            font-weight: bold;
+            line-height: 200%;
+        }
+        table.body_fields {
+        }
+        table.body_fields td {
+            padding: 5px 0px 5px 0px;
+        }
+        div p {
+            margin-top:0px;
+            margin-bottom:0px;
+            padding:0px;
+            border:0px;
+        }
+        .right, .right p {
+          align: right;
+        }
+        .left, .left p {
+          align: left;
+        }
+        .center, .center p {
+          align: center;
+        }
+        .red {
+            color: red;
+        }
+
+        table.borders {
+            border-collapse: collapse;
+        }
+
+        table.borders td, table.borders th {
+            border: 1px solid #dddddd;
+        }
+    </style>
+</head>
+
+<body size="A4" font-family="arial">
+            <table class="header" style="height: 14%">
+                <tr>
+                      <td colspan="6" class="left"><b><span class="title">PS Details for Invoice - {{_invoice_number}}</span></b></td>
+           			  
+              <td colspan="3" class="right"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=1150&c=4678143&h=f894ed8f50a378f87414"/></td>
+                  </tr>
+ 
+            </table>
+    <table class="itemtable" style="width:100%;">
+        <thead>
+            <tr>
+                <th colspan="3" class="center">Engineer Name</th>
+                <th colspan="3" class="center">Work Start Date</th>
+                <th colspan="3" class="center">Work End Date</th>
+                <th colspan="2" class="center">QTY</th>
+                <th colspan="4" class="center">PS Day</th>
+				 <th colspan="3" class="center">Location Type</th>
+                <th colspan="5" class="center">Service Type</th>
+				<th colspan="5" class="center">Timecard</th>
+            </tr>
+        </thead>
+        
+        --startlist--
+        <tr class="lighterblue-bg">
+            <td colspan="3" class="left">test</td>
+            <td colspan="3" class="left">test</td>
+            <td colspan="3" class="left">test</td>
+            <td colspan="3" class="left">test</td>
+            <td colspan="3" class="left">test</td>
+			<td colspan="3" class="left">test</td>
+        </tr>
+		--endlist--
+    </table>
+    
+	
+	            <table style="height: 14%">
+                <tr>
+                      <td colspan="6" class="left">{{_supp_comment}}</td>
+                  </tr>
+ 
+            </table>
+	
+	
+        <table style="width:100%; margin-top: 15px;" cellpadding="0">
+        <tr>
+            <td class="right" valign="bottom">
+                <table>
+                    <tr>
+                        <td class="left">
+                            Sincerely <br/>
+                            CyberArk Billing Team
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</pdf>

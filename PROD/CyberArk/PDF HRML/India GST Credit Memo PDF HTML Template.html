@@ -1,0 +1,227 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<#function isTrue val>
+    <#if val?? && val?has_content>
+        <#if val?is_boolean>
+            <#return val == true>
+        <#elseif val?is_string>
+            <#return val == "T">
+        </#if>
+    </#if>
+    <#return false>
+</#function>
+<#function resolveXmlAmpersand val>
+      <#return val?replace("&(?!(?:apos|quot|[gl]t|amp|nbsp);|\\#)", "&amp;", "r")>
+</#function>
+
+<#function isHtmlLongText text>
+     <#local htmlTags = text?matches("(<[/ ]*table>)|(<[/ ]*tr>)|(<[/ ]*td>)", "ri")>
+     <#return (htmlTags?size > 0)>
+</#function>
+
+<#function resolveHtmlTags text>
+     <#local retValue = text?replace("<"?html, "<", "ri")?replace(">"?html, ">", "r")>
+     <#if isHtmlLongText(retValue)>
+         <#local retValue = retValue?replace("<br[/ ]*>", "", "r")>
+     </#if>
+     <#return retValue>
+</#function>
+<#assign 
+	termsAndConditionsTemplate = ""
+	IS_DOMESTIC = false
+	LOCALE = record.custbody_ncs_locale
+	IS_EXPORT = false
+>
+<#if subsidiary.country?has_content && subsidiary.country.internalid?has_content && BILL_COUNTRY?has_content>
+    <#if BILL_COUNTRY?lower_case == subsidiary.country.internalid?lower_case?lower_case>
+        <#assign IS_DOMESTIC = true>
+    <#elseif BILL_COUNTRY?lower_case != subsidiary.country.internalid?lower_case?lower_case>
+        <#assign IS_EXPORT = true>
+    </#if>
+</#if>
+
+<#if record.custbody_cbr_layout_settings?has_content>
+    <#if isTrue(IS_DOMESTIC) && record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_domestic?has_content>
+        <#assign
+            termsAndConditionsTemplate = resolveXmlAmpersand(resolveHtmlTags(record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_domestic))
+        >
+    <#elseif record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_export?has_content>
+        <#assign
+            termsAndConditionsTemplate = resolveXmlAmpersand(resolveHtmlTags(record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_export))
+        >
+    </#if>
+</#if>
+<head>
+	<link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+	<#if .locale == "zh_CN">
+		<link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+	<#elseif .locale == "zh_TW">
+		<link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+	<#elseif .locale == "ja_JP">
+		<link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+	<#elseif .locale == "ko_KR">
+		<link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+	<#elseif .locale == "th_TH">
+		<link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+	</#if>
+    <macrolist>
+        <macro id="nlfooter">
+                    </macro>
+    </macrolist>
+    <style type="text/css">table { font-size: 9pt; table-layout: fixed; width: 100%; }
+th { font-weight: bold; font-size: 8pt; vertical-align: middle; padding: 5px 6px 3px; color: #333333; padding-bottom: 10px; padding-top: 10px; }
+td { padding: 4px 6px; }
+b { font-weight: bold; color: #333333; }
+</style>
+</head>
+     <#if record.custbody_gst_totaligst!=0>
+      <body footer="nlfooter"  footer-height="0pt" padding="0.5in 0.5in 0.5in 0.5in" size="A4">
+      <#else>
+        <body footer="nlfooter"  footer-height="0pt" padding="0.5in 0.5in 0.5in 0.5in" size="A4">
+      </#if>
+
+    <table style="width: 100%; border: 1px solid black;"><tr>
+
+  <td style="padding:0px;">
+	<table><tr>
+		<td colspan="3" rowspan="1" style="border-top: 0px solid black; width: 431px;">${subsidiary.mainaddress_text}<br />Tel: <br />Email: ${subsidiary.email} <br />GSTN: ${record.custbody_gst_locationregno}</td>
+		<td style="border-right: 0px solid black;border-top: 0px solid black; width: 250px;"> Original for Recipient<br /><#if companyInformation.logoUrl?length != 0><img src="${companyInformation.logoUrl}" style="float: left; margin: 0px; height: 67px; width: 200px;" /><br /><br /><br /><br /><br /></#if></td>
+		</tr></table>
+
+	<table><tr>
+		<td align="center" style="border-bottom: 1px solid black;border-top: 1px solid black; height: 12px; width: 332px; text-align: center;"><span style="font-size:22px;">CREDIT MEMO</span></td>
+		</tr></table>
+
+	<table>
+      <tr>
+		<td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 1px solid black; "><font color="#333333"><b></b></font> Invoice No: ${record.tranid}</td>
+        <td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 0px solid black; "><font color="#333333"><b></b></font> Invoice Date: ${record.trandate}</td>
+		</tr>
+      <tr>
+		<td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 1px solid black; "><font color="#333333"><b></b></font> Customer PO#: ${record.otherrefnum}</td>
+        <td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 0px solid black; "><font color="#333333"><b></b></font> Due Date: ${record.duedate}</td>
+		</tr>
+      <tr>
+		<td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 1px solid black; "><font color="#333333"><b></b></font> Currency: ${record.currency}</td>
+        <td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 0px solid black; "><font color="#333333"><b></b></font> Payment Terms: ${record.terms}</td>
+		</tr>
+       <tr>
+		<td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 1px solid black; "><font color="#333333"><b></b></font> End User: ${record.custbody_cbr_so_end_user}</td>
+        <td align="left" colspan="10" style="border-bottom: 1px solid black; border-right: 0px solid black; "><font color="#333333"><b></b></font></td>
+		</tr>
+      
+      
+      <tr>
+		<td align="left" colspan="10" style="border-bottom: 0px solid black; border-right: 1px solid black; "><font color="#333333"><b></b></font> Shipping Address: </td>
+        <td align="left" colspan="10" style="border-bottom: 0px solid black; border-right: 0px solid black; "><font color="#333333"><b></b></font> Billing Address: </td>
+		</tr>
+		<tr>
+		<td align="left" colspan="10" style="border-right: 1px solid black; "><font color="#333333"><strong>Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.entity.companyname}</strong></font></td>
+		<td align="left" colspan="10" style="border-right: 0px solid black; "><font color="#333333"><strong>Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.entity.companyname}</strong></font></td>
+		</tr>
+		<tr>
+		<td align="left" colspan="10" style="border-right: 1px solid black;">Address&nbsp;&nbsp;${record.shipaddr1}</td>
+		<td align="left" colspan="10" style="border-right: 0px solid black;">Address&nbsp;&nbsp;${record.billaddr1}</td>
+		</tr>
+		<tr>
+		<td align="left" colspan="7" style="border-right: 0px solid black; ">City&nbsp;&nbsp;${record.shipcity}</td>
+        <td align="left" colspan="3" style="border-right: 1px solid black; "></td>
+		<td align="left" colspan="7" style="border-right: 0px solid black; ">City&nbsp;&nbsp;${record.billcity}</td>
+        <td align="left" colspan="3" style="border-right: 0px solid black; "></td>
+		</tr>
+		<tr>
+		<td align="left" colspan="7" style="border-right: 0px solid black;">State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.shipstate}</td>
+		<td align="left" colspan="3" style="border-left: 0px solid black; border-right: 1px solid black; width: 429px;">Pin&nbsp;&nbsp;&nbsp;&nbsp;${record.shipzip}</td>
+		<td align="left" colspan="7" style="border-right: 0px solid black;">State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.billstate}</td>
+		<td align="left" colspan="3" style="border-left: 0px solid black; border-right: 0px solid black; width: 429px;">Pin&nbsp;&nbsp;&nbsp;&nbsp;${record.billzip}</td>
+		</tr>
+		<tr>
+		<td align="left" colspan="10" style="border-right: 1px solid black; ">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td align="left" colspan="10" style="border-right: 0px solid black; ">GSTN&nbsp;&nbsp;&nbsp;&nbsp;${record.custbody_gst_customerregno}</td>  
+		</tr></table>
+	<table style="width: 100%;">
+      <#list record.item as item><#if item_index==0>
+	<thead>
+        <tr>
+		<td align="center" colspan="1" rowspan="1" style="border-left: 0px solid black;border-top: 1px solid black;border-bottom: 1px solid black; "><strong>Sr</strong></td>
+		<td align="left" colspan="6" rowspan="1" style="border-top: 1px solid black;border-bottom: 1px solid black; text-align: center;"><strong>Description</strong></td>
+		<td align="right" colspan="2" rowspan="1" style="border-top: 1px solid black;border-bottom: 1px solid black; text-align: right;"><b>HSN</b></td>
+          <td align="right" colspan="2" rowspan="1" style="border-top: 1px solid black;border-bottom: 1px solid black; text-align: right;"><b>Quantity</b></td>
+          <td align="right" colspan="3" rowspan="1" style="border-top: 1px solid black;border-bottom: 1px solid black; text-align: right;"><b>Rate</b></td>
+           <td align="right" colspan="2" rowspan="1" style="border-top: 1px solid black;border-bottom: 1px solid black; text-align: right;"><b>Tax Rate</b></td>
+		<td align="right" colspan="3" rowspan="1" style="border-top: 1px solid black;border-bottom: 1px solid black; text-align: right;"><b>Amount</b></td>
+		</tr>
+	</thead>
+	</#if>
+        <#if !item.custcol_is_virtual_item  || ( item.custcol_is_virtual_item && item.amount !=0)>
+            <tr>
+		        <td align="center" colspan="1" >${item_index+1}</td>
+                <td align="left" colspan="6" >${item.item} <#if item.description?has_content><br />${item.description}</#if> <#if isTrue(item.custcol_cbr_is_maintenance)>  <br />Start Date: ${item.custcol_cbr_start_date} <br />End Date: ${item.custcol_cbr_end_date} </#if> </td>
+		        <td align="right" colspan="2" >${item.custcol_gst_hsnsaccode}</td>
+                <td align="right" colspan="2" >${item.quantity}</td>
+                <td align="right" colspan="3" >${item.rate}</td>
+                  <td align="right" colspan="2" >${item.taxrate1}</td>
+                <td align="right" colspan="3" >${item.amount?html?replace('$','')?replace('Rs.','')}</td>
+		    </tr>
+         </#if>
+        
+		</#list>
+    </table>
+     </td>
+      </tr>
+	</table>
+        
+    <!-- a-->
+    <table class="footer" style="width: 100%;border:1px solid black;"><tr>
+	<td colspan="1" style="border-right: 0px solid black;">&nbsp;</td>
+	<td colspan="8" style="border-right: 0px solid black;">&nbsp;</td>
+    <td align="right" colspan="14" rowspan="1" style="border-right: 1px solid black;border-bottom: 0px solid black;">Taxable Value</td>
+    <td align="right" colspan="4" rowspan="1" style="border-bottom: 1px solid black;">${record.subtotal?string.currency?replace('$','')?replace('Rs.','')}</td>
+	</tr>
+   
+      <!-- Added -->
+<tr><#if record.custbody_gst_totalsgst!=0>
+	<td colspan="1" style="border-right: 0px solid black;">&nbsp;</td>
+	<td colspan="8" style="border-right: 0px solid black;">&nbsp;</td>
+    
+	<td align="right" colspan="14" rowspan="1" style="border-right: 1px solid black;border-bottom: 0px solid black;"><#list record.item as item><#if item_index==0>SGST </#if></#list></td>
+	   <td align="right" colspan="4" rowspan="1" style="border-right: 0px solid black;border-bottom: 1px solid black;">&nbsp;${record.custbody_gst_totalsgst?string.currency?replace('$','')?replace('Rs.','')}</td>
+	</#if></tr>
+     <tr><#if record.custbody_gst_totalcgst!=0>
+	<td colspan="1" style="border-right: 0px solid black;">&nbsp;</td>
+	<td colspan="8" style="border-right: 0px solid black;">&nbsp;</td>
+    
+	<td align="right" colspan="14" rowspan="1" style="border-right: 1px solid black;border-bottom: 0px solid black;"><#list record.item as item><#if item_index==0>CGST </#if></#list></td>
+	  <td align="right" colspan="4" rowspan="1" style="border-right: 0px solid black;border-bottom: 1px solid black;">&nbsp;${record.custbody_gst_totalcgst?string.currency?replace('$','')?replace('Rs.','')}</td>
+	</#if></tr>
+<!-- Added -->
+	<tr><#if record.custbody_gst_totaligst!=0>
+	<td colspan="1" style="border-right: 0px solid black;">&nbsp;</td>
+	<td colspan="8" style="border-right: 0px solid black;">&nbsp;</td>
+	<td align="right" colspan="14" rowspan="1" style="border-right: 1px solid black;border-bottom: 0px solid black;"><#list record.item as item><#if item_index==0>IGST </#if></#list></td>
+	  <td align="right" colspan="4" rowspan="1" style="border-right: 0px solid black;border-bottom: 1px solid black;">&nbsp;${record.custbody_gst_totaligst?string.currency?replace('$','')?replace('Rs.','')}</td>
+	</#if></tr>
+	<tr>
+	<td colspan="1" style="border-right: 0px solid black;">&nbsp;</td>
+	<td colspan="8" style="border-right: 0px solid black; ">&nbsp;</td>
+	<td align="right" colspan="14" rowspan="1" style="border-right: 1px solid black; ">Grand Total</td>
+   <td align="right" colspan="4" rowspan="1" style="border-bottom: 0px solid black;">${record.total?string.currency?replace('$','')?replace('Rs.','')}</td>
+	</tr>
+     <#if record.message?has_content>
+        <tr>
+            <td colspan="27" style="border-top: 1px solid black;">${record.message}</td>
+        </tr>
+    </#if>
+	</table>
+    <!-- b -->
+		<#if termsAndConditionsTemplate?has_content>
+		<table style="width:100%; margin-top: 15px;" cellpadding="0">
+			<tr>
+				<td>
+					${termsAndConditionsTemplate}
+				</td>
+			</tr>
+		</table>
+	</#if>   
+</body>
+</pdf>

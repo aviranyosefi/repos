@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://system.eu2.netsuite.com/c.4969978/suitebundle149431/Fonts/Heb-Regular.ttf" src-bold="https://5455345-sb2.app.netsuite.com/c.5455345_SB2/suitebundle257625/IL_Files/arialb.ttf" />
+
+
+        <macrolist>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif;
+            }
+
+            table {
+                font-size: 20pt;
+                font-weight: bolder;
+                table-layout: fixed;
+                font-family: sans-serif;
+            }
+
+                table.comment td {
+                    /*border: 1px solid;*/
+                }
+
+            img {
+                float: center;
+                width: 33.33%;
+            }
+        </style>
+    </head>
+    <body header="nlheader" margin="0" size="B6-landscape" layout="landscape">
+
+        <!-- start items -->
+        <#list record.custbody_packages_data?split("~~") as itemrow>
+            <#if itemrow !="">
+                <#assign count=1>
+                    <#list record.item as origitem>
+                        <#if count==origitem_index +1><#assign field8=origitem.custcol_upccode></#if>
+                    </#list>
+                    <#list itemrow?split("^") as item>
+                        <#if count=1>
+                            <#assign field1=item>
+                                <#elseif count=2>
+                                    <#assign field2=item>
+                                        <#elseif count=3>
+                                            <#assign field3=item>
+                                                <#elseif count=4>
+                                                    <#assign field4=item>
+                                                        <#elseif count=5>
+                                                            <#assign field5=item>
+                                                                <#elseif count=6>
+                                                                    <#assign field6=item>
+                                                                        <#elseif count=7>
+                                                                            <#assign field7=item>
+
+                        </#if>
+                        <#assign count=count+ 1>
+                    </#list>
+
+
+                    <!--<p style="text-align:center"> ${field1} : ${field2}</p>
+                    <p style="text-align:center"> Lot Number : ${field3}</p>
+                    <p style="text-align:center"> Expiry Date : ${field4}</p>
+                    <p style="text-align:center"> Amount of Units : ${field5}</p>-->
+                    <#assign record_entity=record.entity?substring(record.entity?index_of(" ") + 1, record.entity?length )>
+                        <#assign address_entity=record.shipaddress?replace(record_entity ,'')>
+                            <#assign address_entity=address_entity?remove_beginning("<br />")>
+                    <#assign fixed_entity=record_entity>
+                    <#assign fixed_entity +="<br />">
+                    <#assign fixed_entity +=address_entity>
+
+                                <table style="width: 100%; page-break-after:always; padding-top:-40px; margin-bottom: -50px;" align="center">
+                                    <!-- <tr>
+
+                 <td align="center" >item field upc : ${field8}</td>
+
+             </tr>-->
+                                    <tr>
+
+                                        <td style="line-height:40px; font-size: 18pt;" align="center">${field1} : ${field2}</td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td style="line-height:50px; font-size: 29pt;" align="center">Lot Number : ${field3}</td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td style="line-height:50px; font-size: 29pt;" align="center">Expiry Date : ${field4}</td>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td style="line-height:50px;font-size: 29pt;" align="center">Amount of Units : ${field5}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td align="center"><barcode codetype="upca" showtext="true"  bar-width="0.99" value="${field6?j_string}" ></barcode></td>
+                                        <!--<td align="center" width="100%"><barcode bar-width="0.75" codetype="upca" showtext="true" value="0693493011396"></barcode></td>-->
+                                        <!--<td align="center" width="100%"><barcode codetype="code128" showtext="true" value="${field6}" style="width:195px; height:65px;" /></td>-->
+                                    </tr>
+
+                                    <tr>
+                                        <td style="font-weight:normal;">
+                                            <table width="100%">
+                                                <!--width="100%"-->
+                                                <tr>
+                                                    <td align="center" style="font-size:45px;  font-weight: bold; vertical-align: bottom;  padding-top: 5px; padding-bottom: 5px;">${field7}</td>
+                                                    <td align="center"><img src="https://5455345-sb2.app.netsuite.com/core/media/media.nl?id=927&amp;c=5455345_SB2&amp;h=e7c94d40eae25be16503" style="width:160px; height:95px; vertical-align:top" /></td>
+                                                    <td align="right"> <p style="direction:rtl; text-align:right;font-size:14px; font-weight: bold;vertical-align: bottom;" dir="rtl"> <span>${fixed_entity?replace("Israel", "ישראל")}</span></p> </td>
+                                                    <!--<td align="right" style="direction:rtl; text-align:right;font-size:14px; font-weight:normal;vertical-align: bottom;  padding-top: 2px; padding-bottom: 2px;" dir="rtl"> ${record_entity}<br />${address_entity?replace("Israel", "ישראל")}</td>-->
+                                                </tr>
+                                            </table>
+                                        </td>
+
+
+                                    </tr>
+                                </table>
+                       <!-- <p><barcode codetype="upca" showtext="true" height="60" width="100" value="${field6?j_string}"></barcode></p>-->
+            </#if>
+
+        </#list><!-- end items -->
+
+    </body>
+</pdf>
+
+
+
+
+

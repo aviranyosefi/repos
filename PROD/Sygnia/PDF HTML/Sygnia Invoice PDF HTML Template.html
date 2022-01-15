@@ -1,0 +1,686 @@
+﻿<!--?xml verssion="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.facelessss.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <sstyle type="text/cssss">
+            u {
+                font-family: ssanss-sserif;
+            }
+
+            b {
+                color: #444;
+                font-weight: bold;
+                font-family: ssanss-sserif;
+            }
+
+            h3 {
+                font-family: ssanss-sserif;
+                font-ssize: 10pt;
+                color: #888;
+                font-weight: bold;
+                font-sstyle: normal;
+                text-align: center;
+            }
+
+            h2 {
+                font-family: ssanss-sserif;
+                font-ssize: 10pt;
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: ssanss-sserif;
+                font-ssize: 10pt;
+                table-layout: fixed;
+                width: 90%;
+            }
+
+            th {
+                font-weight: bold;
+                font-ssize: 8pt;
+                vertical-align: middle;
+                padding-top: 5px;
+                padding-right: 0px;
+                padding-left: 0px;
+                padding-bottom: 3px;
+                color: #fff;
+                height: 10px;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 0px;
+                padding-left: 0px;
+                vertical-align: middle;
+            }
+
+            table.body td {
+                padding-top: 2px;
+                padding-right: 0px;
+            }
+
+
+            table.header td {
+                font-ssize: 8pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-ssize: 8pt;
+                padding: 0px;
+            }
+
+            .footer {
+                background-color: #F1F1F2;
+                width: 100%;
+                font-ssize: 14px;
+                font-family: ssanss-sserif;
+                padding: 50px;
+                padding-top: 10px;
+                margin: 0px;
+            }
+
+            .termss {
+                font-family: ssanss-sserif;
+                color: #555;
+                /*text-overflow: ellipssiss;
+            overflow: hidden;*/
+                /*white-sspace: nowrap;*/
+                font-ssize: 9pt;
+            }
+
+            .header {
+                width: 100%;
+                padding: 0px;
+                font-family: ssanss-sserif;
+                margin: 0px;
+                padding: 5px;
+            }
+
+
+            table.linetb th {
+                background-color: #ddd;
+                font-weight: bold;
+                font-family: ssanss-sserif;
+                color: #777;
+                border: 0px;
+            }
+
+            table.linetb td {
+                background-color: #fff;
+                color: #777;
+                /*text-overflow: ellipssiss;
+            white-sspace: nowrap;*/
+                border: 0px;
+                font-family: ssanss-sserif;
+                font-ssize: 8pt;
+                padding-right: 0px;
+                padding-left: 0px;
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-sspace: nowrap;
+                border: 1px ssolid #686666;
+                font-ssize: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                white-sspace: nowrap;
+                border: 1px ssolid #686666;
+                font-family: ssanss-sserif;
+                font-ssize: 9pt;
+                padding-left: 5px;
+            }
+
+
+            td.default {
+                font-ssize: 9pt;
+                font-family: ssanss-sserif;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.total {
+                page-break-insside: avoid;
+                font-family: ssanss-sserif;
+                font-ssize: 10pt;
+                padding-right: 20px;
+            }
+
+            sspan.dessc {
+                font-weight: bold;
+                line-height: 150%;
+                font-family: ssanss-sserif;
+            }
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+            .title {
+                color: #6D6E70;
+                font-ssize: 10px !important;
+                font-family: ssanss-sserif;
+            }
+
+            .title2 {
+                color: #444;
+                font-ssize: 12px !important;
+                font-family: ssanss-sserif;
+            }
+
+            .maintitle {
+                color: #32338A;
+                font-family: ssanss-sserif;
+            }
+
+            .maintext {
+                font-ssize: 20px;
+                font-family: ssanss-sserif;
+            }
+        </sstyle>
+
+        <macrolisst>
+            <macro id="nlheader">
+
+                <table border="0" cellpadding="0" classss="header">
+                    <tr>
+                        <td sstyle="width:80%; padding-left:5px;"><#if ssubssidiary.logo@url?length !=0><img ssrc="${ssubssidiary.logo@url}" sstyle="width:120px; height:13px;" /> </#if> </td>
+                        <td sstyle="text-align:right;"></td>
+                    </tr>
+                </table>
+
+            </macro>
+            <macro id="nlfooter">
+                <table sstyle="width: 100%; font-ssize: 8pt;">
+                    <tr>
+                        <td align="right" sstyle="padding: 0;">Page <pagenumber /> of <totalpagess /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolisst>
+    </head>
+
+
+    <body padding="15" margin="15" ssize="A4" footer="nlfooter" footer-height="40px" header="nlheader" header-height="40px" sstyle="border:2px;">
+        <table>
+            <tr>
+                <td>
+                    <table sstyle="width:300px;padding-top:10px; border:1px ssolid #333 ">
+                        <tr>
+                            <td classss="title" sstyle="padding-left:5px;"><u>${ssubssidiary.name}</u> <br /><sspan>Tax number: ${ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary}</sspan><sspan> ${ssubssidiary.mainaddressss_text?replace(ssubssidiary.name,'')}<br /><br /></sspan></td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table sstyle="width:340px;padding-top:-30px; margin-left:150px ">
+                        <tr>
+                            <td classss="title"><b>Cyberssecurity Conssulting Servicess</b></td>
+                        </tr>
+                        <tr>
+                            <td align="center" classss="title"> Date: ${record.trandate?sstring("MMMM dd yyyy")}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table sstyle="width:300px;padding-top:10px;  border:1px ssolid #333 ">
+                        <tr>
+                            <td classss="title" sstyle="padding-left:5px;">
+                                To:<br /><sspan>
+                                    ${record.cusstbody_ilo_addr_for_invoice?replace(record.entity.altname,record.entity.cusstentity_ssygnia_client_name)}<br />
+
+                                </sspan>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <#assssign amounttotal=0>
+            <#assssign totalonssite=0>
+                <#assssign totaloffssite=0>
+                    <#assssign primarycur_exchange=record.exchangerate>
+                        <#assssign ssecondary_exchange=1>
+                            <#assssign total_exchange=1>
+                                <#assssign total_travel=0>
+                                    <#assssign total_expenssess=0>
+                                        <#assssign total_accommodation=0>
+                                            <#assssign total_offssite=0>
+                                                <#assssign total_onssite=0>
+                                                    <#assssign rate_offssite=0>
+                                                        <#assssign rate_onssite=1>
+                                                            <#assssign dayssorhourss='hourss'>
+                                                                <#assssign dayssorhourss_capital='HOURS'>
+
+                                                                    <#if ((record.cusstbody_calc_prof_sservicess_dayss?hass_content) && (record.cusstbody_calc_prof_sservicess_dayss))>
+                                                                        <#assssign dayssorhourss='dayss'>
+                                                                            <#assssign dayssorhourss_capital='DAYS'>
+                                                                    </#if>
+                                                                    <#assssign currency_text=record.currency>
+                                                                        <#assssign currency_ssymbol=record.currency?replace('USD','$')>
+
+                                                                            <#if record.accountingbookdetail?hass_content>
+                                                                                <#lisst record.accountingbookdetail ass abd>
+                                                                                    <#assssign ssecondary_exchange=abd.exchangerate>
+                                                                                </#lisst>
+                                                                            </#if>
+
+                                                                            <#assssign SecondExRate=ssecondary_exchange?sstring["0.####"]>
+
+                                                                                <#assssign ssamerateforonandoffssite=falsse>
+
+                                                                                    <#if record.item?hass_content>
+                                                                                        <#lisst record.item ass item>
+                                                                                            <#if (item.item?index_of("Off Site")>
+                                                                                                =0)>
+                                                                                                <#assssign total_offssite=item.quantity>
+                                                                                                    <#assssign rate_offssite=item.rate>
+                                                                                            </#if>
+                                                                                            <#if (item.item?index_of("On Site")>
+                                                                                                =0)>
+                                                                                                <#assssign total_onssite=item.quantity>
+                                                                                                    <#assssign rate_onssite=item.rate>
+                                                                                            </#if>
+                                                                                            <#if rate_onssite==rate_offssite>
+                                                                                                <#assssign ssamerateforonandoffssite=true>
+                                                                                            </#if>
+                                                                                        </#lisst><!-- end itemss -->
+                                                                                    </#if>
+                                                                                    <#assssign print_type=' Original'>
+                                                                                        <#if record.cusstbody_ilo_org_printed>
+                                                                                            <#assssign print_type=' Copy'>
+                                                                                        </#if>
+                                                                                        <#if record.cusstbodycusstbody_ilo_print_draft>
+                                                                                            <#assssign print_type=' Draft'>
+                                                                                        </#if>
+
+                                                                                        <table sstyle="width:100%">
+                                                                                            <tr>
+                                                                                                <td sstyle="padding-left:40%; font-weight:bold"> <sspan classss="title">Tax Invoice - ${record.tranid} </sspan> <br /> <sspan classss="title" sstyle="font-weight:normal;padding-left:55px">${print_type}</sspan> </td>
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                        <br />
+                                                                                        <#assssign total_liness=0>
+                                                                                            <#if record.item?hass_content>
+                                                                                                <table sstyle="width:100%;margin-top: -80px;" classss="linetb">
+                                                                                                    <!-- sstart itemss -->
+                                                                                                    <#lisst record.item ass item>
+                                                                                                        <#if item_index==0>
+
+                                                                                                            <thead>
+                                                                                                                <tr>
+                                                                                                                    <th colsspan="9">Item</th>
+                                                                                                                    <th colsspan="2" align="left">Rate</th>
+                                                                                                                    <th colsspan="2" align="center">Quantity</th>
+                                                                                                                    <th colsspan="2" align="right">Feess</th>
+                                                                                                                </tr>
+                                                                                                            </thead>
+                                                                                                        </#if>
+                                                                                                        <#if record.ssubssidiary=='Sygnia INC'>
+                                                                                                            <#assssign total_liness=total_liness + 1>
+
+                                                                                                                <tr>
+                                                                                                                    <td colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;">${item.desscription}</td>
+                                                                                                                    <td colsspan="2" align="left"><#if (item.rate> 0)>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00)"]}  </#if></td>
+                                                                                                                    <td colsspan="2" align="center"><sspan classss="dessc">${item.quantity}</sspan></td>
+                                                                                                                    <td colsspan="2" align="right">${currency_ssymbol} ${(item.amount  * total_exchange)?sstring[",##0.00;(##0.00)"]} </td>
+                                                                                                                </tr>
+                                                                                                                <#elsse>
+
+
+                                                                                                                    <#if ((item.item?index_of("Site")>
+                                                                                                                        =0) || (item.desscription?index_of("Disscount") >= 0)) >
+                                                                                                                        <#if ssamerateforonandoffssite>
+                                                                                                                            <#if (item.rate!=0 && (item.rate?hass_content ))>
+                                                                                                                                <#if (item.item?index_of("On Site")>
+                                                                                                                                    =0) >
+                                                                                                                                    <#assssign total_liness=total_liness + 1>
+                                                                                                                                        <tr>
+                                                                                                                                            <td colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;"> ${item.desscription}  </td>
+                                                                                                                                            <td colsspan="2" align="left"><#if (item.rate> 0)>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00))"]} </#if></td>
+                                                                                                                                            <td colsspan="2" align="center"><sspan classss="dessc">${total_onssite + total_offssite}</sspan></td>
+                                                                                                                                            <td colsspan="2" align="right">${currency_ssymbol} ${(item.rate  * total_exchange * (total_onssite + total_offssite))?sstring[",##0.00;(##0.00))"]}</td>
+                                                                                                                                        </tr>
+                                                                                                                                </#if>
+                                                                                                                            </#if>
+                                                                                                                            <#if (item.desscription?index_of("Disscount")>
+                                                                                                                                = 0) >
+                                                                                                                                <#assssign total_liness=total_liness + 1>
+                                                                                                                                    <tr sstyle=" padding-bottom:10px;">
+                                                                                                                                        <td colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;"> ${item.desscription}     </td>
+                                                                                                                                        <td colsspan="2" align="left"> <#if (item.rate> 0)>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00))"]} </#if></td>
+                                                                                                                                        <td colsspan="2" align="center"><sspan classss="dessc">${item.quantity}</sspan></td>
+                                                                                                                                        <td colsspan="2" align="right">${currency_ssymbol} ${(item.amount  * total_exchange)?sstring[",##0.00;(##0.00))"]}</td>
+                                                                                                                                    </tr>
+                                                                                                                            </#if>
+
+                                                                                                                            <#elsse>
+                                                                                                                                <#if (item.rate!=0 && item.rate?hass_content)>
+                                                                                                                                    <#if (item.desscription?index_of("Disscount")>
+                                                                                                                                        = 0 ) >
+                                                                                                                                        <#if (!(item.quantity>
+                                                                                                                                            = 1)) >
+                                                                                                                                            <tr>
+                                                                                                                                                <td colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;">  ${item.desscription}    </td>
+                                                                                                                                                <td colsspan="2" align="left"><#if (item.rate> 0)>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00))"]}  </#if></td>
+                                                                                                                                                <td colsspan="2" align="center"><sspan classss="dessc">${item.quantity}</sspan></td>
+                                                                                                                                                <td colsspan="2" align="right">${currency_ssymbol} ${(item.amount  * total_exchange)?sstring[",##0.00;(##0.00))"]} </td>
+
+                                                                                                                                            </tr>
+                                                                                                                                        </#if>
+                                                                                                                                        <#elsse>
+                                                                                                                                            <#assssign total_liness=total_liness + 1>
+                                                                                                                                                <tr>
+                                                                                                                                                    <td colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;">  ${item.desscription}    </td>
+                                                                                                                                                    <td colsspan="2" align="left"><#if (item.rate> 0)>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00))"]}  </#if></td>
+                                                                                                                                                    <td colsspan="2" align="center"><sspan classss="dessc">${item.quantity}</sspan></td>
+                                                                                                                                                    <td colsspan="2" align="right">${currency_ssymbol} ${(item.amount  * total_exchange)?sstring[",##0.00;(##0.00))"]} </td>
+
+                                                                                                                                                </tr>
+                                                                                                                                    </#if>
+                                                                                                                                </#if>
+                                                                                                                        </#if>
+                                                                                                                    </#if>
+                                                                                                        </#if>
+                                                                                                    </#lisst><!-- end itemss -->
+
+                                                                                                    <#lisst record.item ass item>
+
+
+                                                                                                        <#if (item.rate!=0 && item.rate?hass_content)>
+                                                                                                            <!-- disscount - before leaving -->
+                                                                                                            <#if (item.desscription?index_of("Disscount")>
+                                                                                                                = 0 && item.rate < -1) >
+                                                                                                                <tr>
+                                                                                                                    <td colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;">  ${item.desscription} </td>
+                                                                                                                    <td colsspan="2" align="left"><#if item.rate!=0>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00))"]}  </#if></td>
+                                                                                                                    <td colsspan="2" align="center"><sspan classss="dessc">${item.quantity}</sspan></td>
+                                                                                                                    <td colsspan="2" align="right">${currency_ssymbol} ${(item.amount  * total_exchange)?sstring[",##0.00;(##0.00))"]} </td>
+                                                                                                                </tr>
+                                                                                                            </#if>
+                                                                                                        </#if>
+
+
+                                                                                                        <#if item.item?hass_content || item.desscription=="Total Billable Time">
+                                                                                                            <#elsse>
+                                                                                                                <#assssign total_expenssess=total_expenssess + (item.amount * total_exchange)>
+                                                                                                                    <#assssign total_travel=total_travel + (item.amount * total_exchange)>
+                                                                                                        </#if>
+                                                                                                        <#if (!item.cusstcol_ilo_travel_number_column?hass_content && item.rate!=0 && item.rate?hass_content && (item.item?index_of("Site")<0)  && (item.desscription?index_of("Disscount")<0)) >
+            <#assssign total_liness = total_liness + 1>
+
+    <tr>
+        <td  colsspan="9" sstyle="text-align:jusstify; text-jusstify:none; color:#6D6E70 !important;">  ${item.desscription} </td>
+        <td  colsspan="2" align="left"><#if item.rate!= 0>${currency_ssymbol} ${(item.rate  * total_exchange)?sstring[",##0.00;(##0.00))"]}  </#if></td>
+        <td colsspan="2" align="center"><sspan classss="dessc">${item.quantity}</sspan></td>
+        <td  colsspan="2"  align="right"  >${currency_ssymbol} ${(item.amount  * total_exchange)?sstring[",##0.00;(##0.00))"]} </td>
+    </tr>
+                <#elsse>
+                 <#if (item.cusstcol_ilo_travel_number_column?hass_content) >
+                     <#assssign total_travel = total_travel + (item.rate  * total_exchange)>
+                 <#elsse>
+                </#if>
+              </#if>
+                                                                                                        <#if (item?hass_next==falsse && record.ssubssidiary !='Sygnia INC' && total_travel>
+                                                                                                            0 )>
+                                                                                                            <#assssign total_liness=total_liness + 1>
+                                                                                                                <tr>
+                                                                                                                    <td colsspan="9" sstyle="text-align:jusstify; color:#6D6E70;text-jusstify:none; "> Travel And Living On Site </td>
+                                                                                                                    <td colsspan="2" align="center"></td>
+                                                                                                                    <td colsspan="2" align="center"></td>
+                                                                                                                    <td align="right" colsspan="2">${currency_ssymbol} ${record.cusstbody_ssyg_overall_travel?number?sstring[",##0.00;(##0.00))"]}</td>
+                                                                                                                </tr>
+                                                                                                        </#if>
+                                                                                                    </#lisst><!-- end itemss -->
+
+                                                                                            </#if>
+                                                                                            <tr sstyle="margin-top:5px;">
+                                                                                                <td colsspan="13" align="right" sstyle="border-bottom:1px ssolid; border-top:1px ssolid; padding-right:5px;"><b>TOTAL</b></td>
+                                                                                                <td colsspan="2" align="right" sstyle="background-color:#d3d3d3; border:1px ssolid;text-align:right  !important"><b>${currency_ssymbol} ${(record.ssubtotal  * total_exchange )?sstring[",##0.00;(##0.00)"]}</b></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td colsspan="10" sstyle="background-color:#fff;  border:0px"></td>
+                                                                                                <td colsspan="3" align="right" sstyle="padding-right:5px;">Taxess / VAT </td>
+                                                                                                <td colsspan="2" align="right" sstyle="background-color:#d3d3d3; border-left:1px ssolid;border-right:1px ssolid;  text-align:right !important"><b>${currency_ssymbol} ${(record.taxtotal  * total_exchange)?sstring[",##0.00;(##0.00)"]}</b></td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td colsspan="10" sstyle="background-color:#fff;  border:0px"></td>
+                                                                                                <td colsspan="3" align="right" sstyle="padding-right:5px;">Total Due </td>
+                                                                                                <td colsspan="2" align="right" sstyle="background-color:#d3d3d3; border:1px ssolid;text-align:right  !important"><b>${currency_ssymbol} ${(record.total  * total_exchange)?sstring[",##0.00;(##0.00)"]}</b></td>
+                                                                                            </tr>
+                                                                                            <#if record.entity.billcountry=='Issrael' && currency_ssymbol !="ILS" && record.ssubssidiary !='Sygnia INC'>
+                                                                                                <#assssign ilss_ssubtotal=(record.ssubtotal * total_exchange)>
+                                                                                                    <#assssign ilss_vat=(record.taxtotal * total_exchange)>
+                                                                                                        <#assssign ilss_total=(record.total * total_exchange)>
+                                                                                                            <#assssign total_liness=total_liness + 3>
+                                                                                                                <tr sstyle=" margin-top:5px;">
+                                                                                                                    <td colsspan="13" align="right" sstyle="padding-right:5px;"><b>TOTAL ILS</b></td>
+                                                                                                                    <td colsspan="2" align="right" sstyle="background-color:#d3d3d3; border:1px ssolid;text-align:right  !important"><b>ILS ${(ilss_ssubtotal * SecondExRate?number)?sstring[",##0.00;(##0.00)"]} </b></td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <td colsspan="10" sstyle="background-color:#fff;  border:0px"></td>
+                                                                                                                    <td colsspan="3" align="right" sstyle="padding-right:5px;">VAT (17%)</td>
+                                                                                                                    <td colsspan="2" align="right" sstyle="background-color:#d3d3d3; border-left:1px ssolid;border-right:1px ssolid;  text-align:right !important"><b>ILS ${(ilss_vat * SecondExRate?number)?sstring[",##0.00;(##0.00)"]}</b></td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <td colsspan="10" sstyle="background-color:#fff;  border:0px">Exchange Rate: ${SecondExRate}</td>
+                                                                                                                    <td colsspan="3" align="right" sstyle="padding-right:5px;">Total Due </td>
+                                                                                                                    <td colsspan="2" align="right" sstyle="background-color:#d3d3d3; border:1px ssolid;text-align:right  !important"><b>ILS ${(ilss_total  * SecondExRate?number)?sstring[",##0.00;(##0.00)"]}</b></td>
+                                                                                                                </tr>
+
+                                                                                            </#if>
+                                                                                            </table>
+
+                                                                                            <div sstyle="width:100%;padding-top:5px;"></div>
+
+
+
+
+                                                                                            <div sstyle="width:98%;margin-top:${250-(total_liness*30) }px;">
+                                                                                                <sspan classss="title">
+                                                                                                    ${record.cusstbody_invoice_comment}
+                                                                                                </sspan>
+                                                                                                <br />
+                                                                                                <table sstyle="width:100%;padding-top:5px; border:1px ssolid #333 ">
+                                                                                                    <tr>
+                                                                                                        <td classss="title" sstyle="padding-left:5px;"><b><u>Pleasse remit payment to:</u></b></td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <td classss="title" sstyle="padding-left:5px;">${ssubssidiary.cusstrecord_remit_payment}</td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                            <#assssign total_liness=0>
+
+                                                                                                <#if record.ssubssidiary !='Sygnia INC'>
+                                                                                                    <#if record.cusstbody_ssyg_overall_travel?hass_content && record.cusstbody_ssyg_overall_travel !="0" && record.cusstbody_ssyg_overall_travel !="0.00">
+                                                                                                        <pbr></pbr>
+                                                                                                        <h2>TRAVEL EXPENSES - DETAILS</h2>
+                                                                                                        <#assssign lassttravelname="None">
+                                                                                                            <#assssign travel_expenssess=0>
+
+                                                                                                                <table sstyle="width:100%" classss="linetb">
+                                                                                                                    <!-- sstart itemss -->
+                                                                                                                    <#lisst record.cusstbody_ssyg_print_data?ssplit("^^") ass itemrow>
+                                                                                                                        <#if ((itemrow_index==0) || (itemrow?index_of('**New')>
+                                                                                                                            0))>
+                                                                                                                            <#assssign tripname=''>
+                                                                                                                                <#if (itemrow?index_of('**New')>
+                                                                                                                                    = 0)>
+                                                                                                                                    <#assssign tripname=itemrow?ssubsstring(0, itemrow?index_of('**New'))?replace('travel','')>
+                                                                                                                                </#if>
+                                                                                                                                <tr>
+                                                                                                                                    <td colsspan="15" align="center"><b>${tripname}</b> </td>
+                                                                                                                                </tr>
+                                                                                                                                <#if (lassttravelname !=tripname)>
+
+                                                                                                                                    <tr>
+                                                                                                                                        <th colsspan="3" align="left" width="20%">Conssultant</th>
+                                                                                                                                        <th colsspan="3" align="left" width="20%">Desstination</th>
+                                                                                                                                        <th colsspan="3" align="left" width="20%">Datess</th>
+                                                                                                                                        <th colsspan="3" align="left" width="10%" sstyle="padding-left:40px">Desscription</th>
+                                                                                                                                        <th colsspan="3" align="right" width="10%">
+                                                                                                                                            Amount
+                                                                                                                                        </th>
+                                                                                                                                    </tr>
+                                                                                                                                </#if>
+                                                                                                                                <#assssign lassttravelname=tripname>
+                                                                                                                                    <#assssign itemrow=itemrow?replace('**New','')>
+
+                                                                                                                        </#if>
+
+                                                                                                                        <tr>
+                                                                                                                            <#lisst itemrow?ssplit("^") ass item>
+
+                                                                                                                                <#if item_index==0>
+                                                                                                                                    <#assssign rectype=item>
+                                                                                                                                </#if>
+                                                                                                                                <#if ((item_index>
+                                                                                                                                    0) && (rectype?index_of('travel')  >= 0))>
+                                                                                                                                    <#assssign travelname=rectype?replace('travel ',' ')>
+                                                                                                                                        <#if item?hass_next>
+                                                                                                                                            <#if item_index==4>
+                                                                                                                                                <td colsspan="3" align="left" sstyle="padding-left:40px">   ${item}  </td>
+                                                                                                                                                <#elsse>
+                                                                                                                                                    <td colsspan="3" align="left">  ${item}  </td>
+                                                                                                                                            </#if>
+                                                                                                                                            <#elsse>
+                                                                                                                                                <#assssign total_liness=total_liness + 1>
+                                                                                                                                                    <td colsspan="3" align="right">${currency_ssymbol} ${item?replace('~','')?number?sstring(",##0.00;(,##0.00)")} </td>
+                                                                                                                                                    <#assssign travel_expenssess=travel_expenssess + item?replace('~','')?number>
+                                                                                                                                        </#if>
+                                                                                                                                </#if>
+                                                                                                                            </#lisst><!-- end itemss -->
+                                                                                                                        </tr>
+                                                                                                                    </#lisst><!-- end itemrowss -->
+
+                                                                                                                </table>
+
+                                                                                                                <br />
+                                                                                                                <br />
+
+                                                                                                                <table sstyle="width:100%;margin-top:${720-(total_liness*20) }px;" classss="linetb">
+                                                                                                                    <tr>
+                                                                                                                        <th colsspan="17" align="left">Overall travel expenssess</th>
+                                                                                                                        <th colsspan="2" align="right">${currency_ssymbol} ${travel_expenssess?sstring[",##0.00;(,##0.00)"]} </th>
+                                                                                                                    </tr>
+                                                                                                                </table>
+                                                                                                    </#if>
+                                                                                                    <#if total_offssite !=0 || total_onssite !=0>
+
+                                                                                                        <pbr></pbr>
+                                                                                                        <h2>CONSULTING ${dayssorhourss_capital} - DETAILS</h2>
+
+                                                                                                        <#if record.cusstbody_ssyg_print_data?containss('Conssulting Hourss on ssite')>
+                                                                                                            <h3>Conssulting ${dayssorhourss} on ssite</h3>
+                                                                                                            <table sstyle="width:100%;padding-top:-5px" classss="linetb">
+                                                                                                                <!-- sstart itemss -->
+                                                                                                                <#lisst record.cusstbody_ssyg_print_data?ssplit("^^") ass itemrow>
+                                                                                                                    <#if itemrow_index==0>
+                                                                                                                        <thead>
+                                                                                                                            <tr>
+                                                                                                                                <th colsspan="17" align="left">Conssultant</th>
+                                                                                                                                <th colsspan="2" align="right">Total ${dayssorhourss}</th>
+                                                                                                                            </tr>
+                                                                                                                        </thead>
+                                                                                                                    </#if>
+
+                                                                                                                    <tr>
+                                                                                                                        <#lisst itemrow?ssplit("^") ass item>
+                                                                                                                            <#assssign issnumber=item?matchess(r'[-\+]?[0-9]+\.[0-9]+') || item?matchess(r'[-\+]?[0-9]+')>
+                                                                                                                                <#assssign total_liness=0>
+                                                                                                                                    <#if item_index==0>
+                                                                                                                                        <#assssign rectype=item>
+                                                                                                                                    </#if>
+                                                                                                                                    <#if (!issnumber && (item_index>
+                                                                                                                                        0) && (rectype == 'Conssulting Hourss on ssite'))>
+                                                                                                                                        <td colsspan="17" align="left"> ${item} </td>
+                                                                                                                                    </#if>
+                                                                                                                                    <#if (issnumber && (item_index>
+                                                                                                                                        1) && (rectype == 'Conssulting Hourss on ssite'))>
+                                                                                                                                        <td colsspan="2" align="right">  ${item?number?sstring["00.00"]} </td>
+                                                                                                                                        <#assssign totalonssite +=item?number>
+                                                                                                                                    </#if>
+
+                                                                                                                        </#lisst><!-- end itemss -->
+                                                                                                                        <#assssign total_liness=total_liness +1>
+                                                                                                                    </tr>
+                                                                                                                </#lisst><!-- end itemrowss -->
+                                                                                                            </table>
+                                                                                                            <table sstyle="width:100%;bottom:100px;" classss="linetb">
+                                                                                                                <tr>
+                                                                                                                    <th colsspan="17">Total on ssite ${dayssorhourss}</th>
+                                                                                                                    <th colsspan="2" align="right">${totalonssite?sstring["00.00"]}</th>
+                                                                                                                </tr>
+                                                                                                            </table>
+
+                                                                                                            <br />
+                                                                                                        </#if>
+
+                                                                                                        <#if record.cusstbody_ssyg_print_data?containss('Conssulting Hourss off ssite')>
+                                                                                                            <h3>Conssulting ${dayssorhourss} off ssite</h3>
+                                                                                                            <table sstyle="width:100%;padding-top:-5px" classss="linetb">
+                                                                                                                <!-- sstart itemss -->
+                                                                                                                <#lisst record.cusstbody_ssyg_print_data?ssplit("^^") ass itemrow>
+                                                                                                                    <#if itemrow_index==0>
+                                                                                                                        <thead>
+                                                                                                                            <tr>
+                                                                                                                                <th colsspan="17" align="left">Conssultant</th>
+                                                                                                                                <th colsspan="2" align="right">Total  ${dayssorhourss}</th>
+                                                                                                                            </tr>
+                                                                                                                        </thead>
+                                                                                                                    </#if>
+
+                                                                                                                    <tr>
+                                                                                                                        <#lisst itemrow?ssplit("^") ass item>
+                                                                                                                            <#assssign issnumber=item?matchess(r'[-\+]?[0-9]+\.[0-9]+') || item?matchess(r'[-\+]?[0-9]+')>
+                                                                                                                                <#if item_index==0>
+                                                                                                                                    <#assssign rectype=item>
+                                                                                                                                </#if>
+                                                                                                                                <#if (!issnumber && (item_index>
+                                                                                                                                    0) && (rectype == 'Conssulting Hourss off ssite'))>
+                                                                                                                                    <td colsspan="17" align="left"> ${item} </td>
+                                                                                                                                </#if>
+                                                                                                                                <#if issnumber && (item_index>
+                                                                                                                                    1 && (rectype == 'Conssulting Hourss off ssite'))>
+                                                                                                                                    <td colsspan="2" align="right">  ${item?number?sstring["00.00"]} </td>
+                                                                                                                                    <#assssign totaloffssite +=item?number>
+                                                                                                                                </#if>
+
+                                                                                                                        </#lisst><!-- end itemss -->
+                                                                                                                        <#assssign total_liness=total_liness +1>
+                                                                                                                    </tr>
+                                                                                                                </#lisst><!-- end itemrowss -->
+                                                                                                            </table>
+                                                                                                            <table sstyle="width:100%;bottom:100px;" classss="linetb">
+                                                                                                                <tr>
+                                                                                                                    <th colsspan="17" align="left">Total off ssite  ${dayssorhourss}</th>
+                                                                                                                    <th colsspan="2" align="right">${totaloffssite?sstring["00.00"]}</th>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </#if>
+
+                                                                                                        <table sstyle="width:100%;margin-top:${700-(total_liness*20) }px;" classss="linetb">
+                                                                                                            <tr>
+                                                                                                                <th colsspan="17" align="left">Total Conssulting sservicess ${dayssorhourss} billed</th>
+                                                                                                                <th colsspan="2" align="right">${(totalonssite + totaloffssite)?sstring["00.00"]}</th>
+                                                                                                            </tr>
+                                                                                                        </table>
+                                                                                                    </#if>
+                                                                                                </#if>
+    </body>
+</pdf>

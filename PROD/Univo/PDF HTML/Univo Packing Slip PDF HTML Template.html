@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+        <head>
+            <link name="sans-serif" type="font" subtype="truetype" src="  https://system.eu2.netsuite.com/c.4969978/suitebundle149431/Fonts/Heb-Regular.ttf" />
+
+            <macrolist>
+                <macro id="nlheader">
+                    <table style="width: 100%;" align="center" border="1" cellpadding="0" class="header">
+                        <tr>                 
+                            <td align="center" width="300px" colspan="3" height="140px;" >
+                                <br />
+                                <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="width:200px; height:90px;" /> </#if>
+                                <br />
+                            </td>
+                            <td align="center"  style="font-size:20px">תעודת משלוח</td>
+                        </tr>
+                        <tr>
+                            <td align="center" height="50px"><totalpages /> מתוך <pagenumber /> עמוד</td>
+                            <td align="center">08-07-2020</td>
+                            <td align="center"> B מהדורה</td>
+                            <td align="center">UNV-WDC-FORM-004-3 <br /></td>
+                        </tr>
+                    </table>
+                </macro>
+
+            </macrolist>
+            <style type="text/css">
+                * {
+                    font-family: sans-serif;
+                }
+
+                table {
+                    font-size: 9pt;
+                    table-layout: fixed;
+                    font-family: sans-serif;
+                }
+
+                    table.header td {
+                        padding: 0;
+                        font-size: 10pt;
+                        border: 1px solid;
+                        vertical-align: middle;
+                    }
+
+                    table.linetb th {
+                        background-color: #fff;
+                        border: 1px solid;
+                        padding-bottom: 10px;
+                        padding-top: 10px;
+                    }
+
+                    table.linetb td {
+                        border: 1px solid;
+                        text-overflow: ellipsis;
+                        word-wrap: break-word;
+                    }
+
+                    table.comment td {
+                        border: 1px solid;
+                    }
+            </style>
+        </head>
+        <body header="nlheader" header-height="12%" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+
+            <br />
+            <br />
+            <br />
+            <br />
+    
+            <table style="width:670px; line-height:22px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <table style="width:300px;line-height:22px;font-size: 14px;">
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.createdfrom.shipdate}</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px;">: תאריך משלוח  </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.createdfrom?replace("Sales Order #", "")}</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px;"> : מס' הזמנה   </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </th>
+                        <th colspan="12" align="right"><p style="width: 100%; text-align:right; font-size: 1.4em;"> : לכבוד בית מרקחת  <br /> ${record.shipaddress} </p></th>
+                    </tr>
+
+                </thead>
+
+            </table>
+            <br />
+            <table class="linetb" style="width:670px;">
+                <!-- start items -->
+                <#list record.item as item>
+                    <#if item_index==0>
+                        <thead>
+                            <tr>
+                                <th colspan="2"><p style="width: 100%; text-align:center;">כמות</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">אצוות</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">תיאור</p></th>
+                                <th colspan="10"><p style="width: 100%; text-align:center;">שם מוצר</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">ברקוד</p></th>
+                                <th colspan="2"><p style="width: 100%; text-align:center;">#</p></th>
+                            </tr>
+                        </thead>
+                    </#if>
+                    <tr>
+                        <td colspan="2"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+                        <td colspan="6"><p style="width: 100%; text-align:center;">${item.inventorydetail}</p></td>
+                        <td colspan="6"><p style="width: 100%; text-align:center;">${item.custcol_product_line}</p></td>
+                        <td colspan="10" style="text-align:center; text-justify:none; "><p style="width: 100%; text-align:center;">${item.description}</p></td>
+                        <td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item.custcol_barcode}</p></td>
+                        <td colspan="2" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item_index +1}</p></td>
+                    </tr>
+                </#list><!-- end items -->
+            </table>
+            <br /><br /><br />
+            <table style="width: 100%;" align="center" class="comment">
+                <tr>
+                    <td align="center" width="50%" height="30px;">אישור הלקוח</td>
+                    <td align="center" height="80px;">אישור החברה <br /> <br /></td>
+                </tr>
+                <tr>
+                    <td align="right">:שם המקבל</td>
+                    <td align="right">${record.custbody_transaction_creator?substring(record.custbody_transaction_creator?index_of(" ") + 1, record.custbody_transaction_creator?length)} : שם השולח<br /><br /></td>
+                </tr>
+                <tr>
+                    <td align="right">  : תאריך</td>
+                    <td align="right">${record.createdfrom.shipdate} : תאריך<br /><br /></td>
+                </tr>
+                <tr>
+                    <td align="right">: חתימה</td>
+                    <td align="right">: חתימה<br /><br /></td>
+                </tr>
+                <tr>
+                    <td align="right" colspan="2">: אישור רוקח אחראי<br /><br /></td>
+                </tr>
+            </table>
+        </body>
+</pdf>

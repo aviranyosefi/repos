@@ -1,0 +1,631 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <#function toNumber val>
+        <#if val?? && val?has_content>
+            <#if val?is_number>
+                <#return val>
+            </#if>
+            <#return (val?replace("[^0-9.]", "" , "r" ))?number>
+        </#if>
+        <#return 0>
+    </#function>
+    <#function resolveXmlAmpersand val>
+        <#return val?replace("&(?!(?:apos|quot|[gl]t|amp|nbsp);|\\#)", "&amp;" , "r" )>
+    </#function>
+    <#function resolveHtmlTags text>
+        <#local retValue=text?replace("<"?html, "<" , "ri" )?replace(">"?html, ">", "r")>
+            <#if isHtmlLongText(retValue)>
+                <#local retValue=retValue?replace("<br[/ ]*>", "", "r")>
+            </#if>
+            <#return retValue>
+    </#function>
+    <#function isHtmlLongText text>
+        <#local htmlTags=text?matches("(<[/ ]*table>)|(<[ / ]*tr>)|(<[ / ]*td>)", "ri")>
+                    <#return (htmlTags?size> 0)>
+    </#function>
+
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://system.eu2.netsuite.com/c.4855789/suitebundle149431/Heb-Regular.ttf" />
+        <macrolist>
+            <macro id="nlheader">
+
+                <#assign type="Commercial Invoice">
+
+                    <table class="header" style="width: 100%; font-size: 10pt;top:3px">
+                        <tr>
+                            <td>
+                                <img src="https://5463879.app.netsuite.com/core/media/media.nl?id=1278&amp;c=5463879&amp;h=ce574e6f774e23ea1cdf"
+                                     style="float: left; margin: 7px;" />
+                                <p style="color:#00aaff; font-size: 9pt;">
+                                    ${companyInformation.companyname} <br />
+                                    13th Zarhin st., Bldg. A, 6th floor <br />
+                                    Raanana 4366241 <br />
+                                    PO box: 2619 <br />
+                                    Israel <br />
+                                    Company Reg No : ${companyInformation.employerid} <br />
+                                    VAT Reg No: ${companyInformation.employerid}
+                                </p>
+
+                            </td>
+                            <td align="right">
+                                <p style="width: 100%; text-align:left;top:15px">
+                                    <span style="top:60px" align="center" class="titleCommercial">
+                                        ${type}
+
+                                    </span>
+                                </p>
+                                <br />
+                                <table class="headertable">
+                                    <tr>
+                                        <th>${type} No.</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">
+                                                ${record.tranid?replace("SO","CI")}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Delivery #</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">
+                                                ${record.custbody_df_delivery_num_for_print_txt}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">
+                                                ${record.trandate?string("dd/MM/yyyy")}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Customer PO #</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">
+                                                ${record.custbody_customer_po_num}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>SO #</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">${record.tranid}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">
+                                                ${record.entity?replace("[0-9]",
+                                                "", "r")}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <#if record.subsidiary.id!='3'>
+                                            <th>Intercompany Incoterms</th>
+                                            <td width="50%">
+                                                <p style="width: 100%; text-align:left;">
+                                                    ${record.custbody_intercompany_incoterms}
+                                                </p>
+                                            </td>
+                                            <#else>
+                                                <th>Incoterm</th>
+                                                <td width="50%">
+                                                    <p style="width: 100%; text-align:left;">
+                                                        ${record.custbody_so_ff_incoterm}
+                                                    </p>
+                                                </td>
+                                        </#if>
+                                    </tr>
+                                    <tr>
+                                        <th>API Reference #</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">${record.custbody7}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Currency</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">${record.currencysymbol}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Payment</th>
+                                        <td width="50%">
+                                            <p style="width: 100%; text-align:left;">${record.custbody_payment}</p>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+            </macro>
+            <macro id="nlfooter">
+
+                <table class="footer">
+                    <tr>
+                        <td align="center">
+                            <pagenumber /> of 
+                            <totalpages />
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+            <macro id="nlfooter2">
+                <table style=" bottom: 0;" valign="bottom" align="right" class="footerBody">
+                    <tr>
+                        <td valign="bottom">
+                            <p>D-Fend Solutions A.D Ltd. _______________</p>
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+
+        </macrolist>
+        <style type="text/css">
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            b {
+                color: #000000;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-size: 9pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }
+
+            table.description {
+                font-size: 9pt;
+                padding-left: -5px;
+                padding-top: -13px;
+                table-layout: fixed;
+            }
+
+                table.description td {
+                    font-size: 10pt;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                    text-align: left
+                }
+
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                font-size: 10pt;
+                border: 1px solid #bdd1e2;
+            }
+
+                table.linetb_Total td {
+                    border: 1px solid #bdd1e2;
+                    background-color: #eeeeee;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                }
+
+                table.linetb_Total th {
+                    background-color: #6080b9;
+                    border: 1px solid #bdd1e2;
+                    color: #fff;
+                    padding-bottom: 10px;
+                    padding-top: 10px;
+                    font-weight: bold;
+                    font-size: 9pt;
+                }
+
+            table.linetb td.sub {
+                background-color: #fff;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+                border: 0;
+            }
+
+            p.comment {
+                font-size: 9pt;
+                margin: 0
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                word-wrap: break-word;
+                /* All browsers since IE 5.5+ */
+                overflow-wrap: break-word;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+                vertical-align: middle;
+            }
+
+            table.footer td {
+                padding: 0;
+                font-size: 8pt;
+            }
+
+            table.itemtable th {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            td.addressheader {
+                font-size: 8pt;
+                font-weight: bold;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            td.address {
+                padding-top: 0;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.titleCommercial {
+                font-size: 18pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                word-wrap: break-word;
+                /* All browsers since IE 5.5+ */
+                overflow-wrap: break-word;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.linetb {
+                table-layout: fixed;
+                font-size: 9pt;
+            }
+
+                table.linetb td {
+                    border: 1px solid #bdd1e2;
+                    background-color: #eeeeee;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                }
+
+                table.linetb th {
+                    background-color: #6080b9;
+                    border: 1px solid #bdd1e2;
+                    color: #fff;
+                    padding-bottom: 10px;
+                    padding-top: 10px;
+                    font-weight: bold;
+                    font-size: 9pt;
+                }
+
+                table.linetb td.sub {
+                    background-color: #fff;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                    border: 0;
+                }
+
+            table.footerBody {
+                display: flex;
+                flex: 1;
+                align-items: flex-end;
+            }
+            .bel {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                height: 500px;
+                border: 1px solid #000;
+                padding: 20px;
+            }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="33%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+
+
+        <#assign curr_symbol=record.currencysymbol>
+            <#if record.currencysymbol='USD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencysymbol='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencysymbol='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+            <#if record.currencysymbol='ILS'>
+                <#assign curr_symbol='₪'>
+            </#if>
+
+            <table style="width: 100%; margin-top: 40px;">
+                <tr>
+                    <td class="addressheader">Ship To:</td>
+                    <td class="addressheader">Bill To:</td>
+                    <td class="addressheader">Deliver To:</td>
+                </tr>
+                <tr>
+                    <#if record.subsidiary.id!='3'>
+                        <td class="address">
+                            <p style="width: 100%; text-align:left;">
+                                ${record.subsidiary.custrecord_ilo_subsid_eng_address}
+                            </p>
+                        </td>
+                        <#else>
+                            <td class="address">
+                                <p style="width: 100%; text-align:left;">${record.shipaddress}</p>
+                            </td>
+                    </#if>
+                    <#if record.subsidiary.id!='3'>
+                        <td class="address">
+                            <p style="width: 100%; text-align:left;">
+                                ${record.subsidiary.custrecord_ilo_subsid_eng_address}
+                            </p>
+                        </td>
+                        <#else>
+                            <td class="address">
+                                <p style="width: 100%; text-align:left;">${record.billaddress}</p>
+                            </td>
+                    </#if>
+                    <td class="address">
+                        <p style="width: 100%; text-align:left;">${record.custbody_end_customer_address}</p>
+                    </td>
+                </tr>
+            </table>
+            <br />
+
+
+            <#assign total=0>
+                <#assign lineCount=0>
+
+                    <table class="linetb" style="width:670px;">
+
+                        <thead>
+                            <tr height="20">
+                                <th colspan="2">
+                                    <p style="width: 100%; text-align:center;">Line</p>
+                                </th>
+                                <th colspan="16">
+                                    <p style="width: 100%; text-align:center;">Product id/Description</p>
+                                </th>
+                                <th colspan="2">
+                                    <p style="width: 100%; text-align:center;">Qty</p>
+                                </th>
+                                <th colspan="6">
+                                    <p style="width: 100%; text-align:center;">UOM</p>
+                                </th>
+                                <th colspan="6">
+                                    <p style="width: 100%; text-align:center;">Price</p>
+                                </th>
+                                <th colspan="6">
+                                    <p style="width: 100%; text-align:center;">COO</p>
+                                </th>
+                                <th colspan="6">
+                                    <p style="width: 100%; text-align:center;">HS Code</p>
+                                </th>
+                                <th colspan="6">
+                                    <p style="width: 100%; text-align:center;">Amount</p>
+                                </th>
+                            </tr>
+                        </thead>
+                        <#assign total=0>
+                            <#assign line=1>
+                                <#list record.custbody_prodocts?split("~~") as itemrow>
+                                    <#assign count=1>
+                                        <#if itemrow !="">
+                                            <tr>
+                                                <#list itemrow?split("^") as item>
+                                                    <#if count=1>
+                                                        <td colspan="2" style="text-align:center; text-justify:none;">
+                                                            <p style="width: 100%; text-align:center;">${line}</p>
+                                                        </td>
+                                                        <#elseif count=2>
+                                                            <#assign inlineDisclaimerTemplate=resolveXmlAmpersand(resolveHtmlTags("<td
+                                                                colspan='16'>${item}</td>"))?interpret>
+                                                                <@inlineDisclaimerTemplate />
+                                                                <#elseif count=3>
+                                                                    <td colspan="2">
+                                                                        <p style="width: 100%; text-align:center;">
+                                                                            ${item}</p>
+                                                                    </td>
+                                                                    <#elseif count=4 ||count=6||count=7>
+                                                                        <td colspan="6">
+                                                                            <p style="width: 100%; text-align:center;">
+                                                                                ${item}</p>
+                                                                        </td>
+                                                                        <#elseif count=5>
+                                                                            <td colspan="6">
+                                                                                <p
+                                                                                    style="width: 100%; text-align:center;">
+                                                                                    <#if item?contains('%')>${item}
+                                                                                        <#elseif item?contains('sub')>
+                                                                                            <#else>${item}
+                                                                                    </#if>
+                                                                                    <br /><br />
+                                                                                </p>
+                                                                            </td>
+
+                                                                            <#elseif count=8>
+                                                                                <td colspan="6">
+                                                                                    <p
+                                                                                        style="width: 100%; text-align:center;">
+                                                                                        ${item}</p>
+                                                                                </td>
+                                                                                <#assign
+                                                                                    total=toNumber(total)+toNumber(item)>
+                                                    </#if>
+
+                                                    <#assign count=count + 1>
+
+                                                </#list>
+                                                <#assign line=line + 1>
+                                            </tr>
+                                        </#if>
+                                </#list>
+
+                                <#assign vatAmt=0>
+                                    <#if record.subtotal !=0>
+                                        <#assign vatAmt=(record.taxtotal / record.subtotal * 100)?round>
+                                    </#if>
+
+                                    <#assign totalvatAmt=0>
+                                        <#if record.subtotal !=0>
+                                            <#assign totalvatAmt=(toNumber(total) * toNumber(record.taxtotal /
+                                            record.subtotal))>
+                                        </#if>
+                                        <#assign totalaftervatAmt=0>
+                                            <#assign totalaftervatAmt=(toNumber(total) + toNumber(totalvatAmt))>
+
+                                                <tr>
+                                                    <td class="sub" colspan="38"></td>
+                                                    <td colspan="6"
+                                                        style="text-align:justify; text-justify:none;background-color: #eeeeee;">
+                                                        Sub
+                                                        Total:
+                                                    </td>
+                                                    <td colspan="6"
+                                                        style="text-align:justify; text-justify:none;background-color: #eeeeee;">
+                                                        ${total?string[",##0.00"]}
+                                                    </td>
+                                                </tr>
+                                                <#if vatAmt!=0>
+                                                    <tr>
+                                                        <td class="sub" colspan="38"></td>
+                                                        <td colspan="6"
+                                                            style="text-align:justify; text-justify:none;background-color: #eeeeee;">
+                                                            VAT ${vatAmt}%:
+                                                        </td>
+                                                        <td colspan="6"
+                                                            style="text-align:justify; text-justify:none;background-color: #eeeeee;">
+                                                            ${totalvatAmt?string[",##0.00"]}
+                                                        </td>
+                                                    </tr>
+                                                </#if>
+                                                <tr>
+                                                    <td class="sub" colspan="38"></td>
+                                                    <td colspan="6"
+                                                        style="text-align:justify; text-justify:none;background-color: #eeeeee;">
+                                                        Total:
+                                                    </td>
+                                                    <td colspan="6"
+                                                        style="text-align:justify; text-justify:none;background-color: #eeeeee; ">
+                                                        ${totalaftervatAmt?string[",##0.00"]}
+                                                    </td>
+                                                </tr>
+
+
+                    </table>
+
+                    <table style="padding-bottom: 20px; padding-top: 40px;">
+                        <#if record.custbody_pl_comments?has_content>
+                            <tr>
+                                <td>
+                                    <p><b>Comments:</b> <br /> ${record.custbody_pl_comments}</p>
+                                </td>
+                            </tr>
+                        </#if>
+                        <#if record.custbody_geo_country="United States">
+                            <tr>
+                                <td>
+                                    <p><b>Declaration:</b> <br />${record.custbody_declaration}</p>
+                                </td>
+                            </tr>
+                        </#if>
+                        <#if record.custbody_geo_country="United Kingdom">
+                            <tr>
+                                <td>
+                                    <p>
+                                        <b>Declaration:</b> <br />${record.custbody_declaration_uk}
+                                    </p>
+                                </td>
+                            </tr>
+                        </#if>
+                        <#if record.custbody_pl_terms_and_conditions?has_content>
+                            <tr>
+                                <td>
+                                    <p>
+                                        <b>TERMS &amp; CONDITIONS:</b> <br />
+                                        ${record.custbody_pl_terms_and_conditions}
+                                    </p>
+                                </td>
+                            </tr>
+                        </#if>
+
+                    </table>
+                    <br />
+                    <table style=" bottom: 0;" valign="bottom" align="right" class="footerBody">
+                        <tr>
+                            <td valign="bottom">
+                                <p>D-Fend Solutions A.D Ltd. _______________</p>
+                            </td>
+                        </tr>
+                    </table>
+
+
+</body>
+</pdf>

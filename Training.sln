@@ -1,0 +1,202 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Training", "Training", "{2534D989-CC1B-4613-9222-D4621F71D63B}"
+	ProjectSection(SolutionItems) = preProject
+		api library.js = api library.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "suitelet", "suitelet", "{4B8E3EAE-85CA-4866-AFA5-05CA752EDAAE}"
+	ProjectSection(SolutionItems) = preProject
+		customerSearch.js = customerSearch.js
+		DunningPrintSuitelet.js = DunningPrintSuitelet.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "userEvent", "userEvent", "{337F6268-C600-46BE-A314-B15D584A89D2}"
+	ProjectSection(SolutionItems) = preProject
+		Dunning Print.js = Dunning Print.js
+		nlapiLoadSearch.js = nlapiLoadSearch.js
+		updateLocationsFromHeader.js = updateLocationsFromHeader.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scheduled", "scheduled", "{F0C833D1-9CE0-4C9A-8241-8CAFF52C17D2}"
+	ProjectSection(SolutionItems) = preProject
+		Email.js = Email.js
+		findHotCustomerScheduled.js = findHotCustomerScheduled.js
+		UpdaeLocationsOnCustomerSearch.js = UpdaeLocationsOnCustomerSearch.js
+		updateLocationFromHeader.js = updateLocationFromHeader.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{D31A3F04-E448-423A-99EB-F001C6DF797E}"
+	ProjectSection(SolutionItems) = preProject
+		alertOnSave.js = alertOnSave.js
+		DunningAlert.js = DunningAlert.js
+		tz.js = tz.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PDF AND HTML", "PDF AND HTML", "{4AF7054E-85E2-424C-9A8C-08981DF2A6E5}"
+	ProjectSection(SolutionItems) = preProject
+		HTMLPage1.html = HTMLPage1.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROD", "PROD", "{DBC1A303-6C74-4C9A-BA52-AF48027BA398}"
+	ProjectSection(SolutionItems) = preProject
+		GetJournals.js = GetJournals.js
+		sublist.js = sublist.js
+		sublistTest.js = sublistTest.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JFROG", "JFROG", "{5984BA50-7ED6-4B51-93F6-42C76172A846}"
+	ProjectSection(SolutionItems) = preProject
+		Jfrog_Workato_SO.js = Jfrog_Workato_SO.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SYGNIA", "SYGNIA", "{4651DFDB-2585-41B3-961C-58CEA815AF6D}"
+	ProjectSection(SolutionItems) = preProject
+		Custom Credit Memo PDFHTML Template.html = Custom Credit Memo PDFHTML Template.html
+		Sygnia Invoice PDF HTML Template.html = Sygnia Invoice PDF HTML Template.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SPLITIT", "SPLITIT", "{D4BD840C-FCAE-49D6-AADB-DF79ED2CB2F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PDF HTML", "PDF HTML", "{50BBFE66-5BBC-46C9-8ED2-FC01F146E2DD}"
+	ProjectSection(SolutionItems) = preProject
+		splitit IL Invoice.html = splitit IL Invoice.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workato", "Workato", "{FF6DC6E1-47E5-455C-93D5-8525CCB24F35}"
+	ProjectSection(SolutionItems) = preProject
+		Jfrog_Workato_Invoice_Created.js = Jfrog_Workato_Invoice_Created.js
+		Jfrog_Workato_SO.js = Jfrog_Workato_SO.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BioData", "BioData", "{60A5D3A2-3E26-4E8C-A451-9EC4057D225A}"
+	ProjectSection(SolutionItems) = preProject
+		GetJournals.js = GetJournals.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PDF HTML", "PDF HTML", "{4A7A7D4D-245F-4210-AEBE-F029FC50FAA0}"
+	ProjectSection(SolutionItems) = preProject
+		BioData IL Credit Memo.html = BioData IL Credit Memo.html
+		BioData INC Credit Memo.html = BioData INC Credit Memo.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OPTIBUS", "OPTIBUS", "{39C6C507-764B-4203-A30D-86FD039549A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PDF HTML", "PDF HTML", "{67DB47B7-F329-4C48-BFC1-E8F654CF650F}"
+	ProjectSection(SolutionItems) = preProject
+		Optibus Invoice.html = Optibus Invoice.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CyberX", "CyberX", "{7C906403-B8F2-4EED-91E0-93B7F9FE34A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PDF HTML", "PDF HTML", "{863552B6-ADAA-45C1-B55E-62C0AD08E046}"
+	ProjectSection(SolutionItems) = preProject
+		CYBERX Invoice - PDF HTML Template.html = CYBERX Invoice - PDF HTML Template.html
+		IL CYBERX Invoice.html = IL CYBERX Invoice.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inuitive", "Inuitive", "{D9B11EA1-5F70-469A-B5D7-CE31D96A1369}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PDF HTML", "PDF HTML", "{A4B5152A-A1AC-4AE3-AC0E-A43D05ECE827}"
+	ProjectSection(SolutionItems) = preProject
+		Inuitive Packing Slip PDF HTML Template.html = Inuitive Packing Slip PDF HTML Template.html
+		Inuitive Sales Order PDF HTML Template.html = Inuitive Sales Order PDF HTML Template.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user event", "user event", "{0F075564-B992-4477-8330-8211F71AFF68}"
+	ProjectSection(SolutionItems) = preProject
+		_ilo_icc_create_adj_BS.js = _ilo_icc_create_adj_BS.js
+		Item_Fulfillment_fill_fields.js = Item_Fulfillment_fill_fields.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gilat", "Gilat", "{3C764393-12D6-47F4-9244-D111D6F4FB8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client script", "client script", "{265D9ACF-4C32-4A88-B417-F4B9D39B3329}"
+	ProjectSection(SolutionItems) = preProject
+		EditingBlock.js = EditingBlock.js
+		IPvalidation.js = IPvalidation.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Galooli", "Galooli", "{C8C29C6C-955C-4892-952D-B1148853B66F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HTML PDF", "HTML PDF", "{B46DD9F8-4319-47E8-AB66-8322AC369589}"
+	ProjectSection(SolutionItems) = preProject
+		Galooli Invoice PDF HTML Template.html = Galooli Invoice PDF HTML Template.html
+		Galooli Sales Order PDF HTML Template.html = Galooli Sales Order PDF HTML Template.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dynamic yield", "Dynamic yield", "{1D5323FD-92E9-4FD4-AADD-7C7D46B8B0A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HTML PDF", "HTML PDF", "{7FA352BA-99B6-48C4-9E4A-CA889DD15DF4}"
+	ProjectSection(SolutionItems) = preProject
+		DY Invoice - PDF HTML Template.html = DY Invoice - PDF HTML Template.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{0EDDB289-2311-4F16-994F-A778B89F2C3E}"
+	ProjectSection(SolutionItems) = preProject
+		ILO_Client_Functions_new.js = ILO_Client_Functions_new.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "D-Fend", "D-Fend", "{21711AF0-DFCF-4D45-BD5E-307855FCF692}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "for payment request", "for payment request", "{7DAD2B50-FD83-4401-B665-EEB8B854978B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user event", "user event", "{467611CE-F2BA-425C-8228-5C090840846D}"
+	ProjectSection(SolutionItems) = preProject
+		ilo_payment_req.js = ilo_payment_req.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{12FC2FAB-30F6-438C-B073-5FA9063FC5EB}"
+	ProjectSection(SolutionItems) = preProject
+		ilo_pay_req_client.js = ilo_pay_req_client.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "suitlet", "suitlet", "{85E97A44-9895-4267-9134-78ED4BD86605}"
+	ProjectSection(SolutionItems) = preProject
+		ilo_pay_req_suitlet.js = ilo_pay_req_suitlet.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4B8E3EAE-85CA-4866-AFA5-05CA752EDAAE} = {2534D989-CC1B-4613-9222-D4621F71D63B}
+		{337F6268-C600-46BE-A314-B15D584A89D2} = {2534D989-CC1B-4613-9222-D4621F71D63B}
+		{F0C833D1-9CE0-4C9A-8241-8CAFF52C17D2} = {2534D989-CC1B-4613-9222-D4621F71D63B}
+		{D31A3F04-E448-423A-99EB-F001C6DF797E} = {2534D989-CC1B-4613-9222-D4621F71D63B}
+		{4AF7054E-85E2-424C-9A8C-08981DF2A6E5} = {2534D989-CC1B-4613-9222-D4621F71D63B}
+		{5984BA50-7ED6-4B51-93F6-42C76172A846} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{4651DFDB-2585-41B3-961C-58CEA815AF6D} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{D4BD840C-FCAE-49D6-AADB-DF79ED2CB2F3} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{50BBFE66-5BBC-46C9-8ED2-FC01F146E2DD} = {D4BD840C-FCAE-49D6-AADB-DF79ED2CB2F3}
+		{FF6DC6E1-47E5-455C-93D5-8525CCB24F35} = {5984BA50-7ED6-4B51-93F6-42C76172A846}
+		{60A5D3A2-3E26-4E8C-A451-9EC4057D225A} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{4A7A7D4D-245F-4210-AEBE-F029FC50FAA0} = {60A5D3A2-3E26-4E8C-A451-9EC4057D225A}
+		{39C6C507-764B-4203-A30D-86FD039549A0} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{67DB47B7-F329-4C48-BFC1-E8F654CF650F} = {39C6C507-764B-4203-A30D-86FD039549A0}
+		{7C906403-B8F2-4EED-91E0-93B7F9FE34A5} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{863552B6-ADAA-45C1-B55E-62C0AD08E046} = {7C906403-B8F2-4EED-91E0-93B7F9FE34A5}
+		{D9B11EA1-5F70-469A-B5D7-CE31D96A1369} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{A4B5152A-A1AC-4AE3-AC0E-A43D05ECE827} = {D9B11EA1-5F70-469A-B5D7-CE31D96A1369}
+		{0F075564-B992-4477-8330-8211F71AFF68} = {D9B11EA1-5F70-469A-B5D7-CE31D96A1369}
+		{3C764393-12D6-47F4-9244-D111D6F4FB8F} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{265D9ACF-4C32-4A88-B417-F4B9D39B3329} = {3C764393-12D6-47F4-9244-D111D6F4FB8F}
+		{C8C29C6C-955C-4892-952D-B1148853B66F} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{B46DD9F8-4319-47E8-AB66-8322AC369589} = {C8C29C6C-955C-4892-952D-B1148853B66F}
+		{1D5323FD-92E9-4FD4-AADD-7C7D46B8B0A3} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{7FA352BA-99B6-48C4-9E4A-CA889DD15DF4} = {1D5323FD-92E9-4FD4-AADD-7C7D46B8B0A3}
+		{0EDDB289-2311-4F16-994F-A778B89F2C3E} = {C8C29C6C-955C-4892-952D-B1148853B66F}
+		{21711AF0-DFCF-4D45-BD5E-307855FCF692} = {DBC1A303-6C74-4C9A-BA52-AF48027BA398}
+		{7DAD2B50-FD83-4401-B665-EEB8B854978B} = {21711AF0-DFCF-4D45-BD5E-307855FCF692}
+		{467611CE-F2BA-425C-8228-5C090840846D} = {7DAD2B50-FD83-4401-B665-EEB8B854978B}
+		{12FC2FAB-30F6-438C-B073-5FA9063FC5EB} = {7DAD2B50-FD83-4401-B665-EEB8B854978B}
+		{85E97A44-9895-4267-9134-78ED4BD86605} = {7DAD2B50-FD83-4401-B665-EEB8B854978B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28DDEB7D-31F7-490B-B9A7-1420B35A710C}
+	EndGlobalSection
+EndGlobal

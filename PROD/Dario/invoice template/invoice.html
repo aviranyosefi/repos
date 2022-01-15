@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+   
+    <head>
+        <link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+        <#if .locale= ="zh_CN">
+            <link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+            <#elseif .locale= ="zh_TW">
+                <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+                <#elseif .locale= ="ja_JP">
+                    <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+                    <#elseif .locale= ="ko_KR">
+                        <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+                        <#elseif .locale= ="th_TH">
+                            <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+        </#if>
+        <macrolist>
+            <macro id="nlheader">
+                <#if record.entity.custentity_ilo_print_hebrew= =false>
+                    <#assign print_type='Original'>
+                        <#if record.custbody_ilo_org_printed>
+                            <#assign print_type='Copy'>
+                        </#if>
+                        <#if record.custbodycustbody_ilo_print_draft>
+                            <#assign print_type='Draft'>
+                        </#if>
+                </#if>
+            </macro>
+        </macrolist>
+        <macrolist>
+            <macro id="nlfooter">
+                <table class="footer" style="width: 100%;">
+                    <tr>
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                <#if .locale == "zh_CN"> font-family: NotoSans, NotoSansCJKsc, sans-serif;
+                <#elseif .locale == "zh_TW"> font-family: NotoSans, NotoSansCJKtc, sans-serif;
+                <#elseif .locale == "ja_JP"> font-family: NotoSans, NotoSansCJKjp, sans-serif;
+                <#elseif .locale == "ko_KR"> font-family: NotoSans, NotoSansCJKkr, sans-serif;
+                <#elseif .locale == "th_TH"> font-family: NotoSans, NotoSansThai, sans-serif;
+                <#else> font-family: NotoSans, sans-serif;
+                </#if>
+            }
+
+            table {
+                font-size: 8pt;
+                table-layout: fixed;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 9pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+            }
+
+            td {
+                padding: 4px 6px;
+            }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+            }
+
+            table.header {
+                table-layout: fixed;
+            }
+
+                table.header td {
+                    padding: 0px;
+                    font-size: 10pt;
+                }
+
+            table.footer td {
+                padding: 0px;
+                font-size: 8pt;
+            }
+
+            table.itemtable th {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            table.total {
+                page-break-inside: avoid;
+            }
+
+            tr.totalrow {
+                background-color: #e3e3e3;
+                line-height: 200%;
+            }
+
+            td.totalboxtop {
+                font-size: 12pt;
+                background-color: #e3e3e3;
+            }
+
+            td.addressheader {
+                font-size: 8pt;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            td.address {
+                padding-top: 0px;
+            }
+
+            td.box {
+                padding-top: 10px;
+                border: 1px solid;
+            }
+
+            td.totalboxbot {
+                background-color: #e3e3e3;
+                font-weight: bold;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+
+            span.itemname {
+                font-weight: bold;
+                line-height: 150%;
+            }
+
+            hr {
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+                height: 1px;
+            }
+
+            table.linetb {
+                table-layout: fixed;
+            }
+
+                table.linetb th {
+                    background-color: #fff;
+                    border: 1px solid;
+                    padding-bottom: 0px;
+                    padding-top: 10px;
+                }
+
+                table.linetb td {
+                    border: 1px solid;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                    overflow: hidden;
+                    padding: 5px;
+                }
+
+            .tab {
+                display: inline-block;
+                margin-left: 80px;
+            }
+        </style>
+        <macrolist>
+            <macro id="nlheader">
+                <table border="0" cellpadding="0" class="header" width="100%">
+                    <tr>
+                        <td width="100" align="left">
+                            <#if companyInformation.logoUrl?length !=0>
+                                <img src="${companyInformation.logoUrl}" style="width:180px; height:160px;" />
+                            </#if>
+                        </td>
+                        <td width="100" align="center"><p>&nbsp;</p></td>
+                        <td width="100%" align="right" style="margin-top:70px">
+                            <p style="font-weight: bold; font-size:x-large">Tax Invoice -&nbsp;${print_type}</p>
+                            <p style="font-weight: bold;">Tax Invoice #&nbsp;${record.tranid}</p>
+                            <p>Date:&nbsp;${record.trandate}</p>
+                            <p>L.T.:&nbsp;${subsidiary.federalidnumber}</p>
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+    </head>
+    <#assign headerHeight='140px'>
+
+        <body padding="0" margin="15" size="A4" footer="nlfooter" footer-height="120px" header="nlheader" header-height="140px">
+
+            <table style="width: 100%; margin-top: 0px;">
+                <tr>
+                    <td class="addressheader" colspan="40"><b>Attn: ${record.subsidiary}</b></td>
+                </tr>
+                <tr>
+                    <td class="addressheader" colspan="40"><b>Customer: ${record.entity}</b></td>
+                </tr>
+                <tr>
+                    <td class="addressheader" colspan="40"><b>Vat No: ${record.custbody_ilo_header_vat_period}</b></td>
+                </tr>
+            </table>
+
+            <table class="shippingHeader" style="width: 100%; margin-top: 20px;">
+                <tr>
+                    <td style="border: 1px; line-height: 125%; vertical-align: text-top;" height="100%">
+                        <table class="twoBoxes" style="width: 100%;">
+                            <tr>
+                                <td><b style="vertical-align: text-top;">${record.shipaddress@label}:</b></td>
+                                <td style="border: 0px; font-size: 1.05em; line-height: 125%; vertical-align: text-top;">
+                                    <p style="line-height: normal;">${record.entity.shipaddress}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="border: 1px; line-height: 125%; vertical-align: text-top;" height="100%">
+                        <table class="twoBoxes" style="width: 100%;">
+                            <tr>
+                                <td><b style="vertical-align: text-top;">${record.billaddress@label}:</b></td>
+                                <td style="border: 0px; font-size: 1.05em; line-height: 125%; vertical-align: text-top;">
+                                    <p style="line-height: normal;">${record.entity.billaddress}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="default" style="width: 100%;">
+                <tr>
+                    <td style="border: 0px; text-decoration: underline; line-height: 125%;"><p> Tel:&nbsp; ${subsidiary.custrecord_ilo_phone}</p></td>
+                    <td style="border: 0px; text-decoration: underline; line-height: 125%;"><p> Fax:&nbsp; ${subsidiary.fax}</p></td>
+                    <td style="border: 0px; text-decoration: underline; line-height: 125%;"><p> Mobile:&nbsp;</p></td>
+                </tr>
+                <tr>
+                    <td style="border: 0px; line-height: 125%;"><p><u>E-mail:</u> &nbsp;${subsidiary.email} </p> </td>
+                </tr>
+            </table>
+            &nbsp;
+
+            <#assign curr_symbol=record.currencycode>
+                <#if record.currencycode='USD'>
+                    <#assign curr_symbol='$'>
+                </#if>
+                <#if record.currencycode='GBP'>
+                    <#assign curr_symbol='£'>
+                </#if>
+                <#if record.currencycode='EUR'>
+                    <#assign curr_symbol='€'>
+                </#if>
+                <#if record.currencycode='ILS'>
+                    <#assign curr_symbol='₪'>
+                </#if>
+
+                <table class="linetb" style="width:100%;">
+                    <!-- start items -->
+                    <tr>
+                        <th colspan="2">
+                            <p style="width: 100%; text-align:center;">#</p>
+                        </th>
+                        <th colspan="9">
+                            <p style="width: 100%; text-align:center;">Part No.</p>
+                        </th>
+                        <th colspan="10">
+                            <p style="width: 100%; text-align:center;">Description</p>
+                        </th>
+                        <th colspan="5">
+                            <p style="width: 100%; text-align:center;">Quantity</p>
+                        </th>
+                        <th colspan="5">
+                            <p style="width: 100%; text-align:center;">Price</p>
+                        </th>
+                        <th colspan="5">
+                            <p style="width: 100%; text-align:center;">Total</p>
+                        </th>
+                    </tr>
+                    <#assign lineIdx=1>
+                        <#list printData.itemList as item>
+                            <#if item.partNo !="Sales Tax">
+                                <tr>
+                                    <td colspan="2">
+                                        <p style="width: 100%; text-align: center; vertical-align: middle;">${lineIdx} </p>
+                                    </td>
+                                    <td colspan="9">
+                                        <p style="width: 100%; text-align: left; vertical-align: middle;">${item.partNo} &nbsp; ${item.state}</p>
+                                    </td>
+                                    <td style="line-height: 125%;" colspan="10">
+                                        <p style="width: 100%; text-align: left; vertical-align: middle;">${item.description}</p>
+                                    </td>
+                                    <td colspan="5">
+                                        <p style="width: 100%; text-align: center; vertical-align: middle;">${item.qty}</p>
+                                    </td>
+                                    <td colspan="5">
+                                        <p style="width: 100%; text-align: center; vertical-align: middle;">${curr_symbol}${item.price?number}</p>
+                                    </td>
+                                    <td colspan="5">
+                                        <p style="width: 100%; text-align: center; vertical-align: middle;">${curr_symbol}${item.total?number}</p>
+                                    </td>
+                                </tr>
+                                <#assign lineIdx++>
+                            </#if>
+                            <!--
+                             <tr>
+                                 <td colspan="2">
+                                     <p style="width: 100%; text-align: center; vertical-align: middle;">${' '}</p>
+                                 </td>
+                                 <td colspan="34" style="line-height: 125%;">
+                                     <p>
+                                         <u>Country of origin:</u>&nbsp;${item.members.countryofmanufacture}
+                                         <span class="tab"><u>Customer PO #:</u>&nbsp; ${record.otherrefnum}</span>
+                                         <span class="tab"><u>Delivery #:</u>&nbsp; ${' '}</span>
+                                         <span class="tab"><u>HSc:</u>&nbsp;${item.HSc?string}</span>
+                                     </p>
+                                 </td>
+                             </tr>
+                            -->
+
+                        </#list>
+                        <!--
+                        <tr>
+                            <td colspan="24" style="text-align: left; border: 0px; width:100%;"> <p> </p></td>
+                            <td colspan="6" style="text-align: left; border: 0px; width: 100%; font-weight: bold; font-size:large"><p>Total: </p></td>
+                            <td colspan="6" style="text-align: center; font-weight: bold; border: 0px; vertical-align: middle; width: 100%; font-size: large">
+                                <p style="display: table-cell;" colspan="6"> ${curr_symbol}${totalPriceForTable?string.number} </p>
+                            </td>
+
+                        </tr>
+                         end items -->
+
+                </table>
+
+                <table class="total" style="width:100%;">
+
+                    <tr>
+                        <td colspan="2">
+                            <p style="width: 100%; text-align:center;">Total before tax -  ${curr_symbol}${printData.states.beforeTax}</p>
+                        </td>
+                    </tr>
+                    <!--
+
+                    -->
+                    <tr>
+                        <td colspan="2">
+                            <p style="width: 100%; text-align:center;">Total invoice -  ${curr_symbol}${printData.states.totalInvoice}</p>
+                        </td>
+                    </tr>
+
+                </table>
+
+        </body>
+</pdf>
+
+
+
+

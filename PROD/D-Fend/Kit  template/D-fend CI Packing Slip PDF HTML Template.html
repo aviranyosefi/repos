@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://system.eu2.netsuite.com/c.4855789/suitebundle149431/Heb-Regular.ttf" />
+        <macrolist>
+            <macro id="nlheader">
+
+                <#assign type="Commercial Invoice">
+
+                    <table class="header" style="width: 100%; font-size: 10pt;">
+                        <tr>
+                            <td>
+                                <img src="https://5463879.app.netsuite.com/core/media/media.nl?id=1278&amp;c=5463879&amp;h=ce574e6f774e23ea1cdf" style="float: left; margin: 7px" />
+                                <p style="color:#00aaff;">
+                                    13th Zarhin st., Bldg. A, 6th floor <br />
+                                    Raanana 4366241 <br />
+                                    PO box: 2619 <br />
+                                    Israel <br />
+                                    Tax Reg No : ${companyInformation.employerid}
+                                </p>
+
+                            </td>
+
+
+                            <td align="right">
+
+                                <span align="center" class="titleCommercial">${type}&nbsp;&nbsp;&nbsp;&nbsp;<br /></span>
+
+
+
+                                <table class="headertable">
+
+                                    <tr>
+                                        <th>${type} No.</th>
+                                        <td width="80%">CI${record.tranid}</td>
+                                    </tr>
+                                    <tr><th>Delivery #</th><td width="80%"> ${record.custbody_delivery_number}</td></tr>
+                                    <tr><th>Date</th><td width="80%"> ${record.trandate?string("dd/MM/yyyy")}</td></tr>
+                                    <tr><th>Customer PO #</th><td width="80%"> ${record.custbody_customer_po_num}</td></tr>
+                                    <tr><th>Customer</th><td width="80%"> ${record.entity?replace("[0-9]", "", "r")}</td></tr>
+                                    <#if record.custbody_so_ff_incoterm?has_content><tr><th>Incoterm</th><td width="80%"> ${record.custbody_so_ff_incoterm}</td></tr></#if>
+                                    <#if record.custbody7?has_content><tr><th>Api Reference #</th><td width="80%"> ${record.custbody7}</td></tr></#if>
+                                </table>
+                            </td>
+                        </tr>
+
+                    </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer">
+                    <tr>
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+
+            table {
+                font-size: 9pt;
+                table-layout: fixed;
+                font-family: sans-serif;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 8pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+            }
+
+            td {
+                padding: 4px 6px;
+            }
+
+                td p {
+                    align: left
+                }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+            }
+
+
+
+            table.footer td {
+                padding: 0;
+                font-size: 8pt;
+            }
+
+            table.itemtable th {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            td.addressheader {
+                font-size: 8pt;
+                font-weight: bold;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            td.address {
+                padding-top: 0;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.titleCommercial {
+                font-size: 18pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+
+            span.itemname {
+                font-weight: bold;
+                line-height: 150%;
+            }
+
+            div.returnform {
+                width: 100%;
+                /* To ensure minimal height of return form */
+                height: 200pt;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+
+            hr {
+                border-top: 1px dashed #d3d3d3;
+                width: 100%;
+                color: #ffffff;
+                background-color: #ffffff;
+                height: 1px;
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                word-wrap: break-word; /* All browsers since IE 5.5+ */
+                overflow-wrap: break-word;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.linetb {
+                border-collapse: collapse;
+            }
+
+                table.linetb td, table.linetb th {
+                    border: 1px;
+                }
+
+            table.serial {
+                border-collapse: collapse;
+            }
+
+                table.serial td, table.serial th {
+                    border: 1px;
+                }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="20%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+
+        <#assign curr_symbol=record.currencycode>
+            <#if record.currencycode='USD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencycode='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencycode='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+            <#if record.currencycode='ILS'>
+                <#assign curr_symbol='₪'>
+            </#if>
+
+            <br />
+            <#assign shipaddress =record.shipaddress>
+            <#if record.custbody_end_customer_address !="">
+                 <#assign shipaddress =record.custbody_end_customer_address>
+            </#if>
+            <table style="width: 100%; margin-top: 10px;">
+                <tr>
+                    <td class="addressheader">Ship To:</td>
+                    <td class="addressheader">Bill To:</td>
+
+                </tr>
+                <tr>
+                    <td class="address">${shipaddress}</td>
+                    <td class="address">${record.createdfrom.billaddress}</td>
+
+                </tr>
+            </table>
+            <br />
+
+
+            <#assign total=0>
+                <#assign lineCount=0>
+                    <table style="width:680px;margin-top: -20px;" class="linetb">
+                        <!-- start items -->
+                        <#list record.item as item>
+                            <#if item_index=0>
+
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Line</th>
+                                        <th colspan="8">P/N</th>
+                                        <th colspan="6">Description</th>
+                                        <th colspan="2">QTY </th>
+                                        <th colspan="3">UM</th>
+                                        <th colspan="6">Unit Price</th>
+                                        <th colspan="6">Amount</th>
+
+
+                                    </tr>
+                                </thead>
+                            </#if>
+                            <#if item.kitlevel?length=0>
+                                <#if item.inventorydetail !="0">
+                                    <#assign lineCountInventory=1>
+                                </#if>
+
+
+                                <#assign lineCount=lineCount+1>
+                                    <#if item.custcol_parent_grop !="" && lastParent !=item.custcol_parent_grop>
+                                        <#assign lastParent=item.custcol_parent_grop>
+                                            <tr>
+
+
+                                                <td colspan="34" align="center" style="white-space:pre-line;text-align:justify;text-justify:none;">${item.custcol_parent_grop}</td>
+
+
+
+                                            </tr>
+                                    </#if>
+
+                                    <tr>
+
+
+                                        <#if record.custbody_amount_to_be_charge><#assign total=0><#else><#assign total=total +(item.quantity *item.custcol_custom_price)></#if>
+
+                                        <td colspan="2" style="text-align:justify; text-justify:none; ">    ${lineCount}    </td>
+                                        <td colspan="8" style="text-align:justify; text-justify:none; ">    ${item.item}    </td>
+                                        <td colspan="6" style="white-space:pre-line;text-align:justify;text-justify:none;">${item.description}</td>
+                                        <td colspan="2" style="text-align:justify; text-justify:none; ">    ${item.quantity}    </td>
+                                        <td colspan="3" style="text-align:justify; text-justify:none; ">${item.unitsdisplay}</td>
+                                        <td colspan="6" style="text-align:justify; text-justify:none; ">${item.custcol_custom_price}</td>
+                                        <td colspan="6" style="text-align:justify; text-justify:none; ">${curr_symbol}<#if record.custbody_amount_to_be_charge>0.00<#else>${(item.quantity *item.custcol_custom_price)?string[",##0.00"]}</#if></td>
+
+
+                                    </tr>
+
+                            </#if>
+
+                        </#list><!-- end items -->
+
+
+                        <tr>
+                            <td colspan="21" rowspan="2" style="text-align:justify; text-justify:none; border:0"></td>
+                            <td colspan="6" rowspan="2" style="text-align:justify; text-justify:none;background-color: #edeaea; ">Total:</td>
+                            <td colspan="6" rowspan="2" style="text-align:justify; text-justify:none;background-color: #edeaea; ">${curr_symbol}${total?string[",##0.00"]}</td>
+                        </tr>
+
+                        <tr></tr>
+
+
+
+
+
+                    </table>
+
+                    <#if record.custbody_geo_country="United States">
+                        <br />
+                        <p>
+                            ${record.custbody_declaration}
+                        </p>
+
+                    </#if>
+                    <#if record.custbody_geo_country="United Kingdom">
+                        <br />
+                        <p>
+                            ${record.custbody_declaration_uk}
+                        </p>
+
+                    </#if>
+
+
+
+
+
+
+                    <br />
+                    <table>
+                        <#if record.custbody_pl_terms_and_conditions?has_content>
+                            <tr><td><p><b>TERMS &amp; CONDITIONS:</b> <br /> ${record.custbody_pl_terms_and_conditions}</p></td></tr>
+                        </#if>
+                        <#if record.custbody_pl_comments?has_content>
+                            <tr><td><p><b>Comments:</b> <br /> ${record.custbody_pl_comments}</p></td></tr>
+                        </#if>
+                    </table>
+
+    </body>
+</pdf>

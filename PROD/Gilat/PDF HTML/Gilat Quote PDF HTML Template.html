@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+       <#function toNumber val>
+        <#if val?? && val?has_content>
+            <#if val?is_number>
+                <#return val>
+            </#if>
+            <#return (val?replace("[^0-9.]", "" , "r" ))?number>
+        </#if>
+        <#return 0>
+    </#function>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://4998343-sb2.app.netsuite.com/c.4998343_SB2/suitebundle43003/lib/Font/Heb-Regular.ttf" />
+
+            <#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=45&amp;c=4998343&amp;h=32ad81b415aeeb29c2a9">           
+            <#if record.subsidiary=="Satcom">
+            <#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=1657&amp;c=4998343&amp;h=399b18d92f2986898451">
+            <#elseif record.subsidiary=="Gilat Ghana Ltd.">
+            <#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=1658&amp;c=4998343&amp;h=740edb7c2235d48b5138">
+            <#elseif record.subsidiary=="Gilat Uganda Ltd."><#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=1661&amp;c=4998343&amp;h=e8bd0fcda7eed0498c25">
+            <#elseif record.subsidiary=="GAYA Ltd"><#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=1669&amp;c=4998343&amp;h=f0cec764522e31474d6f">
+            <#elseif record.subsidiary=="Gilat Nigeria LTD"><#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=1659&amp;c=4998343&amp;h=376b3e2a4f207512beff">
+            <#elseif record.subsidiary=="Gilat Zambia Ltd."><#assign logo="https://4998343.app.netsuite.com/core/media/media.nl?id=1662&amp;c=4998343&amp;h=1ffa0acef3050c7fe77f">
+            </#if>
+            <macrolist>
+                <macro id="nlheader">
+                    <table class="header" style="width: 100%;" padding="0.5in 0.5in 0.3in 0.5in">
+                        <tr>
+
+                            <td rowspan="3"><img src="${logo}" style="float: left; margin: 7px" /> </td>
+                            <td align="right"><span class="title"></span></td>
+                        </tr>
+                    </table>
+                </macro>
+                <macro id="nlfooter">
+                    <table class="footer" style="width: 100%;" align="center">
+                        <tr>
+                            <td align="center">
+                                ${subsidiary.mainaddress_text?replace("<br />" , " ")} <br />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span class="pink">T:</span> ${subsidiary.custrecord_contact_phone_number} <!--<span class="pink">F:</span> ${subsidiary.fax}--> <span class="pink">E:</span> ${subsidiary.email} <span class="pink">|</span> www.gilat.net
+                            </td>
+
+                        </tr>
+                    </table>
+                    <hr />
+                </macro>
+            </macrolist>
+            <style type="text/css">
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: sans-serif;
+                }
+
+
+                table {
+                    font-size: 9pt;
+                    table-layout: fixed;
+                }
+
+                th {
+                    font-weight: bold;
+                    vertical-align: middle;
+                    padding: 5px 6px 3px;
+                    background-color: #e3e3e3;
+                    color: #333333;
+                }
+
+                td {
+                    padding: 4px 6px;
+                }
+
+                    td p {
+                        align: left
+                    }
+
+                b {
+                    font-weight: bold;
+                    color: #333333;
+                }
+
+                table.header td {
+                    padding: 0;
+                    font-size: 10pt;
+                }
+
+                table.footer td {
+                    padding: 0;
+                    font-size: 8pt;
+                }
+
+                table.itemtable {
+                    font-size: 13px
+                }
+
+                    table.itemtable th {
+                        padding-bottom: 10px;
+                        padding-top: 10px;
+                    }
+
+                hr {
+                    width: 100%;
+                    color: #ff1a75;
+                    background-color: #ff1a75;
+                    height: 55px;
+                }
+
+                span.pink {
+                    color: #ff1a75
+                }
+            </style>
+</head>
+    <body header="nlheader" header-height="15%" footer="nlfooter" footer-height="40pt" size="A4">
+
+        <#assign recurring_period=1>
+            <#if record.custbody_recurring_period=="Quarterly"> <#assign recurring_period=3>
+            <#elseif record.custbody_recurring_period=="Annual"> <#assign recurring_period=12>
+            <#elseif record.custbody_recurring_period=="Semiannual"> <#assign recurring_period=6>
+            </#if>
+
+            <#assign curr_symbol=record.currencysymbol>
+                <#if record.currencysymbol='USD'>
+                    <#assign curr_symbol='$'>
+                </#if>
+                <#if record.currencysymbol='GBP'>
+                    <#assign curr_symbol='£'>
+                </#if>
+                <#if record.currencysymbol='EUR'>
+                    <#assign curr_symbol='€'>
+                </#if>
+                <#if record.currencysymbol='ILS'>
+                    <#assign curr_symbol='₪'>
+                </#if>
+
+                
+                    
+                    <h2 align="center"> Quotation Reference ${record.tranid}</h2>
+                    
+                     <table style="width: 100%; margin-top: 10px;line-height: 15px; font-size:12px" padding="0.2in 0.5in 0.2in 0.5in">
+                    <tr>
+                        <td align="left">
+                            <p>Customer Name : ${record.entity.companyname}</p>
+                        </td>
+                        <td align="left" rowspan="4">
+                            <p>Company Address : <br /> ${record.billaddress}</p>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <p>Date : ${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <p>Email Address : ${record.entity.email}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <p >Phone : ${record.entity.phone}</p>
+                        </td>
+                    </tr>
+
+                </table>
+
+                    
+
+                      <#if record.item?has_content>
+                        <table class="itemtable" style="width: 100%;margin-top: 10px;" padding="0in 0.5in 0in 0.5in">
+
+
+                            <thead>
+                                <tr>
+                                    <th colspan="10">Service/product description</th>
+                                    <th colspan="3" align="right" style="text-align: right">Quantity</th>
+                                    <th colspan="1" align="right" style="text-align: right"></th>
+                                    <#if record.custbody_present_unit_price> <th colspan="7">Unit Price</th></#if>
+                                    <th colspan="7">Price</th>
+
+                                </tr>
+                            </thead>
+
+
+                        </table>
+                    </#if>                 
+           <#if record.item?has_content>
+                    <table class="itemtable" style="width: 100%;  margin-top: 10px;" padding="0in 0.5in 0in 0.5in">
+                        <!-- start items -->
+                        <#assign recurrent=0>
+                        <#assign previous=0>                                        
+                                    <#list record.item as item>
+                                        <#if item.custcol_charging_method=="Recurrent" && (item.custcol_action_type=="Deactivate" || item.custcol_action_type=="Suspend")>
+                                            <#if recurrent==0>
+                                                <tr>
+                                                    <td colspan="10" line-height="150%" style=" font-weight: bold">${record.custbody_recurring_period} Recurring Charges (MRC) <br /> Previous Services</td>
+                                                    <td colspan="3"></td>
+                                                    <td colspan="1"></td>
+                                                    <#if record.custbody_present_unit_price><td colspan="7"></td></#if>
+                                                    <td colspan="7"></td>
+                                                </tr>
+                                                <#assign recurrent=1>
+                                                <#assign previous=1>
+                                            </#if>                           
+                                            <#assign amount=0>                                                                                                                                                                                
+                                            <tr>
+                                                <td colspan="10" line-height="150%">${item.description}</td>
+                                                <td colspan="3" align="right" style="text-align: right">-${item.quantity}</td>
+                                                 <td colspan="1"></td>
+                                                <#if record.custbody_present_unit_price><td colspan="7">${curr_symbol} ${toNumber(item.rate)?string[",##0.00"]}</td></#if>
+                                                <td colspan="7">${curr_symbol} ${amount?string[",##0.00"]}</td>
+                                            </tr>                                            
+                                        </#if>
+                                    </#list><!-- end items -->                                    
+                    </table>
+                </#if>
+
+                <#if record.item?has_content>
+                    <table class="itemtable" style="width: 100%;  margin-top: 10px;" padding="0in 0.5in 0in 0.5in">
+                        <!-- start items -->
+                        <#assign recurrent=0>
+                            <#assign totalAmountRecurrent=0>
+                                <#assign totalTaxRecurrent=0>
+                                    <#list record.item as item>
+                                        <#if item.custcol_charging_method=="Recurrent" &&  item.custcol_action_type !="Deactivate" && item.custcol_action_type !="Suspend">
+                                            <#if recurrent==0>
+                                                <tr>
+                                                    <td colspan="10" line-height="150%" style=" font-weight: bold"><#if previous==1>New Services<#else>${record.custbody_recurring_period} Recurring Charges (MRC)</#if></td>
+                                                    <td colspan="3"></td>
+                                                    <td colspan="1"></td>
+                                                    <#if record.custbody_present_unit_price><td colspan="7"></td></#if>
+                                                    <td colspan="7"></td>
+                                                </tr>
+                                                <#assign recurrent=1>
+
+                                            </#if>                                                                                            
+                                            <#assign amount=item.amount * recurring_period>                                           
+                                            <#assign totalAmountRecurrent=totalAmountRecurrent+ amount>
+                                            <#assign tax=item.tax1amt * recurring_period>
+                                            <#assign totalTaxRecurrent=totalTaxRecurrent+ tax>
+                                            <tr>
+                                                <td colspan="10" line-height="150%">${item.description}</td>
+                                                <td colspan="3" align="right" style="text-align: right">${item.quantity}</td>
+                                                 <td colspan="1"></td>
+                                                <#if record.custbody_present_unit_price><td colspan="7">${curr_symbol} ${toNumber(item.rate)?string[",##0.00"]}</td></#if>
+                                                <td colspan="7">${curr_symbol} ${amount?string[",##0.00"]}</td>
+                                            </tr>
+                                        </#if>
+                                    </#list><!-- end items -->
+                                    <#if recurrent==1>
+                                        <tr>
+                                            <td colspan="10" line-height="150%" style=" font-weight: bold"><#if previous==1>New<#else>Total</#if> ${record.custbody_recurring_period} Recurring Charges</td>
+                                            <td colspan="3"></td>
+                                            <td colspan="1"></td>
+                                            <#if record.custbody_present_unit_price> <td colspan="7"></td></#if>
+                                            <td colspan="7">${curr_symbol} ${totalAmountRecurrent?string[",##0.00"]}</td>
+                                        </tr>
+                                    </#if>
+                    </table>
+                </#if>
+
+                <#if record.item?has_content>
+                                <!-- one time items -->
+                                <table class="itemtable" style="width: 100%; margin-top: 10px;" padding="0in 0.5in 0in 0.5in">
+                                    <!-- start items -->
+                                    <#assign one_time=0>
+                                        <#assign totalAmountOneTime=0>
+                                            <#assign totalTaxOneTime=0>
+                                                <#list record.item as item>
+                                                    <#if item.custcol_charging_method=="One Time" && item.item !="DEPNEW Deposit From Customer">
+                                                        <#if one_time==0>
+                                                            <tr>
+                                                                <td colspan="10" line-height="150%" style=" font-weight: bold">One time Charge</td>
+                                                                <td colspan="3"></td>
+                                                                <td colspan="1"></td>
+                                                                <#if record.custbody_present_unit_price>  <td colspan="7"></td></#if>
+                                                                <td colspan="7"></td>
+                                                            </tr>
+                                                            <#assign one_time=1>
+
+                                                        </#if>
+                                                        <#if item.custcol_action_type=="Deactivate" || item.custcol_action_type=="Suspend">
+                                                            <#assign amount=0>
+                                                                <#else> <#assign amount=item.amount>
+                                                        </#if>
+                                                        <#assign totalAmountOneTime=totalAmountOneTime+ amount>
+                                                            <#assign totalTaxOneTime=totalTaxOneTime+ item.tax1amt>
+                                                                <tr>
+                                                                    <td colspan="10" line-height="150%">${item.description}</td>
+                                                                    <td colspan="3" align="right" style="text-align: right">
+                                                                        <#if item.custcol_action_type=="Deactivate" || item.custcol_action_type=="Suspend">
+                                                                            -${item.quantity}
+                                                                            <#else>${item.quantity}
+                                                                        </#if>
+                                                                    </td>
+                                                                     <td colspan="1"></td>
+                                                                    <#if record.custbody_present_unit_price>   <td colspan="7">${curr_symbol} ${toNumber(item.rate)?string[",##0.00"]}</td></#if>
+                                                                    <td colspan="7">${curr_symbol} ${amount?string[",##0.00"]}</td>
+                                                                </tr>
+                                                    </#if>
+                                                </#list><!-- end items -->
+                                                <#if one_time==1>
+                                                    <tr>
+                                                        <td colspan="10" line-height="150%" style=" font-weight: bold">Total One Time</td>
+                                                        <td colspan="3"></td>
+                                                        <td colspan="1"></td>
+                                                        <#if record.custbody_present_unit_price> <td colspan="7"></td></#if>
+                                                        <td colspan="7">${curr_symbol} ${totalAmountOneTime?string[",##0.00"]}</td>
+                                                    </tr>
+                                                </#if>
+
+
+                                </table>
+                            </#if>
+
+                 <#if record.item?has_content>
+                                <!-- Deposit -->
+                                <table class="itemtable" style="width: 100%; margin-top: 10px;" padding="0in 0.5in 0in 0.5in">
+                                    <!-- start items -->
+                                    <#assign deposit=0>
+                                        <#assign totalAmountDeposit=0>
+
+                                            <#list record.item as item>
+
+                                                <#if item.item=="DEPNEW Deposit From Customer">
+                                                    <#if deposit==0>
+                                                        <tr>
+                                                            <td colspan="10" line-height="150%" style=" font-weight: bold">Deposit</td>
+                                                            <td colspan="3"></td>
+                                                            <td colspan="1"></td>
+                                                            <#if record.custbody_present_unit_price> <td colspan="7"></td></#if>
+                                                            <td colspan="7"></td>
+                                                        </tr>
+                                                        <#assign deposit=1>
+
+                                                    </#if>
+                                                    <#assign totalAmountDeposit=totalAmountDeposit+ item.amount>
+
+                                                        <tr>
+                                                            <td colspan="10" line-height="150%">${item.description}</td>
+                                                            <td colspan="3" align="right" style="text-align: right">${item.quantity}</td>
+                                                            <td colspan="1"></td>
+                                                            <#if record.custbody_present_unit_price>  <td colspan="7">${curr_symbol} ${toNumber(item.rate)?string[",##0.00"]}</td></#if>
+                                                            <td colspan="7">${curr_symbol} ${item.amount?substring(1,item.amount?length )}</td>
+                                                        </tr>
+                                                </#if>
+                                            </#list><!-- end items -->
+                                            <#if deposit=1>
+                                                <tr>
+                                                    <td colspan="10" line-height="150%" style=" font-weight: bold">Total Deposit</td>
+                                                    <td colspan="3"></td>
+                                                    <td colspan="1"></td>
+                                                    <#if record.custbody_present_unit_price>   <td colspan="7"></td></#if>
+                                                    <td colspan="7">${curr_symbol} ${totalAmountDeposit?string[",##0.00"]}</td>
+                                                </tr>
+                                            </#if>
+
+
+                                </table>
+                            </#if>
+
+
+                <table class="itemtable" style="width: 100%; margin-top: 10px;" padding="0in 0.5in 0in 0.5in">
+
+                    <tr>
+                        <td colspan="10" line-height="150%" style=" font-weight: bold">Sub Total</td>
+                        <td colspan="3"></td>
+                        <td colspan="1"></td>
+                        <#if record.custbody_present_unit_price>  <td colspan="7"></td></#if>
+                        <td colspan="7">${curr_symbol} ${(totalAmountOneTime+totalAmountRecurrent + totalAmountDeposit)?string[",##0.00"]}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" line-height="150%" style=" font-weight: bold">VAT</td>
+                        <td colspan="3"></td>
+                        <td colspan="1"></td>
+                        <#if record.custbody_present_unit_price> <td colspan="7"></td></#if>
+                        <td colspan="7"> ${curr_symbol} ${(totalTaxOneTime+totalTaxRecurrent)?string[",##0.00"]}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" line-height="150%" style=" font-weight: bold">Grand Total</td>
+                        <td colspan="3"></td>
+                        <td colspan="1"></td>
+                        <#if record.custbody_present_unit_price>      <td colspan="7"></td></#if>
+                        <td colspan="7">${curr_symbol} ${((totalAmountOneTime+totalAmountRecurrent + totalAmountDeposit)+(totalTaxOneTime+totalTaxRecurrent))?string[",##0.00"]}</td>
+                    </tr>
+                </table>
+
+
+                            <!--<pbr>
+        </pbr>-->
+                            <div padding="0.5in 0.5in 0.3in 0.5in">
+
+                                <#if record.custbody_print_tc_links>
+                                    <table style="width:100%;font-size:14px">
+                                        <tr>
+                                            <td>
+                                                Subject to Gilat’s general terms and conditions: <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="${record.custbody_service_terms_link@url}" rel="link">
+                                                    ${record.custbody_service_tc_doc_type}
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="${record.custbody_equipment_terms_link@url}" rel="link">
+                                                    ${record.custbody_equipment_tc_doc_type}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <br />
+                                                Service Level Agreeent may be found on: <br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="${record.custbody_sla_doc_link@url}" rel="link">
+                                                    ${record.custbody_sla_doc_type}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </#if>
+
+                                <br />
+
+                                <table style="width:100%;font-size:14px">
+                                    <tr>
+                                        <td>
+                                            Valid for 30 days
+                                        </td>
+                                    </tr>
+                                    <#if record.custbody_connection_period_in_months?has_content>
+                                        <tr>
+                                            <td>
+                                                Initial terms: ${record.custbody_connection_period_in_months} months
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.entity.terms?has_content>
+                                        <tr>
+                                            <td>
+                                                Payment Terms (select):
+                                                ${record.entity.terms}
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custbody_proposal_additional_text?has_content>
+                                        <tr>
+                                            <td>
+
+                                                Comments: <br />
+                                                ${record.custbody_proposal_additional_text}
+                                            </td>
+                                        </tr>
+                                    </#if>
+
+
+
+                                </table>
+                            </div>
+
+
+</body>
+</pdf>

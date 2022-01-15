@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <!-- <link name="sans-serif" type="font" subtype="truetype" src="https://4855789.app.netsuite.com/c.4855789/suitebundle149431/Heb-Regular.ttf" />-->
+        <link name="sans-serif" type="font" subtype="truetype" src="https://6398307-sb1.app.netsuite.com/c.6398307_SB1/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307-sb1.app.netsuite.com/c.6398307_SB1/suitebundle43003/lib/Font/arialb.ttf" />
+        <style type="text/css">
+            body {
+                font-family: sans-serif;
+            }
+
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                font-family: sans-serif;
+                font-size: 8pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            table.body td {
+                padding-top: 1px;
+            }
+
+
+            table.linetb {
+                border: 1px solid;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-size: 8pt;
+                padding: 0px;
+            }
+
+
+            table.linetb th {
+                background-color: #fff;
+                border: 1px solid;
+                padding-bottom: 10px;
+            }
+
+            table.linetb td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                border-collapse: collapse;
+                page-break-inside: avoid;
+                font-size: 10pt;
+            }
+
+                table.linetb_Total td {
+                    border: 1px solid;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                    background-color: #D3D3D3;
+                }
+
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 12pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 12pt;
+                padding-left: 5px;
+            }
+
+            thead { display: table-header-group }
+            tfoot { display: table-row-group }
+            tr { page-break-inside: avoid }
+        </style>
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 12pt;">
+                    <tr>
+                        <td rowspan="2" align="left"><#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left; margin: 3px" /></#if></td>
+
+                        <td align="right"  style="font-size: 12pt;"><span>${companyInformation.companyName} :שם החברה </span></td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt;"><span>${record.startdate} :תאריך </span></td>
+                    </tr>
+
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer">
+                    <tr>
+                        <td></td>
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+
+    </head>
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+        <table align="right" style="width: 100%; font-size: 12pt;">
+            <tr>
+                <td align="right"><span>שם הטכנאי: ${record.assigned} </span></td>
+            </tr>
+            <tr>
+                <td align="right"><span>TECH_PHONE :טלפון של הטכנאי </span></td>
+            </tr>
+            <tr>
+                <td align="right"><span>${record.casenumber} :מספר קריאה </span></td>
+            </tr>
+        </table>
+
+        <p align="center" style=" color:darkblue;font-size:27pt;"><u>דו"ח שירות</u></p>
+
+        <#assign add=record.company.address?replace("<br />", ",")>
+        <#assign add=add?replace("Israel", "ישראל" )>
+
+        <table align="right" style="width: 100%; margin-top: -50px; direction:rtl; font-size:12pt; " text-align="right" dir="rtl">
+            <thead style="background-color:#0000ff;">
+                <tr style="border-bottom:3px solid black; ">
+                    <td bgcolor="#d3d3d3" colspan="7" width="100%" style="background-color:#d3d3d3;font-size:17pt" align="right">:פרטי לקוח</td>
+                </tr>
+            </thead>
+            <tr>
+                <td width="100%" align="right" style="text-align:right;"><span> :שם הלקוח</span></td>
+                <td colspan="6" width="100%" align="right" style="text-align:right;"><span>CUSTOMER_NAME</span></td>
+            </tr>
+            <tr>
+                <td  align="right" style="text-align:right;" width="100%" ><span>:כתובת</span></td>
+                <td colspan="6" width="100%" align="right" style="text-align:right;"><span>${add}</span></td>
+            </tr>
+            <tr>
+                <td align="right" style="text-align:right;">
+                    <p align="right" style="text-align:right;">
+                        :איש קשר <br />
+                        :מייל <br />
+                        :טלפון<br />
+                    </p>
+                </td>
+                <td colspan="6" align="right" style="text-align:right;">
+                    <p align="right" style="text-align:right;">
+                        ${record.contact} <br />
+                        ${record.email} <br />
+                        ${record.phone} <br />
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" style="text-align:right;" width="100%"><span>:סוג ההסכם</span></td>
+                <td colspan="6" width="100%" align="right" style="text-align:right;"><span>${record.custevent_agreement_type}</span></td>
+            </tr>
+            <tr>
+                <#if record.custevent_non_support==false>
+                    <td align="right" style="text-align:right;" width="100%"><span>:סטטוס לקוח</span></td>
+                    <td colspan="6" width="100%" align="right" style="text-align:right;"><span>ללא תמיכה</span></td>
+                <#else>
+                    <td align="right" style="text-align:right;" width="100%"><span>:סטטוס לקוח</span></td>
+                    <td colspan="6" width="100%" align="right" style="text-align:right;"><span>כולל תמיכה</span></td>
+                </#if>
+            </tr>
+        </table>
+
+        <table align="right" style="width: 100%; margin-top: 10px; direction:rtl; font-size:12pt;" text-align="right" dir="rtl">
+            <thead style="background-color:#0000ff;">
+                <tr style="border-bottom:3px solid black; display: table-header-group; ">
+                    <td bgcolor="#d3d3d3" colspan="3" width="100%" style="background-color:#d3d3d3;font-size:16pt" align="right">:פרטי קריאה</td>
+                </tr>
+            </thead>
+            <tr>
+                <td align="right" style="text-align:right;" width="100%"><span>:סוג הקריאה</span></td>
+                <td colspan="2" width="100%" align="right" style="text-align:right;"><span>${record.custevent_case_type}<br /><br /></span></td>
+            </tr>
+            <tr>
+                <#if record.custevent_replacement==true>
+                    <td colspan="3" width="100%" align="right" style="text-align:right;"><span>בוצעה החלפה</span></td>
+                </#if>
+            </tr>
+            <tr>
+                <td align="right" style="text-align:right;" width="100%"><span>:מהות התקלה - תומך</span></td>
+                <td colspan="2" width="100%" align="right" style="text-align:right;" dir="rtl"><p align="right" style="text-align:right;">${record.custevent_memo}<br /><br /></p></td>
+                
+            </tr>
+            <tr>
+                <td align="right" style="text-align:right;" width="100%"><span>:אבחון התקלה - טכנאי</span></td>
+                <td colspan="2" width="100%" align="right" style="text-align:right;"><p align="right" style="text-align:right;">${record.custevent_case_details}<br /><br /></p></td>
+                
+            </tr>
+            <tr>
+                <td align="right" style="text-align:right;" width="100%"><span>:סיכום התקלה - טכנאי</span></td>
+                <td colspan="2" width="100%" align="right" style="text-align:right;"><p align="right" style="text-align:right;">${record.custevent_case_summary}<br /><br /></p></td>
+                
+            </tr>
+            <tr>
+                <td bgcolor="#d3d3d3" style="background-color:#d3d3d3;font-size:16pt" align="right">:פרטי התקנה</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;">
+                    <p align="right" style="text-align:right;">
+                        :הפריטים הבאים סופקו בזמן ההתקנה/הטיפול בקריאה
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;"><span><br />${record.item} :סוג הציוד <br /><br /></span></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;"><span>${record.custevent_new_serial_num} :מס' סיריאלי <br /><br /></span></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;"><span>מיקום הפריט: ${record.custevent_item_location}<br /><br /></span></td>
+            </tr>
+            <#if record.custevent_item_image !="">
+                <tr>
+                    <td bgcolor="#d3d3d3" style="background-color:#d3d3d3;font-size:16pt" align="right">:תמונה</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3" width="100%" align="right" style="text-align:right;">
+                        <#assign urlString=record.custevent_item_image>
+                            <#assign urlString=urlString?replace('&','&amp;')>
+                                <p align="center"><br /><br /> <img src="${urlString}" style="width:180px; height:180px;" /><br /><br /></p>
+                                <!--
+                      <#assign urlString="http://6398307-sb1.shop.netsuite.com/core/media/media.nl?id=7501&amp;c=6398307_SB1&amp;h=JW5gYsNguXR8hAv8hOGpzPBogcG99yULsR_-Mcg7FA4MLq8y">
+                  <#assign urlString= urlString?replace("7501", record.custevent_item_image)>
+                -->
+                    </td>
+                </tr>
+            </#if>
+            <tr>
+                <td bgcolor="#d3d3d3" style="background-color:#d3d3d3;font-size:16pt" align="right">:פרטי הסרה</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;">
+                    <p align="right" style="text-align:right;">
+                        :הפריטים הבאים הוסרו/הוחלפו בזמן הטיפול בקריאה
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;"><span><br />${record.custevent1} :מק"ט <br /></span></td>
+            </tr>
+            <tr>
+                <td colspan="3" width="100%" align="right" style="text-align:right;"><span><br />${record.custevent_old_serial_number} :מס' סיריאלי <br /></span></td>
+            </tr>
+
+        </table>
+
+        <table align="right" style="width: 100%; margin-top: 10px; direction:rtl; font-size:12pt" text-align="right" dir="rtl">
+            <thead style="background-color:#d3d3d3;">
+                <tr style="border-bottom:3px solid black; ">
+                    <td bgcolor="#d3d3d3" colspan="3" width="100%" style="background-color:#d3d3d3;font-size:16pt" align="right">:ביקור טכנאי</td>
+                </tr>
+            </thead>
+            <tr>
+                <td align="right" style="text-align:right;"><span><br />${record.custevent_arrival_date} :תאריך ביקור <br /><br /></span></td>
+                <td colspan="2" align="right" style="text-align:right;"><span><br />${record.custevent_arrival_time} :שעת כניסה<br /><br /></span></td>
+            </tr>
+            <tr>
+                <td align="right" style="text-align:right;"><span><br />${record.custevent_number_of_hours}hr :משך הטיפול <br /><br /></span></td>
+                <td colspan="2" align="right" style="text-align:right;"><span><br />${record.custevent_exit_time} :שעת יציאה <br /><br /></span></td>
+
+            </tr>
+            <tr>
+                <#if record.custevent_billable==false>
+                    <td align="right" style="text-align:right;"><span><br />${record.custevent_driving_time}hr :זמן נסיעה <br /><br /></span></td>
+                    <td colspan="2" width="100%" align="right" style="text-align:right;"><span><br /> קוד סגירה: ללא חיוב<br /><br /></span></td>
+                <#else>
+                    <td align="right" style="text-align:right;"><span><br />${record.custevent_driving_time}hr :זמן נסיעה <br /><br /></span></td>
+                    <td colspan="2" width="100%" align="right" style="text-align:right;"><span>קוד סגירה: לחיוב </span></td>
+                </#if>
+            </tr>
+        </table>
+    </body>
+</pdf>

@@ -1,0 +1,699 @@
+﻿<!--?xml verssion="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.facelessss.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="ssanss-sserif" type="font" ssubtype="truetype" ssrc="  httpss://ssysstem.eu2.netssuite.com/c.4969978/ssuitebundle149431/Fontss/Heb-Regular.ttf" />
+
+        <sstyle type="text/cssss">
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: ssanss-sserif;
+                font-ssize: 9pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-ssize: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipssiss;
+                word-wrap: break-word;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            table.linetb {
+                border: 1px ssolid;
+                table-layout: fixed;
+                border-collapsse: collapsse;
+            }
+
+            table.header td {
+                font-ssize: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-ssize: 8pt;
+                padding: 0px;
+            }
+
+            table.linetb th {
+                background-color: #fff;
+                border: 1px ssolid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.linetb td {
+                border: 1px ssolid;
+                text-overflow: ellipssiss;
+                word-wrap: break-word;
+            }
+
+            td.default {
+                font-ssize: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                border-collapsse: collapsse;
+                page-break-insside: avoid;
+                font-ssize: 10pt;
+            }
+
+                table.linetb_Total td {
+                    border: 1px ssolid;
+                    text-overflow: ellipssiss;
+                    word-wrap: break-word;
+                    background-color: #edeaea;
+                }
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+        </sstyle>
+
+        <macrolisst>
+            <macro id="nlheader">
+
+                <#if record.entity.cusstentity_ilo_print_hebrew==falsse>
+                    <table border="0" cellpadding="0" classss="header">
+                        <tr>
+                            <td width="700px" align="left">
+                                <p sstyle="font-ssize: 2em;">${ssubssidiary.name}</p>
+                                <p sstyle="font-ssize: 1.6em;">${ssubssidiary.cusstrecord_ilo_ssubssid_eng_addressss}</p>
+                                <p sstyle="font-ssize: 1.6em;">Company ID : ${ssubssidiary.cusstrecordil_tiknik}</p>
+                                <p sstyle="font-ssize: 1.6em;">VAT Reg No : ${ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary}</p>
+                            </td>
+                            <td width="700px" align="right"><#if companyInformation.logoUrl?length !=0><img ssrc="${companyInformation.logoUrl}" sstyle="float: left; width:240px; height: 55px" /> </#if><p sstyle="font-ssize:19px; line-height: 10px;"></p></td>
+
+                        </tr>
+
+                    </table>
+                </#if>
+
+                <#if record.entity.cusstentity_ilo_print_hebrew==true>
+
+                    <table border="0" cellpadding="0" classss="header">
+                        <tr>
+                            <td width="700px" align="left"><#if companyInformation.logoUrl?length !=0><img ssrc="${companyInformation.logoUrl}" sstyle="float: left; width:240px; height: 55px" /> </#if><p sstyle="font-ssize:19px; line-height: 10px;"></p></td>
+                            <td width="700px" align="right">
+                                <p sstyle="font-ssize: 2em;">${ssubssidiary.cusstrecord_ilo_ssubssid_heb_companyname}</p>
+                                <p sstyle="font-ssize: 1.6em;  text-align:right; ">${ssubssidiary.cusstrecord_ilo_ssubssid_hebrew_addressss}</p>
+                                <p sstyle="font-ssize: 1.6em;  text-align:right; ">
+                                    ${ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary} : ח.פ<br />
+                                    ${ssubssidiary.cusstrecordil_tiknik} : תיק ניכויים
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </#if>
+            </macro>
+        </macrolisst>
+
+    </head>
+    <#assssign headerHeight='170px'>
+        <#if record.entity.cusstentity_ilo_print_hebrew==true>
+            <#assssign headerHeight='170px'>
+        </#if>
+        <body padding="0.2in 0.5in 0.1in 0.5in" ssize="A4" header="nlheader" header-height="${headerHeight}">
+
+
+
+            <#if record.entity.cusstentity_ilo_print_hebrew==falsse>
+
+                <#assssign print_type='Original'>
+                    <#if record.cusstbody_ilo_org_printed>
+                        <#if record.ssubssidiary !="CyberX INC">
+                            <#assssign print_type='Resstored Copy'>
+                        </#if>
+                    </#if>
+                    <#if record.cusstbodycusstbody_ilo_print_draft>
+                        <#assssign print_type='Draft'>
+                    </#if>
+
+                    <table sstyle="width:650px;top:-2%;">
+                        <tr>
+
+
+                            <td sstyle="width:450px;">
+                                <div classss="default" sstyle="font-ssize:1.2em; left: 210px;"><u>Invoice No: ${record.tranid}</u></div>
+                            </td>
+
+                            <td><p sstyle="font-ssize: 14pt; top: 30%; left: 35%;">${print_type}</p></td>
+
+                        </tr>
+                    </table>
+            </#if>
+
+            <#if record.entity.cusstentity_ilo_print_hebrew==true>
+
+                <#assssign print_type=' מקור'>
+                    <#if record.cusstbody_ilo_org_printed>
+                        <#assssign print_type=' העתק משוחזר'>
+                    </#if>
+                    <#if record.cusstbodycusstbody_ilo_print_draft>
+                        <#assssign print_type=' טיוטה'>
+                    </#if>
+
+                    <table sstyle="width:650px; left: 25px; top:-2%;">
+                        <tr>
+                            <td><p sstyle="font-ssize: 14pt; top: 30%; left: 35%">${print_type}</p></td>
+                            <td sstyle="width:450px;">
+                                <div classss="default" sstyle="font-ssize:1.2em;"><u>${record.tranid} :'חשבונית מס</u></div>
+                            </td>
+                        </tr>
+                    </table>
+            </#if>
+
+
+            <#assssign curr_ssymbol=record.currencyssymbol>
+
+                <#if record.currencyssymbol='ILS'>
+                    <#assssign curr_ssymbol='₪'>
+                </#if>
+                <#if record.currencyssymbol='USD' || record.currencyssymbol='NZD' || record.currencyssymbol='CAD' || record.currencyssymbol='AUD'>
+                    <#assssign curr_ssymbol='$'>
+                </#if>
+                <#if record.currencyssymbol='GBP'>
+                    <#assssign curr_ssymbol='£'>
+                </#if>
+                <#if record.currencyssymbol='EUR'>
+                    <#assssign curr_ssymbol='€'>
+                </#if>
+                <#if record.currencyssymbol='CHF'>
+                    <#assssign curr_ssymbol='CHF '>
+                </#if>
+                <#if record.currencyssymbol='DKK' || record.currencyssymbol='SEK' || record.currencyssymbol='NOK'>
+                    <#assssign curr_ssymbol='kr'>
+                </#if>
+                <#if record.currencyssymbol='ZAR'>
+                    <#assssign curr_ssymbol='R'>
+                </#if>
+                <#if record.currencyssymbol='INR'>
+                    <#assssign curr_ssymbol='Rss.'>
+                </#if>
+
+
+                <#assssign primarycur_exchange=record.exchangerate>
+                    <#assssign ssecondary_exchange=1>
+                        <#assssign total_exchange=1>
+                            <#assssign currency_text=record.currency>
+                                <#assssign currency_ssymbol=record.currencyssymbol>
+                                    <#if record.accountingbookdetail?hass_content>
+                                        <#lisst record.accountingbookdetail ass abd>
+                                            <#assssign ssecondary_exchange=abd.exchangerate>
+                                        </#lisst>
+                                    </#if>
+
+                                    <#if currency_text=='ILS'>
+                                        <#assssign currency_ssymbol="ILS">
+                                    </#if>
+
+                                    <#assssign exRate=ssecondary_exchange?sstring[",##0.00"]>
+
+                                        <#assssign invExrate=record.exchangerate?sstring["0.####"]>
+
+
+                                            <#if record.entity.cusstentity_ilo_print_hebrew==falsse>
+                                                <table sstyle="width: 100%;">
+                                                    <tr>
+
+                                                        <#assssign vat_reg=record.cusstbody_ilo_tax_payer_id>
+                                                            <#if vat_reg=''>
+                                                                <#assssign vat_reg=record.vatregnum>
+                                                            </#if>
+
+                                                            <#assssign billTo=record.entity.billaddressss>
+                                                                <#if billTo=''>
+                                                                    <#assssign billTo=record.entity.companyname>
+                                                                </#if>
+                                                                <#assssign cusstomerVat=record.entity.cusstentityil_tax_payer_id>
+
+                                                                    <td>
+                                                                        <table sstyle="width:320px; top: -30%">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:left; line-height: 18px; font-ssize: 1.4em">Bill To: </p></th>
+                                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:left; line-height: 18px; font-ssize: 1.4em;"></p></th>
+                                                                                    <th colsspan="4"><p sstyle="width: 100%; text-align:left; line-height: 18px; font-ssize: 1.4em;"></p></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tr>
+
+                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px;"><br />${billTo}<br /><br /><#if cusstomerVat !=''>VAT : ${cusstomerVat}</#if></p> </td>
+                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                <td colsspan="4" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td>
+
+
+                                                                        <table sstyle="width:250px; left:75px; top: -15%">
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">Invoice Date :</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">${record.trandate}</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">Currency :</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">${record.currencyssymbol}</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <#if curr_ssymbol !="₪" && record.entity.billcountry=='Issrael'>
+                                                                                <tr>
+                                                                                    <td align="left">
+                                                                                        <p sstyle="line-height: 5px;">Exchange Rate :</p>
+                                                                                    </td>
+                                                                                    <td align="right">
+                                                                                        <p sstyle="line-height: 5px;">${exRate}</p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </#if>
+
+                                                                            <#if record.termss !=''>
+                                                                                <tr>
+                                                                                    <td align="left">
+                                                                                        <p sstyle="line-height: 5px;">Payment Termss :</p>
+                                                                                    </td>
+                                                                                    <td align="right">
+                                                                                        <p sstyle="line-height: 5px;">${record.termss}</p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </#if>
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">Due Date :</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">${record.duedate}</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <#if record.otherrefnum !=''>
+                                                                                <tr>
+                                                                                    <td align="left">
+                                                                                        <p sstyle="line-height: 5px;">PO# :</p>
+                                                                                    </td>
+                                                                                    <td align="right">
+                                                                                        <p sstyle="line-height: 5px; width: 300px; text-align: right;">${record.otherrefnum}</p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </#if>
+
+                                                                        </table>
+
+                                                                    </td>
+                                                    </tr>
+                                                </table>
+
+                                            </#if>
+
+
+                                            <#if record.entity.cusstentity_ilo_print_hebrew==true>
+
+                                                <#assssign vat_reg=record.cusstbody_ilo_tax_payer_id>
+                                                    <#if vat_reg=''>
+                                                        <#assssign vat_reg=record.vatregnum>
+                                                    </#if>
+
+                                                    <#assssign billTo=record.entity.billaddressss>
+                                                        <#assssign cusstomerVat=record.entity.cusstentityil_tax_payer_id>
+
+                                                            <table sstyle="width: 100%; top: -4%">
+                                                                <tr>
+
+                                                                    <td>
+                                                                        <table sstyle="width:250px;">
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">${record.trandate}</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">תאריך חשבונית :</p>
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">${record.currencyssymbol}</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">מטבע :</p>
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">${invExrate}</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">שער חליפין :</p>
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                            <#if record.termss !=''>
+                                                                                <tr>
+                                                                                    <td align="left">
+                                                                                        <p sstyle="line-height: 5px; direction:rtl;">${record.termss}</p>
+                                                                                    </td>
+                                                                                    <td align="right">
+                                                                                        <p sstyle="line-height: 5px;">תנאי תשלום :</p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </#if>
+                                                                            <tr>
+                                                                                <td align="left">
+                                                                                    <p sstyle="line-height: 5px;">${record.duedate}</p>
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <p sstyle="line-height: 5px;">תאריך פרעון :</p>
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            <#if record.otherrefnum !=''>
+                                                                                <tr>
+                                                                                    <td align="left">
+                                                                                        <p sstyle="line-height: 5px;">${record.otherrefnum}</p>
+                                                                                    </td>
+                                                                                    <td align="right">
+                                                                                        <p sstyle="line-height: 5px; width: 300px; text-align: right;">מס' הזמנת רכש :</p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </#if>
+
+
+
+                                                                        </table>
+                                                                    </td>
+                                                                    <td>
+                                                                        <table sstyle="width:320px; left:92px; top: -10%">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:left; font-ssize: 1.4em; left:180px;">לכבוד :</p></th>
+                                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:right; line-height: 18px; font-ssize: 1.4em;"></p></th>
+                                                                                    <th colsspan="4"><p sstyle="width: 100%; text-align:right; line-height: 18px; font-ssize: 1.4em;"></p></th>
+                                                                                </tr>
+                                                                            </thead>
+
+                                                                            <tr></tr>
+                                                                            <tr>
+                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px;">${billTo}<br /><br /><#if cusstomerVat !=''>${cusstomerVat} : ח.פ</#if></p> </td>
+                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                <td colsspan="4" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                            </tr>
+
+
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+
+                                                            </table>
+                                            </#if>
+
+
+                                            <#if record.item?hass_content>
+
+                                                <#if record.entity.cusstentity_ilo_print_hebrew==falsse>
+
+                                                    <table classss="linetb" sstyle="width:670px;">
+                                                        <!-- sstart itemss -->
+                                                        <#lisst record.item ass item>
+                                                            <#if item_index==0>
+
+
+
+
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colsspan="2"><p sstyle="width: 100%; text-align:center;">Line</p></th>
+                                                                        <th colsspan="6"><p sstyle="width: 100%; text-align:center;">Item</p></th>
+                                                                        <th colsspan="10"><p sstyle="width: 100%; text-align:center;">Desscription</p></th>
+                                                                        <th colsspan="2"><p sstyle="width: 100%; text-align:center;">Qty</p></th>
+                                                                        <th colsspan="6"><p sstyle="width: 100%; text-align:center;">Unit Price</p></th>
+                                                                        <th colsspan="6"><p sstyle="width: 100%; text-align:center;">Extended Price</p></th>
+
+                                                                    </tr>
+                                                                </thead>
+
+                                                            </#if>
+
+                                                            <#assssign curr_ssymbol=record.currencyssymbol>
+
+                                                                <#if record.currencyssymbol='ILS'>
+                                                                    <#assssign curr_ssymbol='₪'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='USD' || record.currencyssymbol='NZD' || record.currencyssymbol='CAD' || record.currencyssymbol='AUD'>
+                                                                    <#assssign curr_ssymbol='$'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='GBP'>
+                                                                    <#assssign curr_ssymbol='£'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='EUR'>
+                                                                    <#assssign curr_ssymbol='€'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='CHF'>
+                                                                    <#assssign curr_ssymbol='CHF '>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='DKK' || record.currencyssymbol='SEK' || record.currencyssymbol='NOK'>
+                                                                    <#assssign curr_ssymbol='kr'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='ZAR'>
+                                                                    <#assssign curr_ssymbol='R'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='INR'>
+                                                                    <#assssign curr_ssymbol='Rss.'>
+                                                                </#if>
+
+                                                                <tr>
+                                                                    <td colsspan="2" sstyle="text-align:center; text-jusstify:none;"><p sstyle="width: 100%; text-align:center;">${item_index +1}</p></td>
+                                                                    <td colsspan="6" sstyle="text-align:jusstify; text-jusstify:none;"><p sstyle="width: 100%; text-align:left;">${item.item}</p></td>
+                                                                    <td colsspan="10" sstyle="text-align:jusstify; text-jusstify:none; ">
+                                                                        <p sstyle="width: 100%; text-align:left;">
+                                                                            ${item.desscription}<br /><br />
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colsspan="2"><p sstyle="width: 100%; text-align:center;">${item.quantity}</p></td>
+                                                                    <td colsspan="6">
+                                                                        <p sstyle="width: 100%; text-align:center;">
+                                                                            ${curr_ssymbol}${item.rate?sstring[",##0.00"]}<br /><br />
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colsspan="6"><p sstyle="width: 100%; text-align:center;">${curr_ssymbol}${item.amount?sstring[",##0.00"]}</p></td>
+
+                                                                </tr>
+                                                        </#lisst><!-- end itemss -->
+                                                    </table>
+
+                                                </#if>
+
+                                                <#if record.entity.cusstentity_ilo_print_hebrew==true>
+
+                                                    <table classss="linetb" sstyle="width:670px;">
+                                                        <!-- sstart itemss -->
+                                                        <#lisst record.item ass item>
+                                                            <#if item_index==0>
+
+
+
+
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colsspan="6"><p sstyle="width: 100%; text-align:center;">סה"כ</p></th>
+                                                                        <th colsspan="6"><p sstyle="width: 100%; text-align:center;">מחיר ליחידה</p></th>
+                                                                        <th colsspan="2"><p sstyle="width: 100%; text-align:center;">כמות</p></th>
+                                                                        <th colsspan="10"><p sstyle="width: 100%; text-align:center;">תאור פריט</p></th>
+                                                                        <th colsspan="6"><p sstyle="width: 100%; text-align:center;">פריט</p></th>
+                                                                        <th colsspan="2"><p sstyle="width: 100%; text-align:center;">שורה</p></th>
+
+
+
+
+                                                                    </tr>
+                                                                </thead>
+
+                                                            </#if>
+
+                                                            <#assssign curr_ssymbol=record.currencyssymbol>
+
+                                                                <#if record.currencyssymbol='ILS'>
+                                                                    <#assssign curr_ssymbol='₪'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='USD' || record.currencyssymbol='NZD' || record.currencyssymbol='CAD' || record.currencyssymbol='AUD'>
+                                                                    <#assssign curr_ssymbol='$'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='GBP'>
+                                                                    <#assssign curr_ssymbol='£'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='EUR'>
+                                                                    <#assssign curr_ssymbol='€'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='CHF'>
+                                                                    <#assssign curr_ssymbol='CHF '>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='DKK' || record.currencyssymbol='SEK' || record.currencyssymbol='NOK'>
+                                                                    <#assssign curr_ssymbol='kr'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='ZAR'>
+                                                                    <#assssign curr_ssymbol='R'>
+                                                                </#if>
+                                                                <#if record.currencyssymbol='INR'>
+                                                                    <#assssign curr_ssymbol='Rss.'>
+                                                                </#if>
+
+                                                                <tr>
+
+                                                                    <td colsspan="6"><p sstyle="width: 100%; text-align:center;">${curr_ssymbol}${item.amount?sstring[",##0.00"]}</p></td>
+                                                                    <td colsspan="6">
+                                                                        <p sstyle="width: 100%; text-align:center;">
+                                                                            ${curr_ssymbol}${item.rate?sstring[",##0.00"]}<br /><br />
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colsspan="2"><p sstyle="width: 100%; text-align:center;">${item.quantity}</p></td>
+                                                                    <td colsspan="10" sstyle="text-align:jusstify; text-jusstify:none; ">
+                                                                        <p sstyle="width: 100%; text-align:right;">
+                                                                            ${item.desscription}<br /><br />
+                                                                        </p>
+                                                                    </td>
+                                                                    <td colsspan="6" sstyle="text-align:jusstify; text-jusstify:none;"><p sstyle="width: 100%; text-align:right;">${item.item}</p></td>
+                                                                    <td colsspan="2" sstyle="text-align:center; text-jusstify:none;"><p sstyle="width: 100%; text-align:center;">${item_index +1}</p></td>
+
+
+
+
+                                                                </tr>
+                                                        </#lisst><!-- end itemss -->
+                                                    </table>
+
+                                                </#if>
+                                            </#if>
+
+
+                                            <#if record.entity.cusstentity_ilo_print_hebrew==falsse>
+
+                                                <table classss="linetb_Total" sstyle="width:670px">
+                                                    <!-- sstart itemss -->
+                                                    <tr>
+                                                        <td rowsspan="3" colsspan="20" sstyle="background-color:#fff; border: 1px ssolid white">
+                                                            <br /><br /><br />
+                                                            <#if record.memo !=''>
+                                                                Memo : ${record.memo}
+                                                            </#if>
+                                                        </td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">Sub Total<br /></td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${(record.ssubtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">VAT ${record.taxtotal / record.ssubtotal * 100}%<br /></td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">Total<br /></td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${record.total?sstring[",##0.00"]}</td>
+                                                    </tr>
+
+                                                </table>
+
+                                                <table sstyle="width:400px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colsspan="12"><p sstyle="width: 100%; text-align:left; font-ssize: 1.4em;">Remittance Info:</p></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tr>
+
+                                                        <td colsspan="12" classss="default"><p sstyle="text-align: left; width: 550px;"><br /><br />${record.ssubssidiary.cusstrecord_ilo_ssubssid_englissh_remit}</p></td>
+                                                    </tr>
+                                                </table>
+                                            </#if>
+
+                                            <#if record.entity.cusstentity_ilo_print_hebrew==true>
+
+                                                <table classss="linetb_Total" sstyle="width:670px">
+                                                    <!-- sstart itemss -->
+                                                    <tr>
+
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${(record.ssubtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">סה"כ לפני מע"מ : <br /></td>
+
+                                                    </tr>
+                                                    <#if record.disscounttotal?hass_content>
+                                                        <tr>
+
+                                                            <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${(record.disscounttotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                            <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">הנחה: ${record.disscountrate?sstring?replace('-','')}<br /></td>
+                                                        </tr>
+                                                    </#if>
+                                                    <tr>
+
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">מע"מ : 17% <br /></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">${curr_ssymbol}${record.total?sstring[",##0.00"]}</td>
+                                                        <td colsspan="6" align="center" sstyle="height:25px; vertical-align: middle;">סה"כ לתשלום : <br /></td>
+
+
+                                                        <td rowsspan="3" colsspan="20" align="right" sstyle="background-color:#fff; border: 1px ssolid white">
+                                                            <#if record.memo !=''>
+                                                                הערות: ${record.memo}
+                                                            </#if>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                                <table sstyle="width:670px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colsspan="12" align="right"><p sstyle="width: 100%; text-align:right; font-ssize: 1.4em;"> פרטי בנק : </p></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tr>
+
+                                                        <td colsspan="12" classss="default" align="right"><p sstyle="text-align: right; width: 350px;"><br /><br />${record.ssubssidiary.cusstrecord_ilo_ssubssid_hebrew_remit}</p></td>
+                                                    </tr>
+                                                </table>
+
+                                            </#if>
+
+
+        </body>
+</pdf>

@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arialb.ttf" />
+
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 11pt;">
+                    <tr>
+                        <td align="left">
+                            <img src="https://6398307.app.netsuite.com/core/media/media.nl?id=1149&amp;c=6398307&amp;h=uUGDT8MkfjH4yxltSThf31UU2u2VnujNeDH7hMAWJrNVdDlS"
+                                 style="margin: 7px;width:120px; height:90px;" />
+                        </td>
+                        <td align="right">
+                            <p style=" text-align:right; ">
+                                <b style="font-size: 14pt;">
+                                    סינאל מלל פייוויי בע"מ<br />
+                                    עוסק מורשה מס.  511416612
+                                </b>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="header" style="width: 100%; font-size: 11pt;">
+                    <tr>
+                        <td align="center">
+                            <img src="https://6398307.app.netsuite.com/core/media/media.nl?id=4304&amp;c=6398307&amp;h=GPkKGy7b_LyLzZiwE2HSB_d1IcRCoNLXrtjbzpYIoycIRTbb"
+                                 style="float: left; margin: 7px;width:400px; height:75px;" />
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif
+            }
+
+            table {
+                font-size: 11pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            td {
+                font-size: 11pt;
+            }
+            p {
+                font-size: 11pt;
+            }
+            table.linetb {
+                border: 1px solid;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+            table.linetb th {
+                background-color: #fff;
+                border: 1px solid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.linetb td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="4%"  padding="0.1in 0.5in 0.5in 0.5in" size="Letter">
+        <br />
+        <table style="width: 100%;">
+            <tr>
+                <td align="center" style="text-align:right;" dir="rtl">
+                    <b style="font-size: 16pt;">
+                        לקבלן משנה <span> ${record.tranid}</span> תעודת מסירת מלאי
+                    </b>
+                </td>
+            </tr>
+        </table>
+        <br />
+
+        <table>
+            <tr>
+                <td align="left">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="right" style="text-align:right;" dir="rtl">${record.trandate}</td>
+                            <td align="right" style="text-align:right;" dir="rtl">: תאריך</td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="text-align:right;" dir="rtl">${record.custbody_transaction_creator}</td>
+                            <td align="right" style="text-align:right;" dir="rtl">: מפיק התעודה</td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="text-align:right;" dir="rtl">${record.custbody_customer_so.tranid}</td>
+                            <td align="right" style="text-align:right;" dir="rtl">: מס' הזמנה פנימי</td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="text-align:right;" dir="rtl">${record.custbody_customer}</td>
+                            <td align="right" style="text-align:right;" dir="rtl">: מס' לקוח</td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="right" style="text-align:right;" dir="rtl"></td>
+                            <td align="right" style="text-align:right;" dir="rtl">: לכבוד</td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="text-align:right;" dir="rtl"></td>
+                            <td align="right" style="text-align:right;" dir="rtl"><p style="width: 100%; text-align:right;">${record.transferlocation}</p></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br />
+
+        <table class="linetb" style="width:670px;">
+            <!-- start items -->
+            <#list record.inventory as item>
+                <#if item_index==0>
+                    <thead>
+                        <tr>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">אתר</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">תאריך התקנה</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">חתימה</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">סיריאלי</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">כמות</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">תיאור</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">פריט</p></th>
+                            <th colspan="2"><p style="width: 100%; text-align:center;">שורה</p></th>
+                        </tr>
+                    </thead>
+
+                </#if>
+                <tr>
+                    <td colspan="6"><p style="width: 100%; text-align:center;"></p></td>
+                    <td colspan="6"><p style="width: 100%; text-align:center;"></p></td>
+                    <td colspan="6"><p style="width: 100%; text-align:center;"></p></td>
+                    <td colspan="6" style="text-align:right; text-justify:none; "><p style="width: 100%; text-align:right;">${item.inventorydetail}</p></td>
+                    <td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item.adjustqtyby}</p></td>
+                    <td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item.description}</p></td>
+                    <td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item.item}</p></td>
+                    <td colspan="2" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item_index +1}</p></td>
+                </tr>
+            </#list><!-- end items -->
+        </table>
+
+    </body>
+</pdf>

@@ -1,0 +1,408 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+       
+        <link name="sans-serif" type="font" subtype="truetype" src="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arialb.ttf" />
+        <style type="text/css">
+
+            body {
+                font-family: sans-serif;
+            }
+
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: sans-serif;
+                font-size: 8pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-size: 8pt;
+                padding: 0px;
+            }
+
+
+            table.linetb {
+                table-layout: fixed;
+                border: 1px solid;
+                border-collapse: collapse;
+       
+            }
+            table.linetb th {
+                background-color: #fff;
+                border: 1px solid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+
+            table.linetb td {
+                border: 1px solid;   
+         
+            }
+
+
+
+
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                border-collapse: collapse;
+                page-break-inside: avoid;
+                font-size: 10pt;
+            }
+
+
+
+
+                table.linetb_Total td {
+                    border: 1px solid;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                    background-color: #D3D3D3;
+                }
+
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+        </style>
+        <macrolist>
+            <macro id="nlheader">
+                <table align="right" style="width: 100%; direction:rtl; font-size:12pt; text-align:right;" dir="rtl">
+                    <tr>
+                        <td rowspan="3" align="left"><#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: right; margin: 7px" /></#if></td>
+                        <td align="right" style="text-align:right; font-size:11pt;">
+                            <span>
+                                סינאל מלל פייוויי בע"מ
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="text-align:right; font-size:11pt;">
+                            <span>
+                                עוסק מורשה מס' 511416612
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td align="right" style="text-align:right; font-size:11pt;">
+                            <span>
+                                ${record.trandate} :תאריך<br />
+
+                            </span>
+                        </td>
+                    </tr>
+
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer" style="width: 100%;padding: 0px;">
+                    <tr>
+                        <td align="center">
+                            <img src="https://6398307.app.netsuite.com/core/media/media.nl?id=4304&amp;c=6398307&amp;h=GPkKGy7b_LyLzZiwE2HSB_d1IcRCoNLXrtjbzpYIoycIRTbb" style="float: left; margin: 7px;width:600px; height:100px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+
+    </head>
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="8%" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+
+        <p align="center" style="font-size:17pt;">
+            <b>העתק</b> <br />
+            <u>${record.tranid} 'תעודת משלוח מס</u>
+        </p>
+        <!--<#assign add=salesorder.billaddress?substring(salesorder.billaddress?index_of("<br />")+1, salesorder.billaddress?length )>
+    <#assign add=add?substring(add?index_of("<br />") + 1, add?length )>-->
+        <#assign add=salesorder.shipaddress?replace("<br />", " ")>
+        <#assign add=add?replace("Israel", "ישראל" )>
+        <table align="right" style="width: 100%; margin-top: -50px; direction:rtl; font-size:11pt; " text-align="right" dir="rtl">
+        <tr>
+        <td colspan="4" width="100%" align="right" style="text-align:right;"><span>:לכבוד</span></td>
+        </tr>
+        <tr>
+        <td colspan="2" align="right" style="text-align:right;">
+        <p align="right" style="text-align:right;">
+        ${salesorder.custbody_contact_person} <br />
+        ${record.entity} <br />
+        ${add}<br />
+        </p>
+        </td>
+        <td align="left" style="text-align:right;">
+        <p align="left" style="text-align:right;">
+        :מספר הזמנת רכש <br />
+        :מספר הזמנת לקוח <br />
+        :מס' לקוח <br />
+        :פותח התעודה<br />
+        </p>
+        </td>
+        <td align="right" style="text-align:right;">
+        <p align="right" style="text-align:right;">
+        ${salesorder.otherrefnum} <br />
+        ${salesorder.tranid} <br />
+        ${salesorder.entity.entityid}<br />
+        ${record.custbody_transaction_creator}  <br />
+        </p>
+        </td>
+        </tr>
+
+        </table>
+
+
+
+        <table class="linetb" style="width:670px;">
+        <!-- start items -->
+        <#list record.item as item>
+        <#if item_index==0>
+        <thead style="font-size:11pt;background-color:#d3d3d3;">
+        <tr>
+        <th colspan="3" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">כמות</p></th>
+        <th colspan="8" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">מספר סידורי</p></th>
+        <th colspan="4" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">מספר קטלוגי</p></th>
+        <th colspan="9" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">תאור פריט</p></th>
+        <th colspan="3" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">מספר</p></th>
+        </tr>
+        </thead>
+
+        </#if>
+
+        <tr>
+        <td colspan="3"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+        <td colspan="8"><p style="width: 100%; text-align:left;">${item.inventorydetail?replace('<br />', ", ")}</p></td>
+        <td colspan="4"><p style="width: 100%; text-align:center;">${item.item}</p></td>
+        <td colspan="9" align="right" style="text-align:right; text-justify:none; ">
+        <p align="right" style="width: 100%; text-align:left;">
+        ${item.description}<br /><br />
+        </p>
+        </td>
+        <td colspan="3"><p style="width: 100%; text-align:center;">#${item_index+1}</p></td>
+        </tr>
+        </#list><!-- end items -->
+        </table>
+        <br/>
+        <br/>
+        <table align="right" style="direction:rtl; font-size:11pt; text-align:right;"  dir="rtl">
+        <tr>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <br /><span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp;  &emsp; &emsp; &emsp; </u></span> :המשלוח הוכן ונארז ע"י
+        </td>
+        <td colspan="2" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <br /><span><u> &emsp; &emsp; &emsp;  &ensp;</u></span> :מספר אריזות
+        </td>
+        </tr>
+        </table>
+
+
+        <table class="linetb" style="width:670px; font-size:12pt;">
+        <thead>
+        <tr>
+        <th colspan="3" style="background-color:#d3d3d3;"><p style="width: 100%;font-size: 12pt; text-align:center;">אישור המקבל</p></th>
+        <th colspan="3" style="background-color:#d3d3d3;"><p style="width: 100%;font-size: 12pt; text-align:center;">פרטי המתקין</p></th>
+        <th colspan="3" style="background-color:#d3d3d3;"><p style="width: 100%;font-size: 12pt; text-align:center;">פרטי השולח</p></th>
+        </tr>
+        </thead>
+
+        <tr>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <span><br /><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חתימה<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : תאריך<br />
+        </td>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <span><br /><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חתימה<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : תאריך<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שעת סיום<br />
+        </td>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <span><br /><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חתימה<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : תאריך<br />
+        </td>
+        </tr>
+        </table>
+
+
+        <pbr></pbr>
+
+
+        <p align="center" style="font-size:17pt;">
+        <b>מקור</b> <br />
+        <u>${record.tranid} 'תעודת משלוח מס</u>
+        </p>
+
+        <table align="right" style="width: 100%; margin-top: -50px; direction:rtl; font-size:11pt; " text-align="right" dir="rtl">
+        <tr>
+        <td colspan="4" width="100%" align="right" style="text-align:right;"><span>:לכבוד</span></td>
+        </tr>
+        <tr>
+        <td colspan="2" align="right" style="text-align:right;">
+        <p align="right" style="text-align:right;">
+        ${salesorder.custbody_contact_person} <br />
+        ${record.entity} <br />
+        ${add}<br />
+        </p>
+        </td>
+        <td align="left" style="text-align:right;">
+        <p align="left" style="text-align:right;">
+        :מספר הזמנת רכש <br />
+        :מספר הזמנת לקוח <br />
+        :מס' לקוח <br />
+        :פותח התעודה<br />
+        </p>
+        </td>
+        <td align="right" style="text-align:right;">
+        <p align="right" style="text-align:right;">
+        ${salesorder.otherrefnum} <br />
+        ${salesorder.tranid} <br />
+        ${salesorder.entity.entityid}<br />
+        ${record.custbody_transaction_creator}  <br />
+        </p>
+        </td>
+        </tr>
+
+        </table>
+
+
+
+        <table class="linetb" style="width:670px;">
+        <!-- start items -->
+        <#list record.item as item>
+        <#if item_index==0>
+        <thead style="font-size:11pt;background-color:#d3d3d3;">
+        <tr>
+        <th colspan="3" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">כמות</p></th>
+        <th colspan="8" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">מספר סידורי</p></th>
+        <th colspan="4" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">מספר קטלוגי</p></th>
+        <th colspan="9" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">תאור פריט</p></th>
+        <th colspan="3" style="background-color:#d3d3d3;font-size:11pt;"><p style="width: 100%; text-align:center;">מספר</p></th>
+        </tr>
+        </thead>
+
+        </#if>
+
+        <tr>
+        <td colspan="3"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+        <td colspan="8"><p style="width: 100%; text-align:left;white-space:normal;">${item.inventorydetail?replace('<br />', ", ")}</p></td>
+        <td colspan="4"><p style="width: 100%; text-align:center;">${item.item}</p></td>
+        <td colspan="9" align="right" style="text-align:right; text-justify:none; ">
+        <p align="right" style="width: 100%; text-align:left;">
+        ${item.description}<br /><br />
+        </p>
+        </td>
+        <td colspan="3"><p style="width: 100%; text-align:center;">#${item_index+1}</p></td>
+        </tr>
+        </#list><!-- end items -->
+        </table>
+        <br/>
+        <br/>
+        <table align="right" style="direction:rtl; font-size:11pt; text-align:right;"  dir="rtl">
+        <tr>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <br /><span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp;  &emsp; &emsp; &emsp; </u></span> :המשלוח הוכן ונארז ע"י
+        </td>
+        <td colspan="2" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <br /><span><u> &emsp; &emsp; &emsp;  &ensp;</u></span> :מספר אריזות
+        </td>
+        </tr>
+        </table>
+
+
+        <table class="linetb" style="width:670px; font-size:12pt;">
+        <thead>
+        <tr>
+        <th colspan="3" style="background-color:#d3d3d3;"><p style="width: 100%;font-size: 12pt; text-align:center;">אישור המקבל</p></th>
+        <th colspan="3" style="background-color:#d3d3d3;"><p style="width: 100%;font-size: 12pt; text-align:center;">פרטי המתקין</p></th>
+        <th colspan="3" style="background-color:#d3d3d3;"><p style="width: 100%;font-size: 12pt; text-align:center;">פרטי השולח</p></th>
+        </tr>
+        </thead>
+
+        <tr>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <span><br /><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חתימה<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : תאריך<br />
+        </td>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <span><br /><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חתימה<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : תאריך<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp;   </u></span> : שעת סיום<br />
+        </td>
+        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+        <span><br /><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חתימה<br /><br />
+        <span><u> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : תאריך<br />
+        </td>
+        </tr>
+        </table>
+    </body>
+</pdf>

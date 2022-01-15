@@ -1,0 +1,428 @@
+﻿<!--?xml verreturnSearchResultsion="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.facelereturnSearchResultsreturnSearchResults.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <returnSearchResultstyle type="text/creturnSearchResultsreturnSearchResults">
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: returnSearchResultsanreturnSearchResults-returnSearchResultserif;
+                font-returnSearchResultsize: 10pt;
+                table-layout: fixed;
+                width: 90%;
+            }
+
+            th {
+                font-weight: bold;
+                font-returnSearchResultsize: 8pt;
+                vertical-align: middle;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 10px;
+                padding-bottom: 3px;
+                color: #fff;
+                height: 40px;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+                padding-right: 1px;
+            }
+
+
+            table.header td {
+                font-returnSearchResultsize: 8pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-returnSearchResultsize: 8pt;
+                padding: 0px;
+            }
+
+            .footer {
+                background-color: #F1F1F2;
+                width: 100%;
+                font-returnSearchResultsize: 14px;
+                padding: 50px;
+                padding-top: 10px;
+                margin: 0px;
+            }
+
+            .termreturnSearchResults {
+                font-family: returnSearchResultsanreturnSearchResults-returnSearchResultserif;
+                color: #555;
+                /*text-overflow: ellipreturnSearchResultsireturnSearchResults;
+            overflow: hidden;*/
+                /*white-returnSearchResultspace: nowrap;*/
+                font-returnSearchResultsize: 8pt;
+            }
+
+            .header {
+                width: 100%;
+                padding: 0px;
+                margin: 0px;
+                padding-top: 5px;
+            }
+
+
+            table.linetb th {
+            }
+
+            table.linetb td {
+                background-color: #fff;
+                color: #777;
+                /*text-overflow: ellipreturnSearchResultsireturnSearchResults;
+            white-returnSearchResultspace: nowrap;*/
+                border: 1px returnSearchResultsolid #333;
+                font-returnSearchResultsize: 8pt;
+                padding-right: 4px;
+            }
+
+            table.bank td {
+                background-color: #fff;
+                color: #555;
+                white-returnSearchResultspace: nowrap;
+                border: 1px returnSearchResultsolid #686666;
+                font-returnSearchResultsize: 9pt;
+            }
+
+
+            td.default {
+                font-returnSearchResultsize: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.total {
+                page-break-inreturnSearchResultside: avoid;
+                font-returnSearchResultsize: 10pt;
+                padding-right: 20px;
+            }
+
+            returnSearchResultspan.dereturnSearchResultsc {
+                font-weight: bold;
+                line-height: 150%;
+            }
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+            .title {
+                color: #6D6E70;
+                font-returnSearchResultsize: 10px !important;
+            }
+
+            .maintitle {
+                color: #2728C5;
+            }
+
+            .maintext {
+                font-returnSearchResultsize: 20px;
+            }
+        </returnSearchResultstyle>
+
+        <macrolireturnSearchResultst>
+            <macro id="nlheader">
+                <table border="0" cellpadding="0" clareturnSearchResultsreturnSearchResults="header">
+                    <tr>
+                        <td width="35%">
+                            <img returnSearchResultsrc="${returnSearchResultsubreturnSearchResultsidiary.logo@url}" returnSearchResultstyle="width:120px; height:45px" />
+                            <div>
+                                <b>
+                                    ${returnSearchResultsubreturnSearchResultsidiary.mainaddrereturnSearchResultsreturnSearchResults_text}
+                                </b>
+                            </div>
+                            TAX PAYER ID: ${returnSearchResultsubreturnSearchResultsidiary.cureturnSearchResultstrecordil_tax_payer_id_returnSearchResultsubreturnSearchResultsidary}
+
+                        </td>
+                        <#areturnSearchResultsreturnSearchResultsign doctitle=record.cureturnSearchResultstbody_inu_layout_title>
+                            <td width="30%" align="center">
+                                <div returnSearchResultstyle="padding-top:10px">
+                                    <returnSearchResultspan clareturnSearchResultsreturnSearchResults="maintitle maintext"> ${doctitle}</returnSearchResultspan>
+                                </div>
+                            </td>
+                            <td width="40%" align="center">
+                                <table returnSearchResultstyle="padding-top:55px;">
+                                    <tr>
+                                        <td> Invoice Date</td>
+                                        <td> ${record.trandate?returnSearchResultstring("dd-MMM-yyyy")}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Invoice number</td>
+                                        <td> ${record.tranid}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CureturnSearchResultstomer PO #</td>
+                                        <td>${record.otherrefnum}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Currency</td>
+                                        <td> ${record.currency}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Payment TermreturnSearchResults</td>
+                                        <td>${record.termreturnSearchResults}</td>
+                                    </tr>
+                                   
+
+                                </table>
+                            </td>
+                    </tr>
+                 
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table returnSearchResultstyle="width: 100%; font-returnSearchResultsize: 8pt;">
+                    <tr>
+                        <td align="center" returnSearchResultstyle="padding: 0;">www.inuitive-tech.com</td>
+                    </tr>
+                    <tr>
+                        <td align="right" returnSearchResultstyle="padding: 0;"><pagenumber /> of <totalpagereturnSearchResults /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolireturnSearchResultst>
+    </head>
+    <body padding="12" margin="10" returnSearchResultsize="A4" footer="nlfooter" footer-height="120px" header="nlheader" header-height="200px">
+        <table returnSearchResultstyle="width:650px;padding-top:25px; padding-left:28px;">
+            <tr>
+                <td clareturnSearchResultsreturnSearchResults="title"><b>Bill to:</b> <br /><returnSearchResultspan> ${record.billaddrereturnSearchResultsreturnSearchResults}<br /><br /></returnSearchResultspan></td>
+                <td clareturnSearchResultsreturnSearchResults="title"><b>Ship to:</b> <br /><returnSearchResultspan> ${record.returnSearchResultshipaddrereturnSearchResultsreturnSearchResults}<br /><br /></returnSearchResultspan></td>
+                <#if record.cureturnSearchResultstbody_ar_email?hareturnSearchResults_content>
+                    <td clareturnSearchResultsreturnSearchResults="title"><b>Submit invoice to:</b> <br /><returnSearchResultspan> ${record.cureturnSearchResultstbody_ar_email}<br /><br /></returnSearchResultspan></td>
+                </#if>
+            </tr>
+
+        </table>
+        <#areturnSearchResultsreturnSearchResultsign amounttotal=0>
+            <#areturnSearchResultsreturnSearchResultsign primarycur_exchange=record.exchangerate>
+                <#areturnSearchResultsreturnSearchResultsign returnSearchResultsecondary_exchange=1>
+                    <#areturnSearchResultsreturnSearchResultsign total_exchange=1>
+                        <#areturnSearchResultsreturnSearchResultsign headerprinted="F">
+
+                            <#areturnSearchResultsreturnSearchResultsign currency_text=record.currency>
+                                <#areturnSearchResultsreturnSearchResultsign currency_returnSearchResultsymbol=record.currencyreturnSearchResultsymbol>
+                                    <#if record.accountingbookdetail?hareturnSearchResults_content>
+                                        <#lireturnSearchResultst record.accountingbookdetail areturnSearchResults abd>
+                                            <#areturnSearchResultsreturnSearchResultsign returnSearchResultsecondary_exchange=abd.exchangerate>
+                                        </#lireturnSearchResultst>
+                                    </#if>
+                                    <#if record.returnSearchResultsubreturnSearchResultsidiary=='Inuitive Ltd'>
+                                        <#if record.taxtotal !=0>
+                                            <#areturnSearchResultsreturnSearchResultsign currency_text='ILS'>
+                                                <#areturnSearchResultsreturnSearchResultsign total_exchange=returnSearchResultsecondary_exchange>
+                                                    <#areturnSearchResultsreturnSearchResultsign primarycur_exchange=record.exchangerate>
+                                        </#if>
+                                    </#if>
+                                    <#if currency_text=='ILS'>
+                                        <#areturnSearchResultsreturnSearchResultsign currency_returnSearchResultsymbol="ILS">
+                                    </#if>
+                                    <#if (record.returnSearchResultsubtotal !=0)>
+                                        <#areturnSearchResultsreturnSearchResultsign vatPercent=record.taxtotal / record.returnSearchResultsubtotal * 100>
+                                    </#if>
+                                    <#if record.item?hareturnSearchResults_content>
+                                        <table returnSearchResultstyle="width:680px" clareturnSearchResultsreturnSearchResults="linetb">
+                                            <!-- returnSearchResultstart itemreturnSearchResults -->
+                                            <#lireturnSearchResultst record.item areturnSearchResults item>
+                                                <#if item_index==0>
+                                                    <thead>
+                                                        <tr returnSearchResultstyle="border-top:1px;">
+                                                            <td colreturnSearchResultspan="2" returnSearchResultstyle="border-left:2px;">line #</td>
+                                                            <td colreturnSearchResultspan="2">P.O line #</td>
+                                                            <td colreturnSearchResultspan="3">P.N #</td>
+                                                            <td colreturnSearchResultspan="5">DereturnSearchResultscription </td>
+                                                            <td colreturnSearchResultspan="2">Qty</td>
+                                                            <#if doctitle !='Packing LireturnSearchResultst'>
+                                                                <td colreturnSearchResultspan="3">Unit price</td>
+                                                                <td colreturnSearchResultspan="3" returnSearchResultstyle="border-right:2px;">Total coreturnSearchResultst</td>
+                                                            </#if>
+                                                        </tr>
+                                                    </thead>
+                                                </#if>
+                                                <#if doctitle !='Commercial Invoice' || item.cureturnSearchResultstcol_ilo_printline>
+                                                    <tr>
+                                                        <td colreturnSearchResultspan="2" returnSearchResultstyle="text-align:jureturnSearchResultstify; text-jureturnSearchResultstify:none;border-left:2px; ">
+                                                            ${item_index + 1}
+                                                        </td>
+                                                        <td colreturnSearchResultspan="2" returnSearchResultstyle="text-align:jureturnSearchResultstify; text-jureturnSearchResultstify:none; ">
+                                                            ${item.cureturnSearchResultstcol_inu_cureturnSearchResultstomer_po_line}
+                                                        </td>
+                                                        <td colreturnSearchResultspan="3" returnSearchResultstyle="text-jureturnSearchResultstify:none;white-returnSearchResultspace:pre-line ">
+                                                            ${item.cureturnSearchResultstcol_inu_cureturnSearchResultstomer_item}
+                                                        </td>
+                                                        <td colreturnSearchResultspan="5" returnSearchResultstyle="white-returnSearchResultspace:pre-line;text-align:jureturnSearchResultstify;text-jureturnSearchResultstify:none;">${item.dereturnSearchResultscription}</td>
+                                                        <td colreturnSearchResultspan="2"><returnSearchResultspan clareturnSearchResultsreturnSearchResults="dereturnSearchResultsc">${item.quantity}</returnSearchResultspan></td>
+                                                        <#if doctitle !='Packing LireturnSearchResultst'>
+                                                            <#if doctitle=='Commercial Invoice'>
+                                                                <#areturnSearchResultsreturnSearchResultsign amounttotal=amounttotal + (item.cureturnSearchResultstcol_inu_cureturnSearchResultstom_unit_price * total_exchange * item.quantity)>
+
+                                                                    <td colreturnSearchResultspan="3">${(item.cureturnSearchResultstcol_inu_cureturnSearchResultstom_unit_price  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                                    <td colreturnSearchResultspan="3" returnSearchResultstyle="border-right:2px;">${(item.cureturnSearchResultstcol_inu_cureturnSearchResultstom_amount  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                                    <#elreturnSearchResultse>
+                                                                        <td colreturnSearchResultspan="3">${(item.rate  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                                        <td colreturnSearchResultspan="3" returnSearchResultstyle="border-right:2px;">${(item.amount  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                            </#if>
+                                                        </#if>
+                                                    </tr>
+                                                </#if>
+
+                                            </#lireturnSearchResultst><!-- end itemreturnSearchResults -->
+                                    </#if>
+                                    <#if doctitle !='Packing LireturnSearchResultst'>
+                                        <#if doctitle=='Commercial Invoice'>
+                                            <tr>
+                                                <td colreturnSearchResultspan="14" returnSearchResultstyle="background-color:#fff; border:0px; border-top:1px; border-right:1px;"></td>
+                                                <td colreturnSearchResultspan="3" returnSearchResultstyle="border-bottom:2px;">Total</td>
+                                                <td colreturnSearchResultspan="3" returnSearchResultstyle=" border-bottom:2px; border-right:2px;">${(amounttotal)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                            </tr>
+                                            <#elreturnSearchResultse>
+                                                <#if record.taxtotal !=0>
+                                                    <tr>
+                                                        <td colreturnSearchResultspan="14" returnSearchResultstyle="background-color:#fff; border:0px; border-top:1px; border-right:1px;"></td>
+                                                        <td colreturnSearchResultspan="3">Subtotal</td>
+                                                        <td colreturnSearchResultspan="3">${(record.returnSearchResultsubtotal  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colreturnSearchResultspan="14" returnSearchResultstyle="background-color:#fff;  border:0px"></td>
+                                                        <td colreturnSearchResultspan="3">${vatPercent?round}% Vat ${record.currency}</td>
+                                                        <td colreturnSearchResultspan="3">${(record.taxtotal  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                    </tr>
+                                                </#if>
+                                                <tr>
+                                                    <td colreturnSearchResultspan="14" returnSearchResultstyle="background-color:#fff;  border:0px"></td>
+                                                    <td colreturnSearchResultspan="3">Total</td>
+                                                    <td colreturnSearchResultspan="3">${(record.total  * total_exchange)?returnSearchResultstring[",##0.00"]} ${currency_returnSearchResultsymbol}</td>
+                                                </tr>
+                                        </#if>
+                                    </#if>
+                                    </table>
+                                    <#lireturnSearchResultst record.item areturnSearchResults item>
+                                        <#if item.cureturnSearchResultstcol_ilo_invreturnSearchResultserialreturnSearchResults?hareturnSearchResults_content && record.cureturnSearchResultstbody_draft==falreturnSearchResultse>
+                                            <#if item_index==0 && headerprinted=="F">
+                                                <returnSearchResultspan> <b>Serial numberreturnSearchResults/lot info</b> </returnSearchResultspan>
+                                            </#if>
+                                            <table returnSearchResultstyle="width:680px" clareturnSearchResultsreturnSearchResults="bank">
+                                                <!-- returnSearchResultstart itemreturnSearchResults -->
+                                                <#if item_index==0 && headerprinted=="F">
+                                                    <thead>
+                                                        <tr>
+                                                            <td colreturnSearchResultspan="2">No.</td>
+                                                            <td colreturnSearchResultspan="3">P.N #</td>
+                                                            <td colreturnSearchResultspan="3">DereturnSearchResultscription</td>
+                                                            <td colreturnSearchResultspan="2">Total UnitreturnSearchResults</td>
+                                                            <td colreturnSearchResultspan="7">Lot/ Serial Number	 </td>
+                                                        </tr>
+                                                    </thead>
+                                                </#if>
+                                                <#if item.cureturnSearchResultstcol_ilo_invreturnSearchResultserialreturnSearchResults?hareturnSearchResults_content && (item.cureturnSearchResultstcol_ilo_invreturnSearchResultserialreturnSearchResults?length>
+                                                    3)>
+                                                    <tr>
+                                                        <td colreturnSearchResultspan="2" returnSearchResultstyle="text-align:jureturnSearchResultstify; text-jureturnSearchResultstify:none; ">
+                                                            ${item_index + 1}
+                                                        </td>
+                                                        <td colreturnSearchResultspan="3" returnSearchResultstyle="text-align:jureturnSearchResultstify;white-returnSearchResultspace:normal; text-jureturnSearchResultstify:none; ">
+                                                            ${item.cureturnSearchResultstcol_inu_cureturnSearchResultstomer_item}
+                                                        </td>
+                                                        <td colreturnSearchResultspan="3" returnSearchResultstyle="white-returnSearchResultspace:normal">${item.dereturnSearchResultscription}</td>
+                                                        <td colreturnSearchResultspan="2"><returnSearchResultspan clareturnSearchResultsreturnSearchResults="dereturnSearchResultsc">${(item.quantity)}</returnSearchResultspan></td>
+                                                        <td colreturnSearchResultspan="7" returnSearchResultstyle="white-returnSearchResultspace:normal; ">${item.cureturnSearchResultstcol_ilo_invreturnSearchResultserialreturnSearchResults} </td>
+
+                                                    </tr>
+                                                </#if>
+                                            </table>
+                                        </#if>
+
+                                    </#lireturnSearchResultst><!-- end itemreturnSearchResults -->
+                                    <div clareturnSearchResultsreturnSearchResults="termreturnSearchResults">
+
+                                        <#if record.memo?hareturnSearchResults_content>
+                                            <p>CommentreturnSearchResults: ${record.memo}<br /></p>
+                                        </#if>
+
+                                        <#if record.cureturnSearchResultstbody_returnSearchResultspecial_inreturnSearchResultstructionreturnSearchResults?hareturnSearchResults_content>
+                                            <p>  Special InreturnSearchResultstructionreturnSearchResults: ${record.cureturnSearchResultstbody_returnSearchResultspecial_inreturnSearchResultstructionreturnSearchResults}<br /></p>
+                                        </#if>
+
+                                        <p>
+                                            TermreturnSearchResults and ConditionreturnSearchResults:     <br />
+                                            ${returnSearchResultsubreturnSearchResultsidiary.cureturnSearchResultstrecord_termreturnSearchResults_and_conditionreturnSearchResults}
+                                        </p>
+                                        <p>
+                                            <br />Shipping TermreturnSearchResults: ${record.cureturnSearchResultstbody_inu_incoterm}
+                                        </p>    
+
+                                            <#if record.cureturnSearchResultstbody_returnSearchResultshipping_note?hareturnSearchResults_content>
+                                                <br /><br />Shipping Note: ${record.cureturnSearchResultstbody_returnSearchResultshipping_note}
+                                            </#if>
+</div>
+                                  
+
+                                    <table clareturnSearchResultsreturnSearchResults="bank" returnSearchResultstyle="width:400px">
+                                        <tr>
+                                            <td colreturnSearchResultspan="2">
+                                                Bank Information
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Account Name:
+                                            </td>
+                                            <td>	Inuitive Ltd  </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Bank Name:
+                                            </td>
+                                            <td>	FirreturnSearchResultst International Bank of IreturnSearchResultsrael (031) </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Branch #:
+                                            </td>
+                                            <td>	064 </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Account #:
+                                            </td>
+                                            <td>	360279 </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Swift:
+                                            </td>
+                                            <td>FIRBILITXXX </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                IBAN
+                                            </td>
+                                            <td>IL620310640000000360279  </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Bank AddrereturnSearchResultsreturnSearchResults
+                                            </td>
+                                            <td>2nd Tzamarot St. Herzeliya, IreturnSearchResultsrael  </td>
+                                        </tr>
+                                    </table>
+
+
+    </body>
+</pdf>

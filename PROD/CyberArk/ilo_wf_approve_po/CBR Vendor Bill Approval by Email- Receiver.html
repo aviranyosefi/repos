@@ -1,0 +1,246 @@
+<span style="font-family:times new roman,times,serif;">
+	<span style="font-size:14px;">Dear&nbsp;</span>
+</span><span style="font-family: &quot;times new roman&quot;, times, serif; font-size: 14px; background-color: rgb(255, 255, 255);">${transaction.custbody_bill_po_reciever}</span><span style="font-family:times new roman,times,serif;">
+	<span style="font-size:14px;">,</span>
+	<br />
+	<br />
+	<span style="font-size:14px;">
+		Request for <#if (transaction.type == "vendbill")>
+			Vendor Bill<#elseif (transaction.type == "purchord")>
+				Purchase Order<#else>Transaction</#if># ${transaction.tranid} has been submitted and pending for your approval.
+	</span>
+</span>
+<table border="0" cellpadding="1" cellspacing="0" style="margin-top:10px;border: 0px;">
+	<tbody>
+		<tr>
+			<td style="font-size: 9pt;">
+				<span style="font-size:14px;">
+					<strong>
+						<span style="font-family:times new roman,times,serif;">Bill Date</span>
+					</strong>
+				</span>
+			</td>
+			<td style="font-size: 9pt;">
+				<span style="font-family:times new roman,times,serif;">: ${transaction.trandate}</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size: 9pt;">
+				<span style="font-size:14px;">
+					<strong>
+						<span style="font-family:times new roman,times,serif;">Total amount</span>
+					</strong>
+				</span>
+			</td>
+			<td style="font-size: 9pt;">
+				<span style="font-family:times new roman,times,serif;">: ${transaction.total}</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size: 9pt;">
+				<span style="font-size:14px;">
+					<strong>
+						<span style="font-family:times new roman,times,serif;">Vendor </span>
+					</strong>
+				</span>
+			</td>
+			<td style="font-size: 9pt;">
+				<span style="font-family:times new roman,times,serif;">: ${transaction.entity}</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="font-size: 9pt;">
+				<span style="font-family:times new roman,times,serif;">
+					<strong>
+						<span style="font-size:14px;">PO :</span>
+					</strong>
+				</span>
+			</td>
+			<td style="font-size: 9pt;">
+				<span style="font-family:times new roman,times,serif;text-align:left;">${transaction.custbody_cbr_poid_email_notif}</span>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<span style="font-family:times new roman,times,serif;">
+	&nbsp;<br />
+	<br />
+	<strong>
+		<u>Items:</u>
+	</strong>
+</span><br />
+&nbsp;
+<table border="2" style="margin-top:10px;width:100%;border-collapse: collapse;border: 1px solid gray;">
+	<#list transaction.item as item>
+		<#if item_index==0>
+			<thead>
+				<tr>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.item@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="3" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.description@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.quantity@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.rate@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.amount@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${transaction.currency@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.custcol_nc_vbtol_original_rate@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.custcol_nc_vbtol_original_amount@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.custcol_nc_vbtol_discrepance_percent@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${item.custcol_nc_qtr_quotation_rate@label}</span>
+							</span>
+						</strong>
+					</th>
+					<th align="center" bgcolor="#a8a8a8" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-weight: bold;font-size: 10pt;color: white;">
+						<strong>
+							<span style="font-family:times new roman,times,serif;">
+								<span style="font-weight: normal;">${transaction.custbody_nc_qrt_quotation_currency@label}</span>
+							</span>
+						</strong>
+					</th>
+				</tr>
+			</thead>
+		</#if>
+		<tbody>
+			<tr>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.item}</span>
+				</td>
+				<td align="center" colspan="3" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.description}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.quantity}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.rate}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.amount}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${transaction.currency}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.custcol_nc_vbtol_original_rate}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.custcol_nc_vbtol_original_amount}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.custcol_nc_vbtol_discrepance_percent}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${item.custcol_nc_qtr_quotation_rate?string}</span>
+				</td>
+				<td align="center" colspan="2" style="padding: 10px 9px;border: 1px solid gray;font-size: 9pt;">
+					<span style="font-family:times new roman,times,serif;">${transaction.custbody_nc_qrt_quotation_currency}</span>
+				</td>
+			</tr>
+		</tbody>
+	</#list>
+</table>
+<br />
+<br />
+<span style="font-family:times new roman,times,serif;">Please review the request and approve or reject. By approving this bill, I confirm CyberArk can pay the supplier according to the attached bill </span>
+
+<table style="width:100%;">
+	<tbody>
+		<tr>
+			<td>&nbsp;</td>
+			<td style="border-radius: 3px; background: #fff; text-align: center;width:230px; font-size:18px;">
+				<span style="font-family:times new roman,times,serif;">
+					<a href="approvedurl" style="background: #326600 ; border: 15px solid #326600 ; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;">
+						<span style="color:#ffffff;font-size:18px;">&nbsp;&nbsp;&nbsp;&nbsp;Approve&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					</a>
+				</span>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<span style="font-family:times new roman,times,serif;"> </span>
+
+<table style="width:100%;">
+	<tbody>
+		<tr>
+			<td>&nbsp;</td>
+			<td style="border-radius: 3px; background: #fff; text-align: center;width:230px; font-size:18px;">
+				<span style="font-family:times new roman,times,serif;">
+					<a href="rejecturl" style="background: #990000 ; border: 15px solid #990000 ; font-family: sans-serif; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;">
+						<span style="color:#ffffff;font-size:18px;">&nbsp;&nbsp;&nbsp;&nbsp;Reject&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					</a>
+				</span>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<span style="font-family:times new roman,times,serif;">
+	<span style="background-color: rgb(255, 255, 255); font-size: 14px; color: rgb(255, 0, 0);">
+		<strong>Notice!</strong>
+	</span>
+	<span style="background-color: rgb(255, 255, 255); font-size: 14px;">&nbsp;With this email you can approve or reject the Requisition and your selection will be recorded in Netsuite system under your user name.</span>
+	<br style="background-color: rgb(255, 255, 255); font-size: 14px;" />
+	<span style="background-color: rgb(255, 255, 255); font-size: 14px;">Please</span>
+	<span style="background-color: rgb(255, 255, 255); font-size: 16px;">
+		&nbsp;<strong>
+			<u>DO NOT FORWARD</u>&nbsp;this message.
+		</strong>
+	</span>
+</span>

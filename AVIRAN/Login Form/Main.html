@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<body>
+
+
+    <script src="index.js"></script>
+    <form action="Main.html" class="login-form">
+        <h1>Main app</h1>
+
+
+
+
+
+        <div class="txtb">
+            Number of groups :
+
+            <input type="number" id="numbers_of_groups" name="quantity" value="2" min="2" max="5"><br>
+
+        </div>
+
+        <div class="txtb">
+            Number of players each gruop :
+            <input type="number" id="numbers_of_players_each_gruop" name="quantity" value="2" min="2" max="10"><br>
+
+        </div>
+
+        <input type="button" class="logbtn" value="Submit" onclick="addFields()">
+
+        <div class="row">
+            <div class="column">
+                <img class="rotate" src="./IMAGES/football.PNG" height="60" width="60" />
+            </div>
+            <div class="column">
+                <img class="rotate" src="./IMAGES/basketball.PNG" height="60" width="60" />
+            </div>
+        </div>
+
+    </form>
+
+
+
+
+    <div id="div_before_sort" style="display:none">
+
+
+    </div>
+
+    <div id="div_after_sort" style="display:none">
+
+
+    </div>
+
+
+
+
+
+</body>
+</html>
+
+

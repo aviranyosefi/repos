@@ -1,0 +1,570 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://4998343.app.netsuite.com/c.4998343/suitebundle43003/lib/Font/Heb-Regular.ttf" />
+        <macrolist>
+            <macro id="nlheader">
+                <#if record.custbody_hebrew_layout==false>
+                    <#assign type="Packing List">
+
+                        <table class="header" style="width: 100%; font-size: 10pt;">
+                            <tr>
+                                <td>
+                                    <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left; margin: 7px" /> </#if>
+                                    <p>
+                                        ${companyInformation.mainaddress_text}
+                                    </p>
+                                </td>
+
+                                <td align="right">
+                                    <span class="title">${type}     <br /></span>
+                                    <br />
+                                    <table style="width:100%" class="headertable">
+
+                                        <tr><th width="35%">${type} No.</th><td> ${record.tranid}</td></tr>
+                                        <tr><th>Sales Order No </th><td> ${record.createdfrom?substring(11,record.createdfrom?length )}</td></tr>
+                                        <tr><th>Date</th><td> ${record.trandate?string("dd/MM/yyyy")}</td></tr>
+                                        <tr><th>Customer PO #</th><td> ${record.custbody_customer_po_num}</td></tr>
+                                        <tr><th>Customer</th><td> ${record.entity?replace("[0-9]", "", "r")}</td></tr>
+                                        <#if record.custbody_incoterm?has_content><tr><th>Incoterm</th><td> ${record.custbody_incoterm}</td></tr></#if>
+
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </table>
+                </#if>
+
+                <#if record.custbody_hebrew_layout==true>
+                    <#assign type="תעודת משלוח">
+
+                        <table class="header" style="width: 100%; font-size: 10pt;">
+                            <tr>
+                                <td align="right">
+                                    <span class="title">${type}   <br /></span>
+                                    <br />
+                                    <table style="width:100%" class="headertableHebrew">
+
+                                        <tr><th> ${record.tranid}</th><td width="35%"> : 'תעודת משלוח מס </td></tr>
+                                        <tr><th>  ${record.createdfrom?substring(11,record.createdfrom?length )}</th><td> : מספר הזמנה </td></tr>
+                                        <tr><th> ${record.trandate?string("dd/MM/yyyy")}</th><td>  : תאריך  </td></tr>
+                                        <tr><th> ${record.custbody_customer_po_num} </th><td> : הזמנת רכש ללקוח</td></tr>
+                                        <tr><th> ${record.entity?replace("[0-9]", "", "r")}</th><td> : לקוח </td></tr>
+                                        <#if record.custbody_incoterm?has_content><tr><th>${record.custbody_incoterm}</th><td> : תנאים </td></tr></#if>
+
+                                    </table>
+                                </td>
+
+                                <td>
+                                    <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left; margin: 7px" /> </#if>
+                                    <p style="float: right;">
+                                        ${companyInformation.mainaddress_text}
+                                    </p>
+                                </td>
+                            </tr>
+
+                        </table>
+                </#if>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer">
+                    <tr>
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+
+            table {
+                font-size: 9pt;
+                table-layout: fixed;
+                font-family: sans-serif;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 8pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+            }
+
+            td {
+                padding: 4px 6px;
+            }
+
+                td p {
+                    align: left
+                }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+            }
+
+
+
+            table.footer td {
+                padding: 0;
+                font-size: 8pt;
+            }
+
+            table.itemtable th {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            td.addressheader {
+                font-size: 8pt;
+                font-weight: bold;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            td.address {
+                padding-top: 0;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.titleCommercial {
+                font-size: 18pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+
+            span.itemname {
+                font-weight: bold;
+                line-height: 150%;
+            }
+
+            div.returnform {
+                width: 100%;
+                /* To ensure minimal height of return form */
+                height: 200pt;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+
+            hr {
+                border-top: 1px dashed #d3d3d3;
+                width: 100%;
+                color: #ffffff;
+                background-color: #ffffff;
+                height: 1px;
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertableHebrew td {
+                background-color: #d3d3d3;
+                color: #555;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertableHebrew th {
+                background-color: #fff;
+                color: #555;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+
+
+            table.linetb {
+                border-collapse: collapse;
+                font-family: sans-serif;
+            }
+
+                table.linetb td, table.linetb th {
+                    border: 1px;
+                    font-family: sans-serif;
+                }
+
+            table.serial {
+                border-collapse: collapse;
+            }
+
+                table.serial td, table.serial th {
+                    border: 1px;
+                }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="20%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+
+        <#assign curr_symbol='₪'>
+            <#if record.currencycode='USD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencycode='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencycode='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+
+            <br />
+            <#if record.custbody_hebrew_layout==false>
+                <table style="width: 100%; margin-top: 10px;">
+                    <tr>
+                        <td class="addressheader">Ship To:</td>
+                    </tr>
+                    <tr>
+                        <td class="address">${record.shipaddress}</td>
+                    </tr>
+                </table>
+
+
+            </#if>
+
+            <#if record.custbody_hebrew_layout==true>
+                <table align="right" style="width: 50%; margin-top: 10px;">
+                    <tr>
+                        <td align="right">: לכבוד </td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="address"> ${record.shipaddress}</td>
+                    </tr>
+                </table>
+
+
+            </#if>
+
+            <br />
+
+            <#assign lastParent="">
+                <#assign lineCount=0>
+
+                    <#assign lineCountInventory=0>
+                        <#if record.item?has_content>
+
+                            <#if record.custbody_hebrew_layout==false>
+                                <table style="width:680px;margin-top: -20px;" class="linetb">
+                                    <!-- start items -->
+                                    <#list record.item as item>
+                                        <#if item_index=0>
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Line</th>
+                                                    <th colspan="5">P/N</th>
+                                                    <th colspan="8">Description</th>
+                                                    <th colspan="2">QTY </th>
+
+
+                                                </tr>
+                                            </thead>
+                                        </#if>
+
+                                        <#if item.inventorydetail?has_content>
+                                            <#assign lineCountInventory=1>
+                                        </#if>
+
+
+                                        <#assign lineCount=lineCount+1>
+
+                                            <tr>
+
+                                                <td colspan="2" style="text-align:justify; text-justify:none; ">    ${lineCount}    </td>
+                                                <td colspan="5" style="text-align:justify; text-justify:none; ">    ${item.item}    </td>
+                                                <td colspan="8" style="white-space:pre-line;text-align:justify;text-justify:none;">${item.description}</td>
+                                                <td colspan="2" style="text-align:justify; text-justify:none; ">    ${item.quantity}    </td>
+
+                                            </tr>
+
+
+
+                                    </#list><!-- end items -->
+
+
+
+
+
+
+                                </table>
+                            </#if>
+
+
+                            <#if record.custbody_hebrew_layout==true>
+                                <table style="width:680px;margin-top: -20px;" class="linetb">
+                                    <!-- start items -->
+                                    <#list record.item as item>
+                                        <#if item_index=0>
+                                            <thead>
+                                                <tr>
+                                                    <th align="right" style="font-weight:normal" colspan="6"> כמות </th>
+                                                    <th align="right" style="font-weight:normal" colspan="6"> תיאור </th>
+                                                    <th align="right" style="font-weight:normal" colspan="5"> פריט</th>
+                                                    <th align="right" style="font-weight:normal" colspan="2"> שורה </th>
+
+                                                </tr>
+                                            </thead>
+                                        </#if>
+
+                                        <#if item.inventorydetail?has_content>
+                                            <#assign lineCountInventory=1>
+                                        </#if>
+
+
+                                        <#assign lineCount=lineCount+1>
+
+                                            <tr>
+                                                <td align="right" colspan="6" style="text-align:right; text-justify:none; ">    ${item.quantity}    </td>
+                                                <td align="right" colspan="6" style="white-space:pre-line;text-align:right;text-justify:none;">${item.description}</td>
+                                                <td align="right" colspan="5" style="text-align:right; text-justify:none; ">    ${item.item}    </td>
+                                                <td align="right" colspan="2" style="text-align:right; text-justify:none; ">    ${lineCount}    </td>
+                                            </tr>
+
+
+
+                                    </#list><!-- end items -->
+
+
+
+
+
+
+                                </table>
+                            </#if>
+                        </#if>
+
+
+                        <#if lineCountInventory !=0>
+                            <#assign lineCount_serials=0>
+                                <#if record.custbody_hebrew_layout==false>
+                                    <div> <b>Serial numbers/lot info </b> </div>
+                                    <table style="width:400px" class="linetb">
+                                        <!-- start items -->
+
+                                        <thead>
+                                            <tr>
+                                                <th colspan="1">No.</th>
+                                                <th colspan="5">P.N #</th>
+                                                <th colspan="6">Lot/ Serial Number	 </th>
+
+                                            </tr>
+                                        </thead>
+                                        <#list record.item as item>
+                                            <#assign lineCount_serials=lineCount_serials+1>
+                                                <#if item.inventorydetail !="0" && item.custcol_invserials !="">
+
+                                                    <tr>
+                                                        <td colspan="1" style="text-align:justify; text-justify:none; ">
+                                                            ${lineCount_serials}
+                                                        </td>
+                                                        <td colspan="5" style="text-align:justify;white-space:normal; text-justify:none; ">
+                                                            ${item.item}
+                                                        </td>
+
+
+                                                        <td colspan="6" style="white-space:normal;">${item.custcol_invserials?replace(" ", "<br />", "")} </td>
+                                                    </tr>
+                                                </#if>
+                                        </#list><!-- end items -->
+                                    </table>
+
+
+                                </#if>
+
+                                <#if record.custbody_hebrew_layout==true>
+                                    <div> <b>מידע על מספרים סידוריים  </b> </div>
+                                    <table align="right" style="width:400px" class="linetb">
+                                        <!-- start items -->
+
+                                        <thead>
+                                            <tr>
+                                                <th align="right" style="font-weight:normal" colspan="6">סיריאלי  </th>
+                                                <th align="right" style="font-weight:normal" colspan="5">פריט </th>
+                                                <th align="right" style="font-weight:normal" colspan="1"> .'מס </th>
+                                            </tr>
+                                        </thead>
+                                        <#list record.item as item>
+                                            <#assign lineCount_serials=lineCount_serials+1>
+                                                <#if item.inventorydetail !="0" && item.custcol_invserials !="">
+
+                                                    <tr>
+
+                                                        <td colspan="6" align="right" style="text-align:right; text-justify:none; ">${item.custcol_invserials?replace(" ", "<br />", "")} </td>
+
+                                                        <td colspan="5" align="right" style="text-align:right; text-justify:none; ">
+                                                            ${item.item}
+                                                        </td>
+                                                        <td colspan="1" align="right" style="text-align:right; text-justify:none; ">
+                                                            ${lineCount_serials}
+                                                        </td>
+
+
+                                                    </tr>
+                                                </#if>
+                                        </#list><!-- end items -->
+                                    </table>
+
+
+                                </#if>
+                        </#if>
+
+
+
+
+                        <br />
+                        <#if record.custbody_package_detail_script?has_content>
+                            <#if record.custbody_hebrew_layout==false>
+                                <table border="0" class="linetb" style="width:670px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="display:none;" colspan="4">row</th>
+                                            <th colspan="4">Item No.</th>
+                                            <th colspan="4">Quantity</th>
+                                            <th colspan="3">Box #</th>
+                                            <th colspan="3">Dimensions <br /> CM (L/W/H)</th>
+                                            <th colspan="3">KGS</th>
+                                        </tr>
+                                    </thead>
+
+                                    <#assign num_of_packages=0>
+                                        <#assign sum_weight=0>
+                                            <#list record.custbody_package_detail_script?split("~~") as itemrow>
+
+                                                <#if itemrow !="">
+                                                    <#assign rowspan=itemrow?substring(0,1)>
+                                                        <#assign num_of_packages=num_of_packages +1>
+                                                            <tr>
+                                                                <#assign cols=0>
+                                                                    <#list itemrow?split("^") as item>
+                                                                        <#assign colspan=3>
+                                                                            <#assign cols=cols+1>
+                                                                                <#if cols==1>
+                                                                                    <td style="display:none;" colspan="4">  ${item}</td>
+                                                                                    <#elseif (cols <= 3   )  >
+                                                                                <td colspan="4">   ${item}</td>
+                                                                            <#elseif (rowspan?number >1)>
+                                                                                <td colspan="${colspan}" rowspan="${rowspan}">   ${item}</td>
+                                                                            <#elseif rowspan?number !=0 >
+                                                                                    <td colspan="${colspan}">  ${item}</td>
+                                                                                </#if>
+                                                                    </#list>
+                                                            </tr>
+                                                </#if>
+                                            </#list>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td colspan="4"> <b>TOTAL NO. OF <br /> PACKAGES </b></td>
+                                                <td colspan="3">${record.custbody_package_detail_num}</td>
+                                                <td colspan="3"><b>TOTAL <br /> WEIGHT </b> </td>
+                                                <td colspan="3">${record.custbody_package_detail_weight}</td>
+
+                                            </tr>
+                                </table>
+                            </#if>
+
+
+                            <#if record.custbody_hebrew_layout==true>
+                                <table border="0" class="linetb" style="width:670px;direction:rtl">
+                                    <thead>
+                                        <tr>
+                                            <th style="display:none;" colspan="4">row</th>
+                                            <th align="right" style="font-weight:normal" colspan="4">.'מס</th>
+                                            <th align="right" style="font-weight:normal" colspan="4">כמות</th>
+                                            <th align="right" style="font-weight:normal" colspan="4"> # קופסא</th>
+                                            <th align="right" style="font-weight:normal" colspan="4">גודל </th>
+                                            <th align="right" style="font-weight:normal" colspan="4">משקל </th>
+
+
+
+
+                                        </tr>
+                                    </thead>
+
+
+                                    <#assign num_of_packages=0>
+                                        <#assign sum_weight=0>
+                                            <#list record.custbody_package_detail_script?split("~~") as itemrow>
+
+                                                <#if itemrow !="">
+                                                    <#assign rowspan=itemrow?substring(0,1)>
+                                                        <#assign num_of_packages=num_of_packages +1>
+                                                            <tr>
+                                                                <#assign cols=0>
+                                                                    <#list itemrow?split("^") as item>
+
+                                                                        <#assign cols=cols+1>
+                                                                            <#if cols==1>
+                                                                                <td style="display:none;" colspan="4">  ${item}</td>
+                                                                                <#elseif (cols <= 3   )  >
+                                                                                <td colspan="4" align="right" style="text-align:right; text-justify:none; ">  ${item}</td>
+                                                                            <#elseif (rowspan?number >1)>
+                                                                                <td colspan="4" rowspan="${rowspan}" align="right" style="text-align:right; text-justify:none; ">  ${item}</td>
+                                                                                <#elseif rowspan?number !=0 >
+                                                                               <td colspan="4" align="right" style="text-align:right; text-justify:none; ">  ${item}</td>
+                                                                            </#if>
+                                                                    </#list>
+                                                            </tr>
+                                                </#if>
+                                            </#list>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td colspan="4" align="right" style="text-align:right; text-justify:none; "> סה"כ מספר ארגזים </td>
+                                                <td colspan="4" align="right" style="text-align:right; text-justify:none; ">${record.custbody_package_detail_num}</td>
+                                                <td colspan="4" align="right" style="text-align:right; text-justify:none; ">סה"כ משקל </td>
+                                                <td colspan="4" align="right" style="text-align:right; text-justify:none; ">${record.custbody_package_detail_weight}</td>
+
+                                            </tr>
+                                </table>
+                            </#if>
+                        </#if>
+
+
+
+                        <br />
+                        <#if record.custbody_hebrew_layout==false>
+                            <table style='font-size:10px;'>
+                                <#if record.custbody_pl_terms_and_conditions?has_content>
+                                    <tr><td><p><b>TERMS &amp; CONDITIONS:</b> <br /> ${record.custbody_pl_terms_and_conditions}</p></td></tr>
+                                </#if>
+                                <#if record.custbody_external_comments?has_content>
+                                    <tr><td><p><b>Comments:</b> <br /> ${record.custbody_external_comments}</p></td></tr>
+                                </#if>
+                            </table>
+                        </#if>
+
+                        <#if record.custbody_hebrew_layout==true>
+                            <table style='font-size:10px;'>
+                                <#if record.custbody_pl_terms_and_conditions?has_content>
+                                    <tr><td><p align="right" style="font-weight:normal"><b align="right" style="font-weight:normal"> : תנאים </b> <br /> ${record.custbody_pl_terms_and_conditions}</p></td></tr>
+                                </#if>
+                                <#if record.custbody_external_comments?has_content>
+                                    <tr><td><p align="right" style="font-weight:normal"><b align="right" style="font-weight:normal"> : הערה</b> <br /> ${record.custbody_external_comments}</p></td></tr>
+                                </#if>
+                            </table>
+                        </#if>
+
+    </body>
+</pdf>

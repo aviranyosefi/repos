@@ -1,0 +1,449 @@
+﻿<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <#function toNumber val>
+        <#if val?? && val?has_content>
+            <#if val?is_number>
+                <#return val>
+            </#if>
+            <#return (val?replace("[^0-9.]", "" , "r" ))?number>
+        </#if>
+        <#return 0>
+    </#function>
+    <#function resolveXmlAmpersand val>
+        <#return val?replace("&(?!(?:apos|quot|[gl]t|amp|nbsp);|\\#)", "&amp;" , "r" )>
+    </#function>
+    <#function resolveHtmlTags text>
+        <#local retValue=text?replace("<"?html, "<", "ri")?replace(">"?html, ">", "r")>
+     <#if isHtmlLongText(retValue)>
+         <#local retValue = retValue?replace("<br[/ ]*>", "", "r")>
+     </#if>
+     <#return retValue>
+    </#function>
+    <#function isHtmlLongText text>
+        <#local htmlTags=text?matches("(<[/ ]*table>)|(<[/ ]*tr>)|(<[/ ]*td>)", "ri")>
+     <#return (htmlTags?size > 0)>
+    </#function>
+
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://5463879.app.netsuite.com/c.5463879/suitebundle255679/IL_Files/Heb-Regular.ttf" />
+
+        <style type="text/css">
+            body {
+                font-family: sans-serif;
+            }
+            b {
+                color: #000000;
+                font-weight: bold;
+            }
+            table {
+                margin-top: 10px;          
+                font-size: 9pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }       
+            table.description {
+                padding-left: -5px;
+                padding-top: -13px;
+                table-layout: fixed;
+            }
+            table.description td {
+                font-size: 10pt;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+                text-align: left
+            }
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                border-collapse: collapse;
+                font-size: 10pt;
+            }
+            table.linetb_Total td {                   
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            table.linetb_Total th {
+                background-color: #edeaea;
+                border: 1px solid black;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+            p.comment {
+                font-size: 9pt;
+                margin: 0
+            }
+        </style>
+
+    </head>
+
+    <body padding="0.5in 0.5in 0.5in 0.5in" size="A4">
+
+        <table style='color:#00aaff;' border="0" cellpadding="0" class="header">
+            <tr>
+                <td style='font-size:14px' width="700px" align="left">
+                    ${subsidiary.custrecord_ilo_subsid_eng_address}<br />
+                    <#if record.subsidiary !="D-fend solutions AD Inc.">
+                        Company Reg No : ${subsidiary.custrecordil_tax_payer_id_subsidary}<br />
+                        VAT Reg No : ${subsidiary.federalidnumber}<br />
+                    </#if>
+                </td>
+                <td width="700px" align="right">
+                    <p style="font-size:19px; line-height: 10px;"><#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left;width:180px; height:60px;" /></#if></p>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width:650px;">
+            <tr>
+                <td style="width:450px;">
+                    <div class="default" style="font-size:1.2em; left: 210px;"><u>Quote No: ${record.tranid}</u></div>
+                </td>
+                <td><p style="font-size: 14pt; top: 30%; left: 35%;"></p></td>
+            </tr>
+        </table>
+
+        <#assign curr_symbol=record.currencysymbol>
+            <#if record.currencysymbol='USD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencysymbol='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencysymbol='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+            <#if record.currencysymbol='ILS'>
+                <#assign curr_symbol='₪'>
+            </#if>
+
+            <#assign billTo=record.entity.billaddress>
+            <#if billTo=''>
+                <#assign billTo=record.entity.companyname>
+            </#if>
+
+
+            <table  style="width: 100%;">
+                <tr>
+                    <td>
+                        <table  style="width:320px;top: -12%">                 
+                            <tr>
+                                <td colspan="12"><p style="width: 100%; text-align:left; line-height: 18px; font-size: 1.4em">Customer: </p></td>
+                            </tr>                        
+                            <tr>
+                                <td colspan="12" class="default">
+                                    <p style="text-align: left; width: 320px;">
+                                        ${billTo}<br /> Attention To:<br /> <#if record.custbody_contact_customer?has_content>${record.custbody_contact_customer?substring(record.custbody_contact_customer?index_of(":") + 1, record.custbody_contact_customer?length)}</#if> <#if record.custbody_contact_address?has_content></#if><#if record.custbody_contact_address?has_content><br /> ${record.custbody_contact_address}</#if><#if record.custbody_contact_phone_number?has_content><br /> ${record.custbody_contact_phone_number}</#if><br />
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="12" class="default">
+                                    <p style="width: 100%; text-align:left; line-height: 18px; font-size: 1.4em">
+                                        <br />Currency :<br /> <span style="font-size: 9pt;">${record.currencysymbol}</span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table  style="width:250px; left:75px; top: -12%">
+                            <#if record.custbody6?has_content>
+                                <tr>
+                                    <td align="left">
+                                        <p style="width: 100%; text-align:left; line-height: 18px; font-size: 1.4em">End Customer :<br /><span style="font-size: 9pt;">${record.custbody6?substring(record.custbody6?index_of(" ") + 1, record.custbody6?length)}</span></p>
+                                    </td>
+                                </tr>
+                            </#if>
+                            <#if record.custbody_opp_title?has_content>
+                                <tr>
+                                    <td align="left">
+                                        <p style="width: 100%; text-align:left; line-height: 18px; font-size: 1.4em">Opportunity :<br /><span style="font-size: 9pt;">${record.custbody_opp_title}</span></p>
+                                    </td>
+                                </tr>
+                            </#if>
+                            <tr>
+                                <td align="left">
+                                    <p style="width: 100%; text-align:left; line-height: 18px; font-size: 1.4em">Date :<br /><span style="font-size: 9pt;">${record.trandate}</span></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <table align="center" style="width:650px;">
+                <tr>
+                    <td style="width:450px;" align="center">
+                        <div class="default" style="font-size:1.2em;"><u>Core Quote</u></div>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="linetb_Total" style="width:670px;">
+                <thead>
+                    <tr height="20">
+                        <th colspan="2"><p style="width: 100%; text-align:center;">Line</p></th>
+                        <th colspan="16"><p style="width: 100%; text-align:center;">Product id/description</p></th>                            
+                        <th colspan="2"><p style="width: 100%; text-align:center;">Qty</p></th>
+                        <th colspan="6"><p style="width: 100%; text-align:center;">Price</p></th>
+                        <th colspan="6"><p style="width: 100%; text-align:center;">Total</p></th>
+                    </tr>
+                </thead>      
+                <#list record.custbody_prodocts?split("~~") as itemrow>
+                    <#assign count=1>
+                        <#if itemrow !="">
+                            <tr>
+                                <#list itemrow?split("^") as item>
+                                    <#if count=1>
+                                        <td colspan="2" style="text-align:center; text-justify:none; border: 1px solid black;"><p style="width: 100%; text-align:center;">${item}</p></td>
+                                        <#elseif count=2>
+                                                <#assign inlineDisclaimerTemplate = resolveXmlAmpersand(resolveHtmlTags("<td colspan='16' style='border: 1px solid black;'><p style='width: 100%; text-align:left;'>${item}</p></td>"))?interpret>
+                                                <@inlineDisclaimerTemplate />                                                                                                       
+                                                <#elseif count=3>
+                                                    <td colspan="2" style=" border: 1px solid black;"><p style="width: 100%; text-align:center;">${item}</p></td>
+                                                    <#elseif count=4>
+                                                        <td colspan="6" style="border: 1px solid black;">
+                                                            <p style="width: 100%; text-align:center;">
+                                                                <#if item?contains('%')>${item} <#elseif item?contains('sub')><#else>${curr_symbol}${item}</#if>
+                                                                <br /><br />
+                                                            </p>
+                                                        </td>
+                                                        <#elseif count=5>
+                                                            <td colspan="6" style=" border: 1px solid black;"><p style="width: 100%; text-align:center;">${curr_symbol}${item}</p></td>
+                                    </#if>
+                                    <#assign count=count+ 1>
+                                </#list>                                  
+                            </tr>
+                        </#if>
+                </#list>
+                <tr>
+                    <td colspan="20" style="background-color:#fff; border: 1px solid white"></td>
+                    <td colspan="6" style="height:25px; vertical-align: middle;background-color: #edeaea;border: 1px solid black;">Sub Total<br /></td>
+                    <td colspan="6" align="right" style="height:25px; vertical-align: middle;background-color: #edeaea;border: 1px solid black;">${curr_symbol}${(record.subtotal)?string[",##0.00"]}</td>
+                </tr>
+                <tr>
+                    <td colspan="20" style="background-color:#fff; border: 1px solid white"></td>
+                    <td colspan="6" style="height:25px; vertical-align: middle;background-color: #edeaea;border: 1px solid black;">VAT <#if record.subtotal !=0>${record.taxtotal / record.subtotal * 100}<#else>0</#if> %<br /></td>
+                    <td colspan="6" align="right" style="height:25px; vertical-align: middle;background-color: #edeaea;border: 1px solid black;">${curr_symbol}${(record.taxtotal)?string[",##0.00"]}</td>
+                </tr>
+                <tr>
+                    <td colspan="20" style="background-color:#fff; border: 1px solid white"></td>
+                    <td colspan="6" style="height:25px; vertical-align: middle;background-color: #edeaea;border: 1px solid black;">Total<br /></td>
+                    <td colspan="6" align="right" style="height:25px; vertical-align: middle;background-color: #edeaea;border: 1px solid black;">${curr_symbol}${record.total?string[",##0.00"]}</td>
+                </tr>
+            </table>
+
+            <#if record.custbody_prodocts_optional?has_content>
+                <br />
+                <table align="center" style="width:650px;top:-2%;">
+                    <tr>
+                        <td style="width:450px;" align="center">
+                            <div class="default" style="font-size:1.2em;"><u>Optional Items</u></div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="linetb_Total" style="width:670px;">
+                    <thead>
+                        <tr height="20">
+
+                            <th colspan="2"><p style="width: 100%; text-align:center;">Line</p></th>
+                            <th colspan="16"><p style="width: 100%; text-align:center;">Product id/description</p></th>
+                            <th colspan="2"><p style="width: 100%; text-align:center;">Qty</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">Price</p></th>
+                            <th colspan="6"><p style="width: 100%; text-align:center;">Total</p></th>
+
+                        </tr>
+                    </thead>
+                                         
+                    <#list record.custbody_prodocts_optional?split("~~") as itemrow>
+                        <#assign count=1>
+                            <#if itemrow !="">
+                                <tr>
+                                    <#list itemrow?split("^") as item>
+                                        <#if count=1>
+                                            <td colspan="2" style="text-align:center; text-justify:none;border: 1px solid black;"><p style="width: 100%; text-align:center;">${item}</p></td>
+                                            <#elseif count=2>
+                                                <#assign inlineDisclaimerTemplate = resolveXmlAmpersand(resolveHtmlTags("<td colspan='16' style='text-align:justify; text-justify:none; border: 1px solid black;'><p style='width: 100%; text-align:left;'>${item}</p></td>"))?interpret>
+                                            <@inlineDisclaimerTemplate />  
+                                                    <#elseif count=3>
+                                                        <td colspan="2" style=" border: 1px solid black;"><p style="width: 100%; text-align:center;">${item}</p></td>
+                                                        <#elseif count=4>
+                                                            <td colspan="6" style="border: 1px solid black;">
+                                                                <p style="width: 100%; text-align:center;">
+                                                                    <#if item?contains('%')>${item} <#elseif item?contains('sub')><#else>${curr_symbol}${item}</#if>
+                                                                    <br /><br />
+                                                                </p>
+                                                            </td>
+                                                            <#elseif count=5>
+                                                                <td colspan="6" style="border: 1px solid black;"><p style="width: 100%; text-align:center;">${curr_symbol}${item}</p></td>
+                                                              
+                                        </#if>
+
+                                        <#assign count=count+ 1>
+
+                                    </#list>                                           
+                                </tr>
+                            </#if>
+                    </#list>                        
+                </table>
+            </#if>
+              
+            <#if record.custbody_pmt_comments?has_content>
+                <br />
+                <p class="comment">
+                    <b>Comments:</b><br /> ${record.custbody_pmt_comments}<br /><br />
+                </p>
+
+            </#if>
+            <table align="center" style="width:650px;top:-2%;">
+                <tr>
+                    <td style="width:450px;" align="center">
+                        <div class="default" style="font-size:1.2em;"><u>Terms &amp; Conditions</u></div>
+                    </td>
+                </tr>
+            </table>
+            <#if record.custbody_terms_and_conditions?has_content>
+
+                <p class="comment">
+                    <!--<b>Terms &amp; Conditions: </b><br />--><b> ${record.custbody_terms_and_conditions}</b> <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_pmt_terms_and_conditions?has_content>
+
+                <p class="comment">
+                    <b> Payment Terms: </b><br /> ${record.custbody_pmt_terms_and_conditions} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_end_user_certificate?has_content>
+
+                <p class="comment">
+                    <b>End User Certificate: </b><br /> ${record.custbody_end_user_certificate} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_cancellation_fee?has_content>
+
+                <p class="comment">
+                    <b>Cancellation fee: </b><br /> ${record.custbody_cancellation_fee} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_delivery_date?has_content>
+
+                <p class="comment">
+                    <b>Delivery Date:</b> <br /> ${record.custbody_delivery_date} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_currency?has_content>
+                <p class="comment">
+                    <b>Currency:</b> <br /> ${record.custbody_currency} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_delivery_shipping?has_content>
+                <p class="comment">
+                    <b>Delivery/Shipping:</b> <br /> ${record.custbody_delivery_shipping} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_acceptance?has_content>
+                <p class="comment">
+                    <b>Acceptance:</b> <br /> ${record.custbody_acceptance} <br /><br />
+                </p>
+
+            </#if>
+            <p class="comment">
+                <b>Bank Details:</b><br /> <#if record.entity.country=='IL'> ${subsidiary.custrecord_bankils} <#else>  ${subsidiary.custrecord_bankfrn} <br /></#if><br /><br />
+            </p>
+            <#if record.custbody_cfe?has_content>
+                <p class="comment">
+                    <b>CFE (Customer Furnished Equipment):</b><br /> ${record.custbody_cfe}<br /><br />
+                </p>
+            </#if> 
+            <table>
+                <#if record.custbody_general?has_content>
+                    <tr>
+                        <td style="width:10%;"></td>
+                        <td>
+                            <ul>
+                                <#if record.custbody_general?has_content>
+                                    <li>
+                                        <p class="comment">
+                                            <b> General:  </b><br /> ${record.custbody_general} <br /><br />
+                                        </p>
+                                    </li>
+                                </#if>
+                                <#if record.custbody_for_stationary_sensor_install?has_content>
+                                    <li>
+                                        <p class="comment">
+                                            <b> For Stationary Sensor installation: </b><br /> ${record.custbody_for_stationary_sensor_install} <br /><br />
+                                        </p>
+                                    </li>
+                                </#if>
+                                <#if record.custbody_for_vehicle_sensor_installati?has_content>
+                                    <li>
+                                        <p class="comment">
+                                            <b>For Vehicle Sensor installation: </b><br /> ${record.custbody_for_vehicle_sensor_installati} <br /><br />
+                                        </p>
+                                    </li>
+                                </#if>
+                            </ul>
+
+                        </td>
+
+                    </tr>
+                </#if>
+
+            </table>
+
+            <#if record.custbody_maintenance_sw_updates_firmw?has_content>
+
+                <p class="comment">
+                    <b>Maintenance, SW Updates Firmware Updates &amp; Support: </b><br /> ${record.custbody_maintenance_sw_updates_firmw} <br /><br />
+                </p>
+
+            </#if>
+            <#if record.custbody_validity?has_content>
+
+                <p class="comment">
+                    <b>Validity:</b> <br /> ${record.custbody_validity?replace('*' , record.duedate)} <br /><br />
+                </p>
+
+            </#if>
+
+
+
+
+    </body>
+</pdf>

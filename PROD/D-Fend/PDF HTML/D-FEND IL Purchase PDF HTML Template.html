@@ -1,0 +1,536 @@
+﻿<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://5463879.app.netsuite.com/c.5463879/suitebundle255679/IL_Files/Heb-Regular.ttf" />
+
+        <style type="text/css">
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: sans-serif;
+                font-size: 9pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+
+            table.linetb {
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-size: 8pt;
+                padding: 0px;
+            }
+
+
+            table.linetb th {
+                background-color: #fff;
+                border: 1px solid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.linetb td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+
+
+
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                border-collapse: collapse;
+                page-break-inside: avoid;
+                font-size: 8pt;
+            }
+
+
+
+
+            #linetb_Total {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+                background-color: #D3D3D3;
+            }
+
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 9pt;
+                padding-left: 5px;
+                vertical-align: middle;
+            }
+        </style>
+
+        <macrolist>
+            <macro id="nlheader">
+
+                <#if record.entity.custentity_ilo_print_hebrew==false>
+                    <table style='color:#00aaff;' border="0" cellpadding="0" class="header">
+                        <tr>
+                            <td width="700px" align="left">
+                                <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left;width:180px; height:60px;" /> </#if>
+                                <p style="font-size: 1.3em;">${subsidiary.mainaddress_text}</p>
+                                <p style="font-size: 1.3em;">Tax Reg No : ${companyInformation.employerid}</p>
+                                <p style="font-size: 1.3em;">Requestor Name : ${record.custbody_requisition_requester}</p>
+                                <p style="font-size: 1.3em;">Requestor Phone : ${record.custbody_requisition_requester.phone}</p>
+                            </td>
+                            <td width="500px" align="right">
+
+                                <table class="headertable" style="font-size: 1.6em;">
+                                    <tr><th>PO# :</th><td width="50%"> ${record.tranid}</td></tr>
+                                    <tr><th>Date :</th><td width="50%"> ${record.trandate?string("dd/MM/yyyy")}</td></tr>
+                                    <tr><th>Currency :</th><td width="50%"> ${record.currencysymbol}</td></tr>
+                                    <#if record.terms !=''>
+                                        <tr><th>Payment Terms :</th><td width="50%"> ${record.terms}</td></tr>
+                                    </#if>
+                                    <tr><th>Incoterm :</th><td width="50%"> ${record.custbody_so_ff_incoterm}</td></tr>
+                                </table>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+                </#if>
+                <div class="default" align="center" style="font-size:1.1em;"><u>Purchase Order #: ${record.tranid}</u></div>
+
+
+                <#if record.entity.custentity_ilo_print_hebrew==true>
+
+                    <table border="0" cellpadding="0" class="header">
+                        <tr>
+                            <td width="700px" align="left"></td>
+                            <td width="700px" align="right">
+                                <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left;width:180px; height:60px;" /> </#if>
+                                <p style="font-size: 2em;">${subsidiary.custrecord_ilo_subsid_heb_companyname}</p>
+                                <p style="font-size: 1.6em;  text-align:right; ">${subsidiary.custrecord_ilo_subsid_hebrew_address}</p>
+                                <p style="font-size: 1.6em;  text-align:right; ">${subsidiary.custrecordil_tax_payer_id_subsidary} : ח.פ</p>
+                                <p style="font-size: 1.6em;  text-align:right; ">${subsidiary.custrecordil_tiknik} : תיק ניכויים</p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </#if>
+            </macro>
+        </macrolist>
+
+    </head>
+    <#assign headerHeight='170px'>
+        <#if record.entity.custentity_ilo_print_hebrew==true>
+            <#assign headerHeight='170px'>
+        </#if>
+
+        <body padding="15" margin="15" size="A4" footer="nlfooter" footer-height="120px" header="nlheader" header-height="200px">
+
+
+
+
+
+            <#if record.entity.custentity_ilo_print_hebrew==false>
+
+                <table style="width:650px;top:-2%;">
+                    <tr>
+                        <td style="width:400px;"></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </#if>
+
+            <#if record.entity.custentity_ilo_print_hebrew==true>
+
+                <table style="width:650px; top:-2%;">
+                    <tr>
+                        <td>
+                            <table style="width:250px;">
+
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.tranid}</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px; width: 300px; text-align: right;">מס' הזמנת רכש :</p>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.trandate}</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px;">תאריך :</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.duedate}</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px;">תאריך משלוח :</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.currencysymbol}</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px;">מטבע :</p>
+                                    </td>
+                                </tr>
+
+
+                                <#if record.terms !=''>
+                                    <tr>
+                                        <td align="left">
+                                            <p style="line-height: 5px;">${record.terms}</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="line-height: 5px;">תנאי תשלום :</p>
+                                        </td>
+                                    </tr>
+                                </#if>
+                                <tr>
+                                    <td align="left">
+                                        <p style="line-height: 5px;">${record.custbody_so_ff_incoterm }</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="line-height: 5px;">Incoterm</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:400px;" align="right">
+                            <div class="default" style="font-size:1.2em;"><u>${record.tranid} :# הזמנת רכש</u></div>
+                        </td>
+                    </tr>
+                </table>
+            </#if>
+
+
+            <#if record.entity.custentity_ilo_print_hebrew==false>
+                <div>
+                    <br />
+                    <table style="width:650px; ">
+                        <tr>
+
+                            <td class="default" style="font-size:1.05em;"><u>Purchase From:</u> <br /><span>${record.billaddress}<br /><br /></span></td>
+
+                            <td class="default" style="font-size:1.05em;"><u>Ship To:</u><br /> <span>  ${subsidiary.shippingaddress_text}<br /><br /></span> </td>
+                        </tr>
+
+                    </table><br />
+                    <#assign amounttotal=0>
+                        <#assign primarycur_exchange=record.exchangerate>
+                            <#assign secondary_exchange=1>
+                                <#assign total_exchange=1>
+                                    <#assign currency_text=record.currency>
+                                        <#assign currency_symbol=record.currency>
+                                            <#if record.accountingbookdetail?has_content>
+                                                <#list record.accountingbookdetail as abd>
+                                                    <#assign secondary_exchange=abd.exchangerate>
+                                                </#list>
+                                            </#if>
+                </div>
+            </#if>
+
+            <#if record.entity.custentity_ilo_print_hebrew==true>
+                <div>
+                    <table style="width:650px; ">
+                        <tr>
+                            <td class="default" align="right" style="font-size:1.05em;"><u>לשלוח:</u><br /> <br /><span> ${record.shipaddress}<br /><br /></span></td>
+                            <td class="default" align="right" style="font-size:1.05em;"><u>לחיוב:</u><br /> <br /><span> ${record.billaddress}<br /><br /></span></td>
+                            <td class="default" align="right" style="font-size:1.05em;"><u>לכבוד:</u><br /> <br /><span> ${record.billaddressee}<br /><br /></span></td>
+                        </tr>
+
+                    </table><br />
+                    <#assign amounttotal=0>
+                        <#assign primarycur_exchange=record.exchangerate>
+                            <#assign secondary_exchange=1>
+                                <#assign total_exchange=1>
+                                    <#assign currency_text=record.currency>
+                                        <#assign currency_symbol=record.currency>
+                                            <#if record.accountingbookdetail?has_content>
+                                                <#list record.accountingbookdetail as abd>
+                                                    <#assign secondary_exchange=abd.exchangerate>
+                                                </#list>
+                                            </#if>
+                </div>
+            </#if>
+
+            <#assign curr_symbol=record.currencysymbol>
+                <#if record.currencysymbol='USD'>
+                    <#assign curr_symbol='$'>
+                </#if>
+                <#if record.currencysymbol='GBP'>
+                    <#assign curr_symbol='£'>
+                </#if>
+                <#if record.currencysymbol='EUR'>
+                    <#assign curr_symbol='€'>
+                </#if>
+                <#if record.currencysymbol='ILS'>
+                    <#assign curr_symbol='₪'>
+                </#if>
+
+
+                <#if record.item?has_content>
+
+
+                    <#if record.entity.custentity_ilo_print_hebrew==false>
+
+                        <table class="linetb" style="width:670px;font-size:8px">
+                            <!-- start items -->
+                            <#list record.item as item>
+                                <#if item_index==0>
+
+
+
+
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2"><p style="width: 100%; text-align:center;">Line</p></th>
+                                            <th colspan="5"><p style="width: 100%; text-align:center;">Item</p></th>
+                                            <th colspan="8"><p style="width: 100%; text-align:center;">Description</p></th>
+                                            <th colspan="4"><p style="width: 100%; text-align:center;">Rev No</p></th>
+                                            <th colspan="2"><p style="width: 100%; text-align:center;">Qty</p></th>
+                                            <th colspan="3"><p style="width: 100%; text-align:center;">Units</p></th>
+                                            <th colspan="6"><p style="width: 100%; text-align:center;">Manufacturer PN</p></th>
+                                            <th colspan="3"><p style="width: 100%; text-align:center;">MFG</p></th>
+                                            <th colspan="5"><p style="width: 100%; text-align:center;">Request Date</p></th>
+                                            <th colspan="6"><p style="width: 100%; text-align:center;">Unit Price</p></th>
+                                            <th colspan="6"><p style="width: 100%; text-align:center;">Amount</p></th>
+
+
+                                        </tr>
+                                    </thead>
+
+                                </#if>
+
+                                <tr>
+                                    <td colspan="2" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item_index +1}</p></td>
+                                    <td colspan="5" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:left;">${item.custcol_item_number}</p></td>
+                                    <td colspan="8" style="text-align:justify; text-justify:none; ">
+                                        <p style="width: 100%; text-align:left;">
+                                            ${item.description}<br /><br />
+                                        </p>
+                                    </td>
+                                    <td colspan="4"><p style="width: 100%; text-align:center;">${item.custcol9}</p></td>
+                                    <td colspan="2"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+                                    <td colspan="3"><p style="width: 100%; text-align:center;">${item.units}</p></td>
+                                    <td colspan="6"><p style="width: 100%; text-align:center;">${item.custcol_manufacturer_pn}</p></td>
+                                    <td colspan="3"><p style="width: 100%; text-align:center;">${item.custcol_manufacturer}</p></td>
+                                    <td colspan="5"><p style="width: 100%; text-align:center;">${item.expectedreceiptdate}</p></td>
+                                    <td colspan="6">
+                                        <p style="width: 100%; text-align:center;">
+                                            ${curr_symbol}${item.rate?string[",##0.00"]}<br /><br />
+                                        </p>
+                                    </td>
+                                    <td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol}${item.amount?string[",##0.00"]}</p></td>
+
+
+                                </tr>
+                            </#list><!-- end items -->
+                            <#if record.taxtotal?has_content>
+                                <#assign vatAmt=(record.taxtotal / record.subtotal * 100)?round>
+                                <tr>
+                                    <td colspan="38" style="background-color:#fff; border:0"> </td>
+                                    <td id="linetb_Total" colspan="6" align="center" style="height:40px; vertical-align: middle;">Sub Total<br /></td>
+                                    <td id="Td1" colspan="6" align="center" style="height:40px; vertical-align: middle;">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="38" style="background-color:#fff; border:0"> </td>
+                                    <td id="Td2" colspan="6" align="center" style="height:40px; vertical-align: middle;">VAT ${vatAmt}%<br /></td>
+                                    <td id="Td3" colspan="6" align="center" style="height:40px; vertical-align: middle;">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+                                </tr>
+                            </#if>
+                            <tr>
+                                <td colspan="38" style="background-color:#fff; border:0"> </td>
+                                <td id="Td4" colspan="6" align="center" style="height:40px; vertical-align: middle;">Total<br /></td>
+                                <td id="Td5" colspan="6" align="center" style="height:40px; vertical-align: middle;">${curr_symbol}${record.total?string[",##0.00"]}</td>
+                            </tr>
+                        </table>
+
+                    </#if>
+
+                    <#if record.entity.custentity_ilo_print_hebrew==true>
+
+                        <table class="linetb" style="width:670px;">
+                            <!-- start items -->
+                            <#list record.item as item>
+                                <#if item_index==0>
+
+
+
+
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6"><p style="width: 100%; text-align:center;">סה"כ</p></th>
+                                            <th colspan="6"><p style="width: 100%; text-align:center;">מחיר ליחידה</p></th>
+                                            <th colspan="2"><p style="width: 100%; text-align:center;">כמות</p></th>
+                                            <th colspan="10"><p style="width: 100%; text-align:center;">תאור פריט</p></th>
+                                            <th colspan="6"><p style="width: 100%; text-align:center;">פריט</p></th>
+                                            <th colspan="2"><p style="width: 100%; text-align:center;">שורה</p></th>
+
+
+
+
+                                        </tr>
+                                    </thead>
+
+                                </#if>
+
+                                <tr>
+
+                                    <td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol}${item.amount?string[",##0.00"]}</p></td>
+                                    <td colspan="6">
+                                        <p style="width: 100%; text-align:center;">
+                                            ${curr_symbol}${item.rate?string[",##0.00"]}<br /><br />
+                                        </p>
+                                    </td>
+                                    <td colspan="2"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+                                    <td colspan="10" style="text-align:justify; text-justify:none; ">
+                                        <p style="width: 100%; text-align:left;">
+                                            ${item.description}<br /><br />
+                                        </p>
+                                    </td>
+                                    <td colspan="6" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:left;">${item.custcol_item_number}</p></td>
+                                    <td colspan="2" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item_index +1}</p></td>
+
+
+
+
+                                </tr>
+                            </#list><!-- end items -->
+                        </table>
+
+                    </#if>
+
+
+
+                </#if>
+
+                <#if record.entity.custentity_ilo_print_hebrew==true>
+
+                    <#assign vatAmt=(record.taxtotal / record.subtotal * 100)?round>
+
+                    <table class="linetb_Total" style="width:670px">
+                        <!-- start items -->
+                        <tr>
+
+                            <td colspan="6" align="center" style="height:40px; vertical-align: middle;">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+                            <td colspan="6" align="center" style="height:40px; vertical-align: middle;">סה"כ לפני מע"מ : <br /></td>
+
+                        </tr>
+                        <tr>
+
+                            <td colspan="6" align="center" style="height:40px; vertical-align: middle;">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+                            <td colspan="6" align="center" style="height:40px; vertical-align: middle;"> : מע"מ ${vatAmt}%<br /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" align="center" style="height:40px; vertical-align: middle;">${curr_symbol}${record.total?string[",##0.00"]}</td>
+                            <td colspan="6" align="center" style="height:40px; vertical-align: middle;">סה"כ לתשלום : <br /></td>
+
+
+                            <td rowspan="3" colspan="20" align="right" style="background-color:#fff; border: 1px solid white">
+                                <#if record.memo !=''>
+                                    <b>הערות :</b>
+                                    <p style='border:1px;padding:8px'>
+                                        ${record.memo}
+                                    </p>
+                                </#if>
+                                <#if subsidiary.custrecord_po_additional_comment_hebrew !=''>
+                                    <br /><br />
+                                    ${subsidiary.custrecord_po_additional_comment_hebrew}
+                                </#if>
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+
+                </#if>
+
+                <table style='font-size:12px;'>
+                    <#if record.memo !=''>
+                        <tr><td>   <b>Remarks</b> <p style='border:1px;padding:8px'>${record.memo}</p> </td></tr>
+
+                    </#if>
+                    <#if subsidiary.custrecord_po_additional_comment_english !=''>
+
+                        <tr><td> <br />${subsidiary.custrecord_po_additional_comment_english}</td></tr>
+                    </#if>
+                    <#if subsidiary.custrecord_ilo_subsid_english_remit?has_content>
+                        <tr><td><p><b>TERMS &amp; CONDITIONS:</b> <br /> ${subsidiary.custrecord_ilo_subsid_english_remit}</p></td></tr>
+                    </#if>
+                </table>
+
+
+
+        </body>
+</pdf>

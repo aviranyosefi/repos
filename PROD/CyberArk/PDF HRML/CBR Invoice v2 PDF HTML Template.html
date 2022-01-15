@@ -1,0 +1,1121 @@
+﻿<#-- NetCloud Customer Success - Advanced PDF/HTML Template
+  NCS Invoice/Credit Memo PDF/HTML Template
+-->
+<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <#-- ======Start Functions======-->
+        <#function isTrue val>
+            <#if val?? && val?has_content>
+                <#if val?is_boolean>
+                    <#return val==true>
+                        <#elseif val?is_string>
+                            <#return val=="T">
+                </#if>
+            </#if>
+            <#return false>
+        </#function>
+
+        <#function toNumber val>
+            <#if val?? && val?has_content>
+                <#if val?is_number>
+                    <#return val>
+                </#if>
+                <#return (val?replace("[^0-9.]", "" , "r" ))?number>
+            </#if>
+            <#return 0>
+        </#function>
+
+        <#function resolveXmlAmpersand val>
+            <#return val?replace("&(?!(?:apos|quot|[gl]t|amp|nbsp);|\\#)", "&amp;" , "r" )>
+        </#function>
+
+        <#function isHtmlLongText text>
+            <#local htmlTags=text?matches("(<[/ ]*table>)|(<[/ ]*tr>)|(<[/ ]*td>)", "ri")>
+     <#return (htmlTags?size > 0)>
+        </#function>
+
+        <#function resolveHtmlTags text>
+            <#local retValue=text?replace("<"?html, "<", "ri")?replace(">"?html, ">", "r")>
+     <#if isHtmlLongText(retValue)>
+         <#local retValue = retValue?replace("<br[/ ]*>", "", "r")>
+     </#if>
+     <#return retValue>
+        </#function>
+
+        <#-- ============Translation Function=============-->
+            <#function getTranslatedLabel (fldName, defaultText)>
+                <#if NC_LABEL_TRANSLATIONS?has_content && NC_LABEL_TRANSLATIONS[fldName]?has_content>
+                    <#return NC_LABEL_TRANSLATIONS[fldName]>
+                </#if>
+                <#return defaultText>
+            </#function>
+            <#-- ============End Translation Function=============-->
+                <#-- ======End Functions======-->
+
+                    <#assign GLOBAL_DOMAIN_PATH="https://4678143.app.netsuite.com"
+                             RECORD_TITLE=record@title
+                             FONT_PATH="https://4678143.app.netsuite.com/c.4678143/suitebundle46541/Localization-IL/Fonts"
+                             IS_RTL=false
+                             TEXT_DIRECTION="ltr"
+                             ALIGN_DIRECTION_LEFT="left"
+                             ALIGN_DIRECTION_RIGHT="right"
+                             BILL_ADDRESS=record.billaddress
+                             SHIP_ADDRESS=record.shipaddress
+                             VAT_REG_NUM=record.vatregnum
+                             TAX_ID=record.subsidiary.taxidnum
+                             UNION_TAX_ID=record.subsidiary.custrecord_il_union_tax_reg_num
+                             BILL_COUNTRY=record.billcountry
+                             DATE_FORMAT="dd-MMM-yyyy"
+                             TEXT_TRANSL={
+                             "מקור" : "Original" ,
+                             "העתק" : "Copy" ,
+                             "טיוטה" : "Draft"
+                             }
+                             termsAndConditionsTemplate=""
+                             LOCALE=record.custbody_ncs_locale
+    <#------ Localization ------>
+    CURR_FORMAT = ",##0.00"
+    EXCH_CURR_FORMAT = ",##0.000##"
+
+    <#-- Transaction Currency -->
+    TRAN_CURR_SYMBOL = record.custbody_ncs_tran_currency_symbol
+	TRAN_CURR_FORMAT_SYM = TRAN_CURR_SYMBOL + " " + CURR_FORMAT
+
+    <#-- Local Currency (based on subsidiary) -->
+	LOCAL_CURR_SYMBOL = record.subsidiary.custrecord_ncs_print_currency_symbol
+	LOCAL_CURR_FORMAT_SYM = LOCAL_CURR_SYMBOL + " " + CURR_FORMAT
+
+    <#------ IL Localization ------>
+    IS_IL_ENTITY = false
+    IS_IL_LOCALIZATION = subsidiary.country.internalid?lower_case == "il"
+    CURR_SYMBOL_ISO = record.custbody_il_currency_sym_iso
+
+    <#-- IL Currency & Exchange rate  -->
+    IL_EXCHANGE_RATE = record.custbody_il_exchangerate
+    IL_CURR_SYMBOL = "₪"
+    IL_CURR_FORMAT_SYM = IL_CURR_SYMBOL + " " + CURR_FORMAT
+
+	COMSIGN_ORIGNAL = record.custbody_cbr_comsign_print_original
+	COMSIGN_ALREADY_SIGNED = record.custbody_cbr_comsign_doc_record
+
+    TRAN_STATUS = record.custbody_il_transaction_state.custrecord_il_tranprint_status
+    TRAN_ORIGINAL_PRINTED = TRAN_STATUS?has_content && TEXT_TRANSL[TRAN_STATUS]?? && TEXT_TRANSL[TRAN_STATUS]?lower_case == "original"
+
+    IS_DOMESTIC = false
+    IS_EXPORT = false
+
+    IS_US_SUBSIDIARY = subsidiary.country.internalid?lower_case == "us"
+
+    SUB_CURRENCY = record.subsidiary.currency?lower_case
+    TRAN_CURRENCY = record.currency?lower_case
+    LIST_PRICE_CURRENCY = record.custbody_cbr_so_list_price_currency?lower_case!""
+    INDEXATION_IND = isTrue(record.custbody_cbr_indexation_ind)
+    ZAB_INDEXATION_IND = isTrue(record.custbody_cbr_zab_ind)
+    ZAB_SECONDERY_EXCHANGE = 1
+
+    SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS = false
+    ORIGINAL_UNIT_PRICE_SUBTOTAL = 0
+    ORIGINAL_UNIT_PRICE_FORMAT_SYM = "$ " + CURR_FORMAT
+
+    SECONDARY_CURRENCY = ""
+
+    CANADIAN_NUMBERS = ""
+    PS_DETAILS_LIST = ""
+    RECORD_CURRENCY = record.currency
+        
+>
+
+      <#if record.subsidiary = "202_CyberArk ISR">
+        <#assign TAX_ID = record.subsidiary.custrecordil_tax_payer_id_subsidary
+    			UNION_TAX_ID = record.subsidiary.taxidnum>
+        </#if>
+
+<#if record.custpage_ps_details_list?has_content>
+    <#assign PS_DETAILS_LIST = record.custpage_ps_details_list?eval!"">
+</#if>
+
+<#if record.custpage_canadian_numbers?has_content>
+    <#assign CANADIAN_NUMBERS = record.custpage_canadian_numbers?eval!"">
+</#if>
+
+<#if isTrue(record.subsidiary.custrecord_ncs_print_local_currency) && record.custpage_secondary_currency_obj?has_content>
+    <#assign SECONDARY_CURRENCY = record.custpage_secondary_currency_obj?eval!"">
+</#if>
+
+<#if INDEXATION_IND && TRAN_CURRENCY == "ils" && LIST_PRICE_CURRENCY == "usd" && SUB_CURRENCY == "usd" && subsidiary.country.internalid?lower_case == "il">
+    <#assign SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS = true>
+</#if>
+
+<#if record.custpage_print_custom_locale?has_content>
+    <#assign LOCALE = record.custpage_print_custom_locale>
+</#if>
+
+<#if isTrue(TRAN_ORIGINAL_PRINTED) && record.entity?has_content && record.entity.language?has_content && (record.entity.language == "Hebrew" || record.entity.language.id == "2501")>
+    <#assign LOCALE = "he_IL">
+</#if>
+
+<#if record.custbody_batch_hebrew_print = 2>
+  <#assign LOCALE = "he_IL">
+</#if>
+
+<#if LOCALE == "he_IL">
+    <#assign IS_RTL = true>
+</#if>
+
+<#if IS_RTL == true>
+    <#assign
+        TEXT_DIRECTION = "rtl"
+        ALIGN_DIRECTION_LEFT = "right"
+        ALIGN_DIRECTION_RIGHT = "left"
+        DATE_FORMAT = "dd-MM-yyyy"
+    >
+</#if>
+
+<#if record.baserecordtype == "invoice">
+    <#if LOCALE == "he_IL">
+        <#assign RECORD_TITLE = "חשבונית מס">
+    <#else>
+        <#assign RECORD_TITLE = "Tax Invoice">
+    </#if>
+<#elseif record.baserecordtype == "creditmemo">
+    <#if LOCALE == "he_IL">
+        <#assign RECORD_TITLE = "חשבונית מס זיכוי">
+    <#else>
+        <#assign RECORD_TITLE = "Credit Memo">
+    </#if>
+</#if>
+
+<#if TRAN_STATUS?has_content && TEXT_TRANSL[TRAN_STATUS]?? && LOCALE != "he_IL">
+  <#assign TRAN_STATUS = TEXT_TRANSL[TRAN_STATUS]>
+</#if>
+
+<#-- Get Address from Entity directrly in case the data comes empty from transaction -->
+<#if !VAT_REG_NUM?has_content>
+	<#assign VAT_REG_NUM = record.custbody_il_vatregnumber>
+</#if>
+
+<#if !VAT_REG_NUM?has_content>
+	<#assign VAT_REG_NUM = record.entity.vatregnumber>
+</#if>
+
+<#if !BILL_COUNTRY?has_content>
+	<#assign BILL_COUNTRY = record.entity.billcountry>
+</#if>
+
+<#if !BILL_ADDRESS?has_content>
+	<#assign BILL_ADDRESS = record.entity.billaddressee>
+</#if>
+
+<#assign IS_IL_ENTITY = (BILL_COUNTRY?lower_case == "il" || BILL_COUNTRY.internalid?lower_case == "il")>
+
+<#assign
+    <#-- Condions for localization -->
+    SHOW_IL_CURR_EXCH_FLDS = IS_IL_LOCALIZATION && IS_IL_ENTITY && record.currencysymbol != "ILS"
+    SHOW_LOCAL_CURRENCY = isTrue(record.subsidiary.custrecord_ncs_print_local_currency) && SECONDARY_CURRENCY?has_content
+	SHOW_LOCAL_CURR_EXCH_FLDS = SHOW_LOCAL_CURRENCY && SECONDARY_CURRENCY.exchangerate != 1 && record.billcountry?lower_case == subsidiary.country.internalid?lower_case
+>
+
+<#if SHOW_IL_CURR_EXCH_FLDS>
+	<#assign
+		LOCALIZATION_CURRENCY_SYMBOL = IL_CURR_FORMAT_SYM
+		LOCALIZATION_EXCHANGE_RATE = record.custbody_il_exchangerate
+		EXCHANGE_RATE_LABEL = record.custbody_il_exchangerate@label
+	>
+<#elseif SHOW_LOCAL_CURR_EXCH_FLDS>
+    <#if SECONDARY_CURRENCY?has_content && SECONDARY_CURRENCY.symbol?has_content && SECONDARY_CURRENCY.exchangerate?has_content>
+        <#assign
+            LOCALIZATION_CURRENCY_SYMBOL = SECONDARY_CURRENCY.symbol + " " + CURR_FORMAT
+            LOCALIZATION_EXCHANGE_RATE = SECONDARY_CURRENCY.exchangerate
+        >
+    <#else>
+        <#assign SHOW_LOCAL_CURR_EXCH_FLDS = false>
+    </#if>
+</#if>
+
+<#if record.custbody_ncs_field_labels?has_content>
+	<#assign NC_LABEL_TRANSLATIONS_TEMP = record.custbody_ncs_field_labels?replace(":null", ":\"\"", "ri")?eval!"">
+    <#if LOCALE?has_content && NC_LABEL_TRANSLATIONS_TEMP?has_content && NC_LABEL_TRANSLATIONS_TEMP[LOCALE]?has_content>
+        <#assign NC_LABEL_TRANSLATIONS = NC_LABEL_TRANSLATIONS_TEMP[LOCALE]>
+    </#if>
+</#if>
+
+<#assign
+    EXCHANGE_RATE_LABEL = getTranslatedLabel("exchangerate", record.exchangerate@label)
+    ORIGINAL_UNIT_PRICE_EXCHANGE_RATE_LABEL = getTranslatedLabel("index_rate", "Index Rate")
+>
+
+<#if subsidiary.country?has_content && subsidiary.country.internalid?has_content && BILL_COUNTRY?has_content>
+    <#if BILL_COUNTRY?lower_case == subsidiary.country.internalid?lower_case?lower_case>
+        <#assign IS_DOMESTIC = true>
+    <#elseif BILL_COUNTRY?lower_case != subsidiary.country.internalid?lower_case?lower_case>
+        <#assign IS_EXPORT = true>
+    </#if>
+</#if>
+
+<#if record.custbody_cbr_layout_settings?has_content>
+    <#if isTrue(IS_DOMESTIC) && record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_domestic?has_content>
+        <#assign
+            termsAndConditionsTemplate = resolveXmlAmpersand(resolveHtmlTags(record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_domestic))
+        >
+    <#elseif record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_export?has_content>
+        <#assign
+            termsAndConditionsTemplate = resolveXmlAmpersand(resolveHtmlTags(record.custbody_cbr_layout_settings.custrecord_cbr_layout_tc_export))
+        >
+    </#if>
+
+    <#if LOCALE != "he_IL">
+        <#if isTrue(IS_DOMESTIC) && record.custbody_cbr_layout_settings.custrecord_cbr_layout_invoice_title?has_content>
+            <#assign RECORD_TITLE = record.custbody_cbr_layout_settings.custrecord_cbr_layout_invoice_title>
+        <#elseif isTrue(IS_EXPORT) && record.custbody_cbr_layout_settings.custrecord_cbr_layout_title_export?has_content>
+            <#assign RECORD_TITLE = record.custbody_cbr_layout_settings.custrecord_cbr_layout_title_export>
+        </#if>
+    </#if>
+</#if>
+
+<#if ZAB_INDEXATION_IND>
+    <#if record.accountingbookdetail?has_content>
+        <#list record.accountingbookdetail as abd>
+            <#assign ZAB_SECONDERY_EXCHANGE=abd.exchangerate
+                     RECORD_CURRENCY=abd.currency
+                     >
+        </#list>
+    </#if>
+</#if>
+
+<head>
+	<meta name="title" value="Print Transaction (NetSuite)" />
+	<meta name="author" value="NetCloud" />
+	<meta name="subject" value="" />
+	<meta name="access-level" value="print-all change-none extract-none" />
+
+	<link name="arial" type="font" subtype="truetype"
+		src="${FONT_PATH}/arial.ttf"
+		src-bold="${FONT_PATH}/arialb.ttf"
+		src-italic="${FONT_PATH}/ariali.ttf"
+		src-bolditalic="${FONT_PATH}/arialbi.ttf"
+	/>
+
+    <macrolist>
+    	<macro id="nlheader">
+            <#assign
+            	logoTdTemplate = r'
+                    <td style="width: 33.3%;" class="${ALIGN_DIRECTION_RIGHT}" valign="top">
+                        <#if record.custbody_il_subsidiary_logo?has_content>
+                            <#if record.custbody_il_subsidiary_logo?index_of("<") != -1>
+                                ${record.custbody_il_subsidiary_logo}
+                            <#else>
+                                <img src="${record.custbody_il_subsidiary_logo?replace("&", "&amp;", "r")}" />
+                            </#if>
+                        <#elseif companyInformation.logoUrl?length != 0>
+                            <img src="${companyInformation.logoUrl}" style="float: ${ALIGN_DIRECTION_RIGHT}; margin-bottom: 5px" />
+                        </#if>
+                    </td>
+            	'?interpret
+
+                companyInfoTd = r'
+                    <td style="width: 33.3%;" valign="top" class="${ALIGN_DIRECTION_LEFT}">
+                       <table>
+                            <#if subsidiary.addrtext?has_content>
+                                <tr>
+                                    <td class="${ALIGN_DIRECTION_LEFT}">${subsidiary.addrtext}</td>
+                                </tr>
+                            </#if>
+                            <#if TAX_ID?has_content>
+
+                                <tr>
+                                <#if record.subsidiary == "504_CyberArk AUS">
+
+                                      <td class="${ALIGN_DIRECTION_LEFT}">ABN: ${TAX_ID}</td>
+                                   </#if>
+                                                                   <#if record.subsidiary == "406_CyberArk NLD">
+
+                                      <td class="${ALIGN_DIRECTION_LEFT}">Dutch VAT ID: ${TAX_ID}</td>
+                                   </#if>
+                                                                    <#if record.subsidiary == "405_CyberArk ITA">
+
+                                      <td class="${ALIGN_DIRECTION_LEFT}">P.I./C.F./n° iscriz. REG. IMPR: ${TAX_ID}</td>
+                                   </#if>
+                              <#if record.subsidiary != "504_CyberArk AUS" && record.subsidiary != "406_CyberArk NLD" && record.subsidiary != "405_CyberArk ITA">
+                                <td class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("subsidiary.taxidnum", record.subsidiary.taxidnum@label)}: ${TAX_ID}</td>
+                                    </#if>
+                                </tr>
+                                  <#if record.subsidiary == "406_CyberArk NLD">
+                                                              <tr>
+                                <td class="${ALIGN_DIRECTION_LEFT}">Dutch Chamber of Commerce Number: 66974941</td>
+
+                                </tr>
+                                      </#if>
+                            </#if>
+                            <#if IS_IL_LOCALIZATION && UNION_TAX_ID?has_content>
+                                  <#assign TAX_ID = record.subsidiary.custrecordil_tax_payer_id_subsidary>
+   									<#assign UNION_TAX_ID = record.subsidiary.taxidnum>
+                                <tr>
+                                    <td class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("subsidiary.custrecord_il_union_tax_reg_num", record.subsidiary.custrecord_il_union_tax_reg_num@label)}: ${UNION_TAX_ID}</td>
+                                </tr>
+                            </#if>
+                            <#if record.subsidiary.email?has_content>
+                                <tr>
+                                    <td class="${ALIGN_DIRECTION_LEFT}">
+                                        <#if IS_RTL>
+                                        ${record.subsidiary.email}
+                                        </#if>
+                                        ${getTranslatedLabel("subsidiary.email", record.subsidiary.email@label)}<#if !IS_RTL>:<#else>&nbsp;</#if>
+                                        <#if !IS_RTL>
+                                        ${record.subsidiary.email}
+                                        </#if>
+                                    </td>
+                                </tr>
+                            </#if>
+                            <#if record.subsidiary.url?has_content>
+                                <tr>
+                                    <td class="${ALIGN_DIRECTION_LEFT}">
+                                        <#if IS_RTL>
+                                        ${record.subsidiary.url}
+                                        </#if>
+                                        ${getTranslatedLabel("subsidiary.url", record.subsidiary.url@label)}<#if !IS_RTL>:<#else>&nbsp;</#if>
+                                        <#if !IS_RTL>
+                                        ${record.subsidiary.url}
+                                        </#if>
+                                    </td>
+                                </tr>
+                            </#if>
+                            <#if record.subsidiary == "405_CyberArk ITA">
+                            <tr>
+                             <td class="${ALIGN_DIRECTION_LEFT}">Capitale sociale: euro 10.000,00 (i.v.)</td>
+                            </tr>
+                            </#if>
+                        </table>
+                    </td>
+                '?interpret
+            >
+            <!--====== Start Subsidiary Data ======-->
+            <table class="header">
+                <tr>
+                    <#if IS_RTL>
+                        <@logoTdTemplate />
+                    <#else>
+                        <@companyInfoTd />
+                    </#if>
+                    <td style="width: 33.3%" class="center" valign="top">
+                        <table>
+                            <tr>
+                                <td class="${ALIGN_DIRECTION_LEFT}" align="${ALIGN_DIRECTION_LEFT}" colspan="2">
+                                    <b><span class="title">${RECORD_TITLE}</span></b>
+                                </td>
+                            </tr>
+                            <#if record.tranid?has_content>
+                                <tr>
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("tranid", record.tranid@label)}</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.tranid}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if>
+                            <#if record.trandate?has_content>
+                                <tr>
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("trandate", record.trandate@label)}</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.trandate?string(DATE_FORMAT)}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if>
+                            <#if record.terms?has_content>
+                                <tr>
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("terms", record.terms@label)}</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.terms}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if>
+                            <#if record.duedate?has_content>
+                                <tr>
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("duedate", record.duedate@label)}</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.duedate?string(DATE_FORMAT)}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if>
+                            <#if record.currency?has_content>
+                                <tr>
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("currency", record.currency@label)}</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${RECORD_CURRENCY}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if>
+                                 <!-- <#if record.amountremaining?has_content>
+                                <tr class="totalrow lightblue">
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("amountremaining", record.amountremaining@label)}</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.amountremaining?string(TRAN_CURR_FORMAT_SYM)}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if> -->
+
+                                                    <#if record.custbody_cbr_so_internal_message?has_content && (record.subsidiary == '404_CyberArk DEU' || record.subsidiary == '406_CyberArk NLD' )>
+                                               <tr>
+                                    <#assign tdTemplate = r'
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">Delivery Date</td>
+                                    '?interpret>
+                                    <#if !IS_RTL><@tdTemplate /></#if>
+                                    <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.custbody_cbr_so_internal_message}</td>
+                                    <#if IS_RTL><@tdTemplate /></#if>
+                                </tr>
+                            </#if>
+
+
+                            <#if TRAN_STATUS?has_content>
+                                <tr>
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT} red" colspan="2"><b>${TRAN_STATUS}</b></td>
+                                </tr>
+                            </#if>
+                            <#if record.subsidiary == '202_CyberArk ISR'>
+
+                            <#if COMSIGN_ORIGNAL>
+                                      <tr>
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT} red" colspan="2"><b><#if LOCALE == 'en_US'>Original<#else>מקור</#if></b></td>
+                                </tr>
+                            </#if>
+                            <#if !COMSIGN_ORIGNAL && COMSIGN_ALREADY_SIGNED?has_content>
+                                      <tr>
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT} red" colspan="2"><b><#if LOCALE == 'en_US'>Copy<#else>העתק</#if></b></td>
+                                </tr>
+
+                            </#if>
+                            <#if !COMSIGN_ORIGNAL && !COMSIGN_ALREADY_SIGNED?has_content>
+                                                                    <tr>
+                                    <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT} red" colspan="2"><b><#if LOCALE == 'en_US'>Draft<#else>טיוטה</#if></b></td>
+                                </tr>
+                             </#if>
+                            </#if>
+                        </table>
+                    </td>
+                    <#if !IS_RTL>
+                        <@logoTdTemplate />
+                    <#else>
+                        <@companyInfoTd />
+                    </#if>
+                </tr>
+            </table>
+            <!--====== Start Subsidiary Data ======-->
+    	</macro>
+
+      <macro id="nlfooter">
+
+      <#if record.subsidiary != '403_CyberArk FRA'>
+        <table class="footer">
+        	<tr>
+                <td class="${ALIGN_DIRECTION_RIGHT}">
+                <#if LOCALE == "he_IL">
+                    <pagenumber/>/<totalpages/><span> עמוד </span>
+                <#else>
+                    Page <pagenumber/>/<totalpages/>
+                </#if>
+                </td>
+            </tr>
+        </table>
+        </#if>
+              <#if record.subsidiary == '403_CyberArk FRA'>
+        <table class="footer">
+               <tr>
+        <td class="${ALIGN_DIRECTION_LEFT}">
+        ${termsAndConditionsTemplate}
+      </td>
+        </tr>
+        	<tr>
+                <td class="${ALIGN_DIRECTION_RIGHT}">
+                <#if LOCALE == "he_IL">
+                    <pagenumber/>/<totalpages/><span> עמוד </span>
+                <#else>
+                    Page <pagenumber/>/<totalpages/>
+                </#if>
+                </td>
+            </tr>
+        </table>
+        </#if>
+      </macro>
+    </macrolist>
+
+    <style type="text/css">
+        body {
+            font-size: 10pt;
+        }
+        .white-bg {
+            background-color:white;
+        }
+        .lightblue {
+            color: white;
+            background-color: #607799 !important;
+        }
+        .lighterblue-bg {
+            background-color: #dfe3ea;
+        }
+        .title {
+            font-size: 14pt;
+        }
+        table {
+            table-layout: auto;
+        }
+        th {
+            font-weight: bold;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+            direction:"${TEXT_DIRECTION}";
+        }
+        td {
+            padding: 4px 6px;
+            vertical-align: middle;
+        }
+        b {
+            font-weight: bold;
+        }
+        table.header {
+            width: 100%;
+            table-layout: fixed;
+        }
+        table.header td {
+            padding: 0px;
+            font-size: 10pt;
+        }
+        table.footer  {
+            width: 100%;
+        }
+        table.footer td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+        table.itemtable {
+            border: 0px;
+            background-color:#bfbfbf;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            table-layout: fixed;
+        }
+        table.itemtable td {
+        }
+        table.itemtable th {
+            color: white;
+            background-color: #607799;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        table.total {
+            page-break-inside: avoid;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            width:49.5%;
+        }
+        table.total td {
+        }
+        tr.totalrow {
+            font-weight: bold;
+            line-height: 200%;
+        }
+        table.body_fields {
+        }
+        table.body_fields td {
+            padding: 5px 0px 5px 0px;
+        }
+        div p {
+            margin-top:0px;
+            margin-bottom:0px;
+            padding:0px;
+            border:0px;
+        }
+        .right, .right p {
+          align: right;
+        }
+        .left, .left p {
+          align: left;
+        }
+        .center, .center p {
+          align: center;
+        }
+        .red {
+            color: red;
+        }
+
+        table.borders {
+            border-collapse: collapse;
+        }
+
+        table.borders td, table.borders th {
+            border: 1px solid #dddddd;
+        }
+    </style>
+</head>
+
+<#assign footerHeight = '20pt'>
+<#if record.subsidiary == '403_CyberArk FRA'>
+<#assign footerHeight = '60pt'>
+</#if>
+
+<body direction="${TEXT_DIRECTION}" header="nlheader" header-height="16.5%"  footer="nlfooter" footer-height="${footerHeight}" padding="20px 30px 20px 30px" size="A4" font-family="arial">
+
+    <!--====== Start Entity Data ======-->
+    <table style="width: 100%; margin-top: 15px; margin-bottom: 15px;">
+        <tr>
+            <#if BILL_ADDRESS?has_content || VAT_REG_NUM?has_content && VAT_REG_NUM != '999999999'>
+            <td valign="top">
+                <table style="width: 100%;" cellpadding="0">
+                    <tr>
+                        <td class="${ALIGN_DIRECTION_LEFT}"><b><#if LOCALE == "he_IL" >: ${getTranslatedLabel("billaddress", record.billaddress@label)}<#else> ${getTranslatedLabel("billaddress", record.billaddress@label)}:</#if></b></td>
+                    </tr>
+                    <#if BILL_ADDRESS?has_content>
+                        <tr>
+                            <td class="${ALIGN_DIRECTION_LEFT}">
+                                <#-- ${BILL_ADDRESS} -->
+                                <#if record.billaddressee?has_content>${record.billaddressee}<br/></#if>
+                                <#if record.billattention?has_content>${record.billattention}<br/></#if>
+                                <#if record.billaddr1?has_content>${record.billaddr1}<br/></#if>
+                                <#if record.billaddr2?has_content>${record.billaddr2}<br/></#if>
+                                <#if record.billcity?has_content>${record.billcity}</#if>
+                                <#if record.billstate?has_content>${record.billstate}</#if>
+                                <#if record.billzip?has_content>${record.billzip}</#if>
+                                <#if record.billcity?has_content || record.billstate?has_content || record.billzip?has_content><br/></#if>
+                                <#if record.custpage_billcountry?has_content>${record.custpage_billcountry}<br/></#if>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if VAT_REG_NUM?has_content && VAT_REG_NUM != '999999999'>
+                        <tr>
+                            <td class="${ALIGN_DIRECTION_LEFT}">${VAT_REG_NUM}</td>
+                        </tr>
+                    </#if>
+					 <#if record.subsidiary == '303_CyberArk CAN' && record.entity.custentity_cbr_customer_pst_number?has_content >
+                        <tr>
+                            <td class="${ALIGN_DIRECTION_LEFT}">PST# ${record.entity.custentity_cbr_customer_pst_number}</td>
+                        </tr>
+                    </#if>
+                </table>
+            </td>
+            </#if>
+            <#if SHIP_ADDRESS?has_content && record.baserecordtype == "invoice" && SHIP_ADDRESS != BILL_ADDRESS && !record.custbody_cra_invoice_layout>
+            <td valign="top">
+                <table style="width: 100%;" cellpadding="0">
+                    <tr>
+                        <td class="${ALIGN_DIRECTION_LEFT}"><b> <#if LOCALE=="he_IL">: ${getTranslatedLabel("shipaddress", record.shipaddress@label)}<#else> ${getTranslatedLabel("shipaddress", record.shipaddress@label)}:</#if></b></td>                                         
+                    </tr>
+                    <#if SHIP_ADDRESS?has_content>
+                        <tr>
+                            <td class="${ALIGN_DIRECTION_LEFT}">${SHIP_ADDRESS}</td>
+                        </tr>
+                    </#if>
+                </table>
+            </td>
+            </#if>
+        </tr>
+    </table>
+    <!--====== End Entity Data ======-->
+
+    <table class="itemtable">
+        <thead>
+            <tr>
+                <th class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("otherrefnum", record.otherrefnum@label)}</th>
+                <th class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("salesrep", record.salesrep@label)}</th>
+                <th class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("entitynumber", record.entitynumber@label)}</th>
+                <th class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("custbody_cbr_so_end_user", record.custbody_cbr_so_end_user@label)}</th>
+                <th class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("createdfrom.tranid", record.createdfrom.tranid@label)}</th>
+            </tr>
+        </thead>
+        <tr class="lighterblue-bg">
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#if record.otherrefnum?has_content>
+                ${record.otherrefnum}
+                </#if>
+            </td>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#if record.salesrep?has_content>
+                ${record.salesrep}
+                </#if>
+            </td>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#if record.entity.entitynumber?has_content>
+                ${record.entity.entitynumber?c}
+                </#if>
+            </td>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#if record.custbody_cbr_so_end_user?has_content>
+                ${record.custbody_cbr_so_end_user}
+                </#if>
+            </td>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#if record.createdfrom?has_content && record.createdfrom.tranid?has_content>
+                ${record.createdfrom.tranid}
+                </#if>
+            </td>
+        </tr>
+    </table>
+
+
+<#assign showPeriods = 0>
+<#list record.item as item>
+<#assign showPeriods = showPeriods + item.custcol_cbrsubsamount>
+</#list>
+
+    <#--====== Start Items ======-->
+    <#if record.item?has_content>
+        <#assign itemIndex = 0>
+        <table class="itemtable">
+            <#list record.item as item>
+                <#if item_index==0>
+                <thead>
+                    <tr>
+                        <th colspan="5" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("item.item", item.item@label)}</th>
+                        <th colspan="10" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("item.description", item.description@label)}</th>
+                        <th colspan="3" class="center">${getTranslatedLabel("item.quantity", item.quantity@label)}</th>
+                        <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                        <th colspan="4" class="right">${getTranslatedLabel("label_line_rate_in_usd", item.rate@label + " " + LIST_PRICE_CURRENCY?upper_case)}</th>
+                        </#if>
+                        <#if showPeriods?string != '0'>
+                         <th colspan="4" class="right">Period</th>
+                        </#if>
+                        <th colspan="4" class="right">${getTranslatedLabel("item.rate", item.rate@label)}</th>
+                        <th colspan="5" class="right">${getTranslatedLabel("item.amount", item.amount@label)}</th>
+                    </tr>
+                </thead>
+
+                  </#if>
+
+                <#if !item.custcol_cbr_split_from_custom_line_id?has_content>
+                  	<#if  !item.custcol_is_virtual_item  || ( item.custcol_is_virtual_item && item.amount !=0)>
+                      <tr class="<#if itemIndex % 2 == 1>white-bg<#else>lighterblue-bg</#if>">
+                          <td colspan="5" class="${ALIGN_DIRECTION_LEFT}" valign="top">
+                              ${item.item}
+                          </td>
+                          <td colspan="10" class="${ALIGN_DIRECTION_LEFT}" valign="top">
+                              <#if item.description?has_content>${item.description}</#if>
+                              <#if isTrue(item.custcol_cbr_is_maintenance)>
+                                  <br/>
+                                  <#if item.custcol_cbr_start_date?has_content>${item.custcol_cbr_start_date?string(DATE_FORMAT)}</#if>
+                                  <#if item.custcol_cbr_end_date?has_content> - ${item.custcol_cbr_end_date?string(DATE_FORMAT)}</#if>
+                              </#if>
+                          </td>
+                          <td colspan="3" class="center" valign="top"><#if item.custcol_orig_order_qty !=0> ${item.custcol_orig_order_qty?c}<#else>${item.quantity?c} </#if></td>
+                          <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                              <td colspan="4" class="right" valign="top">${item.custcol_cbr_so_original_unit_price?string(CURR_FORMAT)}</td>
+                          </#if>
+                            <#if showPeriods?string != '0'>
+                           <td colspan="4" class="right" valign="top">${item.custcol_cbr_period?string}</td>
+                          </#if>
+                          <td colspan="4" class="right" valign="top"><#if item.custcol_orig_order_qty !=0> ${((item.amount/item.custcol_orig_order_qty*ZAB_SECONDERY_EXCHANGE))?string(CURR_FORMAT)}<#else>${(item.rate*ZAB_SECONDERY_EXCHANGE)?string(CURR_FORMAT)}</#if></td>
+                           <td colspan="5" class="right" valign="top">${(item.amount*ZAB_SECONDERY_EXCHANGE)?string(CURR_FORMAT)}</td>
+
+                      </tr>
+                    <#assign itemIndex = itemIndex + 1>
+                    <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                        <#assign ORIGINAL_UNIT_PRICE_SUBTOTAL = ORIGINAL_UNIT_PRICE_SUBTOTAL + (toNumber(item.custcol_cbr_so_original_unit_price) * toNumber(item.quantity))>
+                    </#if>
+                  </#if>
+                </#if>
+            </#list>
+        </table>
+    </#if>
+ <#--====== End Items ======-->
+
+ <!--====== Total ======-->
+    <#assign
+        taxRate = 0
+        taxTotal = toNumber(record.taxtotal)
+        subTotal = toNumber(record.subtotal)
+        total = toNumber(record.total)
+    >
+    <#if ZAB_INDEXATION_IND>
+        <#assign taxRate=0
+                 taxTotal=taxTotal * LOCALIZATION_EXCHANGE_RATE
+                 subTotal=subTotal * LOCALIZATION_EXCHANGE_RATE
+                 total=total * ZAB_SECONDERY_EXCHANGE
+                 IL_CURR_SYMBOL="₪"
+                 TRAN_CURR_FORMAT_SYM=RECORD_CURRENCY + " " + CURR_FORMAT
+        >
+   
+ 
+    </#if>
+    <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+        <#if subTotal != 0 && ORIGINAL_UNIT_PRICE_SUBTOTAL != 0>
+            <#assign
+                ORIGINAL_UNIT_PRICE_EXCHANGE_RATE = subTotal / ORIGINAL_UNIT_PRICE_SUBTOTAL
+                ORIGINAL_UNIT_PRICE_TOTAL = total / ORIGINAL_UNIT_PRICE_EXCHANGE_RATE
+            >
+        <#else>
+            <#assign
+                ORIGINAL_UNIT_PRICE_TOTAL = 0
+            >
+        </#if>
+    </#if>
+    <#if record.subtotal != 0>
+      <#assign taxRate = (record.taxtotal/record.subtotal)?string(",##0.000")?number*100>
+    </#if>
+
+    <table class="total ${ALIGN_DIRECTION_RIGHT}">
+        <tr>
+            <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}" style="width: 150px;"><b>${getTranslatedLabel("subtotal", record.subtotal@label)}</b></td>
+            <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}" style="width: 120px;">&nbsp;</td>
+            </#if>
+            <#if (SHOW_IL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND)>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}" style="width: 120px;">${(subTotal * LOCALIZATION_EXCHANGE_RATE)?string(LOCALIZATION_CURRENCY_SYMBOL)}</td>
+            </#if>
+            <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}" style="width: 120px;">${subTotal?string(TRAN_CURR_FORMAT_SYM)}</td>
+        </tr>
+        <tr>
+            <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}" style ='font-weight: bold;'>
+
+                    <#if IS_RTL>(</#if>
+                  <#if record.tax2total?has_content>GST&nbsp;</#if>
+                  <#if record.subsidiary == '406_CyberArk NLD' && taxRate?string == '0'>VAT out of Scope
+                    <#else>${getTranslatedLabel("taxtotal", record.taxtotal@label)}</#if>
+                    <#if !isTrue(IS_US_SUBSIDIARY) && record.subsidiary !='303_CyberArk CAN'>(${taxRate?string(CURR_FORMAT)}%
+                    <#if !IS_RTL>)</#if>
+                      </#if>
+
+            </td>
+            <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}" style="width: 120px;">&nbsp;</td>
+            </#if>
+            <#if (SHOW_IL_CURR_EXCH_FLDS  && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS  && !ZAB_INDEXATION_IND)>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${(taxTotal * LOCALIZATION_EXCHANGE_RATE)?string(LOCALIZATION_CURRENCY_SYMBOL)}</td>
+            </#if>
+            <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${taxTotal?string(TRAN_CURR_FORMAT_SYM)}</td>
+        </tr>
+        <#if record.tax2total?has_content>
+        <tr>
+            <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}"><b><#if IS_RTL>(</#if>${getTranslatedLabel("tax2total", record.tax2total@label)}</b></td>
+            <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}" style="width: 120px;">&nbsp;</td>
+            </#if>
+            <#if (SHOW_IL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND)>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${(toNumber(record.tax2total) * LOCALIZATION_EXCHANGE_RATE)?string(LOCALIZATION_CURRENCY_SYMBOL)}</td>
+            </#if>
+            <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${record.tax2total?string(TRAN_CURR_FORMAT_SYM)}</td>
+        </tr>
+        </#if>
+        <#assign totalColspan = 2>
+        <tr class="totalrow lightblue">
+            <td align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}"><#if record.subsidiary == '504_CyberArk AUS'>Total including GST<#else>${getTranslatedLabel("total", record.total@label)}</#if></td>
+            <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS>
+                <#assign totalColspan = toNumber(totalColspan) + 1>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}" style="width: 120px;">${(ORIGINAL_UNIT_PRICE_TOTAL)?string(ORIGINAL_UNIT_PRICE_FORMAT_SYM)}</td>
+            </#if>
+            <#if (SHOW_IL_CURR_EXCH_FLDS  && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND)>
+                <#assign totalColspan = toNumber(totalColspan) + 1>
+                <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${(total * LOCALIZATION_EXCHANGE_RATE)?string(LOCALIZATION_CURRENCY_SYMBOL)}</td>
+            </#if>
+            <td align="${ALIGN_DIRECTION_RIGHT}" class="${ALIGN_DIRECTION_RIGHT}">${total?string(TRAN_CURR_FORMAT_SYM)}</td>
+        </tr>
+        <tr>
+            <td colspan="${toNumber(totalColspan)?c}" align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">
+                <#if IS_RTL>${RECORD_CURRENCY} :</#if>${getTranslatedLabel("label_payment_recive", "Payment must be made in the currency of the purchase order received")}<#if !IS_RTL>: ${RECORD_CURRENCY}</#if>
+            </td>
+        </tr>
+    </table>
+    <!--====== End Total ======-->
+
+    <!--======= Start Body Fields =========-->
+    <table cellpadding="0" class="${ALIGN_DIRECTION_RIGHT} body_fields">
+        <#if ((SHOW_IL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS  && !ZAB_INDEXATION_IND))>
+            <tr>
+              <td>${EXCHANGE_RATE_LABEL}: ${LOCALIZATION_EXCHANGE_RATE?string(EXCH_CURR_FORMAT)}</td>
+            <!--    <td>${EXCHANGE_RATE_LABEL}: ${record.exchangerate?string[",##0.0000##"]}</td> -->
+
+            </tr>
+        </#if>
+
+        <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS && ORIGINAL_UNIT_PRICE_EXCHANGE_RATE?has_content>
+            <tr>
+               <!--   <td>${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE_LABEL}: ${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE?string(EXCH_CURR_FORMAT)}</td> -->
+              <#if record.subsidiary == '202_CyberArk ISR' && record.currency == 'ILS'>
+                 <td>${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE_LABEL}: ${(total / ORIGINAL_UNIT_PRICE_TOTAL)?string[",##0.0000##"]}</td>
+                <#else>
+                           <td>${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE_LABEL}: ${(1 / record.exchangerate)?string[",##0.0000##"]}</td>
+                </#if>
+
+            </tr>
+        </#if>
+    </table>
+    <!--======= End Body Fields =========-->
+
+    <#if record.baserecordtype == "creditmemo" && record.apply?has_content>
+    <table style="width:100%; margin-top: 15px;" cellpadding="0">
+        <tr>
+            <td class="${ALIGN_DIRECTION_LEFT}"><b>${getTranslatedLabel("label_applied_to", "Applied To")}:</b></td>
+        </tr>
+        <tr>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#list record.apply as apply>
+                    <#if apply.refnum?has_content>
+                        ${apply.refnum}<#if apply_has_next> , </#if>
+                    </#if>
+                </#list>
+            </td>
+        </tr>
+    </table>
+    </#if>
+
+    <!--====== Start installment ======-->
+    <#if record.installment?has_content>
+        <#assign installmentIndex = 0>
+        <table class="itemtable">
+            <#list record.installment as installment>
+                <#if installment_index==0>
+                <thead>
+                    <tr>
+                        <th colspan="5" class="${ALIGN_DIRECTION_LEFT}">Payment Installment #</th>
+                        <th colspan="3" class="${ALIGN_DIRECTION_LEFT}">DUE DATE</th>
+                        <th colspan="3" class="center">AMOUNT</th>
+
+
+                    </tr>
+                </thead>
+
+                  </#if>
+
+
+                    <tr class="<#if installmentIndex % 2 == 1>white-bg<#else>lighterblue-bg</#if>">
+                        <td colspan="5" class="${ALIGN_DIRECTION_LEFT}" valign="top">
+                            ${installmentIndex+1}
+                        </td>
+                        <td colspan="3" class="${ALIGN_DIRECTION_LEFT}" valign="top">
+                           ${installment.duedate}
+                        </td>
+                        <td colspan="3" class="center" valign="top">${installment.amount}</td>
+
+
+
+                    </tr>
+                    <#assign installmentIndex = installmentIndex + 1>
+
+            </#list>
+        </table>
+    </#if>
+ <!--====== End installment ======-->
+
+    <!--====== Payment Method for US only ======-->
+    <#if isTrue(IS_US_SUBSIDIARY)>
+        <#if record.baserecordtype == "invoice" && record.shipmethod?has_content>
+        <table style="width:100%; margin-top: 15px;" cellpadding="0">
+            <tr>
+                <td class="${ALIGN_DIRECTION_LEFT}">
+                    ${getTranslatedLabel("shipmethod", record.shipmethod@label)}: ${record.shipmethod}
+                </td>
+            </tr>
+        </table>
+        </#if>
+    </#if>
+    <!--====== Payment Method for US only ======-->
+
+    <!-- Start Subsidiary Disclaimer -->
+    <#if record.baserecordtype == "invoice" && record.custbody_ncs_transaction_disclaimer?has_content && record.custbody_ncs_transaction_disclaimer.custrecord_ncs_disclaimer_en_us?has_content>
+    <table style="width:100%; margin-top: 15px;" cellpadding="0">
+        <tr>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#assign inlineDisclaimerTemplate = resolveXmlAmpersand(resolveHtmlTags(record.custbody_ncs_transaction_disclaimer.custrecord_ncs_disclaimer_en_us))?interpret>
+                <@inlineDisclaimerTemplate />
+            </td>
+        </tr>
+    </table>
+    </#if>
+
+ <#if record.subsidiary != '403_CyberArk FRA'>
+    <#if termsAndConditionsTemplate?has_content>
+    <table style="width:100%; margin-top: 15px;" cellpadding="0">
+        <tr>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                ${termsAndConditionsTemplate}
+            </td>
+        </tr>
+    </table>
+    </#if>
+        </#if>
+
+
+    <!--====== Start Customer Message ======-->
+    <table style="width:100%; margin-top: 15px;" cellpadding="0">
+        <tr>
+            <td class="${ALIGN_DIRECTION_LEFT}">
+                <#if record.message?has_content>
+                ${record.message}
+                </#if>
+            </td>
+        </tr>
+    </table>
+
+    <#if record.baserecordtype == "invoice" && PS_DETAILS_LIST?has_content>
+    <table class="itemtable" style="width:100%; margin-top: 15px; table-layout: fixed;">
+        <thead>
+            <tr>
+                <th colspan="3" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("ps_ngineer_name", "Engineer Name")}</th>
+                <th colspan="3" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("ps_start_date", "Work Start Date")}</th>
+                <th colspan="3" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("ps_end_date", "Work End Date")}</th>
+                <th colspan="3" class="center">${getTranslatedLabel("ps_quantity", "Quantity")}</th>
+                <th colspan="3" class="${ALIGN_DIRECTION_LEFT}">${getTranslatedLabel("ps_day_number", "PS Day")}</th>
+            </tr>
+        </thead>
+        <#list PS_DETAILS_LIST as psDetail>
+        <tr class="<#if psDetail_index % 2 == 1>white-bg<#else>lighterblue-bg</#if>">
+            <td colspan="3" class="${ALIGN_DIRECTION_LEFT}"><#if psDetail.engineerName?has_content>${psDetail.engineerName}</#if></td>
+            <td colspan="3" class="${ALIGN_DIRECTION_LEFT}"><#if psDetail.startDate?has_content>${psDetail.startDate?date?string(DATE_FORMAT)}</#if></td>
+            <td colspan="3" class="${ALIGN_DIRECTION_LEFT}"><#if psDetail.endDate?has_content>${psDetail.endDate?date?string(DATE_FORMAT)}</#if></td>
+            <td colspan="3" class="center"><#if psDetail.quantity?has_content>${psDetail.quantity}</#if></td>
+            <td colspan="3" class="${ALIGN_DIRECTION_LEFT}"><#if psDetail.psDays?has_content>${psDetail.psDays}</#if></td>
+        </tr>
+        </#list>
+    </table>
+    </#if>
+
+    <#if CANADIAN_NUMBERS?has_content && record.subsidiary == '303_CyberArk CAN'>
+        <#if CANADIAN_NUMBERS.custrecord_cbr_gs_ca_business_number?? && CANADIAN_NUMBERS.custrecord_cbr_gs_ca_business_number?has_content>
+            <br/>GST/HST Business Number: ${CANADIAN_NUMBERS.custrecord_cbr_gs_ca_business_number}
+        </#if>
+        <#if CANADIAN_NUMBERS.custrecord_cbr_gs_ca_registration_number?? && CANADIAN_NUMBERS.custrecord_cbr_gs_ca_registration_number?has_content>
+            <br/>QST Registration Number: ${CANADIAN_NUMBERS.custrecord_cbr_gs_ca_registration_number}
+        </#if>
+        <br/>
+    </#if>
+
+              <#if  record.custbody_cra_invoice_layout && record.subsidiary == '302_CyberArk USA' >
+
+            <br/>GST/HST Business Number:  ${record.custbody_cbr_gs_ca_business_number}
+            <br/>QST Registration Number:  ${record.custbody_cbr_gs_ca_registration_number}
+
+        <br/>
+    </#if>
+
+     <table style="width:100%; margin-top: 15px;" cellpadding="0">
+        <tr>
+            <td class="${ALIGN_DIRECTION_RIGHT}" valign="bottom">
+                <table>
+                    <tr>
+                         <td class="${ALIGN_DIRECTION_LEFT}">
+						Sincerely <br/>
+						<#if record.subsidiary == '302_CyberArk USA' || record.subsidiary == '303_CyberArk CAN'>
+							Americas Billing Team
+						<#elseif record.subsidiary == '505_IDaptive IND'>
+							Idaptive India
+						<#else>
+							CyberArk Billing Team
+						</#if>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <!--====== End Customer Message ======-->
+</body>
+</pdf>

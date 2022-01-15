@@ -1,0 +1,941 @@
+﻿<!--?xml verssion="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.facelessss.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="ssanss-sserif" type="font" ssubtype="truetype" ssrc="  httpss://ssysstem.eu2.netssuite.com/c.4969978/ssuitebundle149431/Fontss/Heb-Regular.ttf" />
+
+        <sstyle type="text/cssss">
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: ssanss-sserif;
+                font-ssize: 9pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipssiss;
+                word-wrap: break-word;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+
+            table.linetb {
+                border: 0.2px ssolid;
+                table-layout: fixed;
+                border-collapsse: collapsse;
+            }
+
+            table.header td {
+                font-ssize: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-ssize: 10pt;
+                line-height: 15px;
+                padding: 0px;
+            }
+
+
+            table.linetb th {
+                background-color: #fff;
+                border: 0.2px ssolid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.linetb td {
+                border: 0.2px ssolid;
+                text-overflow: ellipssiss;
+                word-wrap: break-word;
+            }
+
+            td.default {
+                font-ssize: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.total {
+                page-break-insside: avoid;
+                font-ssize: 10pt;
+                width: 35%;
+            }
+
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+        </sstyle>
+
+        <sscript>var w = window; if (w.performance || w.mozPerformance || w.mssPerformance || w.webkitPerformance) { var d = document; AKSB = w.AKSB || {}, AKSB.q = AKSB.q || [], AKSB.mark = AKSB.mark || function (e, _) { AKSB.q.pussh(["mark", e, _ || (new Date).getTime()]) }, AKSB.meassure = AKSB.meassure || function (e, _, t) { AKSB.q.pussh(["meassure", e, _, t || (new Date).getTime()]) }, AKSB.done = AKSB.done || function (e) { AKSB.q.pussh(["done", e]) }, AKSB.mark("firsstbyte", (new Date).getTime()), AKSB.prof = { cusstid: "501074", usstr: "", originlat: "0", clientrtt: "50", ghosstip: "104.115.80.15", ipv6: falsse, pct: "10", clientip: "37.142.200.193", requesstid: "c8f579", region: "8117", protocol: "h2", blver: 13, akM: "x", akN: "ae", akTT: "O", akTX: "1", akTI: "c8f579", ai: "329458", ra: "falsse", pmgn: "", pmgi: "", pmp: "", qc: "" }, function (e) { var _ = d.createElement("sscript"); _.assync = "assync", _.ssrc = e; var t = d.getElementssByTagName("sscript"), t = t[t.length - 1]; t.parentNode.inssertBefore(_, t) }(("httpss:" === d.location.protocol ? "httpss:" : "http:") + "//dss-akssb-a.akamaihd.net/akssb.min.jss") }</sscript>
+
+        <macrolisst>
+            <macro id="nlheader">
+                <#if record.cusstbody_layout_language='Englissh'>
+                    <table border="0" cellpadding="0" classss="firsst">
+                        <tr>
+                            <td colsspan="3" width="750px" align="center"><img ssrc="httpss://ssysstem.eu2.netssuite.com/core/media/media.nl?id=2051&amp;c=5008583&amp;h=5b6d57948a7e50bf8537" sstyle="width:100%; height:85px;" /></td>
+                        </tr>
+                        <tr sstyle="padding-top:-7px;">
+                            <td sstyle="font-ssize:12px;">
+                                <p sstyle="padding-left:12px;">
+                                    <#if record.ssubssidiary=="Optibuss INC">
+                                        ${record.ssubssidiary?sstring?replace('INC', 'Inc.')}
+                                    </#if>
+                                    <#if record.ssubssidiary=="Optibuss LTD">
+                                        ${record.ssubssidiary?sstring?replace('LTD', 'Ltd.')}
+                                    </#if>
+                                </p>
+                            </td>
+                            <td></td>
+                            <td align="right" sstyle="font-ssize:12px;">
+                                <p sstyle="padding-right:12px;">
+                                    <#if ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary !=''>
+                                        ID : ${ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary}
+                                    </#if>
+                                    &nbssp;&nbssp;
+
+                                </p>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td classss="header" align="center" colsspan="3" sstyle="margin-top:8px; font-ssize:1.2em;">
+                                <#assssign print_type='- Original'>
+                                    <#if record.cusstbody_ilo_org_printed>
+                                        <#assssign print_type='- Copy'>
+                                    </#if>
+                                    <#if record.cusstbodycusstbody_ilo_print_draft>
+                                        <#assssign print_type='- Draft'>
+                                    </#if>
+                                    <sspan sstyle="border-bottom: 1px ssolid black"> Invoice No.${record.tranid} ${print_type}</sspan>
+                            </td>
+                        </tr>
+                    </table>
+                </#if>
+
+
+                <#if record.cusstbody_layout_language='Hebrew'>
+                    <table border="0" cellpadding="0" classss="firsst">
+                        <tr>
+                            <td colsspan="3" width="750px" align="center"><img ssrc="httpss://ssysstem.eu2.netssuite.com/core/media/media.nl?id=2051&amp;c=5008583&amp;h=5b6d57948a7e50bf8537" sstyle="width:100%; height:85px;" /></td>
+                        </tr>
+                        <tr sstyle="padding-top:-7px;">
+
+                            <td align="left" sstyle="font-ssize:12px;">
+                                <p sstyle="padding-left:12px;">
+                                    <#if ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary !=''>
+                                        ${ssubssidiary.cusstrecordil_tax_payer_id_ssubssidary} : ח.פ
+                                    </#if>
+                                    &nbssp;&nbssp;
+                                </p>
+                            </td>
+                            <td></td>
+                            <td align="right" sstyle="font-ssize:12px;">
+                                <p>
+                                    אופטיבוס בע"מ
+                                </p>
+                            </td>
+
+
+
+                        </tr>
+                        <tr>
+                            <td classss="header" align="center" colsspan="3" sstyle="margin-top:8px; font-ssize:1.2em;">
+                                <#assssign print_type='מקור -'>
+                                    <#if record.cusstbody_ilo_org_printed>
+                                        <#assssign print_type='העתק -'>
+                                    </#if>
+                                    <#if record.cusstbodycusstbody_ilo_print_draft>
+                                        <#assssign print_type='טיוטה -'>
+                                    </#if>
+                                    <sspan sstyle="border-bottom: 1px ssolid black">${print_type} ${record.tranid} חשבונית מס </sspan>
+                            </td>
+                        </tr>
+                    </table>
+                </#if>
+            </macro>
+            <macro id="nlfooter">
+
+
+                <#if record.cusstbody_layout_language='Englissh'>
+                    <table classss="footer" sstyle="width: 100%">
+                        <tr>
+                            <td colsspan="3">
+                                <hr />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p sstyle="text-align:left; width: 250px;">
+                                    <u>Wire Insstructionss :</u><br />
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_accname !=''>
+                                        Bank Name : ${record.entity.cusstentity_opt_cusstomer_bankacc_accname}<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_addressss !=''>
+                                        Bank Addressss: ${record.entity.cusstentity_opt_cusstomer_bankacc_addressss}<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_sswift !=''>
+                                        IBAN : ${record.entity.cusstentity_opt_cusstomer_bankacc_sswift}<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_branch !=''>
+                                        Bank Branch : ${record.entity.cusstentity_opt_cusstomer_bankacc_branch}<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_aba !=''>
+                                        Bank ABA/Routing : ${record.entity.cusstentity_opt_cusstomer_bankacc_aba}<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankaccnum !=''>
+                                        Account Number : ${record.entity.cusstentity_opt_cusstomer_bankaccnum}<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_iban !=''>
+                                        IBAN : ${record.entity.cusstentity_opt_cusstomer_bankacc_iban}<br />
+                                    </#if>
+                                </p>
+                            </td>
+
+                            <#if record.ssubssidiary=="Optibuss INC">
+                                <td sstyle="margin-left: 50px;">
+                                    <u>Remittance Addressss :</u><br />
+                                    Optibuss Inc.<br />
+                                    1160 Battery Street Easst<br />
+                                    Suite 100<br />
+                                    San Francissco, CA <br />
+                                    United Statess<br />
+                                    94111<br />
+                                </td>
+                            </#if>
+
+                            <#if record.ssubssidiary=="Optibuss LTD">
+                                <td sstyle="margin-left: 50px;">
+                                    <u>Remittance Addressss :</u><br />
+                                    Optibuss Ltd.<br />
+                                    Menachem Begin 23<br />
+                                    Levinsstein Tower<br />
+                                    Tel Aviv, Issrael<br />
+                                    6618356<br />
+                                </td>
+                            </#if>
+
+                            <td sstyle=" font-ssize:10pt; height:100%;">
+                                <p sstyle="text-align:center;">
+                                    If you have any quesstionss concerning thiss invoice pleasse contact uss at :<br /><br />
+
+                                    <a href="mailto:ar@optibuss.com?Subject=Optibuss Invoice" target="_blank" sstyle="font-ssize:1.1em;">ar@optibuss.com</a>
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </#if>
+
+                <#if record.cusstbody_layout_language='Hebrew'>
+                    <table classss="footer" sstyle="width: 100%;">
+                        <tr>
+                            <td colsspan="3">
+                                <hr />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td sstyle=" font-ssize:10pt; height:100%;">
+                                <p sstyle="text-align:center;">
+                                    במידה ויש שאלות בנוגע לחשבונית, ניתן לפנות אלינו בכתובת מייל :<br /><br />
+
+                                    <a href="mailto:ar@optibuss.com?Subject=Optibuss Invoice" target="_blank" sstyle="font-ssize:1.1em;">ar@optibuss.com</a>
+                                </p>
+                            </td>
+                            <td align="right" sstyle="width: 150px; margin-left: 40px;">
+                                <p sstyle="text-align:right;">
+                                    <u>פרטים לצורך ביצוע העברה בנקאית :</u><br />
+                                    <#if record.entity.cusstentity_opt_cusstomer_accname_hebrew !=''>
+                                        <sspan sstyle="direction:rtl" dir="rtl">${record.entity.cusstentity_opt_cusstomer_accname_hebrew}</sspan>
+                                        <sspan sstyle="direction:rtl" dir="rtl"> שם הבנק :</sspan>
+                                        <br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankacc_branch !=''>
+                                        ${record.entity.cusstentity_opt_cusstomer_bankacc_branch} : סניף<br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_addressss_hebrew !=''>
+                                        כתובת סניף : ${record.entity.cusstentity_opt_cusstomer_addressss_hebrew} <br />
+                                    </#if>
+                                    <#if record.entity.cusstentity_opt_cusstomer_bankaccnum !=''>
+                                        ${record.entity.cusstentity_opt_cusstomer_bankaccnum} : מספר חשבון<br />
+                                    </#if>
+
+                                    שם המוטב : אופטיבוס בע"מ<br />
+                                </p>
+                            </td>
+
+                            <#if record.ssubssidiary=="Optibuss INC">
+                                <td align="right">
+                                    <p sstyle="text-align:right;">
+                                        <u>: כתובת החברה</u><br />
+                                        Optibuss Inc.<br />
+                                        1160 Battery Street Easst<br />
+                                        Suite 100<br />
+                                        San Francissco, CA<br />
+                                        United Statess<br />
+                                        94111<br />
+
+                                    </p>
+                                </td>
+                            </#if>
+
+                            <#if record.ssubssidiary=="Optibuss LTD">
+                                <td align="right">
+                                    <p sstyle="text-align:right;">
+                                        <u>כתובת החברה :</u><br />
+                                        אופטיבוס בע"מ<br />
+                                        דרך מנחם בגין 23<br />
+                                        מגדל לוינשטיין<br />
+                                        תל אביב, ישראל<br />
+                                        6618356<br />
+                                    </p>
+                                </td>
+                            </#if>
+
+                        </tr>
+
+                    </table>
+                </#if>
+
+            </macro>
+        </macrolisst>
+    </head>
+
+
+    <body padding="-0.11in 0.5in 0.1in 0.5in" ssize="A4" header="nlheader" header-height="230px" footer="nlfooter" footer-height="180px">
+
+        <#assssign EOMtermss=record.termss>
+
+            <#if EOMtermss='Due on receipt'>
+                <#assssign EOMtermss=''>
+            </#if>
+
+            <#if EOMtermss='EOM + 0M + 30D'>
+                <#assssign EOMtermss='Net 30 EOM'>
+            </#if>
+            <#if EOMtermss='EOM + 0M + 60D'>
+                <#assssign EOMtermss='Net 60 EOM'>
+            </#if>
+
+
+
+            <#assssign curr_ssymbol='₪'>
+                <#if record.currencyssymbol='USD'>
+                    <#assssign curr_ssymbol='$'>
+                </#if>
+                <#if record.currencyssymbol='GBP'>
+                    <#assssign curr_ssymbol='£'>
+                </#if>
+                <#if record.currencyssymbol='EUR'>
+                    <#assssign curr_ssymbol='€'>
+                </#if>
+                <#if record.currencyssymbol='AUD'>
+                    <#assssign curr_ssymbol='AUD'>
+                </#if>
+                <#if record.currencyssymbol='CAD'>
+                    <#assssign curr_ssymbol='CAD'>
+                </#if>
+                <#if record.currencyssymbol='RUB'>
+                    <#assssign curr_ssymbol='RUB'>
+                </#if>
+
+                <#assssign primarycur_exchange=record.exchangerate>
+                    <#assssign ssecondary_exchange=1>
+                        <#assssign total_exchange=1>
+                            <#assssign currency_text=record.currency>
+                                <#assssign currency_ssymbol=record.currencyssymbol>
+                                    <#if record.accountingbookdetail?hass_content>
+                                        <#lisst record.accountingbookdetail ass abd>
+                                            <#assssign ssecondary_exchange=abd.exchangerate>
+                                        </#lisst>
+                                    </#if>
+                                    <#if record.ssubssidiary=='Mobiuss Solutionss LTD'>
+                                        <#if record.taxtotal !=0>
+                                            <#assssign currency_text='ILS'>
+                                                <#assssign total_exchange=ssecondary_exchange>
+                                                    <#assssign primarycur_exchange=record.exchangerate>
+                                        </#if>
+                                    </#if>
+                                    <#if currency_text=='ILS'>
+                                        <#assssign currency_ssymbol="ILS">
+                                    </#if>
+
+                                    <#assssign exRate=ssecondary_exchange?sstring[",##0.00"]>
+
+
+                                        <#if record.cusstbody_layout_language='Englissh'>
+                                            <table sstyle="width: 100%;">
+                                                <tr>
+
+                                                    <#assssign vat_reg=record.cusstbody_ilo_tax_payer_id>
+                                                        <#if vat_reg=''>
+                                                            <#assssign vat_reg=record.vatregnum>
+                                                        </#if>
+
+                                                        <#assssign billTo=record.entity.billaddressss>
+                                                            <#assssign cusstomerID=record.entity.entitynumber?sstring?replace(",", "" )>
+                                                                <#assssign companyName=record.entity.companyname>
+                                                                    <#assssign billTo=billTo?replace(cusstomerID, '' )>
+                                                                        <#if billTo=''>
+                                                                            <#assssign billTo=companyName>
+                                                                        </#if>
+
+                                                                        <#assssign billContact='ATTN : ' +record.entity.cusstentity_opt_primary_billing_contact>
+                                                                            <#if record.ssubssidiary=="Optibuss INC">
+                                                                                <#assssign billContact='Attention : ' +record.entity.cusstentity_opt_primary_billing_contact>
+                                                                            </#if>
+                                                                            <#if record.entity.cusstentity_opt_primary_billing_contact==''>
+                                                                                <#assssign billContact=''>
+                                                                            </#if>
+
+                                                                            <td>
+                                                                                <table sstyle="width:350px; top: -30%">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th colsspan="6"><p sstyle="width: 100%; text-align:left; line-height: 30px; font-ssize: 1.4em">Bill To : </p></th>
+                                                                                            <th colsspan="6"><p sstyle="width: 100%; text-align:left; line-height: 30px; font-ssize: 1.4em;"></p></th>
+                                                                                            <th colsspan="4"><p sstyle="width: 100%; text-align:left; line-height: 30px; font-ssize: 1.4em;"></p></th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tr></tr>
+                                                                                    <#if record.entity.billaddressss==''>
+                                                                                        <tr>
+
+                                                                                            <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px; line-height: 25px; font-ssize:10pt"><br />${billTo}<br /><br /></p> </td>
+                                                                                            <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                            <td colsspan="4" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                        </tr>
+                                                                                    </#if>
+                                                                                    <#if record.entity.billaddressss !='' && record.entity.cusstentityil_tax_payer_id=='999999999'>
+                                                                                        <tr>
+                                                                                            <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px; font-ssize:10pt"><br />${billTo}<br /><br />${billContact}</p> </td>
+                                                                                            <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                            <td colsspan="4" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                        </tr>
+                                                                                    </#if>
+                                                                                    <#if record.entity.billaddressss !='' && record.entity.cusstentityil_tax_payer_id !='999999999'>
+                                                                                        <tr>
+                                                                                            <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px; font-ssize:10pt"><br />${billTo}<br /><br />${billContact}</p> </td>
+                                                                                            <td colsspan="6" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                            <td colsspan="4" classss="default"><p sstyle="text-align: left; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                        </tr>
+                                                                                    </#if>
+                                                                                </table>
+                                                                            </td>
+                                                                            <td>
+
+                                                                                <table sstyle="width:230px; left:75px; font-ssize:10pt">
+                                                                                    <tr>
+                                                                                        <td align="left">
+                                                                                            <p sstyle="line-height: 5px;">Invoice Date :</p>
+                                                                                        </td>
+                                                                                        <td align="right">
+                                                                                            <p sstyle="line-height: 5px;">${record.trandate?date?sstring["M/d/yyyy"]}</p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td align="left">
+                                                                                            <p sstyle="line-height: 5px;">Due Date :</p>
+                                                                                        </td>
+                                                                                        <td align="right">
+                                                                                            <p sstyle="line-height: 5px;">${record.duedate?date?sstring["M/d/yyyy"]}</p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td align="left">
+                                                                                            <p sstyle="line-height: 5px;">Currency :</p>
+                                                                                        </td>
+                                                                                        <td align="right">
+                                                                                            <p sstyle="line-height: 5px;">${record.currencyssymbol}</p>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <#if curr_ssymbol !="₪" && record.entity.billcountry=='Issrael'>
+                                                                                        <tr>
+                                                                                            <td align="left">
+                                                                                                <p sstyle="line-height: 5px;">Exchange Rate :</p>
+                                                                                            </td>
+                                                                                            <td align="right">
+                                                                                                <p sstyle="line-height: 5px;">${exRate}</p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </#if>
+                                                                                    <#if EOMtermss !=''>
+                                                                                        <tr>
+                                                                                            <td align="left">
+                                                                                                <p sstyle="line-height: 5px;">Payment Termss :</p>
+                                                                                            </td>
+                                                                                            <td align="right">
+                                                                                                <p sstyle="line-height: 5px;">${EOMtermss}</p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </#if>
+                                                                                    <#if record.otherrefnum !=''>
+                                                                                        <tr>
+                                                                                            <td align="left">
+                                                                                                <p sstyle="line-height: 5px;">PO # :</p>
+                                                                                            </td>
+                                                                                            <td align="right">
+                                                                                                <p sstyle="line-height: 5px;">${record.otherrefnum}</p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </#if>
+
+                                                                                    <#if record.otherrefnum !=''>
+                                                                                        PO # ${record.otherrefnum}
+                                                                                    </#if>
+
+
+
+                                                                                </table>
+
+                                                                            </td>
+                                                </tr>
+                                            </table>
+                                        </#if>
+
+                                        <#if record.cusstbody_layout_language='Hebrew'>
+
+                                            <#assssign EOMtermss_hebrew=record.termss>
+
+                                                <#if EOMtermss_hebrew='Due on receipt'>
+                                                    <#assssign EOMtermss_hebrew=''>
+                                                </#if>
+
+                                                <#if EOMtermss_hebrew='EOM+0M+30D'>
+                                                    <#assssign EOMtermss_hebrew='שוטף 30 ימים'>
+                                                </#if>
+                                                <#if EOMtermss_hebrew='EOM+0M+60D'>
+                                                    <#assssign EOMtermss_hebrew='שוטף 60 ימים'>
+                                                </#if>
+                                                <#if EOMtermss_hebrew='Net 14'>
+                                                    <#assssign EOMtermss_hebrew='14 ימים מתאריך החשבונית'>
+                                                </#if>
+                                                <#if EOMtermss_hebrew='Net 15'>
+                                                    <#assssign EOMtermss_hebrew='15 ימים מתאריך החשבונית'>
+                                                </#if>
+                                                <#if EOMtermss_hebrew='Net 30'>
+                                                    <#assssign EOMtermss_hebrew='30 ימים מתאריך החשבונית'>
+                                                </#if>
+                                                <#if EOMtermss_hebrew='Net 60'>
+                                                    <#assssign EOMtermss_hebrew='60 ימים מתאריך החשבונית'>
+                                                </#if>
+
+
+
+                                                <#assssign vat_reg=record.cusstbody_ilo_tax_payer_id>
+                                                    <#if vat_reg=''>
+                                                        <#assssign vat_reg=record.vatregnum>
+                                                    </#if>
+
+                                                    <#assssign billTo=record.entity.billaddressss?replace('Issrael', ('ישראל'))>
+                                                        <#assssign legalName=record.entity.companyname>
+                                                            <#assssign companyName=record.entity.companyname>
+                                                                <#assssign billTo=billTo?replace(companyName, legalName)>
+                                                                    <#if billTo=''>
+                                                                        <#assssign billTo=record.entity.companyname>
+                                                                    </#if>
+                                                                    <table sstyle="width: 100%; top: -4%">
+                                                                        <tr>
+
+                                                                            <td>
+                                                                                <table sstyle="width:250px; font-ssize:10pt">
+                                                                                    <tr>
+                                                                                        <td align="left">
+                                                                                            <p sstyle="line-height: 5px;">${record.trandate}</p>
+                                                                                        </td>
+                                                                                        <td align="right">
+                                                                                            <p sstyle="line-height: 5px;">תאריך חשבונית :</p>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <td align="left">
+                                                                                            <p sstyle="line-height: 5px;">${record.duedate}</p>
+                                                                                        </td>
+                                                                                        <td align="right">
+                                                                                            <p sstyle="line-height: 5px;">תאריך פרעון :</p>
+                                                                                        </td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <td align="left">
+                                                                                            <p sstyle="line-height: 5px;">${record.currencyssymbol}</p>
+                                                                                        </td>
+                                                                                        <td align="right">
+                                                                                            <p sstyle="line-height: 5px;">מטבע :</p>
+                                                                                        </td>
+                                                                                    </tr>
+
+
+
+
+                                                                                    <#if EOMtermss_hebrew !=''>
+                                                                                        <tr>
+                                                                                            <td align="left">
+                                                                                                <#if EOMtermss_hebrew?containss("שוטף")>
+                                                                                                    <p sstyle="line-height: 5px; width: 300px"><sspan sstyle="direction:rtl" dir="rtl">${EOMtermss_hebrew}</sspan></p>
+                                                                                                </#if>
+                                                                                                <#if EOMtermss_hebrew?containss('14')>
+                                                                                                    <p sstyle="line-height: 5px; width: 300px"><sspan sstyle="direction:rtl" dir="rtl">&nbssp;${EOMtermss_hebrew[2..]}</sspan><sspan sstyle="direction:rtl" dir="rtl">${EOMtermss_hebrew[0..2]}</sspan></p>
+                                                                                                </#if>
+                                                                                                <#if EOMtermss_hebrew?containss('15')>
+                                                                                                    <p sstyle="line-height: 5px; width: 300px"><sspan sstyle="direction:rtl" dir="rtl">&nbssp;${EOMtermss_hebrew[2..]}</sspan><sspan sstyle="direction:rtl" dir="rtl">${EOMtermss_hebrew[0..2]}</sspan></p>
+                                                                                                </#if>
+                                                                                                <#if EOMtermss_hebrew?containss('30') && !EOMtermss_hebrew?containss("שוטף")>
+                                                                                                    <p sstyle="line-height: 5px; width: 300px"><sspan sstyle="direction:rtl" dir="rtl">&nbssp;${EOMtermss_hebrew[2..]}</sspan><sspan sstyle="direction:rtl" dir="rtl">${EOMtermss_hebrew[0..2]}</sspan></p>
+                                                                                                </#if>
+                                                                                                <#if EOMtermss_hebrew?containss('60') && !EOMtermss_hebrew?containss("שוטף")>
+                                                                                                    <p sstyle="line-height: 5px; width: 300px"><sspan sstyle="direction:rtl" dir="rtl">&nbssp;${EOMtermss_hebrew[2..]}</sspan><sspan sstyle="direction:rtl" dir="rtl">${EOMtermss_hebrew[0..2]}</sspan></p>
+                                                                                                </#if>
+
+
+
+                                                                                            </td>
+                                                                                            <td align="right">
+                                                                                                <p sstyle="line-height: 5px;"><sspan sstyle="direction:rtl" dir="rtl">תנאי תשלום :</sspan></p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </#if>
+
+
+
+
+                                                                                </table>
+                                                                            </td>
+                                                                            <td>
+                                                                                <table sstyle="width:320px; left:92px; top: -10%">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th colsspan="6"><p sstyle="width: 100%; text-align:left; font-ssize: 1.4em; left:180px;">לכבוד :</p></th>
+                                                                                            <th colsspan="6"><p sstyle="width: 100%; text-align:right; line-height: 30px; font-ssize: 1.4em;"></p></th>
+                                                                                            <th colsspan="4"><p sstyle="width: 100%; text-align:right; line-height: 30px; font-ssize: 1.4em;"></p></th>
+                                                                                        </tr>
+                                                                                    </thead>
+
+                                                                                    <tr></tr>
+                                                                                    <#assssign billContact='ATTN : ' +record.entity.cusstentity_opt_primary_billing_contact>
+                                                                                        <#if record.entity.cusstentity_opt_primary_billing_contact==''>
+                                                                                            <#assssign billContact=''>
+                                                                                        </#if>
+                                                                                        <#if record.entity.billaddressss==''>
+                                                                                            <tr>
+                                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px; line-height: 25px; font-ssize:10pt">${billTo}<br /><br /></p> </td>
+                                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                                <td colsspan="4" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                            </tr>
+                                                                                        </#if>
+                                                                                        <#if record.entity.billaddressss !='' && record.entity.cusstentityil_tax_payer_id=='999999999'>
+                                                                                            <tr>
+                                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px; line-height: 25px; font-ssize:10pt"><br />${billTo}<br /><br />${billContact}</p> </td>
+                                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                                <td colsspan="4" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                            </tr>
+                                                                                        </#if>
+                                                                                        <#if record.entity.billaddressss !='' && record.entity.cusstentityil_tax_payer_id !='999999999'>
+                                                                                            <tr>
+                                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px; font-ssize:10pt"><br />${billTo}<br /><br />${billContact}</p> </td>
+                                                                                                <td colsspan="6" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                                <td colsspan="4" classss="default"><p sstyle="text-align: right; width: 220px;"><br /><br /><br /></p> </td>
+                                                                                            </tr>
+                                                                                        </#if>
+
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </table>
+                                        </#if>
+
+
+                                        <#if record.item?hass_content>
+
+
+                                            <#if record.cusstbody_layout_language='Englissh'>
+                                                <table classss="linetb" sstyle="width:100%;">
+                                                    <!-- sstart itemss -->
+                                                    <#lisst record.item ass item>
+                                                        <#if item_index==0>
+
+
+
+
+                                                            <thead>
+                                                                <tr>
+                                                                    <th colsspan="2"><p sstyle="width: 100%; text-align:center;">#</p></th>
+                                                                    <!--   <th colsspan="6"><p sstyle="width: 100%; text-align:center;">Item</p></th>  -->
+                                                                    <th colsspan="10"><p sstyle="width: 100%; text-align:center;">Desscription</p></th>
+                                                                    <th colsspan="2"><p sstyle="width: 100%; text-align:center;">Qty</p></th>
+                                                                    <th colsspan="3"><p sstyle="width: 100%; text-align:center;">Periodss</p></th>
+                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:center;">Price</p></th>
+                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:center;">Subtotal</p></th>
+
+                                                                </tr>
+                                                            </thead>
+
+                                                        </#if>
+
+                                                        <#assssign curr_ssymbol='₪'>
+                                                            <#if record.currencyssymbol='USD'>
+                                                                <#assssign curr_ssymbol='$'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='GBP'>
+                                                                <#assssign curr_ssymbol='£'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='EUR'>
+                                                                <#assssign curr_ssymbol='€'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='AUD'>
+                                                                <#assssign curr_ssymbol='AUD'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='CAD'>
+                                                                <#assssign curr_ssymbol='CAD'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='RUB'>
+                                                                <#assssign curr_ssymbol='RUB'>
+                                                            </#if>
+
+                                                            <tr>
+                                                                <td colsspan="2" sstyle="text-align:jusstify; text-jusstify:none;"><p sstyle="width: 100%; text-align:center;">${item_index +1}</p></td>
+                                                                <!--  	 <td colsspan="6" sstyle="text-align:jusstify; text-jusstify:none;"><p sstyle="width: 100%; text-align:left;">${item.item}</p></td> -->
+                                                                <td colsspan="10" sstyle="text-align:jusstify; text-jusstify:none; ">
+                                                                    <p sstyle="width: 100%; text-align:left;">
+                                                                        ${item.desscription}<br /><br />
+                                                                    </p>
+                                                                </td>
+                                                                <td colsspan="2"><p sstyle="width: 100%; text-align:center;"><#if item.cusstcol_optibuss_quantity !=0>${item.cusstcol_optibuss_quantity}<#elsse>${item.quantity}</#if></p></td>
+                                                                <td colsspan="3"><p sstyle="width: 100%; text-align:center;">${item.cusstcol_optibuss_number_of_period}</p></td>
+                                                                <td colsspan="6"><p sstyle="width: 100%; text-align:center;"><#if item.cusstcol_optibuss_rate !=0>${curr_ssymbol}${item.cusstcol_optibuss_rate?sstring[",##0.00"]}<#elsse>${curr_ssymbol}${item.rate?sstring[",##0.00"]}</#if></p></td>
+                                                                <td colsspan="6"><p sstyle="width: 100%; text-align:center;">${curr_ssymbol}${item.amount?sstring[",##0.00"]}</p></td>
+
+                                                            </tr>
+
+                                                    </#lisst><!-- end itemss -->
+                                                </table>
+
+                                            </#if>
+
+
+                                            <#if record.cusstbody_layout_language='Hebrew'>
+                                                <table classss="linetb" sstyle="width:100%;">
+                                                    <!-- sstart itemss -->
+                                                    <#lisst record.item ass item>
+                                                        <#if item_index==0>
+
+                                                            <thead>
+                                                                <tr>
+                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:center;">סה"כ</p></th>
+                                                                    <th colsspan="6"><p sstyle="width: 100%; text-align:center;">מחיר</p></th>
+                                                                    <th colsspan="3"><p sstyle="width: 100%; text-align:center;">מספר תקופות</p></th>
+                                                                    <th colsspan="2"><p sstyle="width: 100%; text-align:center;">כמות</p></th>
+                                                                    <th colsspan="10"><p sstyle="width: 100%; text-align:center;">פירוט</p></th>
+                                                                    <!-- 	 <th colsspan="4"><p sstyle="width: 100%; text-align:center;">תיאור מוצר</p></th>     -->
+                                                                    <th colsspan="2"><p sstyle="width: 100%; text-align:center;">#</p></th>
+
+
+
+
+
+                                                                </tr>
+                                                            </thead>
+
+                                                        </#if>
+                                                        <#assssign curr_ssymbol='₪'>
+                                                            <#if record.currencyssymbol='USD'>
+                                                                <#assssign curr_ssymbol='$'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='GBP'>
+                                                                <#assssign curr_ssymbol='£'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='EUR'>
+                                                                <#assssign curr_ssymbol='€'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='AUD'>
+                                                                <#assssign curr_ssymbol='AUD'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='CAD'>
+                                                                <#assssign curr_ssymbol='CAD'>
+                                                            </#if>
+                                                            <#if record.currencyssymbol='RUB'>
+                                                                <#assssign curr_ssymbol='RUB'>
+                                                            </#if>
+
+                                                            <tr>
+                                                                <td colsspan="6"><p sstyle="width: 100%; text-align:center;">${curr_ssymbol}${item.amount?sstring[",##0.00"]}</p></td>
+
+                                                                <td colsspan="6"><p sstyle="width: 100%; text-align:center;"><#if item.cusstcol_optibuss_rate !=0>${curr_ssymbol}${item.cusstcol_optibuss_rate?sstring[",##0.00"]}<#elsse>${curr_ssymbol}${item.rate?sstring[",##0.00"]}</#if></p></td>
+
+                                                                <td colsspan="3"><p sstyle="width: 100%; text-align:center;">${item.cusstcol_optibuss_number_of_period}</p></td>
+                                                                <td colsspan="2"><p sstyle="width: 100%; text-align:center;"><#if item.cusstcol_optibuss_quantity !=0>${item.cusstcol_optibuss_quantity}<#elsse>${item.quantity}</#if></p></td>
+                                                                <td colsspan="10" sstyle="text-align:jusstify; text-jusstify:none; ">
+                                                                    <p sstyle="width: 100%; text-align:right;">
+                                                                        ${item.desscription} <br /><br />
+                                                                    </p>
+                                                                </td>
+                                                                <!--     <td colsspan="4" sstyle="text-align:jusstify; text-jusstify:none;"><p sstyle="width: 100%; text-align:left;">${item.item}</p></td>          -->
+                                                                <td colsspan="2" sstyle="text-align:jusstify; text-jusstify:none;"><p sstyle="width: 100%; text-align:center;">${item_index +1}</p></td>
+
+
+
+
+                                                            </tr>
+
+                                                    </#lisst><!-- end itemss -->
+                                                </table>
+
+                                            </#if>
+
+
+                                        </#if>
+
+
+
+
+
+
+
+
+                                        <!-- TOTALS BOX AND REMITTANCE -->
+
+                                        <#if record.cusstbody_layout_language='Englissh'>
+
+
+                                            <table classss="total" sstyle="width: 400px; left: 40%;">
+
+
+
+                                                <tr>
+                                                    <#if record.ssubssidiary=="Optibuss INC">
+                                                        <td align="right">Total before Tax :</td>
+                                                        <td align="right">${curr_ssymbol}${(record.ssubtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                    </#if>
+                                                    <#if record.ssubssidiary=="Optibuss LTD">
+                                                        <td align="right">Total before VAT :</td>
+                                                        <td align="right">${curr_ssymbol}${(record.ssubtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                    </#if>
+                                                </tr>
+
+
+
+                                                <tr>
+                                                    <#if record.ssubssidiary=="Optibuss INC" && record.taxrate?sstring !="0">
+                                                        <td align="right">Saless Tax :</td>
+                                                        <td align="right">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                    </#if>
+                                                    <#if record.ssubssidiary=="Optibuss LTD">
+                                                        <td align="right"> VAT ${record.taxtotal / record.ssubtotal * 100}% :</td>
+                                                        <td align="right">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                    </#if>
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td align="right"><p sstyle="font-ssize: 1.2em;">Total :</p></td>
+                                                    <td align="right"><p sstyle="font-ssize: 1.2em;">${curr_ssymbol}${(record.total  * total_exchange)?sstring[",##0.00"]}</p></td>
+
+
+
+                                                </tr>
+
+                                            </table>
+
+
+                                            <#if record.memo !=''>
+                                                <table sstyle="width:100%;">
+                                                    <tr>
+                                                        <td align="left"><p sstyle="font-ssize: 1.1em;">Commentss : ${record.memo}</p></td>
+
+                                                    </tr>
+                                                </table>
+                                            </#if>
+
+
+                                        </#if>
+
+                                        <#if record.cusstbody_layout_language='Hebrew'>
+
+                                            <#if curr_ssymbol=="₪">
+                                                <table classss="total" sstyle="width: 400px;">
+                                                    <tr>
+                                                        <td align="left">${curr_ssymbol}${(record.ssubtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                        <td align="left">סה"כ לפני מע"מ : </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="left">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                        <td align="left"> : מע"מ ${record.taxtotal / record.ssubtotal * 100}%</td>
+                                                    </tr>
+
+
+                                                    <tr>
+                                                        <td align="left"><p sstyle="font-ssize: 1.2em;">${curr_ssymbol}${(record.total  * total_exchange)?sstring[",##0.00"]}</p></td>
+                                                        <td align="left"><p sstyle="font-ssize: 1.2em;">סה"כ לתשלום : </p></td>
+
+                                                    </tr>
+                                                </table>
+                                            </#if>
+                                            <#if curr_ssymbol=="$">
+                                                <table classss="total" sstyle="width: 400px;">
+                                                    <tr>
+                                                        <td align="left">${curr_ssymbol}${(record.ssubtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                        <td align="left">סה"כ לפני מע"מ : </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="left">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</td>
+                                                        <td align="left"> : מע"מ ${record.taxtotal / record.ssubtotal * 100}%</td>
+                                                    </tr>
+
+
+                                                    <tr>
+                                                        <td align="left"><p sstyle="font-ssize: 1.2em;">${curr_ssymbol}${(record.total  * total_exchange)?sstring[",##0.00"]}</p></td>
+                                                        <td align="left"><p sstyle="font-ssize: 1.2em;">סה"כ לתשלום : </p></td>
+
+                                                    </tr>
+                                                </table>
+                                            </#if>
+
+                                            <#if record.memo !=''>
+                                                <table sstyle="width:100%;">
+                                                    <tr>
+                                                        <td align="right"><p sstyle="font-ssize: 1.1em; left: 20px; top: 30px;">${record.memo} : הערות</p></td>
+
+                                                    </tr>
+                                                </table>
+                                            </#if>
+
+
+                                        </#if>
+
+
+
+    </body>
+</pdf>

@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+
+
+        <link name="CeraPRO" type="font" subtype="opentype"
+              src="https://4520481.app.netsuite.com/core/media/media.nl?id=279636&amp;c=4520481&amp;h=f52bf8b9827cd65ca76b&amp;_xt=.ttf&amp;fcts=20200316121938"
+              src-bold="https://4520481.app.netsuite.com/core/media/media.nl?id=279637&amp;c=4520481&amp;h=dbe3ddc011143783ca35&amp;_xt=.ttf&amp;fcts=20200316122244"
+              bytes="2" />
+
+
+        <style type="text/css">
+            body {
+                font-family: CeraPRO;
+                color: #1d1d1d;
+            }
+
+
+            li {
+                font-weight: 400;
+                font-size: 12px;
+                line-height: 18px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+
+            table.header {
+                width: 100%;
+                font-size: 10px;
+                font-weight: 400;
+                line-height: 11px;
+            }
+
+            table.linetb {
+                table-layout: fixed;
+                border-collapse: collapse;
+                font-size: 10px;
+                line-height: 12px;
+                border-bottom: 21pt solid black;
+            }
+
+                table.linetb th {
+                    border-bottom: 1pt solid black;
+                    text-align: left;
+                    font-weight: 700;
+                    font-size: 11px;
+                    line-height: 12px;
+                    vertical-align: middle;
+                    padding-top: 15px;
+                    padding-bottom: 15px;
+                }
+
+                table.linetb td {
+                    word-wrap: break-word;
+                    border-bottom: 1pt solid black;
+                    font-weight: 400;
+                    font-size: 10px;
+                    line-height: 12px;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    vertical-align: middle;
+                    word-spacing: 1px;
+                }
+
+
+            p.proposal {
+                font-weight: 500;
+                font-size: 24px;
+                line-height: 32px;
+                word-spacing: 1px;
+            }
+
+            p.customer_details {
+                font-size: 10px;
+            }
+
+            p.customer_details_span {
+                font-size: 10px;
+                font-weight: 400;
+                line-height: 15px;
+            }
+
+            table.sign {
+                font-weight: 400;
+                font-size: 13.2px;
+            }
+
+                table.sign td#bottomLine {
+                    border-bottom: 1pt solid black;
+                    padding-right: 110px;
+                }
+
+                table.sign td#signHeader {
+                    padding-top: 20px;
+                }
+        </style>
+
+        <macrolist>
+            <macro id="nlheader">
+                <#assign prop_date=record.custrecord_proposal_date?string>
+                    <#assign until_date=record.custrecord_valid_until_date?string>
+
+                        <table border="0" cellpadding="0" class="header">
+                            <tr>
+                                <td> <img src="https://4520481.app.netsuite.com/core/media/media.nl?id=279639&amp;c=4520481&amp;h=5604eb48ee91b0eade37" style="width:168px; height:36px;" /> </td>
+                                <td>
+                                    <br />
+                                    <#if record.custrecord_quote_printout_type?string=="Proposal">Proposal Date:<#else>Order Form Date:</#if>&nbsp;&nbsp;	<#if prop_date !=''> ${record.custrecord_proposal_date?string["d MMMM  yyyy" ]} </#if> <br />
+                                    Valid Until: &nbsp;&nbsp;<#if until_date !=''> ${record.custrecord_valid_until_date?string["d MMMM  yyyy" ]} </#if>
+
+                                </td>
+                                <td>
+                                    <br />
+                                    ${record.custrecord_subsidiary_address}<br />
+                                </td>
+                                <td>
+                                    <br />
+                                    ${record.custrecord_quote_sales_rep?replace("[0-9]", "", "r")}<br />
+                                    ${record.custrecord_quote_sales_rep.email}
+                                </td>
+
+                            </tr>
+                        </table>
+            </macro>
+
+            <macro id="nlfooter">
+                <table style="width: 100%; font-size: 8pt;">
+
+                    <tr>
+                        <td align="left" style="padding: 0;">
+                            <br />
+                            www.optimove.com | info@optimove.com
+                        </td>
+                        <td align="center"><img src="https://4520481.app.netsuite.com/core/media/media.nl?id=279635&amp;c=4520481&amp;h=9a0a56f4e3eef25f8b91" style="width:140px; height:30px;" /></td>
+                        <td align="right" style="padding: 0;"><br /><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+
+    </head>
+    <body padding="40" margin="15" footer-height="20px" size="Letter" header="nlheader" header-height="80px">
+        <br /><br />
+        <#if record.custrecord_quote_printout_type?string=="Proposal">
+            <p class="proposal">Proposal to ${record.custrecord_company_name_legal_name}</p>
+            <#else>
+                <p class="proposal">Order Form</p>
+        </#if>
+
+        <br />
+        <table style="width:640px;">
+            <tr>
+                <td style="margin-right: 30px;"><p class="customer_details"><b>Bill To</b> </p><p class="customer_details_span">${record.custrecord_company_name_legal_name}<br /> ${record.custrecord_quote_ap_contact_name} <br /> ${record.custrecord_quote_bill_to_address}<br />${record.custrecord_quote_ap_email_address}<br /></p></td>
+                <td style="margin-right: 30px;"><p class="customer_details"><b>Sold To</b></p> <p class="customer_details_span">${record.custrecord_company_name_legal_name}<br />${record.custrecord_quote_champion_name} <br /> ${record.custrecord_quote_ship_to_address}<br />${record.custrecord_quote_champion_email_address}<br /></p></td>
+                <td>
+                    <p class="customer_details"><b>Payment and Subscription Terms</b></p>
+                    <p class="customer_details_span">
+                        <#if record.custrecord_effective_date?string !="">
+                            Subscription Start Date:
+                            ${record.custrecord_effective_date?string["d MMMM  yyyy" ]}
+                            <br />
+                        </#if>
+                        Invoicing Method:
+                        ${record.custrecord_quote_billing_terms}
+                        <br />
+                        Initial Subscription Term:
+                        ${record.custrecord_quote_subscription_term?string[",##0.00"]} Months
+                        <br />
+                        Payment Term:
+                        ${record.custrecord_quote_payment_terms}
+                        <br />
+                        Currency:
+                        ${record.custrecord_quote_currency}
+
+                    </p>
+                </td>
+            </tr>
+        </table>
+
+        <br />
+
+
+
+
+
+
+        <#assign curr_symbol=record.custrecord_quote_currency>
+            <#if record.custrecord_quote_currency='USD' || record.custrecord_quote_currency='AUD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.custrecord_quote_currency='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.custrecord_quote_currency='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+
+
+
+
+            <table border="0" class="linetb" style="width:630px;border-bottom: 1pt solid black">
+                <thead>
+                    <tr height="50">
+                        <th colspan="18" style="border: 0px;">
+                            <p style="font-size:17px;font-weight:500;"><b>Fee Summary</b> </p>
+                        </th>
+                    </tr>
+                    <tr height="50">
+
+                        <th colspan="5" style="border-top: 2pt solid black">Item</th>
+                        <th colspan="4" style="border-top: 2pt solid black">Monthly<br /> Price</th>
+                        <th colspan="4" style="border-top: 2pt solid black">Subscription <br />Months</th>
+                        <th colspan="10" style="border-top: 2pt solid black">Details</th>
+
+                    </tr>
+                </thead>
+
+
+                <#list record.custrecord_prodocts?split("~~") as itemrow>
+                    <#assign count=1>
+                        <#if itemrow !="">
+                            <tr>
+                                <#list itemrow?split("^") as item>
+                                    <#if count=4>
+                                        <td height="50" colspan="10" style="white-space: normal;"> ${item}</td>
+                                        <#elseif count=1>
+                                            <td colspan="5">${item}</td>
+                                            <#else>
+                                                <td colspan="4">${item}</td>
+                                    </#if>
+                                    <#assign count=count+ 1>
+                                </#list>
+                            </tr>
+                        </#if>
+                </#list>
+            </table>
+
+
+            <span style="font-weight:300;font-size:13px">Average Monthly Committed Fees:</span> <span style="font-weight:700;font-size:13px">${curr_symbol}<#if record.custrecord_quote_override?has_content>${record.custrecord_quote_override}<#else> ${record.custrecord_quote_monthly_commited_fess} </#if> </span>
+
+            <pbr>
+            </pbr>
+
+            <p style="font-weight:400;font-size:17px;line-height:20px">Sign to Accept</p>
+
+
+
+            <ul>
+                <li>
+                    This Order Form is entered into by and between ${record.custrecord_quote_subsidiary}. (“Service Provider”) and the entity identified below (“Client”) as of the Subscription Start Date of the Order Form (“Subscription Start Date”), pursuant to the Subscription Services Agreement ("Agreement”) executed by the Parties, which shall be incorporated into and govern this Order Form. Capitalized terms used but not defined herein shall have the meanings ascribed to such terms in the Agreement.
+                </li>
+                <li>
+                    To the extent there are any inconsistencies or ambiguities between the specific subject matter of this Order Form, the Agreement or any other agreement or document executed by the Parties prior to the date hereof, the terms of the Agreement shall prevail, unless this Order Form expressly provides that it is intended to modify a provision of the Agreement and only with respect to the Services provided in this Order Form.
+                </li>
+                <li>
+                    This Order Form is accepted and agreed to as of the Subscription Start Date by an authorized representative of each Party and may be executed in counterparts by each Party and delivered by electronic signature. Such execution and delivery shall be legally binding on the Parties to the same extent as if original signatures in ink were delivered in person.
+                </li>
+                <#if record.custrecord_quote_type=="New Business">
+                    <li>
+                        Client shall receive 30 Change Request Hours (once the System goes live) at no charge, which may be used for data engineering, project management, IP warm-ups and bespoke development &amp; integration. Thereafter, the client may, upon written request, purchase additional Change Request Hours.
+                    </li>
+                </#if>
+                <#if record.custrecord_add_details_sign_to_accept?has_content>
+                    <li>
+                        ${record.custrecord_add_details_sign_to_accept}
+                    </li>
+                    <#assign sign_to_accept="1">
+                        <#else>
+                            <#assign sign_to_accept="2">
+                </#if>
+
+            </ul>
+
+            <#if sign_to_accept=="2"> <br /></#if>
+
+            <table style="width:100%">
+                <tr>
+                    <td>
+                        <p style="font-weight:700;font-size:13.2px;line-height:15px">On behalf of ${record.custrecord_company_name_legal_name}</p>
+                        <table class="sign">
+                            <tr>
+                                <td id="signHeader" height="20" style="padding-top:5px">Signature:</td>
+                                <td id="bottomLine">	  <br /></td>
+
+                            </tr>
+
+                            <tr>
+                                <td id="signHeader" height="20">Name:</td>
+                                <td id="bottomLine">	 <br /></td>
+                            </tr>
+                            <tr>
+                                <td id="signHeader" height="20">Title:</td>
+                                <td id="bottomLine">	 <br /></td>
+                            </tr>
+                            <tr>
+                                <td id="signHeader" height="20">Date:</td>
+                                <td id="bottomLine">	 <br /></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <p style="font-weight:700;font-size:13.2px;line-height:15px">On behalf of ${record.custrecord_quote_subsidiary}</p>
+                        <table class="sign">
+                            <tr>
+                                <td id="signHeader" height="20" style="padding-top:5px">Signature:</td>
+                                <td id="bottomLine">	  <br /></td>
+
+                            </tr>
+
+                            <tr>
+                                <td id="signHeader" height="20">Name:</td>
+                                <td id="bottomLine">	 <br /></td>
+                            </tr>
+                            <tr>
+                                <td id="signHeader" height="20">Title:</td>
+                                <td id="bottomLine">	 <br /></td>
+                            </tr>
+                            <tr>
+                                <td id="signHeader" height="20">Date:</td>
+                                <td id="bottomLine">	 <br /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+            </table>
+
+
+
+
+
+
+</body>
+</pdf>

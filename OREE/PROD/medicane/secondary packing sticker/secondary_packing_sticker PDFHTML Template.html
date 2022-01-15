@@ -1,0 +1,245 @@
+﻿<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://4855789.app.netsuite.com/c.4855789/suitebundle149431/Heb-Regular.ttf" />
+
+        <style type="text/css">
+            table {
+                font-family: sans-serif;
+                font-size: 9pt;
+                table-layout: fixed;
+                width: 100%;
+                /*border: 1px solid black;*/
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 8pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            td {
+                /*border: 1px solid black;*/
+            }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+            }
+
+            .a {
+                height: 200px
+            }
+
+            .b {
+                font-weight: bold;
+                text-align: left;
+                vertical-align: text-bottom;
+            }
+
+            .c {
+                height: 200px;
+            }
+
+            .d {
+                height: 70px;
+                vertical-align: top;
+            }
+
+            .x {
+                font-size: 11pt;
+                vertical-align: text-top;
+            }
+        </style>
+    </head>
+    <body size="A4">
+        <#assign aDateTime=.now>
+        <#assign batch="batch">
+        <#assign packs_quantity=0>
+        <#assign total_weight=0>
+        <#list record.recmachcustrecord_md_carton as lines>
+            <#if lines_index==0>
+                <#assign batch=lines.custrecord_md_batch_number>
+            </#if>
+            <#if lines.custrecord_md_batch_number != ''>
+                <#assign packs_quantity= packs_quantity +1>
+            </#if>
+            <#assign total_weight=total_weight + lines.custrecord_quantity>
+        </#list>
+            <table style="width: 100%; font-size: 11pt;">
+                <tr>
+                    <td>
+                        <table style="width: 380px; height:140px; font-size: 11pt;" align="center">
+                            <tr>
+                                <td class="b" colspan="2" align="left"> Batch: ${batch}</td>
+                            </tr>
+                            <tr>
+                                <td class="b" colspan="2" align="left"> Box Num:  ${record.name}</td>
+                            </tr>
+                            <tr>
+                                <td class="x" colspan="2" align="left"> Packs Quantity: ${packs_quantity} </td>
+                            </tr>
+                            <tr>
+                                <td class="x" colspan="2" align="left"> Total weight: ${total_weight} gr / kg</td>
+                            </tr>
+                            <tr>
+                                <td class="b" colspan="2" align="center"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6332&amp;c=6400853_SB1&amp;h=9D1kaKKZs7y3JWu3sA9sGeYvIlE04Vp_CN0Pc_XMYF-jpBAV" style="width:60px; height:50px;" /></td>
+                            </tr>
+                            <!--<tr>
+                                <td class="x" align="left"></td>
+                                <td class="d" align="center"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6334&amp;c=6400853_SB1&amp;h=R1UljySChTlOioxrDQWJa4JwW8HwfwuxMC5ATXQMQb3a_Lkb" style="width:50px; height:50px;" /></td>
+                            </tr>-->
+                        </table>
+                    </td>
+                    <td>
+                        <!--<table style="width: 380px; height:380px; font-size: 11pt;" align="center">
+                                <tr>
+                                    <td class="d" align="left">MEDICANE</td>
+                                    <td class="d" align="left"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6332&amp;c=6400853_SB1&amp;h=9D1kaKKZs7y3JWu3sA9sGeYvIlE04Vp_CN0Pc_XMYF-jpBAV" style="width:100px; height:80px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="x" align="left">Business Code <br />${record.subsidiary.custrecord_business_code}</td>
+                                    <td class="x" align="left">Producer’s Code <br />${record.subsidiary.custrecord_producer_code}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Variety Type: ${record.custbody_species_line}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Pack:  ${record.custbody_bag_number}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Weight: ${record.custbody_bruto_bag_weight} Gr   SECAL IL ${record.subsidiary.custrecord_secal_il}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Packing Date: ${record.trandate}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> D.Pallet: Dry and Cure</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" align="left">Batch #: <br /><span style="font-size: 13pt;">${record.custbody_medicane_lot}</span></td>
+                                    <td class="b" align="center"><barcode codetype="qrcode" showtext="true" size="2" height="60px" width="60px" value="${record.custbody_bag_number}" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="x" align="left">Growing practices of this product have <br /> been approved by Social Israel LTD</td>
+                                    <td class="d" align="center"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6334&amp;c=6400853_SB1&amp;h=R1UljySChTlOioxrDQWJa4JwW8HwfwuxMC5ATXQMQb3a_Lkb" style="width:50px; height:50px;" /></td>
+                                </tr>
+                            </table>-->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- <br /><br /><br /><br /><br /><br />
+                            <hr />
+                            <table style="width: 380px; height:380px; font-size: 11pt;" align="center">
+                                <tr>
+                                    <td class="d" align="left">MEDICANE</td>
+                                    <td class="d" align="left"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6332&amp;c=6400853_SB1&amp;h=9D1kaKKZs7y3JWu3sA9sGeYvIlE04Vp_CN0Pc_XMYF-jpBAV" style="width:100px; height:80px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="x" align="left">Business Code <br />${record.subsidiary.custrecord_business_code}</td>
+                                    <td class="x" align="left">Producer’s Code <br />${record.subsidiary.custrecord_producer_code}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Variety Type: ${record.custbody_species_line}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Pack:  ${record.custbody_bag_number}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Weight: ${record.custbody_bruto_bag_weight} Gr   SECAL IL ${record.subsidiary.custrecord_secal_il}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Packing Date: ${record.trandate}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> D.Pallet: Dry and Cure</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" align="left">Batch #: <br /><span style="font-size: 13pt;">${record.custbody_medicane_lot}</span></td>
+                                    <td class="b" align="center"><barcode codetype="qrcode" showtext="true" size="2" height="60px" width="60px" value="${record.custbody_bag_number}" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="x" align="left">Growing practices of this product have <br /> been approved by Social Israel LTD</td>
+                                    <td class="d" align="center"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6334&amp;c=6400853_SB1&amp;h=R1UljySChTlOioxrDQWJa4JwW8HwfwuxMC5ATXQMQb3a_Lkb" style="width:50px; height:50px;" /></td>
+                                </tr>
+                            </table>-->
+                        </td>
+                        <td>
+                            <!--<br /><br /><br /><br /><br /><br />
+                            <hr />
+                            <table style="width: 380px; height:380px; font-size: 11pt;" align="center">
+                                <tr>
+                                    <td class="d" align="left">MEDICANE</td>
+                                    <td class="d" align="left"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6332&amp;c=6400853_SB1&amp;h=9D1kaKKZs7y3JWu3sA9sGeYvIlE04Vp_CN0Pc_XMYF-jpBAV" style="width:100px; height:80px;" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="x" align="left">Business Code <br />${record.subsidiary.custrecord_business_code}</td>
+                                    <td class="x" align="left">Producer’s Code <br />${record.subsidiary.custrecord_producer_code}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Variety Type: ${record.custbody_species_line}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Pack:  ${record.custbody_bag_number}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Weight: ${record.custbody_bruto_bag_weight} Gr   SECAL IL ${record.subsidiary.custrecord_secal_il}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> Packing Date: ${record.trandate}</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" colspan="2" align="left"> D.Pallet: Dry and Cure</td>
+                                </tr>
+                                <tr>
+                                    <td class="b" align="left">Batch #: <br /><span style="font-size: 13pt;">${record.custbody_medicane_lot}</span></td>
+                                    <td class="b" align="center"><barcode codetype="qrcode" showtext="true" size="2" height="60px" width="60px" value="${record.custbody_bag_number}" /></td>
+                                </tr>
+                                <tr>
+                                    <td class="x" align="left">Growing practices of this product have <br /> been approved by Social Israel LTD</td>
+                                    <td class="d" align="center"><img src="https://6400853-sb1.app.netsuite.com/core/media/media.nl?id=6334&amp;c=6400853_SB1&amp;h=R1UljySChTlOioxrDQWJa4JwW8HwfwuxMC5ATXQMQb3a_Lkb" style="width:50px; height:50px;" /></td>
+                                </tr>
+                            </table>-->
+                        </td>
+                    </tr>
+                </table>
+                &nbsp;
+
+        </body>
+    </pdf>
+
+
+
+    <!--<table style="width: 380px; height:380px; font-size: 11pt;" align="center">
+        <tr>
+            <td class="b" colspan="2" align="right">Date:</td>
+            <td class="b" colspan="2" align="left">${aDateTime}</td>
+        </tr>
+        <tr>
+            <td class="x" colspan="2" align="right">Batch:</td>
+            <td class="x" colspan="2" align="left">${record.custrecord_md_balance_cell_sublot}</td>
+        </tr>
+        <tr>
+            <td class="b" colspan="2" align="right"> Harvest Type:</td>
+            <td class="b" colspan="2" align="left">${record.custrecord_harvest_type_cell}</td>
+        </tr>
+        <tr>
+            <td class="b" colspan="2" align="right"> Drying Cart:</td>
+            <td class="b" colspan="2" align="left">${record.name}</td>
+        </tr>
+        <tr>
+            <td class="b" colspan="2" align="right"> Trays Quantity:</td>
+            <td class="b" colspan="2" align="left">${record.custrecord_sum_of_tray}</td>
+        </tr>
+        <tr>
+            <td class="b" colspan="2" align="right"> Total Weight:</td>
+            <td class="b" colspan="2" align="left">${record.custrecord_sum_of_weight} gr</td>
+        </tr>
+    </table>-->

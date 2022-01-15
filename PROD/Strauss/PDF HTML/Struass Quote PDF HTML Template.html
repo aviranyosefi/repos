@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://4855789.app.netsuite.com/c.4855789/suitebundle149431/Heb-Regular.ttf"
+              src-bold="https://6208757.app.netsuite.com/c.6208757/suitebundle255679/IL_Files/Alef-Bold.ttf" />
+
+
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header">
+                    <tr>
+                        <td><img src="https://6208757.app.netsuite.com/core/media/media.nl?id=4155&amp;c=6208757&amp;h=gxFvH2b5NyvQRc2TcE2FuQ1FH5QuhSKNzf7Z4Y_XHKSyrffi" style="width:736px;height:150px;" /> </td>
+                    </tr>
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer" style="width: 100%;">
+                    <tr>
+                        <#if record.custbody_beanz_quote==true>
+                            <td></td>
+                            <td align="center" style="width:80%"><img src="https://6208757.app.netsuite.com/core/media/media.nl?id=10321&amp;c=6208757&amp;h=8F3G3gJVrcv80aDruBHLekWwtckibZUANwoCAU8-HIMldXIO" style="width:600px;height:60px;" /> </td>
+                        </#if>
+
+                        <td align="right" style="vertical-align:bottom"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+
+        <style type="text/css">
+            body {
+                font-family: sans-serif;
+            }
+
+            table {
+                font-size: 9pt;
+                table-layout: fixed;
+                font-family: sans-serif;
+            }
+
+            th {
+                font-size: 9pt;
+                vertical-align: middle;
+                background-color: #e3e3e3;
+                color: #333333;
+            }
+
+
+            td p {
+                align: left
+            }
+
+            b {
+                color: #333333;
+            }
+
+            table.header td {
+                font-size: 10pt;
+            }
+
+            table.footer td {
+                font-size: 8pt;
+            }
+
+            table.itemtable th {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            table.total {
+                page-break-inside: avoid;
+            }
+
+            tr.totalrow {
+                background-color: #e3e3e3;
+                line-height: 200%;
+            }
+
+            td.totalboxtop {
+                font-size: 12pt;
+                background-color: #e3e3e3;
+            }
+
+            td.addressheader {
+                font-size: 8pt;
+            }
+
+            td.address {
+            }
+
+            td.totalboxmid {
+                font-size: 28pt;
+                padding-top: 20px;
+                background-color: #e3e3e3;
+            }
+
+            td.totalboxbot {
+                background-color: #e3e3e3;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+
+            span.itemname {
+                line-height: 150%;
+            }
+
+            hr {
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+                height: 1px;
+            }
+
+            body_elem {
+                padding-left: 0.5in;
+                padding-right: 0.5in;
+            }
+        </style>
+    </head>
+    <#assign footer="20pt">
+        <#if record.custbody_beanz_quote==true>
+            <#assign footer="70px">
+        </#if>
+        <#function removeLeadingNumbers text>
+            <#local retValue="">
+                <#if text?? && text?has_content>
+                    <#local retValue=text?replace("^([0-9 ])+", "" , "r" )>
+                </#if>
+                <#return retValue>
+        </#function>
+        <body header="nlheader" header-height="180px" footer="nlfooter" footer-height="${footer}" padding="0.0in 0.0in 0.0in 0.0in" size="A4">
+
+            <table class="body_elem" style="width: 100%; margin-top: 10px; padding-left:0.5in; padding-right:0.5in;">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td align="right" style="font-size: 9pt; text-align:right;">
+                                    <span>  ${record.trandate}</span> :תאריך הצעה
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" style="font-size: 9pt; text-align:right;" dir="rtl">
+                                    <span>${record.tranid}</span> :מספר הצעה
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" style="font-size: 9pt;">
+                                    <span>${record.salesrep}</span> :מנהל מכירות
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table align="right">
+                            <tr>
+                                <td align="right" style="font-size: 9pt; text-align:right;" dir="rtl">
+                                    :לכבוד
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <#assign billTo=record.billaddress?replace('Israel','ישראל')>
+                                        <#if billTo==''>
+                                            <#assign billTo=record.custbody_primary_contact_name + '<br />' + removeLeadingNumbers(record.entityname)>
+                                        </#if>
+                                        <p align="right" style="font-size: 9pt;text-align:right; direction:rtl;" dir="rtl"> ${billTo}</p>
+                                </td>
+                            </tr>
+                            <!--<tr>
+                                <td align="right" style="font-size: 9pt;">
+                                    <span>  ${record.salesrep}</span> :לידי
+                                </td>
+                            </tr>-->
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="body_elem" style="width: 100%; margin-top: 10px; padding-left:0.5in; padding-right:0.5in;">
+                <tr>
+                    <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <b>הנדון : הצעה לחוויית קפה חדשה לעסק שלך<br /><br /></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <#if record.custbody_beanz_quote==false>
+                            <p align="right" style="font-size: 10pt; text-align:right; direction:rtl;" dir="rtl">
+                                ${record.subsidiary.custrecord_scp_quote_intro}
+
+                            </p>
+                            <#else>
+                                <p align="right" style="font-size: 10pt; text-align:right; direction:rtl;" dir="rtl">
+                                    ${record.subsidiary.custrecord_beanz_quote_intro}
+
+                                </p>
+                        </#if>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <br /><b>ההצעה שלנו כוללת</b>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="itemtable" style="width: 100%; margin-top: 10px; padding-left:0.5in; padding-right:0.5in;page-break-inside:avoid;">
+              
+                <!-- start items -->
+                <#list record.item as item>
+                    <#if item_index==0>
+                        <tr>
+                            <th colspan="5"><p style="width: 100%; text-align:center;">סה"כ</p></th>
+                            <th colspan="5"><p style="width: 100%; text-align:center;">מחיר</p></th>
+                            <th colspan="3"><p style="width: 100%; text-align:center;">כמות</p></th>
+                            <th colspan="9"><p style="width: 100%; text-align:right;padding-right:2px">שם פריט</p></th>
+                        </tr>
+                    </#if>
+
+                    <#assign curr_symbol=record.currencysymbol>
+                        <#if record.currencysymbol='USD'>
+                            <#assign curr_symbol='$'>
+                        </#if>
+                        <#if record.currencysymbol='GBP'>
+                            <#assign curr_symbol='£'>
+                        </#if>
+                        <#if record.currencysymbol='EUR'>
+                            <#assign curr_symbol='€'>
+                        </#if>
+                        <#if record.currencysymbol='ILS'>
+                            <#assign curr_symbol='₪'>
+                        </#if>
+
+                        <tr>
+                            <td colspan="5" style="height: 20px;"><p style="width: 100%; text-align:center;">${curr_symbol}${item.amount?string[",##0.00"]}</p></td>
+                            <td colspan="5" style="height: 20px; ">
+                                <p style="width: 100%; text-align:center;">
+                                    ${curr_symbol}${item.rate?string[",##0.00"]}
+                                </p>
+                            </td>
+                            <td colspan="3" style="height: 20px; margin:1px; padding:1px;"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+                            <td colspan="9" align="right" dir="rtl" style="text-align:right; text-justify:none;    direction:rtl !important;">
+                                ${item.description}
+                            </td>
+                        </tr>
+                </#list><!-- end items -->
+            </table>
+
+            <#if record.custbody_quote_type=="מסלול חודשי">
+
+                <table align="right" style="text-align:right; width: 100%; margin-top: 10px; padding-left:0.5in; padding-right:0.5in;">
+                    <tr>
+                        <td>
+                            <p align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span style="font-size: 10pt;">  (לא כולל מע"מ) ${curr_symbol}${record.subtotal?string[",##0.00"]}</span>&nbsp;&nbsp;<b>:עלות חודשית כוללת</b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 10pt; text-align:right;">
+                            <span style="font-size: 11pt;">  :הזמנות מעבר לכמות הניתנת במסלול יחויבו לפי עלות של • </span>
+                            <p align="right" style="font-size: 10pt; text-align:right; direction:rtl;" dir="rtl">
+                                <ul style="padding-right:20px;">
+                                    <#if record.custbody_exceeding_capsules_rate !=0>
+                                        <li align="right" style="padding-right:1px;text-align:right;">(לא כולל מע"מ) <b> למארז      ${curr_symbol} ${record.custbody_exceeding_capsules_rate?string[",##0.00"]}</b>  :קפסולות</li>
+                                    </#if>
+                                    <#if record.custbody_exceeding_beans_rate !=0>
+                                        <li align="right" style="padding-right:1px;"> לקג' (לא כולל מע"מ) <span>${curr_symbol} ${record.custbody_exceeding_beans_rate?string[",##0.00"]}</span> :פולים</li>
+                                    </#if>
+                                    <#if record.custbody_exceeding_milk_powder_rate !=0>
+                                        <li align="right" style="padding-right:1px;"> לקג' (לא כולל מע"מ) <span>${curr_symbol} ${record.custbody_exceeding_milk_powder_rate?string[",##0.00"]}</span> :אבקת חלב</li>
+                                    </#if>
+                                    <#if record.custbody_exceeding_choco_powder_rate !=0>
+                                        <li align="right" style="padding-right:1px;"> לקג' (לא כולל מע"מ) <span>${curr_symbol} ${record.custbody_exceeding_choco_powder_rate?string[",##0.00"]}</span> :אבקת שוקו</li>
+                                    </#if>
+                                </ul>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </#if>
+
+            <table class="body_elem" style="width: 100%; margin-top: 10px; padding-left:0.5in; padding-right:0.5in;page-break-inside:avoid;">
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <b> :תנאים כלליים</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p align="right" style="font-size: 10pt; text-align:right; direction:rtl;" dir="rtl">
+                            <#if record.custbody_commitment_period?has_content && record.custbody_commitment_period !=0>.חודשים <span>${record.custbody_commitment_period}</span> -ההסכם בתוקף ל   • <br /></#if>
+                            <#if record.custbody_agreement_cancel_penalty=="כן">
+                                במידה ויחליט הלקוח לסיים התקשרות טרם סיום מועד ההסכם יחויב בסך של 20%    • <br />
+                                .מאובדן ההכנסה הממוצע (לכל מכונה) במצטבר עד תום תקופת ההסכם  &emsp;  &emsp; <br />
+                            </#if>
+
+                            .(בכרטיס אשראי או בהעברה בנקאית בלבד) <span>${record.terms?replace("EOM+","")?replace("D"," + שוטף ")}</span> : תנאי תשלום   • <br />
+                            ${record.duedate} : תוקף ההצעה   • <br />
+
+                            <#if record.subsidiary.custbody_quote_terms_conditions !="">
+                                <span> ${record.subsidiary.custrecord_qhote_terms_conditions}</span>
+                            </#if>
+                            <br />
+                            ,מכונות הקפה מותאמות לצרכי הלקוח ולנתוני הצריכה הצפויים. באם נתוני הצריכה בפועל יהיו שונים  • <br />
+                            .שטראוס קפה שומרת לעצמה את הזכות להתאים את סוג המכונה לצריכה בפועל &emsp;  &emsp;
+                            <br />
+                            בחודשים בהם הלקוח לא ירכוש פולי קפה, יחויב בדמי שכירות בגובה  ${record.custbody_rent_percent} מעלות המסלול החודשי   • <br />
+                            .או צפי הצריכה החודשי בש"ח  &emsp;  &emsp; <br />
+
+                            <#if record.custbody_beanz_quote==false>
+                                .הקפה מגיע במארזים של 5 ק"ג בקרטון   • <br />
+                                <br />
+
+                                <#else>
+                                    .הקפה מגיע במארזים של 5 ק"ג בקרטון   • <br />
+                                    <br />
+                            </#if>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+              <#if record.custbody_comments_for_printout !="">
+                <table class="body_elem" style="width: 100%; margin-top: 10px; padding-left:0.5in; padding-right:0.5in;">
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <b> :הערות</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p align="right" style="font-size: 10pt; text-align:right; direction:rtl;" dir="rtl">${record.custbody_comments_for_printout}</p>
+                        </td>
+                    </tr>
+                </table>
+                  <br />
+            </#if>
+
+            <table class="body_elem" style="width: 100%; padding-left:0.5in; padding-right:0.5in;page-break-inside:avoid;">
+                <tr>
+                    <td colspan="2" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <b>,אשמח לעמוד לשירותך בכל עת<br /><br /></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <b>,בברכה<br /></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <b><span>${record.salesrep}</span><br /></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right; width: 250px;" dir="rtl">
+                        <br /><br /><span> &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp;  &emsp; &emsp; &emsp;  &emsp; &emsp;   &ensp;  &ensp;  &ensp;  &ensp;  &ensp;  &emsp; &emsp; &emsp;</span> :חתימה + חותמת
+                    </td>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <br /><br /><span>${record.entity.companyname}</span> :שם<br />
+                    </td>
+                </tr>
+            </table>
+
+            <#if record.custbody_pl_for_print !="">
+                <pbr></pbr>
+                <#assign field1='field1'>
+                    <#assign field2='field2'>
+                        <#assign field3='field3'>
+                            <p align="center" style="font-size: 12pt; text-align:right; direction:rtl;padding-left:0.5in;padding-top:20px" dir="rtl"><b>נספח א – מחירון מוצרים נלווים</b> </p>
+                            <table class="itemtable" style="width:720px; padding-left:0.5in; padding-right:0.5in;">
+                                <!-- start items -->
+
+                                <thead>
+                                    <tr>
+                                        <th colspan="4"><p style="width: 100%; text-align:right;">כמות באריזה</p></th>
+                                        <th colspan="5"><p style="width: 100%; text-align:right;">מחיר ליחידה</p></th>
+                                        <th colspan="8"><p style="width: 100%; text-align:right;">פריט</p></th>
+                                    </tr>
+                                </thead>
+
+                                <#list record.custbody_pl_for_print?split("{br}") as itemrow>
+                                    <#if itemrow !="">
+                                        <#assign count=1>
+                                            <#list itemrow?split("{t}") as pl>
+                                                <#if count=1>
+                                                    <#assign field1=pl>
+                                                        <#elseif count=2>
+                                                            <#assign field2=pl>
+                                                                <#elseif count=3>
+                                                                    <#assign field3=pl>
+                                                </#if>
+                                                <#assign count=count+ 1>
+                                            </#list>
+                                            <tr>
+                                                <td colspan="4"><p style="width: 100%; text-align:right;direction:rtl">${field3}</p></td>
+                                                <td colspan="5"><p style="width: 100%; text-align:right;direction:rtl">${field1}</p></td>
+                                                <td colspan="8"><p style="width: 100%; text-align:right;direction:rtl">${field2}</p></td>
+                                            </tr>
+                                    </#if>
+                                </#list><!-- end items -->
+                            </table>
+            </#if>
+
+
+            <pbr></pbr>
+
+            <p align="center" style="font-size: 12pt; text-align:right; direction:rtl;padding-right:0.5in;" dir="rtl"><b> <#if record.custbody_pl_for_print !="">נספח ב<#else>נספח א</#if> - תמונות המכונות המוצעות</b> </p>
+            <#list record.item as item>
+                
+                <#if item.custcol_pic_url_front?has_content || item.custcol_pic_url_side?has_content>
+                    <table style="width: 80%;margin-top:50px" align="center" padding="10px">
+                        <tr>
+                            <#if item.custcol_pic_url_front !="">
+                                <#assign urString="https://6208757.app.netsuite.com?${item.custcol_pic_url_front}">
+                                    <#assign logoTdTemplate=r'
+
+                            <#if item.custcol_pic_url_front?index_of("<") != -1>
+                                    <img src="${urString}" style="width:155px; height:155px;" />
+                            <#else>
+                                    <img src="${item.custcol_pic_url_front}" style="width:155px; height:155px;" />
+                            </#if>
+
+
+                        '?interpret
+                        >
+                        <td align="center">    <@logoTdTemplate /></td>
+
+                            </#if>
+
+                            <#if item.custcol_pic_url_side !="">
+                                <#assign urString="https://6208757.app.netsuite.com?${item.custcol_pic_url_side}">
+                                    <#assign logoTdTemplate=r'
+
+                            <#if item.custcol_pic_url_side?index_of("<") != -1>
+                                <td> <img src="${urString}" style="width:155px; height:155px;" /></td>
+                                <#else>
+                                    <img src="${item.custcol_pic_url_side}" style="width:155px; height:155px;" />
+                             </#if>
+
+
+                        '?interpret
+                            >
+                        <td align="center">    <@logoTdTemplate /></td>
+                            </#if>
+                        </tr>
+                    </table>
+                </#if>                                    
+            </#list><!-- end items -->
+        </body>
+</pdf>

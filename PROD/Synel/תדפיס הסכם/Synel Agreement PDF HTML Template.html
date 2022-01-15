@@ -1,0 +1,3190 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arialb.ttf" />
+
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 11pt;">
+                    <tr>
+                        <td></td>
+                        <td align="center">
+                            <img src="https://6398307.app.netsuite.com/core/media/media.nl?id=8762&amp;c=6398307&amp;h=8EVnA9i-raUz1TRaRHdYA3C18QgDvzm4WkaRuhcXrJm3WEF0"
+                                 style="margin: 7px;width:300px; height:90px;" />
+                        </td>
+                        <td align="right">
+                            <pagenumber /> of
+                            <totalpages />
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="header" style="width: 100%; font-size: 11pt;">
+                    <tr>
+                        <td align="center">
+                            <img src="https://6398307.app.netsuite.com/core/media/media.nl?id=4304&amp;c=6398307&amp;h=GPkKGy7b_LyLzZiwE2HSB_d1IcRCoNLXrtjbzpYIoycIRTbb"
+                                 style="float: left; margin: 7px;width:400px; height:75px;" />
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif
+            }
+
+            table {
+                font-size: 12pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 12pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            td {
+                font-size: 12pt;
+            }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+                font-size: 11pt;
+            }
+
+            p {
+                font-size: 12pt;
+            }
+
+            table.pl {
+                table-layout: fixed;
+                border-collapse: collapse;
+                font-size: 10pt;
+            }
+
+                table.pl td {
+                    border: 1px solid;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                }
+
+                table.pl thead {
+                    display: table-header-group
+                }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="4%" padding="0.1in 0.5in 0.5in 0.5in" size="Letter">
+        <#assign amtHeader=record.custrecord_agr_net_amt>
+            <#if record.custrecord_agr_status=="טיוטא">
+                <#assign amtHeader=record.custrecord_agr_new_agreed_amt>
+            </#if>
+            <!--//mekif-->
+            <#if !record.custrecord_agr_short_version_print && record.custrecord_support_type=="מקיף">
+                <br />
+                <table style="width:200px;">
+                    <tr>
+                        <td align="right">
+                            <p>${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+                        <td width="40%" align="right">
+                            <p>:תאריך</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">${record.internalid}</p>
+                        </td>
+                        <td align="right">
+                            <p>: סימוכין</p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>${record.custrecord_agr_bill_cust.companyname}</p>
+                        </td>
+                        <td align="right">
+                            <p>: לכבוד</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>
+                                ${record.custrecord_agr_contact.firstname}
+                                ${record.custrecord_agr_contact.lastname}<br /><br />
+                            </p>
+                        </td>
+                        <td align="right">
+                            <p>: לידי</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p></p>
+                        </td>
+                        <td align="right">
+                            <p>,.א.ג.נ</p>
+                        </td>
+                    </tr>
+                </table>
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <b>
+                                <span> ${record.custrecord_agr_sys_type}</span> למערכות <span>
+                                    ${record.custrecord_support_type}
+                                </span> הנדון: הצעה להסכם שרות אחזקה
+                            </b>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                הננו מתכבדים להגיש לכם בזאת את הצעתנו להסכם שרות אחזקה מקיף עבור מערכות תוכנה וחומרה <br />
+                                .שנרכשו מחברתנו והותקנו והוטמעו על ידיי עובדי חברתנו בארגונכם<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                סינאל מלל פייוויי בע"מ הינה החברה הוותיקה והמובילה בישראל בפיתוח שיווק ושרות לפתרונות<br />
+                                .תוכנה וחומרה לניהול פעילות העובד בארגון, בקרת כניסה, משאבי אנוש וחישוב שכר עבודה<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                <span>Help Desk</span> במסגרת הסכם השירות אנו מעמידים לרשותכם מוקד שרות ארצי ממוחשב הכולל
+                                מערך<br />
+                                לתמיכה טלפונית, וצוות גדול של טכנאי שטח בפריסת ארצית הזמינים להגעה למשרדכם, כמו כן
+                                לשירותכם<br />
+                                .מעבדת תיקונים וכיתות הדרכה מקצועיות<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                פניה של לקוח החתום על חוזה שרות לקבלת שירות, מטופלת בהליך מקוצר ובמסלול מהיר והוא מקבל
+                                <br />
+                                עדיפות בטיפול על פני לקוחות שאינם במסגרת הסכם שירות. בנוסף, תהליך הטיפול מתקצר ומתייעל, בין
+                                <br />
+                                .היתר לאור דילוג על שלב החתימה על ההתחייבות לתשלום<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                לקוחות בהסכם שרות מקבלים תעריפים מיוחדים בעת ביצוע עבודות מיוחדות כגון תוספות/העתקות,
+                                הקמה<br />
+                                .גיבוי בענן, הדרכות, או כל שינוי אחר ,<span>IP</span> ושינויים בהסכמי עבודה, שינוי
+                                כתובת<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                .הסכם שרות זה כולל גם החלפת חלקים מתכלים כגון: סוללת זיכרון, סוללות גיבוי וקורא מגנטי<br />
+                                .חלקים אלו קריטים לתפקודו התקין של השעון ואורך חייהם מוגבל
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                ,חתימתכם על גבי ההסכם ונספח א' (נספח הציוד) המצורפים מטה והחזרת שני העתקים למשרדנו
+                                ברעננה<br />
+                                .תהווה הסכמתכם להיכלל בהסכם שרות<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                .הצעה זו תעמוד בתוקף למשך 30 יום
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                בכבוד רב
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.entityid/</span>
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.phone/</span> :טל
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.email/</span> :דוא"ל
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <!--//page2//-->
+                <pbr></pbr>
+                <table style="width:200px;">
+                    <tr>
+                        <td align="right">
+                            <p>${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+                        <td width="40%" align="right">
+                            <p>:תאריך</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">${record.internalid}</p>
+                        </td>
+                        <td align="right">
+                            <p>: סימוכין</p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span> ${record.custrecord_support_type}</span> הסכם שרות אחזקה
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span> </span> שנערך ונחתם ב
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br />
+                    <table style="width:650px;" align="right">
+                        <tr>
+                            <td></td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>סינאל מלל פיוויי בע"מ (ח.פ 511416612)</p>
+                            </td>
+                            <td align="right">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">: בין</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">("להלן: "סינאל)</td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>מרחוב התדהר 2, רעננה</p>
+                            </td>
+                            <td align="right">
+                                <p></p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>
+                                    (${record.custrecord_agr_bill_cust.vatregnumber} ח.פ)
+                                    ${record.custrecord_agr_bill_cust.companyname}
+                                </p>
+                            </td>
+                            <td align="right">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">: לבין</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">("להלן: "הלקוח)</td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">/customerAddress/</p>
+                            </td>
+                            <td align="right">
+                                <p></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <table align="right" style="text-align:right; direction:rtl" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.1</p>
+                                    </td>
+                                    <td width="95%" align="right">
+                                        <p style="text-align:right;" dir="rtl">
+                                            בתוספת מע"מ <span> ₪ ${amtHeader}</span>   עבור כלל הציוד המותקן אצל הלקוח הינו <span>ה${record.custrecord_support_type}</span> מחיר הסכם השרות <br />
+                                            <span>${record.custrecord_agr_end_date}</span> ועד ליום
+                                            <span>${record.custrecord_agr_srt_date}</span> חודשים, החל מיום
+                                            <span>${record.custrecord_agr_num_mon}</span> תקופת החוזה הינה למשך
+                                            .("<b>התמורה</b>"
+                                            :להלן)<br />
+                                            .'התמורה כוללת תשלום עבור שרות בגין התוכנה ו/או החומרה המפורטים בנספח א<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.2</p>
+                                    </td>
+                                    <td width="95%" align="right">
+                                        <p style="text-align:right;" dir="rtl">:שרות התמיכה כולל</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl"> <b><u>:תמיכה בתוכנה</u></b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .<span>${record.custrecord_agr_sys_type}</span>-תמיכה טלפונית בתוכנה ה
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .תמיכה באמצעות התחברות מרחוק
+                                        </p>
+                                    </td>
+                                </tr>
+                                <#if record.custrecord_collapse_insurance_indication>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                .עדכון תוכנה בגרסאות חדשות (במסגרת ביטוח קריסה)
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <#if record.custrecord_agr_sys_type?contains("Harmony")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    <span>,(SQL למעט התקנת)</span> ,מחדש
+                                                    ע"ג שרת קיים <span>Harmony</span> התקנת תוכנה <b>
+                                                        - <span>Harmony</span>
+                                                        ביטוח קריסה לתוכנת
+                                                    </b><br />
+                                                    בעקבות העברת התוכנה ממשתמש למשתמש, או בעקבות העברה למערכת הפעלה חדשה,
+                                                    בכפוף<br />
+                                                    .לכך שנספח א' להסכם שרות כולל ביטוח קריסה<br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Sy-Bridge")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Sy-Bridge</span> התקנת תוכנה <b>
+                                                        - <span>Sy-Bridge</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Falcon")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Falcon</span> התקנת תוכנה <b>
+                                                        - <span>Falcon</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Time Log")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Time Log</span> התקנת תוכנה <b>
+                                                        - <span>Time Log</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Syncomm")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק, החלפת
+                                                    <span>Syncomm</span> התקנת תוכנה <b>
+                                                        - <span>Syncomm</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    מחשב ו/או מערכת הפעלה,התקנת התוכנה תעשה ע"ג פלטפורמה קיימת ולא ע"ג שרת
+                                                    חדש<br />
+                                                    .ובכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("SY-Server")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>SY-Server</span> התקנת תוכנה <b>
+                                                        - <span>SY-Server</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Entryx")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Entryx</span> התקנת תוכנה <b>
+                                                        - <span>Entryx</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                </#if>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl"> <b><u>:תמיכה בחומרה</u></b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .שעות נסיעה ועבודת טכנאי באתר הלקוח בעת תקלה
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .החלפת ציוד תקול
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .החלפת חלקים במכשירים
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .החלפת חלקים מתכלים כגון: סוללות גיבוי, סוללות זיכרון וקורא מגנטי
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <#if record.custrecord_agr_print_1?has_content>
+                                <table>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                <span>למען הסר ספק  ,מובהר כי השירות אינו כולל</span><br />
+                                                <span>${record.custrecord_agr_print_1}</span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </#if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl">:אחריות הלקוח&ensp;&ensp;&ensp;<span>.3</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מתן השרות עפ"י הסכם זה כפוף לביצוע תחזוקה שוטפת, על ידי הלקוח, על מנת לשמור על
+                                            תקינות<br />
+                                            .<span>${record.custrecord_agr_sys_type}</span> ושמישות המערכת על הלקוח לבצע
+                                            גיבוי
+                                            למחיצת
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            למען הסר ספק מובהר כי במידה והלקוח לא יאפשר לסינאל להתחבר מרחוק ו/או במקרה
+                                            שתהיה<br />
+                                            חסימה מצד הלקוח שלא תאפשר גישה לתוכנה, הלקוח יישא בעלות כספית נוספת של 365 ₪
+                                            בתוספת
+                                            <br />
+                                            .מע"מ עבור קריאת השרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,חל איסור מצד הלקוח לשכפל להעתיק או לבצע שימוש שאינו חוקי בתוכנה, רישיון שימוש
+                                            זכויות בתוכנה<br />
+                                            .ינופק כל 365 ימים ובמסגרת הסכם שרות בתוקף
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.4</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            יום מתאריך הוצאת החשבונית , באמצעות המחאה או כרטיס אשראי או
+                                            <span> ${record.custrecord_agr_payment_terms} </span> תשלום התמורה תוך
+                                            <br />
+                                            באמצעות העברה בנקאית ל- בנק לאומי (מס' 10), סניף ראשי חיפה (מס' 876)
+                                            מס' חשבון<br />
+                                            .עבור סינאל מלל פייוויי בע"מ <span>176300/08</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            בעת חידוש ההסכם, התמורה תוצמד לעליית מדד המחירים לצרכן,
+                                            כאשר מדד הבסיס הוא המדד היודע כפי <br />.שרשום בנספח להסכם השירות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl">:מתן השרות&ensp;&ensp;&ensp;<span>.5</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            שעות פעילות סינאל הינם בימים א'-ה' משעה 08:00 עד שעה 16:00, בערבי חג משעה 08:00
+                                            עד
+                                            השעה<br />
+                                            .<span>08:00-15:00</span> חול המועד ,<span>13:00</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .שעות עבודה ממועד פתיחת קריאת השרות
+                                            <span>${record.custrecord_agr_sla_in_hours}</span> מענה טלפוני והתחברות מרחוק
+                                            יינתן
+                                            תוך -<b>שרות תוכנה</b><br />
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            שעות עבודה ממועד פתיחת קריאת השרות ו/או סיווגה
+                                            <span>${record.custrecord_agr_sla_field}</span> הגעת טכנאי אל הלקוח תהיה עד
+                                            -<b>ביקור טכנאי</b><br />
+                                            .כקריאת שרות הדורשת הגעת טכנאי למשרדי הלקוח
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .<span>www.synel.co.il</span> קריאת שרות יש לפתוח באמצעות אתר סינאל בכתובת<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .לנוחיותכם, ניתן לקצר את זמן התגובה למענה ותמיכה טלפונית, לקבלת הצעת מחיר יש
+                                            לפנות
+                                            לח"מ<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.6</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ${record.custrecord_agr_print_2}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.7</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            במידה וסינאל תזומן לטיפול בתקלה ויתברר שמקור התקלה אינו בציוד סינאל, יחויב הלקוח
+                                            בסך
+                                            של ₪230 <br />
+                                            .בתוספת מע"מ עבור עבודה ו/או נסיעות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.8</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מוסכם בזאת, שכל ציוד נוסף שיירכש על ידי הלקוח, יתווסף אוטומטית לחוזה שרות זה,
+                                            מיד
+                                            בתום תקופת <br />
+                                            .האחריות שלו וסינאל תהיה רשאית לחייב את הלקוח בגין הוספת ציוד זה לחוזה השרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.9</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            במידה והתקלה מחייבת ביקור טכנאי במשרדי הלקוח באילת, יישא הלקוח בתשלום בגין
+                                            כרטיסי
+                                            טיסה (שני <br />
+                                            .כיוונים) או לחלופין יזמין על חשבונו כרטיסי טיסה עבור טכנאי סינאל, זאת בנוסף
+                                            לעלויות
+                                            הקבועות בהסכם זה
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.10</p>
+                                    </td>
+                                    <td align="right">
+                                        <#if record.custrecord_agr_renew_type="אוטומטי">
+                                            <p style="text-align:right;">
+                                                הסכם השרות יאורך אוטומטית, בכל שנה לשנה נוספת אלא אם הודיע אחד הצדדים בכתב
+                                                על אי
+                                                רצונו בחידוש <br />
+                                                . ההסכם עד 90 יום לפני תום התקופה (להלן : "הסכם השרות המוארך")
+                                            </p>
+                                            <#else>
+                                                <p style="text-align:right;">
+                                                    .בכל שנה תשלח הצעת מחיר לחידוש השרות<br />
+                                                </p>
+                                        </#if>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.11</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .סינאל רשאית לשנות את תעריפי השירות בעת חידוש הסכם השירות /או הסכם השירות
+                                            המוארך,
+                                            לפי העניין<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.12</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח בכל
+                                            תנאי הסכם זה<br />
+                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.12</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח
+                                            בכל
+                                            תנאי הסכם זה<br />
+                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.13</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            הלקוח מאשר כי קרא את תנאי הסכם זה ואת רשימת הציוד המפורטת בנספח א', הבין אותם,
+                                            והצדדים מאשרים <br />
+                                            כי הסכם זה על נספחיו כולל וממצה את כל ההבנות וההסכמות ביניהם בנוגע לעסקה הכלולה
+                                            בו
+                                            והוא מבטל <br />
+                                            וגובר על כל הצעה, הסכם, הסכמה, מצג, הבנה או משא ומתן שקדמו לו בכתב או בע"פ בנוגע
+                                            לנושאים מושאי<br />
+                                            .ההסכם
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.14</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סמכות השיפוט המקומית הבלעדית בכל עניין ו/או מחלוקת הנובעים ו/או
+                                            הקשורים בהסכם זה<br />
+                                            .תהא מסורה לבית המשפט בעל הסמכות העניינית אשר בעיר תל-אביב
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.15</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            אנו החתומים מטה מסכימים לכל האמור לעיל ולראיה באנו על החתום <br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+                <br />
+                <table>
+                    <tr>
+                        <td>
+                            <table style="width:650px;" align="right">
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>סינאל מלל פיוויי בע"מ</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <span>${record.custrecord_agr_bill_cust.companyname}</span> :הלקוח
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>תדהר 2, רעננה </p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            :מרחוב<span>
+                                                <br />
+                                                /customerAddress/
+                                            </span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>חותמת וחתימות</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">חותמת וחתימות</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><br /></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>תאריך</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">תאריך</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                <br />
+                <br />
+            </#if>
+            <!--//mekif-->
+            <!--//misgeret-->
+            <#if !record.custrecord_agr_short_version_print && record.custrecord_support_type=="הסכם מסגרת">
+                <br />
+                <table style="width:200px;">
+                    <tr>
+                        <td align="right">
+                            <p>${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+                        <td width="40%" align="right">
+                            <p>:תאריך</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">${record.internalid}</p>
+                        </td>
+                        <td align="right">
+                            <p>: סימוכין</p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>${record.custrecord_agr_bill_cust.companyname}</p>
+                        </td>
+                        <td align="right">
+                            <p>: לכבוד</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>
+                                ${record.custrecord_agr_contact.firstname}
+                                ${record.custrecord_agr_contact.lastname}<br /><br />
+                            </p>
+                        </td>
+                        <td align="right">
+                            <p>: לידי</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p></p>
+                        </td>
+                        <td align="right">
+                            <p>,.א.ג.נ</p>
+                        </td>
+                    </tr>
+                </table>
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <b>
+                                <span> ${record.custrecord_agr_sys_type}</span> למערכות <span>
+                                    ${record.custrecord_support_type}
+                                </span> הנדון: הצעה להסכם שרות אחזקה
+                            </b>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                הננו מתכבדים להגיש לכם בזאת את הצעתנו להסכם שרות אחזקה מסגרת עבור מערכות תוכנה וחומרה <br />
+                                .שנרכשו מחברתנו והותקנו והוטמעו על ידיי עובדי חברתנו בארגונכם<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                סינאל מלל פייוויי בע"מ הינה החברה הוותיקה והמובילה בישראל בפיתוח שיווק ושרות לפתרונות<br />
+                                .תוכנה וחומרה לניהול פעילות העובד בארגון, בקרת כניסה, משאבי אנוש וחישוב שכר עבודה<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                <span>Help Desk</span> במסגרת הסכם השירות אנו מעמידים לרשותכם מוקד שרות ארצי ממוחשב הכולל
+                                מערך<br />
+                                לתמיכה טלפונית, וצוות גדול של טכנאי שטח בפריסת ארצית הזמינים להגעה למשרדכם, כמו כן
+                                לשירותכם<br />
+                                .מעבדת תיקונים וכיתות הדרכה מקצועיות<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                פניה של לקוח החתום על חוזה שרות לקבלת שירות, מטופלת בהליך מקוצר ובמסלול מהיר והוא מקבל
+                                <br />
+                                עדיפות בטיפול על פני לקוחות שאינם במסגרת הסכם שירות. בנוסף, תהליך הטיפול מתקצר ומתייעל, בין
+                                <br />
+                                .היתר לאור דילוג על שלב החתימה על ההתחייבות לתשלום<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                לקוחות בהסכם שרות מקבלים תעריפים מיוחדים בעת ביצוע עבודות מיוחדות כגון תוספות/העתקות,
+                                הקמה<br />
+                                .גיבוי בענן, הדרכות, או כל שינוי אחר ,<span>IP</span> ושינויים בהסכמי עבודה, שינוי
+                                כתובת<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                ,חתימתכם על גבי ההסכם ונספח א' (נספח הציוד) המצורפים מטה והחזרת שני העתקים למשרדנו
+                                ברעננה<br />
+                                .תהווה הסכמתכם להיכלל בהסכם שרות<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                .הצעה זו תעמוד בתוקף למשך 30 יום
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                בכבוד רב
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.entityid/</span>
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.phone/</span> :טל
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.email/</span> :דוא"ל
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <!--//page2//-->
+                <pbr></pbr>
+                <table style="width:200px;">
+                    <tr>
+                        <td align="right">
+                            <p>${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+                        <td width="40%" align="right">
+                            <p>:תאריך</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">${record.internalid}</p>
+                        </td>
+                        <td align="right">
+                            <p>: סימוכין</p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span> ${record.custrecord_support_type}</span> הסכם שרות אחזקה
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span> </span> שנערך ונחתם ב
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br />
+                    <table style="width:650px;" align="right">
+                        <tr>
+                            <td></td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>סינאל מלל פיוויי בע"מ (ח.פ 511416612)</p>
+                            </td>
+                            <td align="right">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">: בין</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">("להלן: "סינאל)</td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>מרחוב התדהר 2, רעננה</p>
+                            </td>
+                            <td align="right">
+                                <p></p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>
+                                    (${record.custrecord_agr_bill_cust.vatregnumber} ח.פ)
+                                    ${record.custrecord_agr_bill_cust.companyname}
+                                </p>
+                            </td>
+                            <td align="right">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">: לבין</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">("להלן: "הלקוח)</td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">/customerAddress/</p>
+                            </td>
+                            <td align="right">
+                                <p></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <table align="right" style="text-align:right; direction:rtl" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.1</p>
+                                    </td>
+                                    <td width="95%" align="right">
+                                        <p style="text-align:right;" dir="rtl">
+                                            בתוספת מע"מ <span> ₪ ${amtHeader}</span>   עבור כלל הציוד המותקן אצל הלקוח הינו <span>מסגרת</span> מחיר הסכם השרות <br />
+                                            <span>${record.custrecord_agr_end_date}</span> ועד ליום
+                                            <span>${record.custrecord_agr_srt_date}</span> חודשים, החל מיום
+                                            <span>${record.custrecord_agr_num_mon}</span> תקופת החוזה הינה למשך
+                                            .("<b>התמורה</b>"
+                                            :להלן)<br />
+                                            .'התמורה כוללת תשלום עבור שרות בגין התוכנה ו/או החומרה המפורטים בנספח א<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.2</p>
+                                    </td>
+                                    <td width="95%" align="right">
+                                        <p style="text-align:right;" dir="rtl">:שרות התמיכה כולל</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl"> <b><u>:תמיכה בתוכנה</u></b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .<span>${record.custrecord_agr_sys_type}</span>-תמיכה טלפונית בתוכנה ה
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .תמיכה באמצעות התחברות מרחוק
+                                        </p>
+                                    </td>
+                                </tr>
+                                <#if record.custrecord_collapse_insurance_indication>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                .עדכון תוכנה בגרסאות חדשות (במסגרת ביטוח קריסה)
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                התקנת תוכנה מחדש ע"ג שרת קיים בעקבות קריסת שרת וירוס כופר, התקנה ע"ג מחשב
+                                                חדש
+                                                בכפוף <br />
+                                                .לכך שנספח א' להסכם שרות כולל סעיף ביטוח קריסה
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <#if record.custrecord_agr_sys_type?contains("Harmony")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    <span>,(SQL למעט התקנת)</span> ,מחדש
+                                                    ע"ג שרת קיים <span>Harmony</span> התקנת תוכנה <b>
+                                                        - <span>Harmony</span>
+                                                        ביטוח קריסה לתוכנת
+                                                    </b><br />
+                                                    בעקבות העברת התוכנה ממשתמש למשתמש, או בעקבות העברה למערכת הפעלה חדשה,
+                                                    בכפוף<br />
+                                                    .לכך שנספח א' להסכם שרות כולל ביטוח קריסה<br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Sy-Bridge")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Sy-Bridge</span> התקנת תוכנה <b>
+                                                        - <span>Sy-Bridge</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Falcon")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Falcon</span> התקנת תוכנה <b>
+                                                        - <span>Falcon</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Time Log")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Time Log</span> התקנת תוכנה <b>
+                                                        - <span>Time Log</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Syncomm")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק, החלפת
+                                                    <span>Syncomm</span> התקנת תוכנה <b>
+                                                        - <span>Syncomm</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    מחשב ו/או מערכת הפעלה,התקנת התוכנה תעשה ע"ג פלטפורמה קיימת ולא ע"ג שרת
+                                                    חדש<br />
+                                                    .ובכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("SY-Server")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>SY-Server</span> התקנת תוכנה <b>
+                                                        - <span>SY-Server</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Entryx")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Entryx</span> התקנת תוכנה <b>
+                                                        - <span>Entryx</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                </#if>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl"> <b><u>:תמיכה בחומרה</u></b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .שעות נסיעה ועבודת טכנאי באתר הלקוח בעת תקלה
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .במקרה של תיקון ו/או החלפת ציוד תקול, יישא הלקוח בתשלום נוסף בהתאם למחירון סינאל
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <#if record.custrecord_agr_print_1?has_content>
+                                <table>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                ${record.custrecord_agr_print_1}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </#if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl">:אחריות הלקוח&ensp;&ensp;&ensp;<span>.3</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מתן השרות עפ"י הסכם זה כפוף לביצוע תחזוקה שוטפת, על ידי הלקוח, על מנת לשמור על
+                                            תקינות<br />
+                                            .<span>${record.custrecord_agr_sys_type}</span> ושמישות המערכת על הלקוח לבצע
+                                            גיבוי
+                                            למחיצת
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            למען הסר ספק מובהר כי במידה והלקוח לא יאפשר לסינאל להתחבר מרחוק ו/או במקרה
+                                            שתהיה<br />
+                                            חסימה מצד הלקוח שלא תאפשר גישה לתוכנה, הלקוח יישא בעלות כספית נוספת של 365 ₪
+                                            בתוספת
+                                            <br />
+                                            .מע"מ עבור קריאת השרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,חל איסור מצד הלקוח לשכפל להעתיק או לבצע שימוש שאינו חוקי בתוכנה, רישיון שימוש
+                                            זכויות בתוכנה<br />
+                                            .ינופק כל 365 ימים ובמסגרת הסכם שרות בתוקף
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.4</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            יום מתאריך הוצאת החשבונית , באמצעות המחאה או כרטיס אשראי או
+                                            <span> ${record.custrecord_agr_payment_terms} </span> תשלום התמורה תוך
+                                            <br />
+                                            באמצעות העברה בנקאית ל- בנק לאומי (מס' 10), סניף ראשי חיפה (מס' 876)
+                                            מס' חשבון<br />
+                                            .עבור סינאל מלל פייוויי בע"מ <span>176300/08</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            בעת חידוש ההסכם, התמורה תוצמד לעליית מדד המחירים לצרכן,
+                                            כאשר מדד הבסיס הוא המדד היודע כפי <br />.שרשום בנספח להסכם השירות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.4</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מתאריך הוצאת החשבונית לפי תשלומים בשנה , באמצעות המחאה או בעת חידוש ההסכם, התמורה
+                                            תוצמד לעליית מדד המחירים לצרכן, כאשר מדד הבסיס הוא המדד הידוע כפי שמופיע<br />
+                                            כרטיס אשראי או באמצעות העברה בנקאית ל- בנק לאומי (מס' 10), סניף ראשי חיפה (מס' 876)
+                                            מס' חשבון<br />
+                                            .בנספח להסכם שרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl">:מתן השרות&ensp;&ensp;&ensp;<span>.5</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            שעות פעילות סינאל הינם בימים א'-ה' משעה 08:00 עד שעה 16:00, בערבי חג משעה 08:00
+                                            עד
+                                            השעה<br />
+                                            .<span>08:00-15:00</span> חול המועד ,<span>13:00</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .שעות עבודה ממועד פתיחת קריאת השרות
+                                            <span>${record.custrecord_agr_sla_in_hours}</span> מענה טלפוני והתחברות מרחוק
+                                            יינתן
+                                            תוך -<b>שרות תוכנה</b><br />
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            שעות עבודה ממועד פתיחת קריאת השרות ו/או סיווגה
+                                            <span>${record.custrecord_agr_sla_field}</span> הגעת טכנאי אל הלקוח תהיה עד
+                                            -<b>ביקור טכנאי</b><br />
+                                            .כקריאת שרות הדורשת הגעת טכנאי למשרדי הלקוח
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .<span>www.synel.co.il</span> קריאת שרות יש לפתוח באמצעות אתר סינאל בכתובת<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .לנוחיותכם, ניתן לקצר את זמן התגובה למענה ותמיכה טלפונית, לקבלת הצעת מחיר יש
+                                            לפנות
+                                            לח"מ<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.6</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ${record.custrecord_agr_print_2}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.7</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            במידה וסינאל תזומן לטיפול בתקלה ויתברר שמקור התקלה אינו בציוד סינאל, יחויב הלקוח
+                                            בסך
+                                            של ₪230 <br />
+                                            .בתוספת מע"מ עבור עבודה ו/או נסיעות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.8</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מוסכם בזאת, שכל ציוד נוסף שיירכש על ידי הלקוח, יתווסף אוטומטית לחוזה שרות זה,
+                                            מיד
+                                            בתום תקופת <br />
+                                            .האחריות שלו וסינאל תהיה רשאית לחייב את הלקוח בגין הוספת ציוד זה לחוזה השרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.9</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            במידה והתקלה מחייבת ביקור טכנאי במשרדי הלקוח באילת, יישא הלקוח בתשלום בגין
+                                            כרטיסי
+                                            טיסה (שני <br />
+                                            .כיוונים) או לחלופין יזמין על חשבונו כרטיסי טיסה עבור טכנאי סינאל, זאת בנוסף
+                                            לעלויות
+                                            הקבועות בהסכם זה
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.10</p>
+                                    </td>
+                                    <td align="right">
+                                        <#if record.custrecord_agr_renew_type="אוטומטי">
+                                            <p style="text-align:right;">
+                                                הסכם השרות יאורך אוטומטית, בכל שנה לשנה נוספת אלא אם הודיע אחד הצדדים בכתב
+                                                על אי
+                                                רצונו בחידוש <br />
+                                                . ההסכם עד 90 יום לפני תום התקופה (להלן : "הסכם השרות המוארך")
+                                            </p>
+                                            <#else>
+                                                <p style="text-align:right;">
+                                                    .בכל שנה תשלח הצעת מחיר לחידוש השרות<br />
+                                                </p>
+                                        </#if>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.11</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .סינאל רשאית לשנות את תעריפי השירות בעת חידוש הסכם השירות /או הסכם השירות
+                                            המוארך,
+                                            לפי העניין<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!--<tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.12</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח בכל
+                                            תנאי הסכם זה<br />
+                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.12</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח
+                                            בכל
+                                            תנאי הסכם זה<br />
+                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.13</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            הלקוח מאשר כי קרא את תנאי הסכם זה ואת רשימת הציוד המפורטת בנספח א', הבין אותם,
+                                            והצדדים מאשרים <br />
+                                            כי הסכם זה על נספחיו כולל וממצה את כל ההבנות וההסכמות ביניהם בנוגע לעסקה הכלולה
+                                            בו
+                                            והוא מבטל <br />
+                                            וגובר על כל הצעה, הסכם, הסכמה, מצג, הבנה או משא ומתן שקדמו לו בכתב או בע"פ בנוגע
+                                            לנושאים מושאי<br />
+                                            .ההסכם
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.14</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סמכות השיפוט המקומית הבלעדית בכל עניין ו/או מחלוקת הנובעים ו/או
+                                            הקשורים בהסכם זה<br />
+                                            .תהא מסורה לבית המשפט בעל הסמכות העניינית אשר בעיר תל-אביב
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.15</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            אנו החתומים מטה מסכימים לכל האמור לעיל ולראיה באנו על החתום <br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+                <br />
+                <table>
+                    <tr>
+                        <td>
+                            <table style="width:650px;" align="right">
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>סינאל מלל פיוויי בע"מ</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <span>${record.custrecord_agr_bill_cust.companyname}</span> :הלקוח
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>תדהר 2, רעננה </p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            :מרחוב<span>
+                                                <br />
+                                                /customerAddress/
+                                            </span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>חותמת וחתימות</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">חותמת וחתימות</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><br /></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>תאריך</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">תאריך</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                <br />
+                <br />
+            </#if>
+            <!--//misgeret-->
+            <!--//מעבדה-->
+            <#if !record.custrecord_agr_short_version_print && record.custrecord_support_type=="מעבדה">
+                <br />
+                <table style="width:200px;">
+                    <tr>
+                        <td align="right">
+                            <p>${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+                        <td width="40%" align="right">
+                            <p>:תאריך</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">${record.internalid}</p>
+                        </td>
+                        <td align="right">
+                            <p>: סימוכין</p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>${record.custrecord_agr_bill_cust.companyname}</p>
+                        </td>
+                        <td align="right">
+                            <p>: לכבוד</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>
+                                ${record.custrecord_agr_contact.firstname}
+                                ${record.custrecord_agr_contact.lastname}<br /><br />
+                            </p>
+                        </td>
+                        <td align="right">
+                            <p>: לידי</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p></p>
+                        </td>
+                        <td align="right">
+                            <p>,.א.ג.נ</p>
+                        </td>
+                    </tr>
+                </table>
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <b>
+                                <span> ${record.custrecord_agr_sys_type}</span> למערכות <span>
+                                    ${record.custrecord_support_type}
+                                </span> הנדון: הצעה להסכם שרות אחזקה
+                            </b>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                הננו מתכבדים להגיש לכם בזאת את הצעתנו להסכם שרות אחזקה מעבדה עבור מערכות תוכנה וחומרה <br />
+                                .שנרכשו מחברתנו והותקנו והוטמעו על ידיי עובדי חברתנו בארגונכם<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                סינאל מלל פייוויי בע"מ הינה החברה הוותיקה והמובילה בישראל בפיתוח שיווק ושרות לפתרונות<br />
+                                .תוכנה וחומרה לניהול פעילות העובד בארגון, בקרת כניסה, משאבי אנוש וחישוב שכר עבודה<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                <span>Help Desk</span> במסגרת הסכם השירות אנו מעמידים לרשותכם מוקד שרות ארצי ממוחשב הכולל
+                                מערך<br />
+                                .לתמיכה טלפונית
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                פניה של לקוח החתום על חוזה שרות לקבלת שירות, מטופלת בהליך מקוצר ובמסלול מהיר והוא מקבל
+                                <br />
+                                עדיפות בטיפול על פני לקוחות שאינם במסגרת הסכם שירות. בנוסף, תהליך הטיפול מתקצר ומתייעל, בין
+                                <br />
+                                .היתר לאור דילוג על שלב החתימה על ההתחייבות לתשלום<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                לקוחות בהסכם שרות מקבלים תעריפים מיוחדים בעת ביצוע עבודות מיוחדות כגון תוספות/העתקות,
+                                הקמה<br />
+                                .גיבוי בענן, הדרכות, או כל שינוי אחר ,<span>IP</span> ושינויים בהסכמי עבודה, שינוי
+                                כתובת<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                .הסכם שרות זה כולל גם החלפת חלקים מתכלים כגון: סוללת זיכרון, סוללות גיבוי וקורא מגנטי<br />
+                                .חלקים אלו קריטים לתפקודו התקין של השעון ואורך חייהם מוגבל
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                ,חתימתכם על גבי ההסכם ונספח א' (נספח הציוד) המצורפים מטה והחזרת שני העתקים למשרדנו
+                                ברעננה<br />
+                                .תהווה הסכמתכם להיכלל בהסכם שרות<br />
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">
+                                .הצעה זו תעמוד בתוקף למשך 30 יום
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                בכבוד רב
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.entityid/</span>
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.phone/</span> :טל
+                            </p>
+                            <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                                <span>/custrecord_agr_current_user.email/</span> :דוא"ל
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <!--//page2//-->
+                <pbr></pbr>
+                <table style="width:200px;">
+                    <tr>
+                        <td align="right">
+                            <p>${.now?string("dd/MM/yyyy")}</p>
+                        </td>
+                        <td width="40%" align="right">
+                            <p>:תאריך</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p style="text-align:right;direction:rtl;" dir="rtl">${record.internalid}</p>
+                        </td>
+                        <td align="right">
+                            <p>: סימוכין</p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <div>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span> ${record.custrecord_support_type}</span> הסכם שרות אחזקה
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span> </span> שנערך ונחתם ב
+                            </td>
+                        </tr>
+                    </table>
+
+                    <br />
+                    <table style="width:650px;" align="right">
+                        <tr>
+                            <td></td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>סינאל מלל פיוויי בע"מ (ח.פ 511416612)</p>
+                            </td>
+                            <td align="right">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">: בין</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">("להלן: "סינאל)</td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>מרחוב התדהר 2, רעננה</p>
+                            </td>
+                            <td align="right">
+                                <p></p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p>
+                                    (${record.custrecord_agr_bill_cust.vatregnumber} ח.פ)
+                                    ${record.custrecord_agr_bill_cust.companyname}
+                                </p>
+                            </td>
+                            <td align="right">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">: לבין</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">("להלן: "הלקוח)</td>
+                            <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <p style="font-size: 12pt; text-align:right;" dir="rtl">/customerAddress/</p>
+                            </td>
+                            <td align="right">
+                                <p></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br />
+                <table align="right" style="text-align:right; direction:rtl" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.1</p>
+                                    </td>
+                                    <td width="95%" align="right">
+                                        <p style="text-align:right;" dir="rtl">
+                                            בתוספת מע"מ <span> ₪ ${amtHeader}</span>   עבור כלל הציוד המותקן אצל הלקוח הינו <span>${record.custrecord_support_type}</span> מחיר הסכם השרות <br />
+                                            <span>${record.custrecord_agr_end_date}</span> ועד ליום
+                                            <span>${record.custrecord_agr_srt_date}</span> חודשים, החל מיום
+                                            <span>${record.custrecord_agr_num_mon}</span> תקופת החוזה הינה למשך
+                                            .("<b>התמורה</b>"
+                                            :להלן)<br />
+                                            .'התמורה כוללת תשלום עבור שרות בגין התוכנה ו/או החומרה המפורטים בנספח א<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.2</p>
+                                    </td>
+                                    <td width="95%" align="right">
+                                        <p style="text-align:right;" dir="rtl">:שרות התמיכה כולל</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl"> <b><u>:תמיכה בתוכנה</u></b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .<span>${record.custrecord_agr_sys_type}</span>-תמיכה טלפונית בתוכנה ה
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .תמיכה באמצעות התחברות מרחוק
+                                        </p>
+                                    </td>
+                                </tr>
+                                <#if record.custrecord_collapse_insurance_indication>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                .עדכון תוכנה בגרסאות חדשות (במסגרת ביטוח קריסה)
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                התקנת תוכנה מחדש ע"ג שרת קיים בעקבות קריסת שרת וירוס כופר, התקנה ע"ג מחשב
+                                                חדש
+                                                בכפוף <br />
+                                                .לכך שנספח א' להסכם שרות כולל סעיף ביטוח קריסה
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <#if record.custrecord_agr_sys_type?contains("Harmony")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    <span>,(SQL למעט התקנת)</span> ,מחדש
+                                                    ע"ג שרת קיים <span>Harmony</span> התקנת תוכנה <b>
+                                                        - <span>Harmony</span>
+                                                        ביטוח קריסה לתוכנת
+                                                    </b><br />
+                                                    בעקבות העברת התוכנה ממשתמש למשתמש, או בעקבות העברה למערכת הפעלה חדשה,
+                                                    בכפוף<br />
+                                                    .לכך שנספח א' להסכם שרות כולל ביטוח קריסה<br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Sy-Bridge")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Sy-Bridge</span> התקנת תוכנה <b>
+                                                        - <span>Sy-Bridge</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Falcon")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Falcon</span> התקנת תוכנה <b>
+                                                        - <span>Falcon</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Time Log")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Time Log</span> התקנת תוכנה <b>
+                                                        - <span>Time Log</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Syncomm")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק, החלפת
+                                                    <span>Syncomm</span> התקנת תוכנה <b>
+                                                        - <span>Syncomm</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    מחשב ו/או מערכת הפעלה,התקנת התוכנה תעשה ע"ג פלטפורמה קיימת ולא ע"ג שרת
+                                                    חדש<br />
+                                                    .ובכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("SY-Server")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>SY-Server</span> התקנת תוכנה <b>
+                                                        - <span>SY-Server</span> ביטוח
+                                                        קריסה לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                    <#if record.custrecord_agr_sys_type?contains("Entryx")>
+                                        <tr>
+                                            <td width="5%" align="left">
+                                                <p style="text-align:right;" dir="rtl">-</p>
+                                            </td>
+                                            <td align="right">
+                                                <p style="text-align:right;" dir="rtl">
+                                                    מחדש עקב קריסת דיסק או שרת, החלפת
+                                                    <span>Entryx</span> התקנת תוכנה <b>
+                                                        - <span>Entryx</span> ביטוח קריסה
+                                                        לתוכנת
+                                                    </b><br />
+                                                    .מחשב ו/או מערכת הפעלה בכפוף לכך שנספח א' להסכם שרות כולל ביטוח קריסה
+                                                    <br />
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </#if>
+                                </#if>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl"> <b><u>:תמיכה בחומרה</u></b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .החלפת ציוד תקול
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .החלפת חלקים במכשירים
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .החלפת חלקים מתכלים כגון: סוללות גיבוי, סוללות זיכרון וקורא מגנטי
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .משלוח הציוד למעבדת סינאל ברעננה ואיסופו לאחר התיקון תהייה ע"י ועל חשבון הלקוח
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <#if record.custrecord_agr_print_1?has_content>
+                                <table>
+                                    <tr>
+                                        <td width="5%" align="left">
+                                            <p style="text-align:right;" dir="rtl">-</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                ${record.custrecord_agr_print_1}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </#if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl">:אחריות הלקוח&ensp;&ensp;&ensp;<span>.3</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מתן השרות עפ"י הסכם זה כפוף לביצוע תחזוקה שוטפת, על ידי הלקוח, על מנת לשמור על
+                                            תקינות<br />
+                                            .<span>${record.custrecord_agr_sys_type}</span> ושמישות המערכת על הלקוח לבצע
+                                            גיבוי
+                                            למחיצת
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            למען הסר ספק מובהר כי במידה והלקוח לא יאפשר לסינאל להתחבר מרחוק ו/או במקרה
+                                            שתהיה<br />
+                                            חסימה מצד הלקוח שלא תאפשר גישה לתוכנה, הלקוח יישא בעלות כספית נוספת של 365 ₪
+                                            בתוספת
+                                            <br />
+                                            .מע"מ עבור קריאת השרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,חל איסור מצד הלקוח לשכפל להעתיק או לבצע שימוש שאינו חוקי בתוכנה, רישיון שימוש
+                                            זכויות בתוכנה<br />
+                                            .ינופק כל 365 ימים ובמסגרת הסכם שרות בתוקף
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.4</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            יום מתאריך הוצאת החשבונית , באמצעות המחאה או כרטיס אשראי או
+                                            <span> ${record.custrecord_agr_payment_terms} </span> תשלום התמורה תוך
+                                            <br />
+                                            באמצעות העברה בנקאית ל- בנק לאומי (מס' 10), סניף ראשי חיפה (מס' 876)
+                                            מס' חשבון<br />
+                                            .עבור סינאל מלל פייוויי בע"מ <span>176300/08</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.5</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            בעת חידוש ההסכם, התמורה תוצמד לעליית מדד המחירים לצרכן,
+                                            כאשר מדד הבסיס הוא המדד היודע כפי <br />.שרשום בנספח להסכם השירות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <p style="text-align:right;" dir="rtl">:מתן השרות<span>.6</span></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            שעות פעילות סינאל הינם בימים א'-ה' משעה 08:00 עד שעה 16:00, בערבי חג משעה 08:00
+                                            עד
+                                            השעה<br />
+                                            .<span>08:00-15:00</span> חול המועד ,<span>13:00</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .שעות עבודה ממועד פתיחת קריאת השרות
+                                            <span>${record.custrecord_agr_sla_in_hours}</span> מענה טלפוני והתחברות מרחוק
+                                            יינתן
+                                            תוך -<b>שרות תוכנה</b><br />
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .<span>www.synel.co.il</span> קריאת שרות יש לפתוח באמצעות אתר סינאל בכתובת<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="5%" align="left">
+                                        <p style="text-align:right;" dir="rtl">-</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .לנוחיותכם, ניתן לקצר את זמן התגובה למענה ותמיכה טלפונית, לקבלת הצעת מחיר יש
+                                            לפנות
+                                            לח"מ<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.7</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ${record.custrecord_agr_print_2}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.8</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            במידה וסינאל תזומן לטיפול בתקלה ויתברר שמקור התקלה אינו בציוד סינאל, יחויב הלקוח
+                                            בסך
+                                            של ₪230 <br />
+                                            .בתוספת מע"מ עבור עבודה ו/או נסיעות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.9</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            מוסכם בזאת, שכל ציוד נוסף שיירכש על ידי הלקוח, יתווסף אוטומטית לחוזה שרות זה,
+                                            מיד
+                                            בתום תקופת <br />
+                                            .האחריות שלו וסינאל תהיה רשאית לחייב את הלקוח בגין הוספת ציוד זה לחוזה השרות
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.10</p>
+                                    </td>
+                                    <td align="right">
+                                        <#if record.custrecord_agr_renew_type="אוטומטי">
+                                            <p style="text-align:right;">
+                                                הסכם השרות יאורך אוטומטית, בכל שנה לשנה נוספת אלא אם הודיע אחד הצדדים בכתב
+                                                על אי
+                                                רצונו בחידוש <br />
+                                                . ההסכם עד 90 יום לפני תום התקופה (להלן : "הסכם השרות המוארך")
+                                            </p>
+                                            <#else>
+                                                <p style="text-align:right;">
+                                                    .בכל שנה תשלח הצעת מחיר לחידוש השרות<br />
+                                                </p>
+                                        </#if>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.11</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            .סינאל רשאית לשנות את תעריפי השירות בעת חידוש הסכם השירות /או הסכם השירות
+                                            המוארך,
+                                            לפי העניין<br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.12</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח
+                                            בכל
+                                            תנאי הסכם זה<br />
+                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.13</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            הלקוח מאשר כי קרא את תנאי הסכם זה ואת רשימת הציוד המפורטת בנספח א', הבין אותם,
+                                            והצדדים מאשרים <br />
+                                            כי הסכם זה על נספחיו כולל וממצה את כל ההבנות וההסכמות ביניהם בנוגע לעסקה הכלולה
+                                            בו
+                                            והוא מבטל <br />
+                                            וגובר על כל הצעה, הסכם, הסכמה, מצג, הבנה או משא ומתן שקדמו לו בכתב או בע"פ בנוגע
+                                            לנושאים מושאי<br />
+                                            .ההסכם
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.14</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            ,מוסכם בזאת כי סמכות השיפוט המקומית הבלעדית בכל עניין ו/או מחלוקת הנובעים ו/או
+                                            הקשורים בהסכם זה<br />
+                                            .תהא מסורה לבית המשפט בעל הסמכות העניינית אשר בעיר תל-אביב
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="right">
+                            <table>
+                                <tr>
+                                    <td width="5%" align="right">
+                                        <p style="text-align:right;" dir="rtl">.15</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="text-align:right;">
+                                            אנו החתומים מטה מסכימים לכל האמור לעיל ולראיה באנו על החתום <br />
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+                <br />
+                <table>
+                    <tr>
+                        <td>
+                            <table style="width:650px;" align="right">
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>סינאל מלל פיוויי בע"מ</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <span>${record.custrecord_agr_bill_cust.companyname}</span> :הלקוח
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>תדהר 2, רעננה </p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            :מרחוב<span>
+                                                <br />
+                                                /customerAddress/
+                                            </span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>חותמת וחתימות</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">חותמת וחתימות</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><br /></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                            <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <p>תאריך</p>
+                                    </td>
+                                    <td align="right">
+                                        <p style="font-size: 12pt; text-align:right;" dir="rtl">תאריך</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                <br />
+                <br />
+            </#if>
+            <!--//מעבדה-->
+
+            <#if !record.custrecord_agr_short_version_print>
+                <pbr>
+                </pbr>
+            </#if>
+            <table style="width:650px;" align="right">
+                <tr>
+                    <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p>${record.internalid} סימוכין</p>
+                    </td>
+                    <td colspan="12" align="right">
+                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                            חודש <span>${record.custrecord_agr_num_mon}</span> :תקופת ההסכם
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p></p>
+                    </td>
+                    <td colspan="12" align="right">
+                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <span>${record.custrecord_agr_srt_date}</span> :תאריך התחלה
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p></p>
+                    </td>
+                    <td colspan="12" align="right">
+                        <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <span>${record.custrecord_agr_end_date}</span> :תאריך סיום
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table style="width:650px;" align="right">
+                <tr>
+                    <td colspan="15" align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p><u> <span>${record.internalid}</span> <span> ${record.custrecord_support_type}</span> נספח א' - להסכם שרות </u></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="15" align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p><u>רשימת הציוד שבהסכם השרות</u></p>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            /searchTable/
+            <br />
+            <table>
+                <tr>
+                    <td>
+                        <table style="width:650px;" align="right">
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p>סינאל מלל פיוויי בע"מ</p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <span>${record.custrecord_agr_bill_cust.companyname}</span> :הלקוח
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p>תדהר 2, רעננה </p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        :מרחוב<span>
+                                            <br />
+                                            /customerAddress/
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p>חותמת וחתימות</p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl">חותמת וחתימות</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p></p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p><br /></p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p><u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u></p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl">
+                                        <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</u>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                    <p>תאריך</p>
+                                </td>
+                                <td align="right">
+                                    <p style="font-size: 12pt; text-align:right;" dir="rtl">תאריך</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <br /><br />
+            <table style="width: 100%;">
+                <tr>
+                    <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                            בכבוד רב
+                        </p>
+                        <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                            <span>/custrecord_agr_current_user.entityid/</span>
+                        </p>
+                        <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                            <span>/custrecord_agr_current_user.phone/</span> :טל
+                        </p>
+                        <p style="text-align:center;direction:rtl;line-height:8px" dir="rtl">
+                            <span>/custrecord_agr_current_user.email/</span> :דוא"ל
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+    </body>
+</pdf>

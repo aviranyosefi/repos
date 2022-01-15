@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdfset>
+    <#if statements?has_content>
+        <#list statements as statement>
+            <pdf>
+                <head>
+                    <link name="sans-serif" type="font" subtype="truetype" src="https://1283062.app.netsuite.com/core/media/media.nl?id=86668&amp;c=1283062&amp;h=491015685f2f289a872f&amp;_xt=.ttf" src-bold="https://1283062.app.netsuite.com/core/media/media.nl?id=86669&amp;c=1283062&amp;h=218e421a5b34fe30d569&amp;_xt=.ttf" />
+                    <macrolist>
+                        <macro id="nlheader">
+                            <table class="header" style="width: 100%;">
+                                <tr>
+                                    <td align="left">
+                                        <#if companyInformation.logoUrl?length !=0>
+                                            <img src="${companyInformation.logoUrl}" style="float: left; margin: 7px" />
+                                        </#if>                             
+                                    </td>
+                                    <td align="left">
+                                        <p align="right" style="width: 100%; text-align:right; font-size: 1.1em;">${subsidiary.custrecord_ilo_subsid_heb_companyname}</p>
+                                        <p align="right" style="width: 100%; text-align:right; font-size: 1.1em;">${subsidiary.custrecord_ilo_subsid_hebrew_address}</p>
+                                    </td>
+                                    <td></td>
+                                    <td align="right"><p align="right" style="width: 100%; text-align:right;" class="title">כרטסת לקוח</p></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="right">${statement.trandate}</td>
+                                </tr>
+                            </table>
+                        </macro>
+                        <macro id="nlfooter">
+                            <table class="footer" style="width: 100%;">
+                                <tr>
+                                    <td align="right"><pagenumber /> of <totalpages /></td>
+                                </tr>
+                            </table>
+                        </macro>
+                    </macrolist>
+                    <style type="text/css">
+                        * {
+                            font-family: sans-serif
+                        }
+
+                        table {
+                            font-size: 9pt;
+                            table-layout: fixed;
+                        }
+
+                        th {
+                            font-weight: bold;
+                            font-size: 8pt;
+                            vertical-align: middle;
+                            padding: 5px 6px 3px;
+                            background-color: #e3e3e3;
+                            color: #333333;
+                        }
+
+                        td {
+                            padding: 4px 6px;
+                        }
+
+                            td p {
+                                align: left
+                            }
+
+                        b {
+                            font-weight: bold;
+                            color: #333333;
+                        }
+
+                        table.header td {
+                            padding: 0;
+                            font-size: 10pt;
+                        }
+
+                        table.footer td {
+                            padding: 0;
+                            font-size: 8pt;
+                        }
+
+                        table.itemtable th {
+                            padding-bottom: 10px;
+                            padding-top: 10px;
+                        }
+
+                        table.body td {
+                            padding-top: 2px;
+                        }
+
+                        td.addressheader {
+                            font-weight: bold;
+                            font-size: 8pt;
+                            padding-top: 6px;
+                            padding-bottom: 2px;
+                        }
+
+                        td.address {
+                            padding-top: 0;
+                        }
+
+                        p.title {
+                            font-size: 20pt;
+                        }
+
+                        span.number {
+                            font-size: 16pt;
+                        }
+
+                        div.remittanceSlip {
+                            width: 100%;
+                            /* To ensure minimal height of remittance slip */
+                            height: 200pt;
+                            page-break-inside: avoid;
+                            page-break-after: avoid;
+                        }
+
+                        hr {
+                            border-top: 1px dashed #d3d3d3;
+                            width: 100%;
+                            color: #ffffff;
+                            background-color: #ffffff;
+                            height: 1px;
+                        }
+                    </style>
+                </head>
+                <body header="nlheader" header-height="12%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+                    <table align="right" style="width: 100%; direction:rtl;margin-top: 10px;" text-align="right" dir="rtl">
+                        <tr>
+                            <td class="addressheader" colspan="3">
+                                <p style="width: 100%; text-align:right; font-size: 1.1em;">כתובת לחייב </p>                           
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="address" colspan="3">
+                                <p style="width: 100%; text-align:right; font-size: 1.1em;">${statement.billaddress} </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table align="right" style="width: 100%; direction:rtl;margin-top: 10px;" text-align="right" dir="rtl" class="body">
+                        <tr>
+                            <th align="right">סכום פתוח</th>
+                        </tr>
+                        <tr>
+                            <td align="right">${statement.amountDue}</td>
+                        </tr>
+                    </table>
+                    <#if statement.lines?has_content>
+
+                        <table class="itemtable" align="right" style="width: 100%; direction:rtl;margin-top: 10px;" text-align="right" dir="rtl">
+                            <!-- start items -->
+                            <#list statement.lines as line>
+                                <#if line_index==0>
+                                    <thead>
+                                        <tr>
+                                            <th align="right" colspan="5">תאריך</th>
+                                            <th align="right" colspan="12">תאור</th>
+                                            <th align="right" colspan="3">חיובים</th>
+                                            <th align="right" colspan="4">זיכויים</th>
+                                            <th align="right" colspan="4">סכום פתוח</th>
+                                        </tr>
+                                    </thead>
+                                </#if><tr>
+                                    <td colspan="5">${line.datecol}</td>
+                                    <td align="right" colspan="12">${line.description}</td>
+                                    <td align="right" colspan="3">${line.charge}</td>
+                                    <td align="right" colspan="4">${line.payment}</td>
+                                    <td align="right" colspan="4">${line.balance}</td>
+                                </tr>
+                            </#list><!-- end items -->
+                        </table>
+
+                        <table class="aging" align="right" style="width: 100%; direction:rtl;margin-top: 10px;" text-align="right" dir="rtl">
+                            <tr>
+                                <th align="right" >לפני תאריך חיוב</th>
+                                <th align="right"> 1-30 </th>
+                                <th align="right">31-60</th>
+                                <th align="right">61-90</th>
+                                <th align="right">מעל 90 ימים</th>
+                                <th align="right">סכום פתוח</th>
+                            </tr>
+                            <tr>
+                                <td align="right">${statement.aging1}</td>
+                                <td align="right">${statement.aging2}</td>
+                                <td align="right">${statement.aging3}</td>
+                                <td align="right">${statement.aging4}</td>
+                                <td align="right">${statement.aging5}</td>
+                                <td align="right">${statement.agingbal}</td>
+                            </tr>
+                        </table>
+                    </#if><#if preferences.RETURNFORM && remittanceSlip??>
+
+                        <hr />
+                        <div class="remittanceSlip">
+                            <table style="width: 100%; margin-top: 10px;">
+                                <tr>
+                                    <td><span class="nameandaddress">${companyInformation.companyName}</span></td>
+                                    <td align="right"><span class="number">${remittanceSlip@title}</span></td>
+                                </tr>
+                            </table>
+
+                            <table style="width: 100%; margin-top: 10px;">
+                                <tr>
+                                    <th>${remittanceSlip.customername@label}</th>
+                                    <th>${statement.trandate@label}</th>
+                                    <th>${statement.amountDue@label}</th>
+                                    <th>${remittanceSlip.amountPaid@label}</th>
+                                </tr>
+                                <tr>
+                                    <td>${companyInformation.addressText}</td>
+                                    <td>${statement.trandate}</td>
+                                    <td align="right">${statement.amountDue}</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table>
+
+                            <table style="width: 100%;">
+                                <tr>
+                                    <th>${remittanceSlip.ccinfo@label}</th>
+                                    <th>${remittanceSlip.companyaddress@label}</th>
+                                </tr>
+                                <tr>
+                                    <td>${remittanceSlip.ccinfo}</td>
+                                    <td>${companyInformation.addressText}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </#if>
+                </body>
+            </pdf>
+        </#list><#else>
+            <pdf>
+                <head>
+                </head><body>
+
+                    <p>Please use Single Currency Advanced Printing Template</p>
+                </body>
+            </pdf>
+    </#if>
+</pdfset>

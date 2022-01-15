@@ -1,0 +1,412 @@
+﻿<!--?xml version="1.0" ?--><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+        <#if .locale=="zh_CN">
+            <link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+            <#elseif .locale=="zh_TW">
+                <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+                <#elseif .locale=="ja_JP">
+                    <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+                    <#elseif .locale=="ko_KR">
+                        <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+                        <#elseif .locale=="th_TH">
+                            <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+        </#if>
+        <macrolist>
+            <macro id="nlfooter">
+                <table class="footer" style="width: 100%; text-align:center;">
+                    <tr>
+                        <td align="center">For a copy of Biodata Inc&rsquo;s W-9 contact billing@biodata.com<br /><br />Biodata prices are charged and paid in US Dollars. All costs provided represent the net amounts to be received by Biodata and do not include any current or future customs duties or taxes, including, but not limited to, sales tax, withholding taxes, VAT, and any other taxes, which may apply.<br /><br />The service is provided under the terms detailed on:<br /><br /><a href="http://labguru.com/company/legal/msa">http://labguru.com/company/legal/msa</a><br />&nbsp;</td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; font-size: 8pt;">
+                    <tr>
+                        <td align="right" style="padding: 0;">Page <pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                margin-top: 10px;
+                font-family: sans-serif;
+                font-size: 9pt;
+                table-layout: fixed;
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+
+            table.linetb {
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-size: 8pt;
+                padding: 0px;
+                text-align: center;
+            }
+
+
+            table.linetb th {
+                background-color: #48ac5f;
+                color: white;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.linetb td {
+                border: 1px solid #48ac5f;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.total {
+                page-break-inside: avoid;
+                font-size: 10pt;
+                width: 35%;
+            }
+
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+            .imp {
+                text-align: center;
+                color: #808080;
+                font-size: 11pt;
+                width: 95%;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body footer="nlfooter" footer-height="140px" padding="0.2in 0.5in 0.1in 0.5in" size="A4">
+        <table border="0" cellpadding="0" class="header" style="width: 100%">
+            <tr>
+                <td align="left" width="700px">
+                    <img src="https://system.na2.netsuite.com/core/media/media.nl?id=10601&amp;c=1166108&amp;h=1001dcea53e51909b61a" style="width:212px; height:80px" />
+                    <p style="font-size:19px; line-height: 10px;">&nbsp;</p>
+                </td>
+                <td align="right" style="top: 15px;" width="700px">
+                    <p style="font-size: 1.4em; top:20px;">Biodata Inc.<br />625 Massachusetts Ave.<br />Cambridge MA 02139<br /><br />EIN 42-1768769</p>
+
+                    <p style="font-size: 1.6em; top:10px">&nbsp;</p>
+                </td>
+            </tr>
+        </table>
+        <#assign print_type='Original'>
+            <#if record.custbody_ilo_org_printed><#assign print_type='Restored Copy'></#if><#if record.custbodycustbody_ilo_print_draft><#assign print_type='Draft'></#if>
+
+            <table style="width:100%; text-align:center;">
+                <tr>
+                    <td align="center" style="font-size:1.3em;">
+                        <span><b><i>CREDIT MEMO</i></b></span>
+                    </td>
+                </tr>
+            </table>
+            <#assign curr_symbol='₪'>
+                <#if record.currencysymbol='USD'><#assign curr_symbol='$'></#if><#if record.currencysymbol='AUD'><#assign curr_symbol='AUD'></#if><#if record.currencysymbol='CAD'><#assign curr_symbol='CAD'></#if><#if record.currencysymbol='GBP'><#assign curr_symbol='£'></#if><#if record.currencysymbol='EUR'><#assign curr_symbol='€'></#if><#if record.currencysymbol='RUB'><#assign curr_symbol='RUB'></#if><#assign EOMterms=record.terms>
+                    <#if EOMterms='EOM + 0M + 30D'><#assign EOMterms='Net 30 EOM'></#if><#if EOMterms='EOM + 0M + 60D'><#assign EOMterms='Net 60 EOM'></#if><#assign primarycur_exchange=record.exchangerate>
+                        <#assign secondary_exchange=1>
+                            <#assign total_exchange=1>
+                                <#assign currency_text=record.currency>
+                                    <#assign currency_symbol=record.currencysymbol>
+                                        <#if record.accountingbookdetail?has_content><#list record.accountingbookdetail as abd><#assign secondary_exchange=abd.exchangerate></#list></#if><#if record.subsidiary=='Mobius Solutions LTD'><#if record.taxtotal !=0><#assign currency_text='ILS'><#assign total_exchange=secondary_exchange><#assign primarycur_exchange=record.exchangerate></#if></#if><#if currency_text=='ILS'><#assign currency_symbol="ILS"></#if>
+
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <#assign vat_reg=record.custbody_ilo_tax_payer_id>
+                                                    <#if vat_reg=''><#assign vat_reg=record.vatregnum></#if><#assign billTo=record.entity.billaddress>
+                                                        <#if billTo=''><#assign billTo=record.entity.companyname></#if>
+                                                        <td>
+                                                            <table style="width:350px;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colspan="6">
+                                                                            <p style="width: 100%; text-align:left; font-size: 1.4em">Bill To:</p>
+                                                                        </th>
+                                                                        <th colspan="6">
+                                                                            <p style="width: 100%; text-align:left; font-size: 1.4em;">&nbsp;</p>
+                                                                        </th>
+                                                                        <th colspan="4">
+                                                                            <p style="width: 100%; text-align:left; font-size: 1.4em;">&nbsp;</p>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tr></tr>
+                                                                <tr>
+                                                                    <td class="default" colspan="6">
+                                                                        <p style="text-align: left; width: 260px;"><br />${billTo}<br />&nbsp;</p>
+                                                                    </td>
+                                                                    <td class="default" colspan="6">
+                                                                        <p style="text-align: left; width: 220px;"><br /><br />&nbsp;</p>
+                                                                    </td>
+                                                                    <td class="default" colspan="4">
+                                                                        <p style="text-align: left; width: 220px;"><br /><br />&nbsp;</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="width:255px; left:70px; top: 10px">
+                                                                <tr>
+                                                                    <td align="left">
+                                                                        <p style="line-height: 5px;">Credit Memo # :</p>
+                                                                    </td>
+                                                                    <td align="right">
+                                                                        <p style="line-height: 5px;">${record.tranid}</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="left">
+                                                                        <p style="line-height: 5px;">Created From :</p>
+                                                                    </td>
+                                                                    <td align="right">
+                                                                        <p style="line-height: 5px;">${record.createdfrom}</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="left">
+                                                                        <p style="line-height: 5px;">Date :</p>
+                                                                    </td>
+                                                                    <td align="right">
+                                                                        <p style="line-height: 5px;">${record.trandate}</p>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <#if record.otherrefnum !=''>
+                                                                    <tr>
+                                                                        <td align="left">
+                                                                            <p style="line-height: 5px;">PO # :</p>
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            <p style="line-height: 5px;">${record.otherrefnum}</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </#if>
+                                                                <tr>
+                                                                    <td align="left">
+                                                                        <p style="line-height: 5px;">Due Date :</p>
+                                                                    </td>
+                                                                    <td align="right">
+                                                                        <p style="line-height: 5px;">${record.duedate}</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td align="left">
+                                                                        <p style="line-height: 5px;">Credit Currency :</p>
+                                                                    </td>
+                                                                    <td align="right">
+                                                                        <p style="line-height: 5px;">${record.currencysymbol}</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <#if record.custbody_document_number !=''>
+                                                                    <tr>
+                                                                        <td align="left">
+                                                                            <p style="line-height: 5px;">Document No :</p>
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            <p style="line-height: 5px;">${record.custbody_document_number}</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </#if>
+
+                                                                <#if record.custbody_quote_number !=''>
+                                                                    <tr>
+                                                                        <td align="left">
+                                                                            <p style="line-height: 5px;">Quote No :</p>
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            <p style="line-height: 5px;">${record.custbody_quote_number}</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </#if>
+
+                                                                <#if record.entity.vatregnumber !=''>
+                                                                    <tr>
+                                                                        <td align="left">
+                                                                            <p style="line-height: 5px;">VAT No :</p>
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            <p style="line-height: 5px;">${record.entity.vatregnumber}</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </#if>
+
+
+
+                                                                <#if record.custbody_labguru_number_ !=''>
+                                                                    <tr>
+                                                                        <td align="left">
+                                                                            <p style="line-height: 5px;">Internal Reference :</p>
+                                                                        </td>
+                                                                        <td align="right">
+                                                                            <p style="line-height: 5px;">${record.custbody_labguru_number_}</p>
+                                                                        </td>
+                                                                    </tr>
+                                                                </#if>
+                                                            </table>
+                                                        </td>
+                                            </tr>
+                                        </table>
+                                        <#if record.item?has_content>
+
+                                            <table class="linetb" style="width:100%;">
+                                                <!-- start items -->
+                                                <#list record.item as item>
+                                                    <#if item_index==0>
+                                                        <thead>
+                                                            <tr>
+                                                                <#if !record.custbody_ilo_hide_item>   <th colspan="6"><p style="width: 100%; text-align:center;">Item</p></th> </#if>
+                                                                <#if !record.custbody_ilo_hide_desc>           <th colspan="12"><p style="width: 100%; text-align:center;">Description</p></th></#if>
+                                                                <#if !record.custbody_ilo_hide_rr_start>            <th colspan="6"><p style="width: 100%; text-align:center;">RR Start Date</p></th></#if>
+                                                                <#if !record.custbody_ilo_hide_rr_end>                  <th colspan="6"><p style="width: 100%; text-align:center;">RR End Date</p></th> </#if>
+                                                                <#if !record.custbody_ilo_hide_rate>             <th colspan="6"><p style="width: 100%; text-align:center;">Rate</p></th> </#if>
+                                                                <#if !record.custbody_ilo_hide_qty>                   <th colspan="2"><p style="width: 100%; text-align:center;">Qty</p></th> </#if>
+                                                                <th colspan="10"><p style="width: 100%; text-align:center;">Amount</p></th>
+
+                                                            </tr>
+                                                        </thead>
+                                                    </#if>
+                                                    <#assign curr_symbol='₪'>
+                                                        <#if record.currencysymbol='USD'>
+                                                            <#assign curr_symbol='$'>
+                                                        </#if>
+                                                        <#if record.currencysymbol='AUD'>
+                                                            <#assign curr_symbol='AUD'>
+                                                        </#if>
+                                                        <#if record.currencysymbol='CAD'>
+                                                            <#assign curr_symbol='CAD'>
+                                                        </#if>
+                                                        <#if record.currencysymbol='GBP'>
+                                                            <#assign curr_symbol='£'>
+                                                        </#if>
+                                                        <#if record.currencysymbol='EUR'>
+                                                            <#assign curr_symbol='€'>
+                                                        </#if>
+                                                        <#if record.currencysymbol='RUB'>
+                                                            <#assign curr_symbol='RUB'>
+                                                        </#if>
+                                                        <tr>
+                                                            <#if !record.custbody_ilo_hide_item>
+                                                                <td colspan="6" style="text-align:justify; text-justify:none;">
+                                                                    <p style="width: 100%; text-align:left;">${item.item}</p>
+                                                                </td>
+                                                            </#if>
+
+                                                            <#if !record.custbody_ilo_hide_desc>
+                                                                <td colspan="12" style="text-align:justify; text-justify:none;">
+                                                                    <p style="width: 100%; text-align:left;">${item.description}<br />&nbsp;</p>
+                                                                </td>
+                                                            </#if>
+                                                            <#if !record.custbody_ilo_hide_rr_start>
+                                                                <td colspan="6">
+                                                                    <p style="width: 100%; text-align:center;">${item.custcol_bidata_start_date}</p>
+                                                                </td>
+                                                            </#if>
+                                                            <#if !record.custbody_ilo_hide_rr_end>
+                                                                <td colspan="6">
+                                                                    <p style="width: 100%; text-align:center;">${item.custcolbiodata_end_date}</p>
+                                                                </td>
+                                                            </#if>
+                                                            <#if !record.custbody_ilo_hide_rate>
+                                                                <td colspan="6">
+                                                                    <p style="width: 100%; text-align:center;">${curr_symbol}${item.rate?string[',##0.00']}</p>
+                                                                </td>
+                                                            </#if>
+                                                            <#if !record.custbody_ilo_hide_qty>
+                                                                <td colspan="2">
+                                                                    <p style="width: 100%; text-align:center;">${item.quantity}</p>
+                                                                </td>
+                                                            </#if>
+
+                                                            <td colspan="10">
+                                                                <p style="width: 100%; text-align:center;">${curr_symbol}${item.amount?string[',##0.00']}</p>
+                                                            </td>
+                                                        </tr>
+                                                </#list><!-- end items -->
+                                            </table>
+
+                                            <table class="linetb" style="width:100%;">
+                                                <!-- start items -->
+                                                <tr>
+                                                    <td colspan="30" rowspan="3" style="background-color:#fff; border: 1px solid white"><br /><b>Payment Terms : ${EOMterms}</b><br /><br /><#if record.memo !=''> Memo : ${record.memo} </#if></td>
+                                                    <td align="center" colspan="8" style="height:30px">Sub Total</td>
+                                                    <td align="center" colspan="10"><#if record.custbody_total_amt !=0>${curr_symbol} -${(record.custbody_total_amt * total_exchange)?string[',##0.00']}<#else>${curr_symbol} -${record.subtotal?substring(1,record.subtotal?length)}</#if></td>
+                                                </tr>
+                                                <#if record.custbody_discount_?string !=''>
+                                                    <tr>
+                                                        <td align="center" colspan="8" style="height:30px">Discount Amount</td>
+                                                        <td align="center" colspan="10">${curr_symbol} -${record.custbody_discount_?string[',##0.00']}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" colspan="8" style="height:30px">Tax Total</td>
+                                                        <td align="center" colspan="10">${curr_symbol } -${record.taxtotal?string[',##0.00']}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="30" style="background-color:#fff; border: 1px solid white">&nbsp;</td>
+                                                        <td align="center" colspan="8" style="height:30px">Total</td>
+                                                        <td align="center" colspan="10">${curr_symbol} -${record.total?string[',##0.00']}</td>
+                                                    </tr>
+                                                    <#else>
+                                                        <tr>
+                                                            <td align="center" colspan="8" style="height:30px">Tax Total</td>
+                                                            <td align="center" colspan="10">${curr_symbol} -${record.taxtotal?string[',##0.00']}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" colspan="8" style="height:30px">Total</td>
+                                                            <td align="center" colspan="10">${curr_symbol} -${record.total?string[',##0.00']}</td>
+                                                        </tr>
+                                                </#if>
+                                            </table>
+                                        </#if>
+
+
+                                        
+    </body>
+</pdf>

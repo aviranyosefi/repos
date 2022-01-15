@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype" src="https://6208757.app.netsuite.com/c.6208757/suitebundle255679/IL_Files/Heb-Regular.ttf" />
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 10pt;">
+                    <tr>
+                        <td align="right" style="padding-top: 12px;padding-bottom: 12px;vertical-align: middle;">
+                            <table align="right" style="text-align:right; direction:rtl" >
+                                <tr>
+                                    <td align="right"><p style="text-align:right;">${record.subsidiary}</p></td>               
+                                </tr>
+                                <tr>                                    
+                                    <td align="right"><p style="text-align:right;"> ${record.subsidiary.custrecord_ilo_subsid_hebrew_address}</p></td>
+                                </tr>
+                            </table>                                                     
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td align="right">
+                           <img src="https://6208757.app.netsuite.com/core/media/media.nl?id=4003&amp;c=6208757&amp;h=XY3BRIC7Y9cZilXdDH6YAQkH42KF8WpVvwWSM_Cql4ygf-1-" style="float: left; margin: 7px;width:110px; height:75px;" />
+                        </td>
+                    </tr>
+                  
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer">
+                    <tr>                     
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif;
+            }
+            table {
+                font-size: 9pt;
+                table-layout: fixed;
+            }
+
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                color: #333333;
+            }       
+            td p {
+                align: left
+            }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+            }
+
+            table.header td {
+                padding: 0;
+                font-size: 10pt;
+            }
+
+            table.footer td {
+                padding: 0;
+                font-size: 8pt;
+            }           
+            td.addressheader {
+                font-size: 8pt;
+                font-weight: bold;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            table.linetb {
+                border: 1px solid;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }     
+            table.linetb th {               
+                border: 1px solid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+                background-color:#e3e3e3;
+            }
+
+            table.linetb td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            td#bottomLine {
+                border-bottom: 1pt solid black;
+                padding-right: 110px;                
+            }
+            td#signHeader {
+                padding-top: 20px;
+            }
+        </style>
+    </head>
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+
+        <table style="width:100%; text-align:center; background-color:#e3e3e3;">
+            <tr>
+                <td align="center" style="font-size:1.3em;">
+                    <span>${record.tranid} - תעודת משלוח</span>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <#if record.ordertype='SalesOrd'>
+           <table style="width:100%;">
+            <tr>
+                <th style="font-size: 10pt;" align="right"><u>פרטים נוספים</u></th>
+                <th style="font-size: 10pt;" align="right"><u>פרטי לקוח</u></th>
+            </tr>
+            <tr>
+                <td align="right">
+                    <table>
+                        <tr>
+                            <td align="right">
+                                ${record.trandate}
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:תאריך</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <p style="text-align:right;">/custentity_service_technician/</p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:שם טכנאי</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                /salesrep/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:מנהל לקוח</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <!--/location/-->
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:מיקום</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                ${record.createdfrom.shipdate}
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:תאריך אספקה</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                /user/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:הופק ע"י</p>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td align="right">
+                    <table>
+                        <tr>
+                            <td align="right">
+                                /custentity_sap_number/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:לקוח</p>
+                            </td>
+                        </tr>                   
+                        <tr>
+                            <td align="right">
+                                <p style="text-align:right;">
+                                    ${record.shipaddress?replace('Israel','ישראל')}
+                                </p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:כתובת</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                /custbody_contact_phone_number/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:טלפון</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                /custbody_contact_person/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:איש קשר</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table> 
+        </#if>
+
+        <#if record.ordertype='TrnfrOrd'>
+           <table style="width:100%;">
+            <tr>
+                <th style="font-size: 10pt;" align="right"><u>פרטים נוספים</u></th>
+                <th style="font-size: 10pt;" align="right"><u>נשלח מ</u></th>
+                <th style="font-size: 10pt;" align="right"><u>נשלח אל</u></th>
+            </tr>
+            <tr>
+                <td align="right">
+                    <table>
+                        <tr>
+                            <td align="right">
+                                ${record.trandate}
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:תאריך</p>
+                            </td>
+                        </tr>          
+                        <tr>
+                            <td align="right">
+                                /user/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:הופק ע"י</p>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td align="right">
+                    <table>
+                        <tr>
+                            <td align="right">
+                                /from_loc_mainaddress_text/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:כתובת</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <p style="text-align:right;">
+                                    /from_loc_representative/
+                                </p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:נציג</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                /from_loc_representative_phone/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:טלפון</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td align="right">
+                    <table>
+                        <tr>
+                            <td align="right">
+                                /to_loc_mainaddress_text/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:כתובת</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <p style="text-align:right;">
+                                    /to_loc_representative/
+                                </p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:נציג</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                /to_loc_representative_phone/
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;">:טלפון</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table> 
+        </#if>
+        
+        <#assign curr_symbol=record.currencysymbol>
+            <#if record.currencysymbol='USD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencysymbol='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencysymbol='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+            <#if record.currencysymbol='ILS'>
+                <#assign curr_symbol='₪'>
+            </#if>
+            <br />
+            <table class="linetb" style="width:100%;">
+                <!-- start items -->
+                <#list record.item as item>
+                    <#if item_index==0>
+                        <thead>
+                            <tr>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">סה"כ</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">מחיר ליחידה</p></th>
+                                <th colspan="2"><p style="width: 100%; text-align:center;">כמות</p></th>
+                                <th colspan="10"><p style="width: 100%; text-align:center;">תיאור </p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">פריט</p></th>
+                            </tr>
+                        </thead>
+                    </#if>
+
+                    <tr>
+                        <td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol}${item.amount?string[",##0.00"]}</p></td>
+                        <td colspan="6">
+                            <p style="width: 100%; text-align:center;">
+                                ${curr_symbol}${item.rate?string[",##0.00"]}<br /><br />
+                            </p>
+                        </td>
+                        <td colspan="2"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+                        <td colspan="10" style="text-align:justify; text-justify:none; ">
+                            <p style="width: 100%; text-align:right;">
+                                ${item.description}<br />${item.inventorydetail}<br />
+                            </p>
+                        </td>
+                        <td colspan="6" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:right;">${item.item}</p></td>
+                    </tr>
+                </#list><!-- end items -->
+            </table>
+            <br /><br /><br />
+            <table  style="width:100%; text-align:right;">
+                <tr>
+                    <td align="right" colspan="18">
+                        <p style="text-align:right;">${record.subsidiary.custrecord_equip_delivery_note_text }</p>        
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5"  id="bottomLine" align="right"></td>
+                    <td colspan="1" id="signHeader" align="right">
+                        <p style="text-align:right;">:ת"ז</p>
+                    </td>
+                    <td colspan="5"  id="bottomLine" align="right"></td>
+                    <td colspan="1" id="signHeader" align="right">
+                        <p style="text-align:right;">:חתימה</p>
+                    </td>
+                    <td colspan="5"  id="bottomLine" align="right"></td>
+                    <td colspan="1" id="signHeader" align="right">
+                        <p style="text-align:right;">:שם</p>
+                    </td>               
+                </tr>
+                <tr>
+                    <td colspan="17" id="bottomLine" align="right"></td>
+                    <td colspan="1" id="signHeader" align="right">
+                        <p style="text-align:right;">:הערות</p>
+                    </td>
+                </tr>
+            </table>
+
+
+</body>
+</pdf>

@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307.app.netsuite.com/c.6398307/suitebundle43003/lib/Font/arialb.ttf" />
+
+        <macrolist>
+            <macro id="nlheader">
+                <table border="0" cellpadding="0" class="header">
+                    <tr>
+                        <td align="left">
+                            <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left;width:200px; height:80px;" /> </#if>
+                            <table class="header" style="width: 100%;">
+                                <tr>
+                                    <td >${subsidiary.legalname}<br />${subsidiary.shippingaddress_text}</td>
+                                </tr>           
+                            </table>
+                        </td>
+                        <td align="right">                           
+                            <table align="right" class="header" style="width: 60%;">
+                                <tr>
+                                    <td colspan="2"><p style="font-size:1.2em;"><b><u>Quotation</u></b></p></td>                           
+                                </tr>
+                                <tr>
+                                    <td>Create Date: </td>
+                                    <td>${record.custbody_esc_created_date}</td>
+                                </tr>
+                                <tr>
+                                    <td>Expiration date: </td>
+                                    <td>${record.duedate}</td>
+                                </tr>
+                                <tr>
+                                    <td>Quote Number: </td>
+                                    <td>${record.tranid}</td>
+                                </tr>
+                                <tr>
+                                    <td>Payment Term: </td>
+                                    <td>${record.terms}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif;
+            }
+            table {
+                margin-top: 10px;
+                font-size: 8pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+            th {
+                font-size: 8pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-top: 5px;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+                background-color: #D3D3D3;
+            }
+            td {
+                padding-bottom: 4px;
+                padding-top: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            table.linetb {
+                border: 1px solid;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+            table.linetb th {
+                background-color: #919191;
+                border: 1px solid;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+            table.linetb td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+            table.header td {
+                font-size: 9pt;
+            }
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+        </style>
+    </head>
+    <body header="nlheader" header-height="15%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+        <br />
+
+        <table style="width:100%; ">
+            <tr>
+                <td align="left" style="font-size:1.05em;"><u>Bill To:</u><br /> <br /><span> ${record.shipaddress}<br /></span></td>
+                <td align="left" style="font-size:1.05em;"><u>Ship to:</u><br /> <br />${record.shipaddress}<br />Contact Name: ${record.entity.contact}</td>
+            </tr>
+        </table>
+
+        <#assign curr_symbol=record.currencysymbol>
+            <#if record.currencysymbol='USD' || record.currencysymbol='AUD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencysymbol='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencysymbol='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+            <#if record.currencysymbol='ILS' && record.entity.custentity_ilo_print_hebrew==true>
+                <#assign curr_symbol='ש"ח'>
+            </#if>
+
+            <br />
+            <table style="width:100%; ">
+                <tr>
+                    <td colspan='2' style="width:400px;">
+                        <div align="center" class="default" style="font-size:1.2em;"><u>Quotation Details</u></div>
+                    </td>
+                </tr>
+            </table>
+            <table class="linetb" style="width:670px;">
+                <!-- start items -->
+                <#list record.item as item>
+                    <#if item_index==0>
+                        <thead>
+                            <tr>
+                                <th colspan="2"><p style="width: 100%; text-align:center;">SNO.</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">Item</p></th>
+                                <th colspan="10"><p style="width: 100%; text-align:center;">Description</p></th>
+                                <th colspan="4"><p style="width: 100%; text-align:center;">Qty</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">Unit Rate (USD)</p></th>
+                                <th colspan="6"><p style="width: 100%; text-align:center;">Amount (USD)</p></th>
+                            </tr>
+                        </thead>
+                    </#if>
+                    <tr>
+                        <td colspan="2" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item_index +1}</p></td>
+                        <td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:center;">${item.item}</p></td>
+                        <td colspan="10" style="text-align:justify; text-justify:none; "><p style="width: 100%; text-align:left;">${item.description}</p></td>
+                        <td colspan="4"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+                        <td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol} ${item.rate?string[",##0.00"]}</p></td>
+                        <td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol} ${item.amount?string[",##0.00"]}</p></td>
+                    </tr>
+                </#list><!-- end items -->
+                <tr>
+                    <td colspan="22" style="border:0px"></td>
+                    <td colspan="6" style="border:0px"><p style="width: 100%; text-align:center;">${record.total@label}</p></td>
+                    <td colspan="6" style="border:0px"><p style="width: 100%; text-align:center;">${curr_symbol} ${record.total?string[",##0.00"]}</p></td>
+                </tr>
+            </table>
+            <br />
+            <table style="width:100%; ">
+                <tr>
+                    <td>
+                        Notes:<br />
+                        ${record.memo}
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <table style="width:100%; ">
+                <tr>
+                    <td>
+                        Prices:<br />
+                        <p>${subsidiary.custrecord_prices}</p>
+                    </td>
+                </tr>
+            </table>
+</body>
+</pdf>

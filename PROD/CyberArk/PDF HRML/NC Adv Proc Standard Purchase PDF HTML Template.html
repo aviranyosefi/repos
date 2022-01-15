@@ -1,0 +1,544 @@
+<#-- Standard Advanced PDF/HTML Template
+	NC Standard Purchase PDF/HTML Template
+-->
+<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <#------------ Start Functions ------------>
+        <#function isTrue val>
+            <#local stringBoolValue="F">
+                <#if val?has_content && (val?string= ="Yes" || val?string= ="T" )>
+                    <#local stringBoolValue="T">
+                </#if>
+                <#return stringBoolValue= ="T">
+        </#function>
+
+        <#function toNumber val>
+            <#if val?? && val?has_content>
+                <#if val?is_number>
+                    <#return val>
+                </#if>
+                <#return (val?replace("[^0-9.]", "" , "r" ))?number>
+            </#if>
+            <#return 0>
+        </#function>
+
+        <#function hasColumnContent (subList, columnName)>
+            <#local theList=subList>
+                <#if columnName?is_string>
+                    <#list theList as item>
+                        <#if item[columnName]?has_content>
+                            <#return true>
+                        </#if>
+                    </#list>
+                </#if>
+                <#if columnName?is_sequence>
+                    <#local retObj={}>
+                        <#list theList as item>
+                            <#list columnName as colName>
+                                <#if colName= ="custcol_nc_qtr_quotation_rate" && toNumber(item[colName])= =0>
+                                    <#local retObj=retObj + {colName: (retObj[colName]?? && retObj[colName] || false)}>
+                                        <#else>
+                                            <#local retObj=retObj + {colName: (retObj[colName]?? && retObj[colName] || item[colName]?has_content)}>
+                                </#if>
+                            </#list>
+                        </#list>
+                        <#return retObj>
+                </#if>
+                <#return false>
+        </#function>
+
+        <#function resolveXmlAmpersand val>
+            <#return val?replace("&", "&amp;" , "r" )>
+        </#function>
+
+        <#function normalizeNonBreakingSpace val>
+            <#return val?replace("&nbsp;", " " , "r" )>
+        </#function>
+
+        <#function isHtmlLongText text>
+            <#local htmlTags=text?matches("(<[/ ]*table>)|(<[/ ]*tr>)|(<[/ ]*td>)", "ri")>
+      <#return (htmlTags?size > 0)>
+        </#function>
+
+        <#function resolveHtmlTags text>
+            <#local retValue=text?replace("<"?html, "<", "ri")?replace(">"?html, ">", "r")>
+      <#if isHtmlLongText(retValue)>
+          <#local    retValue = retValue?replace("<br[/ ]*>", "", "r")>
+      </#if>
+      <#return retValue>
+        </#function>
+        <#------------ End Functions ------------>
+
+            <#assign GLOBAL_DOMAIN_PATH="https://4678143.app.netsuite.com"
+                     recordTitle=record@title
+                     CURRENCY_FORMAT=",##0.00"
+                     CURRENCY_SYMBOL_ISO=record.custbody_il_currency_sym_iso
+                     CURRENCY_FORMAT_SYMBOL=CURRENCY_SYMBOL_ISO + " " + CURRENCY_FORMAT
+                     QUOTATION_CURRENCY_SYMBOL_ISO=record.custbody_nc_qrt_quotation_currency
+                     QUOTATION_CURRENCY_FORMAT_SYMBOL=QUOTATION_CURRENCY_SYMBOL_ISO + " " + CURRENCY_FORMAT
+                     TOTAL_LEFT_OFFSET_COLSPAN=7
+                     TOTAL_MIDDLE_OFFSET_COLSPAN=4
+                     TOTAL_RIGHT_OFFSET_COLSPAN=0
+                     DRAFT_LOGO_URL=GLOBAL_DOMAIN_PATH + resolveXmlAmpersand("/core/media/media.nl?id=436753&c=1040699&h=681bfc3b46cc4a8b41d1&fcts=20170509103940")
+
+            APPROVALSTATUS_ID = record.approvalstatus.internalid
+            SHOW_DRAFT = false
+            >
+            <#if APPROVALSTATUS_ID?? && APPROVALSTATUS_ID?has_content && toNumber(APPROVALSTATUS_ID) !=2>
+                <#assign SHOW_DRAFT=true>
+            </#if>
+
+            <head>
+                <link name="arial" type="font" subtype="truetype"
+                      src="${GLOBAL_DOMAIN_PATH}/core/media/media.nl?id=436649&amp;c=1040699&amp;h=30d40a38f1a9e1e0d9f5&amp;_xt=.ttf"
+                      src-bold="${GLOBAL_DOMAIN_PATH}/core/media/media.nl?id=436650&amp;c=1040699&amp;h=f6f417455f7ce547c4d1&amp;_xt=.ttf"
+                      src-italic="${GLOBAL_DOMAIN_PATH}/core/media/media.nl?id=436652&amp;c=1040699&amp;h=103e96f7b4235815e83b&amp;_xt=.ttf"
+                      src-bolditalic="${GLOBAL_DOMAIN_PATH}/core/media/media.nl?id=436651&amp;c=1040699&amp;h=72e47095c801911d62c1&amp;_xt=.ttf" />
+                <style type="text/css">
+                    body {
+                        font-family: arial;
+                        font-size: 9pt;
+                    }
+
+                    table {
+                        border-collapse: collapse;
+                        table-layout: fixed;
+                    }
+
+                    th {
+                        font-weight: bold;
+                        vertical-align: middle;
+                        padding: 5px 6px 3px;
+                        color: #333333;
+                    }
+
+                    td {
+                        padding: 4px 6px;
+                    }
+
+                    b {
+                        font-weight: bold;
+                        color: #333333;
+                    }
+
+                    table.header td {
+                        padding: 0;
+                        font-size: 10pt;
+                    }
+
+                    table.footer td {
+                        padding: 0;
+                        font-size: 8pt;
+                    }
+
+                    table.itemtable {
+                        border: 0.1px solid black;
+                        width: 100%;
+                    }
+
+                        table.itemtable tr {
+                            border-top: 0.1px solid black;
+                        }
+
+                        table.itemtable th, table.itemtable td {
+                            valign: middle;
+                            padding: 4px 6px;
+                            border: .5px solid #91a2a9;
+                        }
+
+                        table.itemtable th {
+                            color: white;
+                            background-color: #7e929a;
+                        }
+
+                    table.total {
+                        page-break-inside: avoid;
+                    }
+
+                    table.styled-table {
+                    }
+
+                        table.styled-table td {
+                            /*background-color:white;*/
+                        }
+
+                        table.styled-table th {
+                            color: white;
+                            background-color: #7e929a;
+                        }
+
+                    td.addressheader {
+                        font-size: 8pt;
+                        padding-top: 6px;
+                        padding-bottom: 2px;
+                    }
+
+                    td.address {
+                        padding-top: 0;
+                    }
+
+                    td.totalboxmid {
+                        font-size: 28pt;
+                        padding-top: 20px;
+                        background-color: #e3e3e3;
+                    }
+
+                    td.totalboxbot {
+                        background-color: #e3e3e3;
+                        font-weight: bold;
+                    }
+
+                    .styled-tr td {
+                        color: white;
+                        background-color: #7e929a;
+                    }
+
+                    tr.add-borders th {
+                        border: .5px solid #5a737e;
+                    }
+
+                    tr.add-borders td {
+                        border: .5px solid #91a2a9;
+                    }
+
+                    td.add-borders {
+                        border: .5px solid #91a2a9;
+                    }
+
+                    tr.valign-middle td {
+                        vertical-align: middle;
+                    }
+
+                    .bolded-text {
+                        font-weight: bold;
+                    }
+
+                    span.title {
+                        font-size: 28pt;
+                    }
+
+                    span.number {
+                        font-size: 16pt;
+                    }
+
+                    span.itemname {
+                        font-weight: bold;
+                        line-height: 150%;
+                    }
+
+                    hr {
+                        width: 100%;
+                        color: #d3d3d3;
+                        background-color: #d3d3d3;
+                        height: 1px;
+                    }
+
+                    .payment {
+                        font-size: 10pt;
+                        padding: 6px 0 2px;
+                        color: #333333;
+                    }
+
+                    .table {
+                        width: 100%;
+                        margin-top: 10px;
+                    }
+
+                    .tableheader {
+                        border: 0px;
+                    }
+
+                        .tableheader td {
+                            border: 0px;
+                        }
+
+                        .tableheader th {
+                            border: 0px;
+                        }
+
+                    .header-trandetails {
+                    }
+
+                        .header-trandetails th {
+                            padding-right: 5px;
+                        }
+
+                    p {
+                        align: left;
+                    }
+
+                    .draft {
+                        <#if SHOW_DRAFT> background-image: url(${DRAFT_LOGO_URL});
+                        background-attachment: fixed;
+                        background-position: center;
+                        background-repeat: repeat-y;
+                        background-size: contain;
+                        </#if>
+                    }
+
+
+                    .right, .right p {
+                        align: right;
+                    }
+
+                    .left, .left p {
+                        align: left;
+                    }
+
+                    .center, .center p {
+                        align: center;
+                    }
+                </style>
+                <macrolist>
+                    <macro id="nlheader">
+                        <table style="table-layout: fixed; width: 100%;" class="tableheader">
+                            <tr>
+                                <td align="left" style="width: 50%;">
+                                    <#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" /> </#if>
+                                </td>
+                                <td align="right" valign="bottom" style="width: 50%;">
+                                    <#if recordTitle?has_content>
+                                        <span style="font-size: 20pt;">${recordTitle}</span>
+                                    </#if>
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width: 100%; margin-top: 12px;" class="tableheader">
+                            <tr>
+                                <td align="left" style="width:33.3%;">
+                                    <#if subsidiary.addrtext?has_content>
+                                        <b>Bill To</b>:<br />
+                                        ${subsidiary.addrtext}
+                                        <#else>
+                                            ${companyInformation.addressText}
+                                    </#if>
+                                    <#if record.subsidiary.taxidnum?has_content><br /><#if record.subsidiary= ='302_CyberArk USA'>EIN<#else>VAT</#if> # ${record.subsidiary.taxidnum}</#if>
+                                </td>
+
+                                <td align="center" style="width:33.3%;">
+                                    <#if record.shipaddress?has_content>
+                                        <table>
+                                            <tr>
+                                                <td><b>${record.shipaddress@label}</b>:</td>
+                                            </tr>
+                                            <tr>
+                                                <td>${record.shipaddress}</td>
+                                            </tr>
+                                        </table>
+                                    </#if>
+                                </td>
+
+                                <td align="right" style="width:33.3%" class="fix-tds">
+                                    <table cellpadding="0">
+                                        <#if record.trandate?has_content><tr><th class="left">${record.trandate@label}:</th><td class="right">${record.trandate}</td></tr></#if>
+                                        <#if record.tranid?has_content><tr><th class="left">${record.tranid@label}:</th><td class="right">${record.tranid}</td></tr></#if>
+                                        <#if record.currency?has_content><tr><th class="left">${record.currency@label}:</th><td class="right">${record.currency}</td></tr></#if>
+                                        <#if record.custbody_nc_qrt_quotation_currency?has_content><tr><th class="left">${record.custbody_nc_qrt_quotation_currency@label}:</th><td class="right">${record.custbody_nc_qrt_quotation_currency}</td></tr></#if>
+                                        <#if record.custbody_nc_qtr_quote_exchage_rate?has_content><tr><th class="left">${record.custbody_nc_qtr_quote_exchage_rate@label}:</th><td class="right">${record.custbody_nc_qtr_quote_exchage_rate}</td></tr></#if>
+                                        <#if record.terms?has_content><tr><th class="left">${record.terms@label}:</th><td class="right">${record.terms}</td></tr></#if>
+                                        <#if SHOW_DRAFT><tr><th class="left" style="font-size: 12pt;">Draft</th></tr></#if>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr />
+
+                    </macro>
+
+                    <macro id="nlfooter">
+                        <table style="width: 100%; font-size: 8pt;">
+                            <tr>
+                                <td align="right" style="padding: 0;"><pagenumber /> of <totalpages /></td>
+                            </tr>
+                        </table>
+                    </macro>
+                </macrolist>
+
+            </head>
+
+            <body class="draft" header="nlheader" header-height="20%" footer="nlfooter" footer-height="20pt" padding="20px 10px 20px 10px" size="A4">
+                <table style="width: 100%; padding: 0px;">
+                    <tr>
+                        <td style="width: 50%">
+                            <table>
+                                <tr>
+                                    <td><b>Vendor</b>:</td>
+                                </tr>
+                                <#if record.billaddress?has_content>
+                                    <tr>
+                                        <td>
+                                            ${record.billaddress}
+                                        </td>
+                                    </tr>
+                                </#if>
+                                <#if record.employee?has_content>
+                                    <tr>
+                                        <td><b>Requester</b>: ${record.employee}</td>
+                                    </tr>
+                                </#if>
+                            </table>
+                        </td>
+                        <td style="width: 50%"></td>
+                    </tr>
+                </table>
+
+                <!-- start items -->
+                <#if record.item?has_content>
+                    <#assign COLUMN_DISPLAY_DATA=hasColumnContent(record.item, ["custcol_nc_qtr_quotation_rate"])>
+
+
+                        <table class="table styled-table">
+                            <#list record.item as item>
+                                <#if item_index= =0>
+                                    <thead style="font-size:10.5px;">
+                                        <tr class="add-borders">
+                                            <th class="center" colspan="1">Line#</th>
+                                            <th class="center" colspan="2">${item.item@label}</th>
+                                            <th class="center" colspan="3">${item.description@label}</th>
+                                            <th class="center" colspan="1">${item.quantity@label}</th>
+                                            <th class="center" colspan="2">${item.rate@label}</th>
+                                            <th class="center" colspan="2">${item.amount@label}</th>
+                                            <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"]>
+                                                <#assign TOTAL_MIDDLE_OFFSET_COLSPAN=TOTAL_MIDDLE_OFFSET_COLSPAN + 2>
+                                                    <th class="center" colspan="2">Quotation Amount</th> <#-- Quotation Amount -->
+                                            </#if>
+                                        </tr>
+                                    </thead>
+                                </#if>
+
+                                <tr class="add-borders">
+                                    <td class="center" colspan="1">${toNumber(item_index) + 1}</td>
+                                    <td class="center" colspan="2">${item.item}</td>
+                                    <td class="center" colspan="3">${item.description}</td>
+                                    <td class="center" colspan="1">${item.quantity}</td>
+                                    <td class="right" colspan="2">${toNumber(item.rate)?string(CURRENCY_FORMAT)}</td>
+                                    <td class="right" colspan="2">${toNumber(item.amount)?string(CURRENCY_FORMAT)}</td>
+                                    <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"]>
+                                        <td class="right" colspan="2">
+                                            <#if item.custcol_nc_qtr_quotation_rate?has_content>
+                                                ${(toNumber(item.custcol_nc_qtr_quotation_rate)*toNumber(item.quantity))?string(CURRENCY_FORMAT)}
+                                            </#if>
+                                        </td>
+                                    </#if>
+                                </tr>
+
+                            </#list>
+                        </table>
+                </#if>
+
+
+                <#-- total -->
+                    <#assign TAX_RATE=0
+                             TAX_TOTAL=toNumber(record.taxtotal)
+                             SUB_TOTAL=toNumber(record.subtotal)
+                             TOTAL=toNumber(record.total)
+                             QUOTATION_EXCHANGE_RATE=toNumber(record.custbody_nc_qtr_quote_exchage_rate)>
+                        <#if record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                            <#assign CAN_TAX_TOTAL=toNumber(record.tax2total)>
+                        </#if>
+                        <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"] && QUOTATION_EXCHANGE_RATE !=0>
+                            <#assign QUOTATION_TAX_TOTAL=TAX_TOTAL / QUOTATION_EXCHANGE_RATE
+                            QUOTATION_SUB_TOTAL = SUB_TOTAL / QUOTATION_EXCHANGE_RATE
+                            QUOTATION_TOTAL = TOTAL / QUOTATION_EXCHANGE_RATE
+                            >
+                        </#if>
+                        <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"] && QUOTATION_EXCHANGE_RATE !=0 && record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                            <#assign CAN_QUOTATION_TAX_TOTAL=CAN_TAX_TOTAL / QUOTATION_EXCHANGE_RATE>
+                        </#if>
+                        <#if (SUB_TOTAL>
+                            0 && TAX_TOTAL > 0)>
+                            <#assign TAX_RATE=(TAX_TOTAL / SUB_TOTAL * 100)?string(CURRENCY_FORMAT)
+                            >
+                        </#if>
+                        <#if record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                            <#if (SUB_TOTAL>
+                                0  &&  CAN_TAX_TOTAL > 0)>
+                                <#assign CAN_TAX_RATE=(CAN_TAX_TOTAL / SUB_TOTAL * 100)?string(CURRENCY_FORMAT)
+                                >
+                            </#if>
+                        </#if>
+                        <table style="width: 100%;" class="total">
+                            <tr>
+                                <td colspan="${TOTAL_LEFT_OFFSET_COLSPAN}" valign="top">
+                                    <table class="total" style="width: 100%;">
+                                        <tr><td>&nbsp;</td></tr>
+                                        <tr>
+                                            <td>
+                                                <b>Vendor Message:</b><br />
+                                                <#if record.message?has_content>${record.message}<#else>&nbsp;</#if>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td colspan="${TOTAL_MIDDLE_OFFSET_COLSPAN}" style="padding: 0;" valign="top">
+                                    <table class="total" style="width: 100%;">
+                                        <tr><td>&nbsp;</td></tr>
+                                        <#if record.subtotal?has_content>
+                                            <tr class="add-borders valign-middle">
+                                                <td colspan="2" class="right" style="padding: 5px;">${record.subtotal@label}</td>
+                                                <td colspan="2" class="right">${SUB_TOTAL?string(CURRENCY_FORMAT_SYMBOL)}</td>
+                                                <#if QUOTATION_SUB_TOTAL?has_content>
+                                                    <td colspan="2" class="right">${QUOTATION_SUB_TOTAL?string(QUOTATION_CURRENCY_FORMAT_SYMBOL)}</td>
+                                                </#if>
+                                            </tr>
+                                        </#if>
+                                        <#if record.taxtotal?has_content>
+                                            <tr class="add-borders valign-middle">
+                                                <td colspan="2" class="right">${record.taxtotal@label} (${TAX_RATE}%)</td>
+                                                <td colspan="2" class="right">${TAX_TOTAL?string(CURRENCY_FORMAT_SYMBOL)}</td>
+                                                <#if QUOTATION_TAX_TOTAL?has_content>
+                                                    <td colspan="2" class="right">${QUOTATION_TAX_TOTAL?string(QUOTATION_CURRENCY_FORMAT_SYMBOL)}</td>
+                                                </#if>
+                                            </tr>
+                                            <#if !record.tax2total?has_content>
+                                                <tr>
+                                                    <td colspan="2">&nbsp;</td>
+                                                    <td colspan="2">&nbsp;</td>
+                                                </tr>
+                                            </#if>
+                                        </#if>
+                                        <#if record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                                            <tr class="add-borders valign-middle">
+                                                <td colspan="2" class="right">${record.tax2total@label} (${CAN_TAX_RATE}%)</td>
+                                                <td colspan="2" class="right">${CAN_TAX_TOTAL?string(CURRENCY_FORMAT_SYMBOL)}</td>
+                                                <#if QUOTATION_TAX_TOTAL?has_content>
+                                                    <td colspan="2" class="right">${CAN_QUOTATION_TAX_TOTAL?string(QUOTATION_CURRENCY_FORMAT_SYMBOL)}</td>
+                                                </#if>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">&nbsp;</td>
+                                                <td colspan="2">&nbsp;</td>
+                                            </tr>
+                                        </#if>
+                                        <tr class="add-borders styled-tr bolded-text valign-middle">
+                                            <td colspan="2" class="right">${record.total@label}</td>
+                                            <td colspan="2" class="right">${TOTAL?string(CURRENCY_FORMAT_SYMBOL)}</td>
+                                            <#if QUOTATION_TOTAL?has_content>
+                                                <td colspan="2" class="right">${QUOTATION_TOTAL?string(QUOTATION_CURRENCY_FORMAT_SYMBOL)}</td>
+                                            </#if>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td colspan="${TOTAL_RIGHT_OFFSET_COLSPAN}" valign="top"></td>
+                            </tr>
+                        </table>
+                        <#-- end total -->
+
+
+                            <!-- Start Body Fields -->
+                            <#if subsidiary.custrecord_nc_adv_proc_sub_term_conditio?has_content>
+                                <#-- terms & conditions (based on subsidiary) -->
+
+                                    <p>
+                                        <#assign inlineTemplate=r"" + normalizeNonBreakingSpace(resolveHtmlTags(subsidiary.custrecord_nc_adv_proc_sub_term_conditio))?string
+                                                 inlineTemplate=inlineTemplate?interpret>
+                                            <@inlineTemplate />
+
+                                    </p>
+
+                            </#if>
+                            <!-- End Body Fields -->
+
+            </body>
+</pdf>

@@ -1,0 +1,258 @@
+﻿<?xml verssion="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.facelessss.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="NotoSanss" type="font" ssubtype="truetype" ssrc="${nssfont.NotoSanss_Regular}" ssrc-bold="${nssfont.NotoSanss_Bold}" ssrc-italic="${nssfont.NotoSanss_Italic}" ssrc-bolditalic="${nssfont.NotoSanss_BoldItalic}" bytess="2" />
+       
+        <macrolisst>
+            <macro id="nlheader">
+                <table  sstyle="width: 100%; font-ssize: 10pt;">
+                    <tr>
+                        <td rowsspan="3" sstyle="padding: 0;">                        
+                            <#if ssubssidiary.logo@url?length !=0><img ssrc="${ssubssidiary.logo@url}" sstyle="width:180px; height:60px;" /> </#if>
+                            <div sstyle="padding-left:15px">
+                                <sspan classss="nameandaddressss">${ssubssidiary.mainaddressss_text} <br /> IL TAX PAYER ID: ${ssubssidiary.federalidnumber}</sspan>  <br />
+                                <#if ssubssidiary.email !=""><sspan classss="nameandaddressss"><b>Email</b>  ${ssubssidiary.email}</sspan></#if>
+                                <#if ssubssidiary.cusstrecord_phone !=""><br /><sspan classss="nameandaddressss"><b>Phone</b>  ${ssubssidiary.cusstrecord_phone}</sspan></#if> <br />
+                                <#if companyInformation.url !=""><sspan classss="nameandaddressss"><b>Webssite</b>  ${companyInformation.url}</sspan></#if>
+                            </div>
+                        </td>
+                        <td align="right" sstyle="padding: 0;">
+                            <h1>  ${record@title}</h1>
+                            <table classss="headertable">
+                                <tr><th>Saless Persson</th><td> ${record.ssalessrep?replace("[0-9]", "", "r")}</td></tr>
+                                <tr><th>S.O No</th><td> ${record.tranid}</td></tr>
+                                <tr><th>Date</th><td> ${record.trandate}</td></tr>
+                                <tr><th>Payment Termss</th> <td>${record.termss}</td></tr>
+                                <tr><th>Currency</th><td> ${record.currency}</td></tr>
+                                <tr><th>Cusstomer P.O#</th><td> ${record.otherrefnum}</td></tr>
+                                <tr><th>Cusstomer Carrier Name</th><td> ${record.cusstbody_cusstomer_carrier_name}</td></tr>
+                                <tr><th>Cusstomer Carrier Account #</th><td> ${record.cusstbody_cusstomer_carrier_account_num}</td></tr>
+                            </table>
+                            <br />
+                        </td>
+                    </tr>                                       
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table sstyle="width: 100%; font-ssize: 8pt;">
+                    <tr>
+                        <#if record.cusstbody_cusstomer_carrier_name=="" || record.cusstbody_cusstomer_carrier_account_num==""><td><p>Note:</p></td>
+                         <#elsse> <td></td></#if>
+                        <td align="right" sstyle="padding: 0;"></td>
+                    </tr>
+                    <tr>
+                        <#if record.cusstbody_cusstomer_carrier_name=="" || record.cusstbody_cusstomer_carrier_account_num=="">
+                            <td><p>${record.cusstbody_sshipping_note}</p></td>
+                            <#elsse> <td></td>
+                        </#if>
+                        <td align="right" sstyle="padding: 0;"><pagenumber /> of <totalpagess /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolisst>
+        <sstyle type="text/cssss">
+           
+
+            table {
+                font-ssize: 9pt;
+                table-layout: fixed;
+            }
+
+            th {
+                font-weight: bold;
+                font-ssize: 8pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+            }
+
+            td {
+                padding: 4px 6px;
+            }
+
+                td p {
+                    align: left
+                }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-sspace: nowrap;
+                border: 1px ssolid #686666;
+                font-ssize: 9pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                /*   background-color: #fff;*/
+                color: #555;
+                white-sspace: nowrap;
+                border: 1px ssolid #686666;
+                font-ssize: 9pt;
+                padding-left: 5px;
+            }
+            table.linetb th {
+                background-color: #d3d3d3;
+                font-weight: bold;
+                color: #777;
+                border: 1px ssolid #333;
+            }
+
+            table.linetb td {
+                /* background-color: #fff;*/
+                color: #777;
+                /*text-overflow: ellipssiss;
+            white-sspace: nowrap;*/
+                border: 1px ssolid #333;
+                font-ssize: 8pt;
+                padding-right: 1px;
+                padding-left: 5px;
+            }
+        </sstyle>
+    </head>
+    <body padding="15" margin="15" ssize="A4" footer="nlfooter" footer-height="120px" header="nlheader" header-height="260px" background-macro="nlWatermark">
+       
+
+
+            <#assssign total_exchange=1>
+                <#assssign amounttotal=0>
+                    <#assssign primarycur_exchange=record.exchangerate>
+                        <#assssign ssecondary_exchange=1>
+
+                            <#assssign currency_text=record.currency>
+                                <#assssign currency_ssymbol=record.currency>
+                                    <#if record.accountingbookdetail?hass_content>
+                                        <#lisst record.accountingbookdetail ass abd>
+                                            <#assssign ssecondary_exchange=abd.exchangerate>
+                                        </#lisst>
+                                    </#if>
+
+
+
+                                    <#assssign curr_ssymbol='₪'>
+                                        <#if record.currency='USD'>
+                                            <#assssign curr_ssymbol='$'>
+                                        </#if>
+                                        <#if record.currency='ILS'>
+                                            <#assssign curr_ssymbol='₪'>
+                                        </#if>
+                                        <#if record.currency='GBP'>
+                                            <#assssign curr_ssymbol='£'>
+                                        </#if>
+                                        <#if record.currency='EUR'>
+                                            <#assssign curr_ssymbol='€'>
+                                        </#if>
+                                        <#if record.currency='NGN'>
+                                            <#assssign curr_ssymbol='NGN '>
+                                        </#if>
+                                        <#if record.currency='UGX'>
+                                            <#assssign curr_ssymbol='UGX '>
+                                        </#if>
+                                        <#if record.currency='KES'>
+                                            <#assssign curr_ssymbol='KES '>
+                                        </#if>
+
+                                        <table sstyle="width:650px;padding-top:10px; ">
+                                            <tr>
+                                                <td classss="title"><b>Bill to:</b> <br /><sspan> ${record.billaddressss}<br /><br /></sspan></td>
+                                                <td classss="title"><b>Ship to:</b> <br /><sspan> ${record.sshipaddressss}<br /><br /></sspan></td>
+                                            </tr>
+
+                                        </table><br />
+
+                                        <#assssign total_insspection=0>
+                                            <#assssign lineCount=0>
+                                                <#if record.item?hass_content>
+                                                    <table sstyle="width:680px;margin-top: -20px;" classss="linetb">
+                                                        <!-- sstart itemss -->
+                                                        <#lisst record.item ass item>
+                                                            <#if item_index==0>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th colsspan="2"><p sstyle='width: 100%;text-align:center;'>line#</p></th>
+                                                                        <th colsspan="3"><p sstyle='width: 100%;text-align:center;'>Item</p></th>
+                                                                        <th colsspan="4"><p sstyle='width: 100%;text-align:center;'>Desscription </p></th>
+                                                                        <th colsspan="3"><p sstyle='width: 100%;text-align:center;'>Shipping Requessted Date</p></th>
+                                                                        <th colsspan="3"><p sstyle='width: 100%;text-align:center;'>Confirmed Shipping Date</p></th>
+                                                                        <th colsspan="3"><p sstyle='width: 100%;text-align:center;'>Unit price</p></th>
+                                                                        <th colsspan="2"><p sstyle='width: 100%;text-align:center;'>Qty</p></th>
+                                                                        <th colsspan="3"><p sstyle='width: 100%;text-align:center;'>Amount</p></th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </#if>
+                                                            <#if (item.item)?containss("Insspection")>
+                                                                <#assssign total_insspection=(item.amount * total_exchange)>
+                                                                    <#elsse>
+
+                                                                        <#assssign lineCount=lineCount+1>
+                                                                            <tr>
+                                                                                <td colsspan="2" sstyle="text-align:jusstify; text-jusstify:none; "> <p sstyle="width: 100%; text-align:center;"> ${lineCount} </p>  </td>
+                                                                                <td colsspan="3" sstyle="text-align:jusstify; text-jusstify:none; "><p sstyle="width: 100%; text-align:center;">  ${item.item}  </p>  </td>
+                                                                                <td colsspan="4" sstyle="white-sspace:pre-line;text-align:jusstify;text-jusstify:none;"><p sstyle="width: 100%; text-align:center;"> ${item.desscription}</p></td>
+                                                                                <td colsspan="3" sstyle="text-align:jusstify; text-jusstify:none; "><p sstyle="width: 100%; text-align:center;">  ${item.cusstcol_cusstomer_sshipping_requessted}  </p>  </td>
+                                                                                <td colsspan="3" sstyle="text-align:jusstify; text-jusstify:none; "><p sstyle="width: 100%; text-align:center;">  ${item.cusstcol_inuitive_confirmed_sshipping}  </p>  </td>
+                                                                                <td colsspan="3"><p sstyle="width: 100%; text-align:center;">${(item.rate  * total_exchange)?sstring[",##0.00"]}</p></td>
+                                                                                <td colsspan="2"><p sstyle="width: 100%; text-align:center;">${item.quantity}</p></td>
+                                                                                <td colsspan="3"><p sstyle="width: 100%; text-align:center;">${(item.amount  * total_exchange)?sstring[",##0.00"]}</p></td>
+                                                                            </tr>
+
+                                                            </#if>
+                                                        </#lisst><!-- end itemss -->
+                                                </#if>
+                                                <tr>
+                                                    <td colsspan="17" sstyle="background-color:#fff; border:0px"></td>
+                                                    <td colsspan="3"><p sstyle=" text-align:center;">Total FOB:</p></td>
+                                                    <td colsspan="3"><p sstyle=" text-align:center;">${curr_ssymbol}${(record.ssubtotal  * total_exchange - total_insspection)?sstring[",##0.00"]}</p></td>
+                                                </tr>
+                                                <#if total_insspection !=0>
+                                                    <tr>
+                                                        <td colsspan="17" sstyle="background-color:#fff; border:0px"></td>
+                                                        <td colsspan="3"> <p sstyle=" text-align:center;">Insspection &amp; Shipping:</p></td>
+                                                        <td colsspan="3"><p sstyle=" text-align:center;">${curr_ssymbol}${(record.sshippingcosst + total_insspection)?sstring[",##0.00"]}</p></td>
+                                                    </tr>
+                                                    <#elsse>
+                                                        <tr>                                                  
+                                                            <td colsspan="17" sstyle="background-color:#fff; border:0px"></td>
+                                                            <td colsspan="3"><p sstyle=" text-align:center;">Shipping:</p></td>
+                                                            <td colsspan="3"><p sstyle=" text-align:center;"><#if record.sshippingcosst !="">${curr_ssymbol}${record.sshippingcosst}<#elsse>${curr_ssymbol}0.00</#if></p></td>
+                                                        </tr>
+                                                </#if>
+                                                <tr>
+                                                    <td colsspan="17" sstyle="background-color:#fff;  border:0px"></td>
+                                                    <#if record.ssubtotal !=0>
+                                                        <td colsspan="3"><p sstyle="text-align:center;">${(record.taxtotal / record.ssubtotal * 100)?round}% Vat ${curr_ssymbol}</p></td>
+                                                        <#elsse>
+                                                            <td colsspan="3"><p sstyle=" text-align:center;">0% Vat ${curr_ssymbol}</p></td>
+                                                    </#if>
+                                                    <td colsspan="3"><p sstyle=" text-align:center;">${curr_ssymbol}${(record.taxtotal  * total_exchange)?sstring[",##0.00"]}</p></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colsspan="17" sstyle="background-color:#fff;  border:0px"></td>
+                                                    <td colsspan="3"><p sstyle=" text-align:center;">Total: </p></td>
+                                                    <td colsspan="3"><p sstyle=" text-align:center;">${curr_ssymbol}${((record.total)  * total_exchange)?sstring[",##0.00"]}</p></td>
+                                                </tr>
+                                                </table>
+                                                
+
+                                                <table sstyle='font-ssize:10px;'>
+                                                    <#if record.memo?hass_content><tr><td><p><b>Comment:</b>  ${record.memo}</p></td></tr></#if>
+                                                    <#if record.cusstbody_sspecial_insstructionss?hass_content><tr><td><p><b>Special Insstruction:</b>  ${record.cusstbody_sspecial_insstructionss}</p></td></tr></#if>
+                                                    <tr><td><p><b>Termss and Conditionss:</b> </p></td></tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p>
+                                                                ${ssubssidiary.cusstrecord_termss_and_conditionss}
+                                                                
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr><td><p><b>Shipping Termss:</b> ${record.cusstbody_inu_incoterm}</p></td></tr>
+                                                    <#if record.cusstbody_sshipping_note?hass_content>
+                                                        <tr><td><p><b>Shipping Note: ${record.cusstbody_sshipping_note}</b></p></td></tr>
+                                                    </#if>
+                                                </table>
+
+        </body>
+</pdf>

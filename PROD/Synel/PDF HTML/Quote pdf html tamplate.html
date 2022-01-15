@@ -1,0 +1,908 @@
+<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <head>
+        <!-- <link name="sans-serif" type="font" subtype="truetype" src="https://4855789.app.netsuite.com/c.4855789/suitebundle149431/Heb-Regular.ttf" />-->
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://6398307-sb1.app.netsuite.com/c.6398307_SB1/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307-sb1.app.netsuite.com/c.6398307_SB1/suitebundle43003/lib/Font/arialb.ttf" />
+        <style type="text/css">
+            body {
+                font-family: sans-serif;
+                font-size: 12pt;
+            }
+
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                font-family: sans-serif;
+                font-size: 12pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-size: 12pt;
+                vertical-align: middle;
+                text-align: center;
+                padding-right: 6px;
+                padding-left: 6px;
+                padding-bottom: 3px;
+                color: #333333;
+                background-color: #aaaaaa;
+            }
+
+            td {
+                padding-bottom: 4px;
+                padding-right: 6px;
+                padding-left: 6px;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            table.body td {
+                padding-top: 1px;
+            }
+
+
+            table.linetb {
+                border: 1px solid;
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+            table.header td {
+                font-size: 7pt;
+                padding: 0px;
+            }
+
+            table.footer td {
+                font-size: 8pt;
+                padding: -5px;
+            }
+
+
+            table.linetb th {
+                background-color: #fff;
+                border: 1px solid;
+                padding-bottom: 10px;
+            }
+
+            table.linetb td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+            }
+
+            td.default {
+                font-size: 9pt;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            table.linetb_Total {
+                table-layout: fixed;
+                border-collapse: collapse;
+                page-break-inside: avoid;
+                font-size: 10pt;
+            }
+
+                table.linetb_Total td {
+                    border: 1px solid;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                    background-color: #D3D3D3;
+                }
+
+
+            hr {
+                height: 1px;
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+            }
+
+            table.headertable th {
+                background-color: #d3d3d3;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 12pt;
+                padding-left: 5px;
+            }
+
+            table.headertable td {
+                background-color: #fff;
+                color: #555;
+                white-space: nowrap;
+                border: 1px solid #686666;
+                font-size: 12pt;
+                padding-left: 5px;
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            tfoot {
+                display: table-row-group
+            }
+
+            tr {
+                page-break-inside: avoid
+            }
+
+            p.color {
+                color: darkorange;
+            }
+            span.color {
+                color: darkorange;
+            }
+            table.linetb th {
+                background-color: #34b4eb
+            }
+        </style>
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 12pt;">
+                    <tr>
+                        <td rowspan="2" align="left">
+                            <#if companyInformation.logoUrl?length !=0>
+                                <img src="${companyInformation.logoUrl}"
+                                     style="float: left; margin: 3px" />
+                            </#if>
+                        </td>
+
+                        <!-- <td align="right"  style="font-size: 12pt;"><span>${companyInformation.companyName} :שם החברה </span></td>
+                        </tr>
+                        <tr>
+                            <td align="right" style="font-size: 12pt;"><span>${record.startdate} :תאריך </span></td>-->
+                    </tr>
+
+                </table>
+            </macro>
+            <macro id="nlfooter">          
+                <table class="footer">
+                    <tr>
+                        <td style="width:10%"></td>
+                        <td align="center">
+                            <img src="https://6398307-sb1.app.netsuite.com/core/media/media.nl?id=11882&amp;c=6398307_SB1&amp;h=jJn37Bs4vvFaBqMwdMDFZOMTqp-hsjyCUh0V0-BXxNzV-Plf" style="margin: 7px;width:400px; height:75px;" />
+                        </td>
+                        <td style="width:10%" align="right">
+                            <pagenumber /> of
+                            <totalpages />
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+
+    </head>
+
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in"
+          size="Letter">
+
+        <p align="center" style="color:darkorange;font-size:35pt;"><b>הצעת מחיר</b></p>
+        <p align="center" style="color:darkorange;font-size:20pt;">${record.custbody_main_quote_title}</p>
+
+        <#assign add=record.company.address?replace("<br />", ",")>
+        <#assign add=add?replace("Israel", "ישראל" )>
+
+            <br /> <br />
+
+            <table>
+                <tr>
+                    <td>
+                    </td>
+                    <td align="center">
+                        <img src="https://6398307-sb1.app.netsuite.com/core/media/media.nl?id=14999&amp;c=6398307_SB1&amp;h=1ay45PcjxzuqjwiGgeMnAoZx-uUjNDwtUasJrPhzE7lZU9yW"
+                            style="float: center; width:400px; height:120px;  display: block;margin-left: auto;margin-right: auto" />
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+
+            <br /> <br />
+
+            <p align="center" style="color:darkorange;font-size:15pt;">${.now?string("yyyy")}</p>
+            <p align="center" style="color:darkorange;font-size:25pt;">סינאל מלל פייוויי</p>
+
+            <pbr></pbr>
+
+            <table align="left">
+                <tr>
+                    <td>${record.trandate}</td>
+                </tr>
+            </table>
+            <table align="right" style="font-size: 12pt; width: 100%; direction:rtl;" text-align="right" dir="rtl">
+                <tr>
+                    <td align="right" style="text-align:right;">
+                        <p align="right" style="text-align:right;">
+                            <u>:לכבוד</u><br />
+                            :חברת<br />
+                            :לידי<br />
+                            :מייל<br />
+                            :טלפון<br />
+                        </p>
+                    </td>
+                    <td colspan="6" align="right" style="text-align:right;">
+                        <p align="right" style="text-align:right;">
+                            <br />
+                            ${record.entity} <br />
+                            ${record.custbody_contact_person} <br />
+                            ${record.entity.email} <br />
+                            ${record.entity.phone} <br />
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <p align="center"><u>הנדון : ${record.custbody_quote_title}</u></p>
+            <br />
+
+            <table style="font-size: 12pt; width: 100%;">
+                <tr>
+                    <td align="right" style="text-align:right;">
+                        <p align="right" style="text-align:right;">
+                            <u>:אודותינו</u>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p style="text-align:right;direction:rtl;" dir="rtl">
+                            <span>Workforce </span> -סינאל מלל פייוויי הינה בין החברות המובילות בעולם בתחום מתן פתרונות
+                            לניהול פעילות העובד בארגון <br />
+                            ומספקת פתרונות מערכתיים כוללים בטכנולוגיה מתקדמת, הכוללים חומרה ותוכנה לניהול כולל
+                            של<span>,Management</span> <br />
+                            .דיווח נוכחות, משאבי אנוש, שכר, בקרת כניסה, מערכות צפייה והקלטה<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p style="text-align:right;direction:rtl;" dir="rtl">
+                            סל הפתרונות המשווקים על ידי החברה הם פרי פיתוחה, במרכז הפיתוח הממוקם ביוקנעם וכולל עשרות מהנדסים <br/>
+                            ומנתחי מערכות מיומנים עם ניסיון רב שנים ביישום והטמעת פרויקטים גדולים בישראל וברחבי העולם. כמפתחת <br/>
+                            ויצרנית מובילה בתחום, החברה בעלת יכולת לבצע אופטימיזציה והתאמות לפתרונות התוכנה והחומרה בהתאם  <br/>
+                            לצרכים והדרישות הייחודיות למגזרי הפעילות השונים במשק. הפתרונות ניתנים ליישום באופן מודולארי, ומיועדים  <br/>
+                            לתפקד כמערכת אינטגרטיבית כלל-ארגונית, כך שהלקוח מקבל פתרון מקיף וכולל לכל פעילות העובד בארגון, הכול    <br/>
+                            .תחת קורת גג אחת<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p style="text-align:right;direction:rtl;" dir="rtl">
+                            סינאל מלל פייוויי הינה חברה ציבורית הנסחרת בבורסה לניירות ערך בת"א, בעלת תקני איכות בינלאומיים
+                            והוסמכה על ידי מיקרוסופט כ<span>IBM -</span>ו<span>SAP </span> החברה מורשית התממשקות למערכות <span>.ISO-9001,SAS-70,UL,CE </span><br />
+                            .<span>Oracle</span> והינה שותף עסקי ומפיץ מורשה של חברת<span> Gold Partner </span><br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p style="text-align:right;direction:rtl;" dir="rtl">
+                            סינאל מלל פייוויי מייצאת את מוצריה לרחבי העולם באמצעות חברות בנות שבבעלותה באנגליה, ארה"ב. וכן <br />
+                            באמצעות כ-20 מפיצים ברחבי העולם ביותר מ- 35 מדינות. לחברה מעל 10,000 לקוחות בישראל, מהגופים הגדולים  <br />
+                            ויצרנית מובילה בתחום, החברה בעלת יכולת לבצע אופטימיזציה והתאמות לפתרונות התוכנה והחומרה בהתאם  <br />
+                            והמובילים בכל המגזרים במשק (חברות ממשלתיות וארגונים פרטיים), מעל 250,000 מסופים שבאמצעותם מדווחים  <br />
+                            .יום יום מעל למיליון עובדים<br />
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+
+            <p align="right" style="width: 100%; direction:rtl;" text-align="right" dir="rtl">
+                <u>
+              תחומי הפעילות שלנו
+                </u>
+            </p>
+            <table align="right" style="font-size: 12pt ;text-align:right; direction:rtl" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                          הפתרון המוצע דרך תוכנת הדגל של החברה - הרמוני - מערכת הוליסטית<span class='color'> -ניהול המשאב האנושי בארגון</span>  <br />
+                            .וגמישה בעלת בסיס נתונים אחד<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                            פתרונות החברה בתחום משתמשים בטכנולוגיות איסוף נתונים וכריית מידע <span class='color'> -ניהול בטיחות ואבטחה פיזית</span>  <br />
+                            .מתקדמות כדי לרכז ולנהל את הקלט ממכשירי בקרה ואזעקה באמצעות אנליטיקה חכמה של אירועים<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                            ,החברה מסייעת לארגונים גדולים ורגישים להתמודד בהצלחה עם איומי ריגול תעשייתי<span class='color'> -ניהול מבקרים בארגון </span>  <br />
+                            ,גישה בלתי מורשית, גניבות וחשיפת מידע ארגוני ובטחוני, תוך התנהלות יומיומית תקינה מול קבלנים, ספקים<br />
+                            עובדי חוץ ומבקרים אחרים בארגון, באמצעות ניהול חכם של הרשאות גישה וכניסה לעובדים ומבקרים במגוון <br />
+                            .ממשקים, לרבות זיהוי ביומטרי, זיהוי פנים, כרטיסים חכמים, כרטיסי קרבה, זיהוי רכבים ועוד<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                            היכרותה המעמיקה של החברה עם תחום רגולציית השכר על שחקניו הרבים אפשרה לה <span class='color'> -סליקה פנסיונית </span>  <br />
+                            לתת ללקוחותיה בארץ מענה איכותי ומתקדם לאור השינויים הרגולטוריים האחרונים בתחום הפנסיה, החסכון <br />
+                            .וההשקעה –  פתרון מקיף, מאובטח ותואם את דרישות הרגולציה<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                            האקדמיה של סינאל הינה מוסד לימודים מפוקח, והינה מוכרת ומוסמכת על ידי לשכת רואי<span class='color'> -Synel Academy </span>  <br />
+                            .חשבון בישראל להעניק תעודת חשב שכר בכיר ולהעביר את השתלמויות הגמל השנתיות הנדרשות בתחום<br />
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+            <p align="right" style="width: 100%; direction:rtl;" text-align="right" dir="rtl">
+                <u>
+              מצב קיים
+                </u>
+            </p>
+            <table style="font-size: 12pt">
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span></span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                            ${record.custbody_status_exist}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+
+             <p align="right" style="width: 100%; direction:rtl;" text-align="right" dir="rtl">
+                <u>
+					פתרון מוצע ללקוח
+                </u>
+            </p>
+            <table style="font-size: 12pt">
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl"><span></span></p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;" dir="rtl">
+                            ${record.custbody_suggested_solution}
+                        </p>
+                    </td>
+                </tr>
+			</table>
+
+			<p align="right" style="text-align:right;">
+				<u>
+					תמחור הפתרון המוצע ללקוח
+				</u>
+			</p>
+			<table class="linetb" style="width:650px;">
+				<!-- start items -->
+				<#list record.item as item>
+					<#if item_index==0>
+						<thead>
+							<tr>
+								<th class="th" colspan="6">
+									<p style="width: 100%; text-align:center;">הערות</p>
+								</th>
+								<th class="th" colspan="6">
+									<p style="width: 100%; text-align:center;">עלות חודשית</p>
+								</th>
+								<th class="th" colspan="6">
+									<p style="width: 100%; text-align:center;">עלות חד פעמית</p>
+								</th>
+								<th class="th" colspan="2">
+									<p style="width: 100%; text-align:center;">כמות</p>
+								</th>
+								<th class="th" colspan="14">
+									<p style="width: 100%; text-align:center;">תיאור</p>
+								</th>
+								<th class="th" colspan="10">
+									<p style="width: 100%; text-align:center;">שם המוצר</p>
+								</th>
+								<th class="th" colspan="2">
+									<p style="width: 100%; text-align:center;"></p>
+								</th>
+							</tr>
+						</thead>
+					</#if>
+					<tr>
+						<td colspan="6">
+							<p style="width: 100%; text-align:center;">
+								${item.custcol_item_comments}
+							</p>
+						</td>
+						<td colspan="6">
+							<p style="width: 100%; text-align:center;">
+								${curr_symbol}${item.custcol_monthly_charge?string[",##0.00"]}
+							</p>
+						</td>
+						<td colspan="6">
+							<p style="width: 100%; text-align:center;">
+								${curr_symbol}${item.rate?string[",##0.00"]}</p>
+						</td>
+						<td colspan="2" style="text-align:justify; text-justify:none; ">
+							<p style="width: 100%; text-align:right;">${item.quantity}</p>
+						</td>
+						<td colspan="14" style="text-align:justify; text-justify:none; ">
+							<p style="width: 100%; text-align:right;">${item.description}</p>
+						</td>
+						<td colspan="10" style="text-align:justify; text-justify:none; ">
+							<p style="width: 100%; text-align:right;">${item.item}</p>
+						</td>
+						<td colspan="2" style="text-align:justify; text-justify:none;">
+							<p style="width: 100%; text-align:right;">${item_index +1}</p>
+						</td>
+					</tr>
+					<!--<tr>
+					<td colspan="6"></td>
+					<td colspan="6"></td>
+					<td colspan="4"></td>
+					<td colspan="4" style="text-align:justify; text-justify:none; "></td>
+					<td colspan="4" style="text-align:justify; text-justify:none; "></td>
+					<td colspan="15" style="text-align:justify; text-justify:none; ">
+						<p style="width: 100%; text-align:right;">${item.description}</p>
+					</td>
+					<td colspan="2" style="text-align:justify; text-justify:none;"></td>
+				</tr>-->
+				</#list>
+			</table>
+
+            <#if record.custbody_cloud_chbx=true>
+				<p align="right" style="text-align:right;">
+					<u>
+					יתרונות שרותי הענן של סינאל
+					</u>
+				</p>
+				<table class="linetb" style="width:650px;">
+                        <tr>
+                            <th class="th"  colspan="14">
+                                <p style="width: 100%; text-align:center;">יתרון</p>
+                            </th>
+                            <th class="th"  colspan="4">
+                                <p style="width: 100%; text-align:center;">פרמטר</p>
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="width: 100%; text-align:center;">גישה מכל מקום ובכל זמן – בדיקות תקשורת ב-און
+                                    ליין
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">חיסכון בזמן</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="width: 100%; text-align:center;">ניטור תקלות באון ליין ע"י צוות התמיכה בסינאל
+                                    –
+                                    המערכת
+                                    מדווחת על התקלה למוקד התמיכה והתקנה מטופלת עם קבלת ההתראה</p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">ניטור תקלות</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="width: 100%; text-align:center;">ללא צורך ברכישת שרתים, רישוי, עדכוני גרסה,
+                                    גיבויים
+                                    ועוד</p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">חיסכון בכסף</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="width: 100%; text-align:center;">שרידות, המידע מאוחסן במקום אחר חסין פריצה
+                                    וגניבה
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">שרידות מערכת</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="width: 100%; text-align:center;">עבודה יעילה יותר במקרה של חברה מבוזרת (עבודה
+                                    מסניפים
+                                    אחרים)</p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">עבודה בארגון מבוזר</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="width: 100%; text-align:center;">תחזוקת הרשת פשוטה יותר, אין צורך ברכישת שרתים
+                                    חדשים,
+                                    מערכות אחסון, התקשורת לענן יכולה להתבצע באמצעות רשת האינטרנט של הלקוח</p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">מבנה רשת פשוט</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="14">
+                                <p style="text-align:center;" dir="rtl">
+                                    <span>(Data Center) </span><span> מערכת ממוקמת באתר בזק בינלאומי - חוות שרתים</span><br />
+                                    מהמתקדמות, הגדולות והמובילות בישראל. באתר מערכות לזיהוי  <br />
+                                    ,עשן וכיבוי אש, מערכות מיזוג אוויר ייחודיות מבוקרות טמפרטורה ולחות  <br />
+                                    ,מערכת לנטרול ברקים וחשמל סטטי, הזנת חשמל כפולה משני מקורות בלתי תלויים   <br />
+                                    .אבטחה פיזית ואבטחה לוגית 24/7<br />
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p class='color' style="width: 100%; text-align:center;">אבטחת מידע</p>
+                            </td>
+                        </tr>
+
+
+                    </table>
+            </#if>
+
+
+			<p align="right" style="width: 100%; direction:rtl;" text-align="right" dir="rtl">
+				<u>
+					תנאי התקשרות מסחריים
+				</u>
+			</p>
+			<table align="right" style="font-size: 12pt ;text-align:right; direction:rtl" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="5%" align="right">
+                            <p style="text-align:right;" dir="rtl"><span>.1</span></p>
+                        </td>
+                        <td align="right">
+                            <p style="text-align:right;" dir="rtl">.מחירים הנ"ל אינם כוללים מע"מ</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="5%" align="right">
+                            <p style="text-align:right;" dir="rtl"><span>.2</span></p>
+                        </td>
+                        <td align="right">
+                            <p style="text-align:right;" dir="rtl">.המחירים יהיו צמודים לעליית מדד המחירים לצרכן</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="5%" align="right">
+                            <p style="text-align:right;" dir="rtl"><span>.3</span></p>
+                        </td>
+                        <td align="right">
+                            <p style="text-align:right;" dir="rtl">.₪כל שעת עבודה מעבר לשעות המצוינות בהצעה תתומחר לפי
+                                240</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="5%" align="right">
+                            <p style="text-align:right;" dir="rtl"><span>.4</span></p>
+                        </td>
+                        <td align="right">
+                            <p style="text-align:right;" dir="rtl">:תנאי תשלום</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table align="right" style="font-size: 12pt ;text-align:right; direction:rtl">
+                                <#if record.custbody_industrial_condition41?has_content>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;" dir="rtl">
+                                                ${record.custbody_industrial_condition41}</p>
+                                        </td>
+                                    </tr>
+                                </#if>
+                                <#if record.custbody_industrial_condition42?has_content>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;" dir="rtl">
+                                                ${record.custbody_industrial_condition42}</p>
+                                        </td>
+                                    </tr>
+                                </#if>
+                                <#if record.custbody_industrial_condition43?has_content>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;" dir="rtl">
+                                                ${record.custbody_industrial_condition43}</p>
+                                        </td>
+                                    </tr>
+                                </#if>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <#if record.custbody_industrial_condition5?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.5</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition5}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if record.custbody_industrial_condition6?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.6</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition6}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if record.custbody_industrial_condition7?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.7</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition7}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if record.custbody_industrial_condition8?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.8</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition8}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <tr>
+                        <td>
+                            <table align="right" style="font-size: 12pt ;text-align:right; direction:rtl">
+                                <#if record.custbody_industrial_condition81?has_content>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl"><span>-</span></p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;" dir="rtl">
+                                                ${record.custbody_industrial_condition81}</p>
+                                        </td>
+                                    </tr>
+                                </#if>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+                <table align="right" style="font-size: 12pt ;text-align:right; direction:rtl">
+                    <tr>
+                        <td width="5%" align="right">
+                            <p style="text-align:right;" dir="rtl"><a href="url"><span>SLA - Service Level
+                                        Agreement</span> לחץ כאן לאמנת השירות </a></p>
+                        </td>
+                    </tr>
+                </table>
+                <table align="right" style="font-size: 12pt ;text-align:right; direction:rtl">
+                    <#if record.custbody_industrial_condition1?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.1</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition1}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if record.custbody_industrial_condition2?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.2</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition2}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if record.custbodyindustrial_condition3?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.3</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbodyindustrial_condition3}</p>
+                            </td>
+                        </tr>
+                    </#if>
+                    <#if record.custbody_industrial_condition4?has_content>
+                        <tr>
+                            <td width="5%" align="right">
+                                <p style="text-align:right;" dir="rtl"><span>.4</span></p>
+                            </td>
+                            <td align="right">
+                                <p style="text-align:right;" dir="rtl">${record.custbody_industrial_condition4}</p>
+                            </td>
+                        </tr>
+                    </#if>
+
+                </table>
+
+
+            <br />
+            <br />
+
+            <div>
+
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td align="right">
+                            <p>,בברכה</p>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td align="right">
+                            ${record.salesrep}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p> ${record.salesrep.phone} :'טל</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p>${record.salesrep.email} :דוא"ל</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            ${record.salesrep.subsidiary}
+                        </td>
+                    </tr>
+
+
+                </table>
+            </div>
+            <div>
+
+
+                <table class="linetb" style="width:670px; font-size:12pt;" align="left">
+                    <tr>
+                        <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p lign="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><br /><u>
+                                        &emsp;
+                                        &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp; </u>:תפקיד &emsp; &emsp;
+                                    &emsp; &emsp; <u> &emsp; &emsp;&emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;
+                                    </u></span> : שם<br /><br />
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp;
+                                        &emsp;
+                                        &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u>:תאריך &emsp;
+                                    &emsp; &ensp;<u> &ensp; &emsp; &emsp; &emsp; &emsp; </u></span> : חותמת
+                                וחתימה<br /><br />
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp;
+                                        &emsp;
+                                        &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp; &emsp; &emsp; &emsp; &ensp;
+                                        &ensp;
+                                        &emsp; &emsp; </u></span> : כתובת למשלוח חשבונית <br /><br />
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <br />
+            <table class="linetb" style="width:670px; font-size:12pt;">
+                <tr>
+                    <td colspan="3" align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <p align="center" style="font-size: 12pt; text-align:right;" dir="rtl">טופס חיוב לקוח באמצעות
+                            כרטיס אשראי – הוראת קבע חודשית</p>
+                        <p align="center" style="font-size: 12pt; text-align:right;" dir="rtl">:יש למלא את הטופס בכתב יד
+                            ברור וקריא ולהחזירו סרוק לכתובת המייל הבאה*</p>
+                        <p align="center" style="font-size: 12pt; text-align:right;" dir="rtl"> או לפקס שמספרו:
+                            04-9596780 melie@synel.co.il</p>
+                        <p align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u>: פרטי הלקוח
+                                </u></span><br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><br /><u> &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp; </u></span>:שם החברה<br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:שם איש קשר
+                            <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp;
+                                    &emsp; &emsp; </u></span> : מספר ח.פ<br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:כתובת
+                            <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp;</u>: פקס <u>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+                                    &ensp; &ensp; &emsp; &emsp;</u></span>:'טל <br /> <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> :פרטי כרטיס
+                                    אשראי</u></span><br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:סוג כרטיס
+                            אשראי (למעט כרטיסי דיינרס ) <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:מס' כרטיס
+                            אשראי(למעט כרטיסי דיינרס ) <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:תוקף כרטיס
+                            <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:שם איש
+                            קשר/גוף/חברה המצוין ע"ג הכרטיס <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:ת.ז./ח.פ.
+                            או כל מס' זיהוי המוטבע על הכרטיס של נושא הכרטיס <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> :אישור הלקוח
+                                </u></span><br /><br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:הנני מאשר
+                            בחתימתי זו את פרטי החיוב לפי הפרטים הנ"ל <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:תאריך
+                            <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:שם החותם
+                            <br />
+                            <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u> &emsp; &emsp;
+                                    &emsp; &emsp; &emsp; &emsp; &emsp; &ensp; &ensp; &emsp; &emsp;</u></span>:חותמת
+                            החברה <br />
+                        </p>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" align="center" style="font-size: 12pt; text-align:center;" dir="rtl">
+                        <p align="center" style="font-size: 12pt; text-align:center;" dir="rtl">לידיעה: החיוב ייעשה
+                            באמצעות חברת סינאל תעשיות בע"מ </p>
+                    </td>
+                </tr>
+
+            </table>
+
+
+
+
+    </body>
+</pdf>
