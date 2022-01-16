@@ -10,14 +10,14 @@ function beforeLoad(type, form) {
             var status = rec.getFieldValue('approvalstatus');
             var currstatusVal = rec.getFieldValue('custbody_budgetary_control_status');
             if (status == 1) {
+                var budgetary_control_type = nlapiLookupField('subsidiary', rec.getFieldValue('subsidiary'), 'custrecord_budgetary_control_type');
                 var cbuType = 'customrecord_control_budgeting_unit';
                 var exceeded = false, budgetunits = false;
                 var err_msg = [], cbuArray = [], NotExsitUnit = [];
                 var unitName = '';
                 var cbuRecord;
                 var itemCount = rec.getLineItemCount('item');
-                for (i = 1; i <= itemCount; i++) {
-                    //currAbu = rec.getLineItemValue('item', 'custcol_budgeting_unit', i);
+                for (i = 1; i <= itemCount; i++) {                 
                     currCbu = rec.getLineItemValue('item', 'custcol_budget_control_unit', i);                                                              
                     if (!isNullOrEmpty(currCbu)) {
                             currAmount = rec.getLineItemValue('item', 'amount', i);
@@ -43,13 +43,7 @@ function beforeLoad(type, form) {
                     else if (rec.getLineItemValue('item', 'custcol_not_exist_unit', i) == 'T') {
                         NotExsitUnit.push(i);
                     }
-                }                
-                var UniqueArray = toUniqueArray(err_msg);
-                var msg = showmsg(exceeded, UniqueArray, budgetunits);
-                var htmlfield = form.addField('custpage_field_check', 'inlinehtml', '', null, null);
-                var totalMsg = msg.toString();
-                var html = "<script>" + totalMsg + "</script>";
-                htmlfield.setDefaultValue(html);
+                }  
 
                 if (NotExsitUnit.length > 0) {
                     statusVal = 2;
@@ -58,6 +52,14 @@ function beforeLoad(type, form) {
                     var html = "<script>" + msg + "</script>";
                     htmlfield.setDefaultValue(html);
                 }
+                if ((budgetary_control_type == 1 && NotExsitUnit.length > 0) || budgetary_control_type == 2 && NotExsitUnit.length ==0) {
+                    var UniqueArray = toUniqueArray(err_msg);
+                    var msg = showmsg(exceeded, UniqueArray, budgetunits);
+                    var htmlfield = form.addField('custpage_field_check', 'inlinehtml', '', null, null);
+                    var totalMsg = msg.toString();
+                    var html = "<script>" + totalMsg + "</script>";
+                    htmlfield.setDefaultValue(html);
+                }                  
                 setStatus(currstatusVal , rec);
             }            
         }
@@ -105,11 +107,15 @@ function showmsg(exceeded, err, budgetunits) {
     return msg;
 }
 function NotExsitUnitMsg(NotExsitUnit) {
-    var lines = '';
+    var lines = 'line: ';
     for (var i = 0; i < NotExsitUnit.length; i++) {
-        lines += 'line: ' + NotExsitUnit[i];
+        if (i == 0) {
+            lines += NotExsitUnit[i];
+        } else {
+            lines += ' ,' + NotExsitUnit[i];
+        }     
     }
-    var msg = 'showAlertBox("my_element_id","NotExsitUnitMsg:","' + lines + '", 3,"", "", "", "")';     
+    var msg = 'showAlertBox("my_element_id","The account is under budgetary control but no budget record was found for the account and relevant class/department:","' + lines + '", 3,"", "", "", "")';     
     return msg;
 }
 function setStatus(currstatusVal , rec) {

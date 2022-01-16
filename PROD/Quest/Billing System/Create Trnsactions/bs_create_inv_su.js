@@ -82,20 +82,23 @@
         form.addField('custpage_page', 'text', 'Next Page', null, null).setDisplayType('hidden');
         form.setScript('customscript_bs_create_inv_cs');
 
-        var results = getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data)
-        if (results.length > 0) {
-            form.addButton('customscript_continue', 'Continue', 'Continue()');
-            form.addButton('customscript_export', 'Export', 'fnExcelReport()');
-            form.addFieldGroup('custpage_timesheet_group', 'List');
-            var subList = form.addSubList('custpage_res_sublist', 'list', 'number of results: ' + results.length, 'custpage_timesheet_group');
-            //subList.addMarkAllButtons()
-            subList.addField('custpage_agr', 'text', 'Agreement');
-            subList.addField('custpage_amount', 'text', 'Amount');
-            for (var i = 0; i < results.length; i++) {
-                subList.setLineItemValue('custpage_agr', i + 1, results[i].agr);
-                subList.setLineItemValue('custpage_amount', i + 1, results[i].amount);
-            }
-        }                        
+        if (!isNullOrEmpty(type_data)) {
+            var results = getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data)
+            if (results.length > 0) {
+                form.addButton('customscript_continue', 'Continue', 'Continue()');
+                form.addButton('customscript_export', 'Export', 'fnExcelReport()');
+                form.addFieldGroup('custpage_timesheet_group', 'List');
+                var subList = form.addSubList('custpage_res_sublist', 'list', 'number of results: ' + results.length, 'custpage_timesheet_group');
+                //subList.addMarkAllButtons()
+                subList.addField('custpage_agr', 'text', 'Agreement');
+                subList.addField('custpage_amount', 'text', 'Amount');
+                for (var i = 0; i < results.length; i++) {
+                    subList.setLineItemValue('custpage_agr', i + 1, results[i].agr);
+                    subList.setLineItemValue('custpage_amount', i + 1, results[i].amount);
+                }
+            }  
+        }
+                        
         response.writePage(form);
     }
 }//end of suitlet

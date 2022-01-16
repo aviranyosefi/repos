@@ -1,9 +1,9 @@
 empType = nlapiGetFieldValue('custpage_user_type')
 var EmpIdCol = 2
 var TotalCol = 15;
-var TotalAggCol = clcColumnindex(19, empType);
-var SubmitCol = clcColumnindex(20, empType);
-var CreateAcCol = clcColumnindex(21, empType);
+var TotalAggCol = clcColumnindex(18, empType); //VALIDATION STATUS
+var SubmitCol = clcColumnindex(19, empType); //SUBMIT
+var CreateAcCol = clcColumnindex(20, empType); // CREATE ACTUAL
 var disabledSubmitCount = 0;
 var prev_ia;
 var at_type_change;
@@ -760,6 +760,9 @@ function addSortFun() {
 
         td = rows[0].getElementsByTagName("TD")[10]
         td.addEventListener("click", function () { sortTable(10, 'custpage_sort_inv'); });
+
+        //td = rows[0].getElementsByTagName("TD")[11]
+        //td.addEventListener("click", function () { sortTable(10, 'custpage_sort_inv'); });
     }
 }
 function sortTable(num, fieldId) {
@@ -927,4 +930,12 @@ function floatDIV() {
     for (var i = 3; i < 8; i++) {
         divs[i].style.float = 'left'
     }
+}
+function setAlignLeft() {
+    alignList = ['nl2', 'nl3']
+    for (var i = 0; i < alignList.length; i++) {
+        var div = document.getElementById(alignList[0]);
+        div.style.textAlign = 'left'
+    }
+    
 }

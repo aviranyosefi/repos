@@ -102,10 +102,8 @@ function CapacityTool(request, response) {
         subList.addField('custpage_ol_name', 'text', 'Office location Name').setDisplayType('disabled');
         subList.addField('custpage_segment', 'select', 'Segment', 'customlist_ct_segment').setDisplayType('disabled');
         subList.addField('custpage_ia', 'select', 'Investment area', 'customrecord_ct_investment_area')
-        subList.addField('custpage_npd', 'integer', 'New Func')
-        subList.addField('custpage_appm', 'integer', 'Existing Func')
+        subList.addField('custpage_npd', 'integer', 'Improvement')   
         subList.addField('custpage_maintenance', 'integer', 'KTLO')
-        //subList.addField('custpage_cc', 'integer', 'CC').
         subList.addField('custpage_total', 'text', 'Total').setDisplayType('disabled');
         var at_field = subList.addField('custpage_at', 'select', 'Assessment Type', null).setDisplayType('disabled');
         at_field.addSelectOption(1, 'Actual');
@@ -115,12 +113,12 @@ function CapacityTool(request, response) {
             subList.addField('custpage_last_mod', 'text', 'Last modified').setDisplayType('disabled');
             subList.addField('custpage_last_mod_by', 'text', 'Last modified by').setDisplayType('disabled');
         }
-
         subList.addField('custpage_total_aggregated', 'select', 'Validation Status', 'customlist_validation_type').setDisplayType('disabled');
         subList.addField('custpage_submit', 'text', 'submit').setDisplayType('disabled');
         subList.addField('custpage_create_actual', 'text', 'CREATE ACTUAL').setDisplayType('disabled');
         subList.addField('custpage_acual_id', 'text', 'CT ACUAL ID').setDisplayType('hidden');
         subList.addField('custpage_cc', 'integer', 'CC').setDisplayType('hidden');
+        subList.addField('custpage_appm', 'integer', 'Existing Func').setDisplayType('hidden');
         for (var x = 0; x < Lines.length; x++) {
             subList.setLineItemValue('custpage_result_cb', x + 1, 'T');
             subList.setLineItemValue('custpage_emp_id', x + 1, Lines[x].emp_id);
