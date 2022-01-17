@@ -1,50 +1,38 @@
 var BuResults;
 var BcuRsults;
 var AccResults;
-
+var statusVal = '';
 function beforeLoad(type, form) {
     if (type == 'view') {
         var transType = nlapiGetRecordType();
         if (transType == 'purchaserequisition' || transType == 'purchaseorder') {
             var rec = nlapiLoadRecord(transType, nlapiGetRecordId());
-            var status = rec.getFieldValue('approvalstatus')
+            var status = rec.getFieldValue('approvalstatus');
+            var currstatusVal = rec.getFieldValue('custbody_budgetary_control_status');
             if (status == 1) {
-                var abuType = 'customrecord_annual_budgeting_unit';
+                var budgetary_control_type = nlapiLookupField('subsidiary', rec.getFieldValue('subsidiary'), 'custrecord_budgetary_control_type');
                 var cbuType = 'customrecord_control_budgeting_unit';
                 var exceeded = false, budgetunits = false;
-                var err_msg = [], cbuArray = [];
+                var err_msg = [], cbuArray = [], NotExsitUnit = [];
                 var unitName = '';
                 var cbuRecord;
                 var itemCount = rec.getLineItemCount('item');
                 for (i = 1; i <= itemCount; i++) {
-                    currAbu = rec.getLineItemValue('item', 'custcol_budgeting_unit', i);
                     currCbu = rec.getLineItemValue('item', 'custcol_budget_control_unit', i);
-                    currAmount = rec.getLineItemValue('item', 'amount', i);
-                    if (currAmount != null && currAmount != '' && currAmount != undefined && currAmount != '0') {
-                        currAmount = parseFloat(currAmount);
-                        if (currCbu != null && currCbu != '' && currCbu != undefined) {
+                    if (!isNullOrEmpty(currCbu)) {
+                        currAmount = rec.getLineItemValue('item', 'amount', i);
+                        if (currAmount != '0') {
+                            currAmount = parseFloat(currAmount);
                             cbuRecord = loadRecByType(cbuType, currCbu);//need the record also for the next if
                             var available_Funds = parseFloat(cbuRecord.getFieldValue('custrecord_cbu_available_funds'));
                             if (cbuArray[currCbu] == null || cbuArray[currCbu] == undefined) {//currCbu seen for the first time
                                 budgetunits = true;
-                                cbuArray[currCbu] = {
-                                    availableFunds: available_Funds, //parseFloat(nlapiLookupField(cbuType, currCbu, 'custrecord_cbu_available_funds')),
-                                    //exceededFlag: false,
-                                    firstAmount: currAmount,
-                                }
-                                //nlapiLogExecution('debug', ' cbuArray first: ' + i, JSON.stringify(cbuArray));
-
-                            } else {
-
-                                cbuArray[currCbu].availableFunds -= cbuArray[currCbu].firstAmount;
-                                //nlapiLogExecution('debug', ' cbuArray[currCbu].availableFunds: ' + i, cbuArray[currCbu].availableFunds);
-
-                                cbuArray[currCbu].firstAmount += currAmount;
-                                //nlapiLogExecution('debug', ' cbuArray[currCbu].firstAmount ' + i, cbuArray[currCbu].firstAmount);
-                                //nlapiLogExecution('debug', ' cbuArray: ' + i, JSON.stringify(cbuArray));
-
+                                cbuArray[currCbu] = { availableFunds: available_Funds, firstAmount: currAmount }
                             }
-
+                            else {
+                                cbuArray[currCbu].availableFunds -= cbuArray[currCbu].firstAmount;
+                                cbuArray[currCbu].firstAmount += currAmount;
+                            }
                             if (cbuArray[currCbu].availableFunds < 0) {
                                 exceeded = true;
                                 unitName = cbuRecord.getFieldValue('name');
@@ -52,17 +40,27 @@ function beforeLoad(type, form) {
                             }
                         }
                     }
+                    else if (rec.getLineItemValue('item', 'custcol_not_exist_unit', i) == 'T') {
+                        NotExsitUnit.push(i);
+                    }
                 }
 
-                var UniqueArray = toUniqueArray(err_msg);
-
-                var msg = showmsg(exceeded, UniqueArray, budgetunits, rec, currCbu);
-                var htmlfield = form.addField('custpage_field_check', 'inlinehtml', '', null, null);
-                var totalMsg = msg.toString();
-                //nlapiLogExecution('debug', ' totalMsg: ', totalMsg);
-
-                var html = "<script>" + totalMsg + "</script>";
-                htmlfield.setDefaultValue(html);
+                if (NotExsitUnit.length > 0) {
+                    statusVal = 2;
+                    var msg = NotExsitUnitMsg(NotExsitUnit);
+                    var htmlfield = form.addField('custpage_not_exsit_unit', 'inlinehtml', '', null, null);
+                    var html = "<script>" + msg + "</script>";
+                    htmlfield.setDefaultValue(html);
+                }
+                if ((budgetary_control_type == 1 && NotExsitUnit.length > 0) || budgetary_control_type == 2 && NotExsitUnit.length == 0) {
+                    var UniqueArray = toUniqueArray(err_msg);
+                    var msg = showmsg(exceeded, UniqueArray, budgetunits);
+                    var htmlfield = form.addField('custpage_field_check', 'inlinehtml', '', null, null);
+                    var totalMsg = msg.toString();
+                    var html = "<script>" + totalMsg + "</script>";
+                    htmlfield.setDefaultValue(html);
+                }
+                setStatus(currstatusVal, rec);
             }
         }
     }
@@ -87,62 +85,48 @@ function loadRecByType(typeRec, RecID) {
     }
     return rec;
 }
-function showmsg(exceeded, err, budgetunits, rec, currCbu) {
+function showmsg(exceeded, err, budgetunits) {
     var msg = [];
-    currstatusVal = rec.getFieldValue('custbody_budgetary_control_status');
-    //nlapiLogExecution('debug', ' currstatusVal: ', currstatusVal);
-
-    var statusVal = [];
-
     if (budgetunits == false) {
         msg[0] = 'showAlertBox("my_element_id","Verified","No budget units to be evaluated", 0,"", "", "", "")';
-        statusVal.push('1');
+        statusVal = 1;
     } else {
         if (exceeded == false) {
             msg[0] = 'showAlertBox("my_element_id","Verified","All containing units are within their budget", 0,"", "", "", "")';
-            statusVal.push('1');
+            statusVal = 1;
         }
         else {
             for (var i = 0; i < err.length; i++) {
                 msg[i] = 'showAlertBox("my_element_id","The following units exceeded their budget:","' + err[i] + '", 3,"", "", "", "")';
             }
-            statusVal.push('2');
-        }
-    }
-
-    if (currstatusVal == 1) {
-        var flag = true;
-        for (var i = 0; i < statusVal.length; i++) {
-
-            if (statusVal[i] == '2') {
-                rec.setFieldValue('custbody_budgetary_control_status', 2);
-                flag = false;
-            }
-        }
-        if (flag == true) {
-            rec.setFieldValue('custbody_budgetary_control_status', 1);
-        }
-    } else if (currstatusVal == 2) {
-
-        var flag = true;
-        for (var i = 0; i < statusVal.length; i++) {
-            if (statusVal[i] == '2') {
-                rec.setFieldValue('custbody_budgetary_control_status', 2);
-                flag = false;
-            }
-        }
-        if (flag == true) {
-            rec.setFieldValue('custbody_budgetary_control_status', 1);
+            statusVal = 2;
         }
     }
 
 
-    nlapiSubmitRecord(rec);
     return msg;
+}
+function NotExsitUnitMsg(NotExsitUnit) {
+    var lines = 'line: ';
+    for (var i = 0; i < NotExsitUnit.length; i++) {
+        if (i == 0) {
+            lines += NotExsitUnit[i];
+        } else {
+            lines += ' ,' + NotExsitUnit[i];
+        }
+    }
+    var msg = 'showAlertBox("my_element_id","The account is under budgetary control but no budget record was found for the account and relevant class/department:","' + lines + '", 3,"", "", "", "")';
+    return msg;
+}
+function setStatus(currstatusVal, rec) {
+    if (currstatusVal != statusVal) {
+        rec.setFieldValue('custbody_budgetary_control_status', statusVal);
+        nlapiSubmitRecord(rec);
+    }
 }
 
 function beforSubmit(type) {
-      //nlapiLogExecution('debug', 'type: ' + type , nlapiGetContext().getExecutionContext());
+    //nlapiLogExecution('debug', 'type: ' + type , nlapiGetContext().getExecutionContext());
     if (type != 'delete' && type != 'xedit') {
         var transType = nlapiGetRecordType();
         //nlapiLogExecution('debug', ' transType ', transType);
@@ -257,6 +241,7 @@ function beforSubmit(type) {
                     if (BU == -1 && AccResults[properties.account] != null) {
                         nlapiSetLineItemValue(itemType, 'custcol_budgeting_unit', i, '');
                         nlapiSetLineItemValue(itemType, 'custcol_budget_control_unit', i, '');
+                        nlapiSetLineItemValue(itemType, 'custcol_not_exist_unit', i, 'T');
                     }
                     else if (BU != -1) {
                         nlapiSetLineItemValue(itemType, 'custcol_budgeting_unit', i, BU);
@@ -265,6 +250,7 @@ function beforSubmit(type) {
                         //nlapiLogExecution('debug', ' reutrned BCU: ', JSON.stringify(BCU));
                         if (BCU != -1) {
                             nlapiSetLineItemValue(itemType, 'custcol_budget_control_unit', i, BCU);
+                            nlapiSetLineItemValue(itemType, 'custcol_not_exist_unit', i, 'F');
                         }
                     }
                 }
@@ -274,7 +260,7 @@ function beforSubmit(type) {
                 }
             }
         }
-    }    
+    }
 }
 
 function afterSubmit(type) {
