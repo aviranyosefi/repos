@@ -83,7 +83,6 @@ function (record, runtime, search,email,task ){
     function getData() {
   
         var objSearch = search.load({ id: 'customsearch_fam_alternate_dep' });
-		//searchObj.filters.push(filterObj);
         var resultSet = objSearch.run();
         var s = [];
         var searchid = 0;

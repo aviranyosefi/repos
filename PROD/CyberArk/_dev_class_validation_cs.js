@@ -3,26 +3,22 @@
  * @NScriptType ClientScript
  */
 
-define(['N/search' , 'N/runtime'],
-    function (search,runtime) {
+define(['N/search'],
+    function (search) {
         function validateLine(context) {
             debugger;
-			var userObj = runtime.getCurrentUser();
-			var role = userObj.role
             var classLine = context.currentRecord.getCurrentSublistValue({
                 sublistId: 'item',
                 fieldId: 'class',
             });
             if (isNullOrEmpty(classLine)) {
-                var mandatory = context.currentRecord.getCurrentSublistValue({
+                var departmentLine = context.currentRecord.getCurrentSublistValue({
                     sublistId: 'item',
-                    fieldId: 'custcol_cbr_is_class_mandatory',
+                    fieldId: 'department',
                 });
-                if (mandatory) {
-					alert('Class field is mandatory for this department'); return false
-                    //var mandatory = getData(departmentLine)
-					//var mandatory= search.lookupFields({ type: search.Type.DEPARTMENT, id: departmentLine, columns: 'custrecord_cbr_class_mandatory' })['custrecord_cbr_class_mandatory'];                 
-                    //if (mandatory) { alert('Class field is mandatory for this department'); return false}
+                if (!isNullOrEmpty(departmentLine)) {
+                    var mandatory = getClassMandatory(departmentLine)
+                    if (mandatory) { alert('Class field is mandatory for this department'); return false}
                 }
             }
             return true                     
@@ -43,7 +39,7 @@ define(['N/search' , 'N/runtime'],
                 mandatory = result.getValue({ name: "custrecord_cbr_class_mandatory" });
             });
             return mandatory;
-        }		
+        }
         function isNullOrEmpty(val) {
 
             if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
