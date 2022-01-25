@@ -4,7 +4,7 @@ function start() {
         var FirstBillsList = FirstBillsData();
         for (var m = 0; m < FirstBillsList.length; m++) {
             Context(context);
-            try {       
+            try {  //     
                 var rec = nlapiLoadRecord('vendorbill', FirstBillsList[m].bill);
                 rec.setFieldValue('custbody_cf_first_payment', FirstBillsList[m].payment)
                 rec.setFieldValue('custbody_cf_first_payment_date', FirstBillsList[m].date)
