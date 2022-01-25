@@ -65,7 +65,6 @@ function beforeLoad(type, form) {
         }
     }
 }
-
 function toUniqueArray(a) {
     var newArr = [];
     for (var i = 0; i < a.length; i++) {
@@ -206,8 +205,9 @@ function beforSubmit(type) {
                         var category = nlapiGetLineItemValue('expense', 'category', i);
                         if (!isNullOrEmpty(category)) {
                             properties.account = nlapiLookupField("expensecategory", category, 'account');
-                            properties.class = nlapiLookupField("expensecategory", category, 'class');
+                            //properties.class = nlapiLookupField("expensecategory", category, 'class');
                         }
+                        properties.class = nlapiGetLineItemValue('expense', 'class', i);
                     }
                     else {//  getting expense account from inline value
                         properties.account = nlapiGetLineItemValue('expense', 'account', i);

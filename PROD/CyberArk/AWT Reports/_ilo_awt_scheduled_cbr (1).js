@@ -696,7 +696,7 @@ function findTemplate(template) {
 	}
 
 	var s = nlapiSearchRecord('folder', null, fils, cols);
-
+    
 	if (s != null) {
 
 		for (var i = 0; i < s.length; i++) {

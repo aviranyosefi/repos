@@ -303,42 +303,49 @@ function buildSerialsResult(seriel_string) {
 
 }
 
-
-
 /////////////suitlet for email -po
 
 function suitelet_email(request, response) {
     nlapiLogExecution('debug', 'suitelet_email', 'run');
 
-    var Recid = request.getParameter('Recid');
-
     if (request.getMethod() == 'GET') {
         nlapiLogExecution('DEBUG', 'stage one', 'stage one');
+        var Recid = request.getParameter('Recid');
 
         var record = nlapiLoadRecord('purchaseorder', Recid);
         var form = nlapiCreateForm('Email Message');
-        form.addSubmitButton('Submit');
+
+        form.setScript('customscript_transaction_mailvalidation_');
+        form.addFieldGroup('custpage_add_Details', 'Details');
 
         //vendor email
-        var vendorEmailField = form.addField('custpage_vendor_email', 'text', 'Vendor Email', null, null);
+        var vendorEmailField = form.addField('custpage_vendor_email', 'text', 'Vendor Email', null, 'custpage_add_Details');
+        vendorEmailField.setLayoutType('normal', 'startcol')
+
         var vendorId = record.getFieldValue('entity');
         var getVendorMail = nlapiLookupField('vendor', vendorId, 'email');
         nlapiLogExecution('DEBUG', 'getVendorMail', getVendorMail);
 
-        vendorEmailField.setDefaultValue(getVendorMail);//will change to automatically insert the vendor mail
+        vendorEmailField.setDefaultValue(getVendorMail);
         vendorEmailField.setMandatory(true);
 
-        // cc emails
-        var additionalRecipients = form.addField('custpage_cc_email', 'text', 'Additional Recipients', null, null);
-        additionalRecipients.setDefaultValue('please insert cc email if applicable.');//maybe will insert a scroll down list of contacts
+        // subject email
+        var subject = form.addField('custpage_subject', 'text', 'Subject', null, 'custpage_add_Details');
+        subject.setMandatory(true);
 
         // body email
-        var bodyMessage = form.addField('custpage_body_message', 'richtext', 'Body Message', null, null);
-        bodyMessage.setDefaultValue('please write your message here.');
+        var bodyMessage = form.addField('custpage_body_message', 'richtext', 'Body Message', null, 'custpage_add_Details');
+
+        // cc emails
+        var additionalRecipientsSubList = form.addSubList('custpage_additional_recipients', 'inlineeditor', 'Additional Recipients', null);
+        additionalRecipientsSubList.addField('custpage_resultssublist_contactmail1', 'text', 'Recipient');
+        additionalRecipientsSubList.setUniqueField("custpage_resultssublist_contactmail1");
 
         var checkStage = form.addField('custpage_rec_id', 'text', 'check', null, null);
         checkStage.setDefaultValue(Recid);
         checkStage.setDisplayType('hidden');
+
+        form.addSubmitButton('Submit');
 
         response.writePage(form);
 
@@ -348,28 +355,35 @@ function suitelet_email(request, response) {
         // send email to vendor 
 
         var form = nlapiCreateForm("Send Email To Vendor With Attached Purchase Order");
+        var additionalRecipientsArr = [];
+        var LinesNo = request.getLineItemCount('custpage_additional_recipients');
 
         var Recid = request.getParameter('custpage_rec_id');
         var vendorEmailField = request.getParameter('custpage_vendor_email');
-        var additionalRecipients = request.getParameter('custpage_cc_email');
+        var subject = request.getParameter('custpage_subject');
         var bodyMessage = request.getParameter('custpage_body_message');
 
-        nlapiLogExecution('DEBUG', 'Recid', Recid);
-        nlapiLogExecution('DEBUG', 'vendorEmailField', vendorEmailField);
-        nlapiLogExecution('DEBUG', 'additionalRecipients', additionalRecipients);
-        nlapiLogExecution('DEBUG', 'bodyMessage', bodyMessage);
+        nlapiLogExecution('DEBUG', 'Recid' + Recid, 'vendorEmailField: ' + vendorEmailField, 'subject: ' + subject, 'bodyMessage: ' + bodyMessage);
+
+        for (var i = 1; i <= LinesNo; i++) {
+            additionalRecipientsArr.push(request.getLineItemValue('custpage_additional_recipients', 'custpage_resultssublist_contactmail1', i))
+        }
 
         var record = nlapiLoadRecord('purchaseorder', Recid);
-
 
         var xml = createPoTempalte(record, Recid);
         var pdf = nlapiXMLToPDF(xml);
         nlapiLogExecution('debug', 'pdf ', pdf);
-        var file = nlapiCreateFile(record.getFieldValue('tranid') +'.pdf', 'PDF', pdf.getValue());
-       
-        var newEmail = nlapiSendEmail(context.getUser(), vendorEmailField, 'Purchase Order Attached From Netsuite system.', bodyMessage, additionalRecipients, null, null, file);
+        var file = nlapiCreateFile(record.getFieldValue('tranid') + '.pdf', 'PDF', pdf.getValue());
+
+        var attachRec = new Object();
+        attachRec['transaction'] = Recid;
+
+        var newEmail = nlapiSendEmail(context.getUser(), vendorEmailField, subject, bodyMessage, additionalRecipientsArr, null, attachRec, file);
         nlapiLogExecution('DEBUG', 'newEmail', newEmail);
+
         response.writePage(form);
+
     }
 }
 

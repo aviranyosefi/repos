@@ -18,8 +18,8 @@ var soRec = null;
 function beforeLoad_addButton(type, form) {
     if (type == 'view' && recType == 'itemfulfillment') {
         form.setScript('customscript_kit_print_client'); // client script id
-        form.addButton('custpage_button_print', 'Kit Print ', 'printButton()');
-        form.addButton('custpage_button_print', 'CI Print ', 'printButtonCI()');
+        form.addButton('custpage_button_print', 'Print ', 'printButton()');
+        //form.addButton('custpage_button_print', 'CI Print ', 'printButtonCI()');
     }
     else if (type == 'view' && recType == 'estimate') {
         var role = nlapiGetContext().role;
@@ -201,28 +201,37 @@ function beforeSubmit(type) {
                                 nlapiSetLineItemValue('item', 'custcol_custom_price', i, rate);
                             }
                             var itemtype = nlapiGetLineItemValue('item', 'itemtype', i);
-                            var item = nlapiGetLineItemValue('item', 'item', i);
+                            var item = nlapiGetLineItemValue('item', 'item', i);                           
+                           
                             if (itemtype == 'Kit') {
-                                var ItemRec = nlapiLoadRecord('kititem', item);
-                                var ItemCount = ItemRec.getLineItemCount('member');
+                                var location = nlapiGetLineItemValue('item', 'location', i);
+                                if (!isNullOrEmpty(location)) {
+                                    var locationRec = nlapiLoadRecord('location', location);
+                                    location = locationRec.getFieldValue('usebins')
+                                }
+                                else { location = 'F'}
                                 prodocts_to += parseInt(line) + '^';
-                                prodocts_to += nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '@@' + '^';
+                                prodocts_to += nlapiLookupField('item', item, 'itemid') + '@@' + '^';
                                 prodocts_to += getVal('itemdescription', i).toString().replaceAll('\u0005', '<br>') + '@@' + '^';
                                 var kitQty = getVal('quantity', i);
                                 prodocts_to += kitQty + '@@' + '~~';
                                 line = parseInt(line) + 1;
-                                if (ItemCount > 0) {
-                                    for (var j = 1; j <= ItemCount; j++) {
-                                        var KitItem = ItemRec.getLineItemValue('member', 'item', j);
-                                        if (nlapiLookupField('item', KitItem, 'custitem_hide_in_print') == 'F' && nlapiLookupField('item', KitItem, 'isserialitem') != 'T') {
-                                            prodocts_to += parseInt(line) + '^';
-                                            prodocts_to += nlapiLookupField('item', ItemRec.getLineItemValue('member', 'item', j), 'itemid') + '^';
-                                            prodocts_to += getValItemRec(ItemRec, 'memberdescr', j) + '^';
-                                            prodocts_to += getValItemRec(ItemRec, 'quantity', j) * kitQty + '~~';
-                                            line = parseInt(line) + 1;
+                                if (location == 'F') {
+                                    var ItemRec = nlapiLoadRecord('kititem', item);
+                                    var ItemCount = ItemRec.getLineItemCount('member');
+                                    if (ItemCount > 0) {
+                                        for (var j = 1; j <= ItemCount; j++) {
+                                            var KitItem = ItemRec.getLineItemValue('member', 'item', j);
+                                            if (nlapiLookupField('item', KitItem, 'custitem_hide_in_print') == 'F' && nlapiLookupField('item', KitItem, 'isserialitem') != 'T') {
+                                                prodocts_to += parseInt(line) + '^';
+                                                prodocts_to += nlapiLookupField('item', ItemRec.getLineItemValue('member', 'item', j), 'itemid') + '^';
+                                                prodocts_to += getValItemRec(ItemRec, 'memberdescr', j) + '^';
+                                                prodocts_to += getValItemRec(ItemRec, 'quantity', j) * kitQty + '~~';
+                                                line = parseInt(line) + 1;
+                                            }
                                         }
                                     }
-                                }
+                                }                              
                             }// if (itemtype == 'Kit')                   
                             else if (nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'custitem_hide_in_print') == 'F') {
 
@@ -349,10 +358,10 @@ function beforeSubmit(type) {
                             continue;
                         if (!isNullOrEmpty(bundle_number)) {
                             //description = nlapiGetLineItemValue('item', 'description', i).toString().replaceAll('\u0005', '<br>');
-                            sumOfRate = parseFloat(nlapiGetLineItemValue('item', 'rate', i));
-                            sumOfAmount = parseFloat(nlapiGetLineItemValue('item', 'amount', i));
+                            sumOfRate = parseFloat(getLineRate(i)[0]);
+                            sumOfAmount = parseFloat(getLineRate(i)[1]);
                             var item = nlapiGetLineItemValue('item', 'item', i);
-                            var itemName = '<table class="description"><tr><td><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '</p></td><td><p style="width:100%;text-align:left;">' + nlapiGetLineItemValue('item', 'description', i).toString().replaceAll('\u0005', '<br>') + "</p></td></tr></table>";
+                            var itemName = '<table class="description"><tr><td style="border:0px solid white"><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '</p></td><td style="border: 0px solid white"><p style="width:100%;text-align:left;">' + nlapiGetLineItemValue('item', 'description', i).toString().replaceAll('\u0005', '<br>') + '</p></td></tr></table>';
                             if (nlapiLookupField('item', item, 'custitem_item_type') == '3') {
                                 lineCore = i;
                             }
@@ -366,10 +375,10 @@ function beforeSubmit(type) {
                                         }
                                     }
                                     //description += '<br><br>' + nlapiGetLineItemValue('item', 'description', j).toString().replaceAll('\u0005', '<br>');
-                                    sumOfRate += parseFloat(nlapiGetLineItemValue('item', 'rate', j));
-                                    sumOfAmount += parseFloat(nlapiGetLineItemValue('item', 'amount', j));
+                                    sumOfRate += parseFloat(getLineRate(j)[0]);
+                                    sumOfAmount += parseFloat(getLineRate(j)[1]);
                                     //itemName += '<br><br>' + nlapiGetLineItemText('item', 'item', j);
-                                    itemName += '<br><br><table class="description"><tr><td><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', j), 'itemid') + '</p></td><td><p style="width:100%;text-align:left;">' + nlapiGetLineItemValue('item', 'description', j).toString().replaceAll('\u0005', '<br>') + '</p></td></tr></table>'
+                                    itemName += '<br><br><table class="description"><tr><td style="border: 0px solid white"><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', j), 'itemid') + '</p></td><td style="border: 0px solid white"><p style="width:100%;text-align:left;">' + nlapiGetLineItemValue('item', 'description', j).toString().replaceAll('\u0005', '<br>') + '</p></td></tr></table>'
                                 }
                                 else {
                                     break;
@@ -378,13 +387,30 @@ function beforeSubmit(type) {
                             if (lineCore == '') {
                                 lineCore = i;
                             }
+                            var unitsid = nlapiLookupField('item', item, 'unitstype')
+                            if (!isNullOrEmpty(unitsid))
+                                var units = nlapiLoadRecord('unitstype', unitsid).getFieldValue('name');
+                            else
+                                var units = '';
+
                             prodocts_to += line + '^';
                             prodocts_to += itemName + '^';
                             //prodocts_to += description + '^';
                             prodocts_to += nlapiGetLineItemValue('item', 'custcol_df_quantity_for_delivery', lineCore) + '^';
+                            prodocts_to += units + '^';
                             prodocts_to += formatNumber(sumOfRate.toFixed(2)) + '^';
-                            prodocts_to += formatNumber(sumOfAmount.toFixed(2)) + '^';
-                            prodocts_to += '<img' +'src=' +getFileUrl(imgFile)+ '></img>' + '~~';
+
+                            var itemtype = nlapiGetLineItemValue("item", "itemtype", lineCore);
+                            var itemT = getitemType(itemtype);
+                            var itemrec = nlapiLoadRecord(itemT, item);
+                            var coo = itemrec.getFieldText('custitem_coo');
+                            var hs_c = itemrec.getFieldValue('custitem_hs_code');
+
+
+
+                            prodocts_to += swap_null(coo) + '^';
+                            prodocts_to += swap_null(hs_c) + '^';
+                            prodocts_to += formatNumber(sumOfAmount.toFixed(2)) + '~~';
                             description = '';
                             lineCore = '';
                             sumOfRate = 0;
@@ -397,92 +423,43 @@ function beforeSubmit(type) {
                             prodocts_to += 'Subtotal^';
                             //prodocts_to += '^';
                             prodocts_to += '^';
+                            prodocts_to += '^';
+                            prodocts_to += '^';
+                            prodocts_to += '^';
                             prodocts_to += 'sub^';
                             prodocts_to += formatNumber(getVal('amount', i)) + '~~';
                         }
                         else {
+                            var item = nlapiGetLineItemValue('item', 'item', i);
+                            var unitsid = nlapiLookupField('item', item, 'unitstype')
+                            if (!isNullOrEmpty(unitsid))
+                                var units = nlapiLoadRecord('unitstype', unitsid).getFieldValue('name');
+                            else
+                                var units = '';
+
                             prodocts_to += line + '^';
                             //prodocts_to += "<table><tr>"nlapiGetLineItemText('item', 'item', i) + '^';
-                            prodocts_to += '<table  class="description"><tr><td><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '</p></td><td><p style="width:100%;text-align:left;">' + getVal('description', i).toString().replaceAll('\u0005', '<br>') + '</p></td></tr></table>^'
+                            prodocts_to += '<table  class="description"><tr><td style="border: 0px solid white"><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '</p></td><td style="border: 0px solid white"><p style="width:100%;text-align:left;">' + getVal('description', i).toString().replaceAll('\u0005', '<br>') + '</p></td></tr></table>^'
                             //prodocts_to += getVal('description', i).toString().replaceAll('\u0005', '<br>') + '^';
                             prodocts_to += getVal('custcol_df_quantity_for_delivery', i) + '^';
-                            prodocts_to += formatNumber(getVal('rate', i)) + '^';
-                            prodocts_to += formatNumber(getVal('amount', i)) + '~~';
+                            prodocts_to += units + '^';
+                            prodocts_to += formatNumber(parseFloat(getLineRate(i)[0]).toFixed(2)) + '^';
+
+                            var itemtype = nlapiGetLineItemValue("item", "itemtype", i);
+                            var itemT = getitemType(itemtype);
+                            var itemrec = nlapiLoadRecord(itemT, item);
+                            var coo = itemrec.getFieldText('custitem_coo');
+                            var hs_c = itemrec.getFieldValue('custitem_hs_code');
+
+
+
+                            prodocts_to += swap_null(coo) + '^';
+                            prodocts_to += swap_null(hs_c) + '^';
+                            prodocts_to += formatNumber(parseFloat(getLineRate(i)[1]).toFixed(2)) + '~~';
                             line = line + 1;
                         }
                     }
                 } // if (count > 0) 
-                var opt_count = nlapiGetLineItemCount('recmachcustrecord_optional_item_quote');
-                line = 1;
-                lineCore = '';
-                sumOfRate = 0;
-                sumOfAmount = 0;
-                if (opt_count > 0) {
-                    for (var i = 1; i <= opt_count; i++) {
-                        var bundle_number = nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_bundle_number', i);
-                        if (!isNullOrEmpty(bundle_number)) {
-                            rate = getOptVal('custrecord_optional_rate', i)
-                            qty = getOptVal('custrecord_quantity_optional_item', i)
-                            amount = (qty * rate).toFixed(2);
-                            //description = nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_items_description', i).toString().replaceAll('\u0005', '<br>');
-                            sumOfRate = parseFloat(rate);
-                            sumOfAmount = parseFloat(amount);
-                            var item = nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_item', i);
-                            var itemName = '<table class="description"><tr><td><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_item', i), 'itemid') + '</p></td><td><p style="width:100%;text-align:left;">' + nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_items_description', i).toString().replaceAll('\u0005', '<br>') + "</p></td></tr></table>";
-                            if (nlapiLookupField('item', item, 'custitem_item_type') == '3') {
-                                lineCore = i;
-                            }
-                            for (var j = i + 1; j <= opt_count; j++) {
-                                var Next_bundle_number = nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_bundle_number', j);
-                                if (bundle_number == Next_bundle_number) {
-                                    var Second_item = nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_item', j);
-                                    if (lineCore == '') {
-                                        if (nlapiLookupField('item', Second_item, 'custitem_item_type') == '3') {
-                                            lineCore = j;
-                                        }
-                                    }
-                                    rate = getOptVal('custrecord_optional_rate', j)
-                                    qty = getOptVal('custrecord_quantity_optional_item', j)
-                                    amount = (qty * rate).toFixed(2);
-                                    //description += '<br><br>' + nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_items_description', j).toString().replaceAll('\u0005', '<br>');
-                                    sumOfRate += parseFloat(rate);
-                                    sumOfAmount += parseFloat(amount);
-                                    itemName += '<br><br><table class="description"><tr><td><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_item', j), 'itemid') + '</p></td><td><p style="width:100%;text-align:left;">' + nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_items_description', j).toString().replaceAll('\u0005', '<br>') + '</p></td></tr></table>';
-                                }
-                                else {
-                                    break;
-                                }
-                            } //  for (var j = i+1 ; j <= count; j++)
-                            if (lineCore == '') {
-                                lineCore = i;
-                            }
-                            opt_prodocts_to += line + '^';
-                            opt_prodocts_to += itemName + '^';
-                            //opt_prodocts_to += description + '^';
-                            opt_prodocts_to += nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_quantity_optional_item', lineCore) + '^';
-                            opt_prodocts_to += formatNumber(sumOfRate.toFixed(2)) + '^';
-                            opt_prodocts_to += formatNumber(sumOfAmount.toFixed(2)) + '~~';
-                            description = '';
-                            lineCore = '';
-                            sumOfRate = 0;
-                            sumOfAmount = 0;
-                            i = j - 1;
-                            line = line + 1
-                        }
-                        else {
-                            rate = getOptVal('custrecord_optional_rate', i)
-                            qty = getOptVal('custrecord_quantity_optional_item', i)
-                            amount = (qty * rate).toFixed(2);
-                            opt_prodocts_to += line + '^';
-                            opt_prodocts_to += '<table  class="description"><tr><td><p style="width:100%;text-align:left;">' + nlapiLookupField('item', nlapiGetLineItemValue('recmachcustrecord_optional_item_quote', 'custrecord_optional_item', i), 'itemid') + '</p></td><td><p style="width:100%; text-align:left;">' + getOptVal('custrecord_optional_items_description', i).toString().replaceAll('\u0005', '<br>') + "</p></td></tr></table>^";
-                            //opt_prodocts_to += getOptVal('custrecord_optional_items_description', i).toString().replaceAll('\u0005', '<br>') + '^';
-                            opt_prodocts_to += qty + '^';
-                            opt_prodocts_to += formatNumber(rate) + '^';
-                            opt_prodocts_to += formatNumber(amount) + '~~';
-                            line = line + 1;
-                        }
-                    }
-                }
             }
 
             if (recType == 'estimate') {
@@ -689,3 +666,70 @@ function getKititemsCost(item) {
     return '';
 }
 
+
+function getLineRate(line) {
+    //nlapiLogExecution('DEBUG', field, line)
+    var calc = {};
+    var custcol_custom_price = nlapiGetLineItemValue('item', 'custcol_custom_price', line)
+    if (!isNullOrEmpty(custcol_custom_price)) {
+        calc[0] = custcol_custom_price;
+        calc[1] = nlapiGetLineItemValue('item', 'custcol_df_quantity_for_delivery', line) * custcol_custom_price;
+    }
+    else {
+        var rate = nlapiGetLineItemValue('item', 'rate', line)
+        calc[0] = rate;
+        calc[1] = nlapiGetLineItemValue('item', 'custcol_df_quantity_for_delivery', line) * rate;
+    }
+    /*if (isNullOrEmpty(quantity) || isNullOrEmpty(custcol_custom_price)) { return '0.00'; }
+    return formatNumber((quantity * custcol_custom_price).toFixed(2));*/
+    return calc
+
+}
+function getLineAmount(rate, line) {
+
+
+
+
+    //nlapiLogExecution('DEBUG', field, line)
+    var quantity_for_delivery = nlapiGetLineItemValue('item', 'custcol_df_quantity_for_delivery', line);
+    if (isNullOrEmpty(quantity_for_delivery) || isNullOrEmpty(rate)) { return '0.00'; }
+    return formatNumber((quantity_for_delivery * rate).toFixed(2));
+
+
+
+
+}
+
+function getitemType(itemtype) {
+    nlapiLogExecution('debug', 'itemtype', itemtype)
+    var recordtype = "";
+
+    switch (itemtype) {
+        case 'InvtPart':
+            recordtype = 'inventoryitem';
+            break;
+        case 'NonInvtPart':
+            recordtype = 'noninventoryitem';
+            break;
+        case 'Service':
+            recordtype = 'serviceitem';
+            break;
+        case 'Assembly':
+            recordtype = 'assemblyitem';
+            break;
+        case 'GiftCert':
+            recordtype = 'giftcertificateitem';
+            break;
+        case 'Kit':
+            recordtype = 'kititem';
+            break;
+        default:
+    }
+    return recordtype;
+}
+
+function swap_null(val) {
+    if (val == null)
+        return ''
+    return val;
+}

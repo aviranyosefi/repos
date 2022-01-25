@@ -58,29 +58,28 @@ function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, emplo
 }
 function SortDataPerSplit(bpList) {
     try {
+        var data = []; 
         line = 0;
         split = bpList[0].split_formula;
-        for (var m = line; m < bpList.length; m++) {
-            var data = [];          
+        for (var m = line; m < bpList.length; m++) {                 
             if (split == bpList[m].split_formula) {
                 data.push({
                     bp_id: bpList[m].bp_id,
                 });
             } else {
                 CreateInvoiceFromBP(data)
-                line = m;
-                if (bpList[m + 1] != undefined) { split = bpList[m + 1].split_formula;}               
-                break;
-            }
-            
+                split = bpList[m].split_formula;   
+                var data = []; 
+                data.push({
+                    bp_id: bpList[m].bp_id,
+                });
+            }           
         }
         CreateInvoiceFromBP(data);
     } catch (e) {
         nlapiLogExecution('ERROR', 'CreateSingalInvoice Error:', e);
     }
 }
-
-
 function CreateInvoiceFromBP(dataToInvoce) {
     try {
         Context(context);
@@ -139,9 +138,6 @@ function CreateItem(INVOICErec, rec) {
         nlapiLogExecution('ERROR', 'CreateItem Error:', e);
     }
 }
-
-
-
 function isNullOrEmpty(val) {
 
     if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
@@ -161,7 +157,6 @@ function Context(context) {
         }
     }
 }
-
 function addFieldToLine(INVOICErec, rec) {
     try {
         INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_agr', rec.getFieldValue('custrecord_bp_agr'))
@@ -176,9 +171,6 @@ function addFieldToLine(INVOICErec, rec) {
     }
     
 }
-
-
-
 function summaryEmail(employeeId) {
     nlapiLogExecution('DEBUG', 'inside send mail', 'inside send mail');
     try {
