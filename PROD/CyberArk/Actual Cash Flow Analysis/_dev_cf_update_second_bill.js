@@ -3,7 +3,7 @@ function start() {
     try {
         var SecondBillsList = SecondBillsData();
         
-        for (var m = 0; m < FirstBillsList.length; m++) {
+        for (var m = 0; m < SecondBillsList.length; m++) {
             Context(context);
             try {        
                 var rec = nlapiLoadRecord('vendorbill', SecondBillsList[m].bill);
@@ -13,7 +13,7 @@ function start() {
                 nlapiSubmitRecord(rec, null, true);
 
             } catch (e) {
-                nlapiLogExecution('error', 'nlapiSubmitField  journal id: ' + SecondBillsList[m].bill, e);
+                nlapiLogExecution('error', 'nlapiSubmitField  vendorbill id: ' + SecondBillsList[m].bill, e);
             }
         }
     } catch (e) {
@@ -21,7 +21,7 @@ function start() {
     }
 }
 
-//NR cash flow update First Bills Data
+//NR cash flow update Second Bills Data
 function SecondBillsData() {
 
     var loadedSearch = nlapiLoadSearch(null, 'customsearch_cf_update_second_bill');

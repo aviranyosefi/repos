@@ -11,7 +11,7 @@ function callInvCount() {
         alert('Please insert location')
         return;
     }
-    var URL = 'https://system.eu2.netsuite.com/app/common/custom/custrecordentry.nl?rectype=217';
+    var URL = 'https://system.eu2.netsuite.com/app/common/custom/custrecordentry.nl?rectype=200';
     document.getElementById("historytxt").click();
     window.open(URL, "popuphelp", "scrollbars=yes,resizable=yes,status=no,'top=" + 350 + ",left=" + 236 + ",height=600,width=1500'");  
 }
@@ -24,10 +24,19 @@ function isNullOrEmpty(val) {
     return false;
 }
 
+function pageInit() {
+    var rectype = nlapiGetRecordType();
+    if (rectype == 'customrecord_inventory_count_file_up') {
+        var recId = nlapiGetRecordId();
+        if (isNullOrEmpty(recId)) {
+            document.getElementsByClassName('uir-multibutton')[0].style.display = "none"
+        }
+    }
+}
+
 function saveRec() {
     try {
         debugger
-
         var rectype = nlapiGetRecordType();
         if (rectype == 'customrecord_inventory_count_file_up') {
 
@@ -76,16 +85,18 @@ function checkFile() {
         alert('PLEASE UPLOADED FILE')
         return;
     }
-    var createdPdfUrl = nlapiResolveURL('SUITELET', 'customscript_invcount_checl_file_su', 'customdeploy_invcount_checl_file_su', false);
+    var createdPdfUrl = nlapiResolveURL('SUITELET', 'customscript_invcount_check_file_su', 'customdeploy_invcount_check_file_su', false);
     createdPdfUrl += '&file=' + uploaded_file
     var response = nlapiRequestURL(createdPdfUrl);
     if (response.getBody()) {
         var res = response.getBody();
         if (res == 'fail') {
-            showAlertBox('alert_No_relevant', 'fails', '', NLAlertDialog.TYPE_HIGH_PRIORITY)
+            showAlertBox('alert_No_relevant', 'fails', '', NLAlertDialog.ERROR)
+            document.getElementsByClassName('uir-multibutton')[0].style.display = "none"
         }
         else {
-            showAlertBox('alert_No_relevant', 'success', '', NLAlertDialog.TYPE_LOWEST_PRIORITY)
+            showAlertBox('alert_No_relevant', 'success', '', NLAlertDialog.CONFIRMATION)
+            document.getElementsByClassName('uir-multibutton')[0].style.display = "block"
         }
    
     }

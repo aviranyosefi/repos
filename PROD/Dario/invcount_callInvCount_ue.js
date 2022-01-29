@@ -37,7 +37,8 @@ function beforeLoad(type, form) {
             var id = nlapiSubmitRecord(rec);
             var html = '<SCRIPT language="JavaScript" type="text/javascript">';
             html += "function bindEvent(element, type, handler) {if(element.addEventListener) {element.addEventListener(type, handler, false);} else {element.attachEvent('on'+type, handler);}} "; html += 'bindEvent(window, "load", function(){';
-            html += 'function grayOut_loading_hijack_save(){try{window.close()}catch(t){console.log(t)}}grayOut_loading_hijack_save();'; html += '});';
+            html += 'function grayOut_loading_hijack_save(){try{window.close()}catch(t){console.log(t)}}grayOut_loading_hijack_save();'; 
+            html += '});';
             html += '</SCRIPT>';
             var field0 = form.addField('custpage_alertmode', 'inlinehtml', '', null, null);
             field0.setDefaultValue(html);
@@ -60,8 +61,9 @@ function afterSubmit(type) {
                     var rec_countlines = rec.getLineItemCount('item');
                     removeLines(rec, rec_countlines);
                     var jsondata = getfileData(FileID);
-                    insertlines(rec, jsondata);
+                    nlapiLogExecution('debug', 'jsondata', JSON.stringify(jsondata));
                     rec.setFieldValue('custbody_json', JSON.stringify(jsondata));
+                    insertlines(rec, jsondata);              
                 }
                 else if (!isNullOrEmpty(FileID) && status == 'Started' && rec.getFieldValue('custbody_load_data') == 'F') {
                     var jsondata = rec.getFieldValue('custbody_json');
@@ -136,60 +138,7 @@ function insertlines(rec, jsondata) {
         if (isNullOrEmpty(key))
             continue;
         nlapiLogExecution("debug", 'key: ' + key, JSON.stringify(fieldval));
-
         rec.setLineItemValue('item', 'item', linenum, key);
-
-
-        /*if (fieldval.length == 1) {
-            fieldval = fieldval[0];
-            for (var fieldname in fieldval) {
-                var val = fieldval[fieldname];
-                nlapiLogExecution("debug", fieldname, val);
- 
-                if (fieldname == 'item')
-                    rec.setLineItemValue('item', fieldname, linenum, key);
-                else if (fieldname == 'quantity') {
-                    var quantity = val;
-                    rec.setLineItemValue('item', 'countquantity', linenum, val);
-                }
-                 else if (fieldname == 'serialLot' && val != '') {
- 
-                     rec.selectLineItem('item', linenum);
- 
- 
-                     var inventoryDetail = rec.createCurrentLineItemSubrecord('item', 'inventorydetail');
- 
-                     inventoryDetail.selectNewLineItem('inventoryassignment');
-                     inventoryDetail.setCurrentLineItemValue('inventorydetail', 'issueinventorynumber', '123test');
-                     inventoryDetail.setCurrentLineItemValue('inventorydetail', 'quantity', quantity);
-                     inventoryDetail.commitLineItem('inventoryassignment');
-                     inventoryDetail.commit();
- 
-                     rec.commitLineItem('item');
- 
-                 }*/
-        /*else
-            rec.setLineItemValue('item', fieldname, linenum, val);*/
-
-        //}
-
-        //}
-        /*else if (fieldval.length > 1) {
-            fieldval = fieldval[0];
-            for (var fieldname in fieldval) {
-                var val = fieldval[fieldname];
-                nlapiLogExecution("debug", fieldname, val);
-        
-                if (fieldname == 'item')
-                    rec.setLineItemValue('item', fieldname, linenum, key);
-                else if (fieldname == 'quantity') {
-                    var quantity = val;
-                    rec.setLineItemValue('item', 'countquantity', linenum, val);
-                }
-        
-        
-            }
-        }*/
         linenum++;
     }
 
@@ -203,55 +152,34 @@ function removeLines(rec, removeLines) {
     return
 }
 function getfileData(FileID) {
-
     var dataToReturn = {};
-
     var loadedFile = nlapiLoadFile(FileID);
     loadedFile.setEncoding('UTF-8')
-    var loadedString = loadedFile.getValue();
+    var loadedString = loadedFile.getValue();   
     var fileLines = loadedString.split('\r\n');
     for (var i = 1; i <= fileLines.length; i++) {
         if (!isNullOrEmpty(fileLines[i])) {
-
             var itemob = {};
-
-
             var prevline = fileLines[i - 1].split(',');
             var lines = fileLines[i].split(',');
 
             if (i == 1 || lines[0] != prevline[0])
                 var items = [];
 
-
             var item = lines[0];
             var bin = lines[1];
             var quantity = lines[2];
             var serialLot = lines[3];
-
-            //nlapiLogExecution('DEBUG', 'lines: ' + i, 'item: ' + item + ' + bin: ' + bin + ' + quantity: ' + quantity + ' + serialLot: ' + serialLot);
-
             var itemob = {
                 'item': item,
                 'bin': bin,
                 'quantity': quantity,
                 'serialLot': serialLot
             }
-
-
             var ItemId = getItemId(item);
-            //nlapiLogExecution('DEBUG', ItemId, item);
-
-
-
             items.push(itemob);
-
-            dataToReturn[ItemId] = items;
-
-            //nlapiLogExecution('DEBUG', 'dataToReturn: ', JSON.stringify(dataToReturn));
-
+            dataToReturn[ItemId] = items;  
         }
-
-
     }
 
     return dataToReturn;

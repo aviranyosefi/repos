@@ -7,12 +7,13 @@ function start() {
             if (!isNullOrEmpty(journalsList[m])) {
                 try {
                     var rec = nlapiLoadRecord('journalentry', journalsList[m]);
-                    rec.setFieldValue('custbody_bank_journal_ind', 'T')
-                    nlapiSubmitRecord(rec, null, true);
                     //nlapiSubmitField('journalentry', journalsList[m], 'custbody_bank_journal_ind', 'T')
                 } catch (e) {
                     nlapiLogExecution('error', 'nlapiSubmitField  journal id: ' + journalsList[m], e);
+                    var rec = nlapiLoadRecord('advintercompanyjournalentry', journalsList[m]);
+                    updateJournals(rec);
                 }
+                
             }
         
         }
@@ -20,11 +21,15 @@ function start() {
         nlapiLogExecution('error', 'error ', e);
     }
 }
+function updateJournals(rec) {
+    rec.setFieldValue('custbody_bank_journal_ind', 'T')
+    nlapiSubmitRecord(rec, null, true);
+}
 
 //nr cash flow update journals
 function getjournalsList() {
 
-    var loadedSearch = nlapiLoadSearch(null, 'customsearch_cf_update_first_bill');
+    var loadedSearch = nlapiLoadSearch(null, 'customsearch_cf_update_journals');
     var cols = loadedSearch.getColumns();
     var runSearch = loadedSearch.runSearch()
     var searchid = 0;

@@ -1,5 +1,5 @@
 
-function Search(request, response) {
+function CheckFile(request, response) {
     var file = request.getParameter('file');
     nlapiLogExecution('debug', 'file', file)
     var res =getfileData(file)

@@ -4,14 +4,14 @@ function start() {
         var FirstBillsList = FirstBillsData();
         for (var m = 0; m < FirstBillsList.length; m++) {
             Context(context);
-            try {  ////
+            try {  //
                 var rec = nlapiLoadRecord('vendorbill', FirstBillsList[m].bill);
                 rec.setFieldValue('custbody_cf_first_payment', FirstBillsList[m].payment)
                 rec.setFieldValue('custbody_cf_first_payment_date', FirstBillsList[m].date)
                 rec.setFieldValue('custbody_cf_first_payment_percent', FirstBillsList[m].perc)
                 nlapiSubmitRecord(rec, null, true);
             } catch (e) {
-                nlapiLogExecution('error', 'nlapiSubmitField  journal id: ' + FirstBillsList[m].bill, e);
+                nlapiLogExecution('error', 'nlapiSubmitField  bill id: ' + FirstBillsList[m].bill, e);
             }
         }
     } catch (e) {
