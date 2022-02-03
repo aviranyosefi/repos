@@ -579,7 +579,7 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
     				if (!common.isNullOrEmpty(endUserCountry) && countryMap.hasOwnProperty(endUserCountry)) {
     					endUserCountry = countryMap[endUserCountry];
     				}
-    				//updateOrderAndRMALines(rec, scriptContext);
+    				updateOrderAndRMALines(rec, scriptContext);
     				/*
 					require(['../Common/NCS.Lib.Helpers' ], function(helpers) {
 						helpers.splitMaintenanceItems(rec, scriptContext.type, endUserCountry);
@@ -597,8 +597,8 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
     		if (rec.type == record.Type.SALES_ORDER) {
     			try {
     				require(['../Common/NCS.Lib.Helpers' ], function(helpers) {
-    					//helpers.createProjectForSO(rec);
-						//helpers.populateSublistEndDates(rec);
+    					helpers.createProjectForSO(rec);
+						helpers.populateSublistEndDates(rec);
 	    			});
     				
     				// create maintenance lines
@@ -608,7 +608,7 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
     				if (!common.isNullOrEmpty(endUserCountry) && countryMap.hasOwnProperty(endUserCountry)) {
     					endUserCountry = countryMap[endUserCountry];
     				}
-    				//updateOrderAndRMALines(rec, scriptContext);
+    				updateOrderAndRMALines(rec, scriptContext);
 					/*
         			require(['../Common/NCS.Lib.Helpers' ], function(helpers) {
 						helpers.splitMaintenanceItems(rec, scriptContext.type, endUserCountry);
@@ -663,7 +663,7 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
     	
     	if (scriptContext.type == scriptContext.UserEventType.CREATE){
     		var rec = scriptContext.newRecord;
-    		//updateSO_OnRMA(rec);
+    		updateSO_OnRMA(rec);
     		
     		//Create JE for deduction bank account amounts
         	//Set transaction id and line memos on target je
@@ -893,29 +893,7 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
         		
         		//Get SO Transaction Ids
         		var tranIds = [];
-                var tranMap = {};
-                var createdFromZab = false;
-                var tranIdRaw = originalRec.getSublistValue({
-                    sublistId: 'revenueelement',
-                    fieldId: 'sourceid',
-                    line: 1
-                });
-                try {
-                    var ZABrec = record.load({
-                        type: 'customrecordzab_revenue_detail',
-                        id: tranIdRaw
-                    });
-                    if (ZABrec) {
-                        var refVal = ZABrec.getText('custrecordzab_rd_parent')
-                        createdFromZab = true;
-                    }
-                }
-                catch (e) {
-                }
-                logger.debug({
-                    title: 'createdFromZab',
-                    details: createdFromZab
-                });
+        		var tranMap = {};
         		for (var lineNumber = 0; lineNumber < revenueElementsLineCount; lineNumber++) {	 
         			var tranIdRaw = originalRec.getSublistValue({
     	        	    sublistId: 'revenueelement',
@@ -936,8 +914,7 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
         		}    		
         		if (tranIds.length > 0) {        			
         			//Map Orders to transaction Numbers
-                    if (!createdFromZab) {
-                        	var salesorderSearchObj = search.create({
+        			var salesorderSearchObj = search.create({
         				   type: "transaction",
         				   filters: [
         				      ["mainline","is","T"],
@@ -949,17 +926,14 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
         				   ]
         				});
         			
-    				    salesorderSearchObj.run().each(function(result){
-    					    var tranInternalId = result.id;
-    					    var tranNumber = result.getValue({
-    				             name: "tranid"
-    				        });
-    					    tranMap[tranInternalId] = tranNumber;
-    					    return true;
+    				salesorderSearchObj.run().each(function(result){
+    					var tranInternalId = result.id;
+    					var tranNumber = result.getValue({
+    				         name: "tranid"
     				    });
-
-                    }
-        		
+    					tranMap[tranInternalId] = tranNumber;
+    					return true;
+    				});
         			//Update transaction numbers
     				
     				//There is a bug on the Revenue Arrangment record - editing sublist lines on user event will result in an error
@@ -980,15 +954,12 @@ define(['require', 'N/log','N/record', '../Common/NCS.Lib.Common', 'N/search', '
         	        	    line: lineNumber
         	        	}); 
         				if (!common.isNullOrEmpty(tranIdRaw)  && common.isNullOrEmpty(tranNumber)){
-                            var tranId = tranIdRaw.substring(tranIdRaw.indexOf('_') + 1);                                                        
-                            if (!createdFromZab) {
-                                var refVal = tranMap[tranId]; 
-                            }
+            				var tranId = tranIdRaw.substring(tranIdRaw.indexOf('_')+1);        				
             				rec.setSublistValue({
         		        	    sublistId: 'revenueelement',
         		        	    fieldId: 'custcol_cbr_rr_reference_num',
         		        	    line: lineNumber,
-                                value: refVal
+        		        	    value: tranMap[tranId]
         		        	});    		        	
             			}
         	    	}

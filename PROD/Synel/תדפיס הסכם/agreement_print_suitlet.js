@@ -123,18 +123,19 @@ function SearchTable(id, type, record, groupline) {
                 table += '<tr><td colspan="2" align="right"><p dir="rtl" style="width:100%;text-align:right;">' + list[i].des + '</p></td>';
                 table += '<td align="right">' + list[i].city + '</td>';
                 table += '<td align="right">' + list[i].print + '</td>';
-                table += '<td align="right">' + Number(list[i].rate).toFixed(1) + '</td>';
+                table += '<td align="center">' + formatNumber(Number(list[i].rate).toFixed(1)) + '</td>';
                 table += '<td align="right">' + list[i].war + '</td>';
-                table += '<td align="right">' + Number(list[i].amt).toFixed(1) + '</td>';
+                table += '<td align="center">' + formatNumber(Number(list[i].amt).toFixed(1)) + '</td>';
                 table += '</tr>';
             }
-            table += '<tr><td style="border:0px" colspan="4"></td><td colspan="2" align="right">סה"כ ללא מע"מ</td><td align="right">' + total + '</td></tr>'
+            table += '<tr><td colspan="6" align="right"><b>סה"כ ללא מע"מ</b></td><td align="center"><b>' + formatNumber(total) + '</b></td></tr>'
             if (discount > 0) {
-                table += '<tr><td style="border:0px" colspan="4"></td><td colspan="2" align="right">הנחה</td><td align="right">' + discount + '</td></tr>'
-                table += '<tr><td style="border:0px" colspan="4"></td><td colspan="2" align="right"><p style="font-size: 12pt; text-align:right;" dir="rtl">סה"כ אחרי הנחה</p></td><td align="right">' + net_amt + '</td></tr>'
+                table += '<tr><td colspan="6" align="right"><b>הנחה</b></td><td align="center"><b>' + formatNumber(discount) + '</b></td></tr>'
+                table += '<tr><td colspan="6" align="right"><p style="font-size: 12pt; text-align:right;" dir="rtl"><b>סה"כ אחרי הנחה</b></p></td><td align="center"><b>' + formatNumber(net_amt) + '</b></td></tr>'
             }
+            table += '</table>'
         }
-        table += '</table>'
+
 
 
     }
@@ -147,18 +148,19 @@ function SearchTable(id, type, record, groupline) {
                 table += '<tr><td colspan="2" align="right"><p dir="rtl" style="width:100%;text-align:right;">' + list[i].des + '</p></td>';
                 table += '<td align="right">' + list[i].city + '</td>';
                 table += '<td align="right">' + list[i].print + '</td>';
-                table += '<td align="right">' + Number(list[i].rate).toFixed(1) + '</td>';
+                table += '<td align="center">' + formatNumber(Number(list[i].rate).toFixed(1)) + '</td>';
                 table += '<td align="right">' + list[i].war + '</td>';
-                table += '<td align="right">' + Number(list[i].amt).toFixed(1) + '</td>';
+                table += '<td align="center">' + formatNumber(Number(list[i].amt).toFixed(1)) + '</td>';
                 table += '</tr>';
             }
-            table += '<tr><td style="border:0px" colspan="4"></td><td colspan="2" align="right">סה"כ ללא מע"מ</td><td align="right">' + total + '</td></tr>'
+            table += '<tr><td colspan="6" align="right"><b>סה"כ ללא מע"מ</b></td><td align="right"><b>' + formatNumber(total) + '</b></td></tr>'
             if (discount > 0) {
-                table += '<tr><td style="border:0px" colspan="4"></td><td colspan="2" align="right">הנחה</td><td align="right">' + discount + '</td></tr>'
-                table += '<tr><td style="border:0px" colspan="4"></td><td colspan="2" align="right"><p style="font-size: 12pt; text-align:right;" dir="rtl">סה"כ אחרי הנחה</p></td><td align="right">' + net_amt + '</td></tr>'
+                table += '<tr><td colspan="6" align="right"><b>הנחה</b></td><td align="right"><b>' + formatNumber(discount) + '</b></td></tr>'
+                table += '<tr><td colspan="6" align="right"><p style="font-size: 12pt; text-align:right;" dir="rtl"><b>סה"כ אחרי הנחה</b></p></td><td align="right"><b>' + formatNumber(net_amt) + '</b></td></tr>'
             }
+            table += '</table>'
         }
-        table += '</table>'
+
     }
     return table;
 }

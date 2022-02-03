@@ -4,95 +4,92 @@ var error;
 function creteICTran(request, response) {
     try {
         var id = request.getParameter('id');
-        // get the inventory details id
-        // create inv adj
-        // create so lines
-        //var targetId = createTargetRec('itemfulfillment', id);
-
         try {
             var rec = nlapiLoadRecord('itemfulfillment', id);
         } catch (e) {
             nlapiLogExecution('debug', 'error details', e);
         }
-
         var itemsArr = [];
         var itemCount = rec.getLineItemCount('item');
-
+        var DefualtData = getDefualtData() 
         for (var i = 1; i <= itemCount; i++) {
-
-
             var subrecord = rec.viewLineItemSubrecord('item', 'inventorydetail', i);
             if (subrecord != "" && subrecord != null) {
                 nlapiLogExecution('debug', ' subrecord', subrecord.id);
+
                 var invDetailID = subrecord.id;
                 nlapiLogExecution('debug', ' invDetailID', invDetailID);
+
                 if (invDetailID != "" && invDetailID != null) {
                     var serials = getInventoryDetails(invDetailID);
-                    if (serials != "" && serials != null) {
-                        nlapiLogExecution('debug', 'serials length() ' + serials.length, serials);
-                        var countLines = 1;
-                        for (var m = 0; m < serials.length; m++) {
-                            if (serials[m] != '') {
-                                var invId = getInventoryNumnerId(serials[m], rec.getLineItemValue('item', 'item', 1));
-                                countLines++;
-                                nlapiLogExecution('debug', 'invId', invId);
-                                itemsArr.push({
-                                    itemID: rec.getLineItemValue('item', 'item', i),
-                                    description: rec.getLineItemValue('item', 'description', i),
-                                    location: rec.getLineItemValue('item', 'location', i),
-                                    units: rec.getLineItemValue('item', 'units', i),
-                                    quantity: rec.getLineItemValue('item', 'quantity', i),
-                                    serial: serials[m]
-                                });
-                                nlapiLogExecution('debug', ' itemsArr', JSON.stringify(itemsArr));
-                            }
-                        }
-                    }
 
+                    if (serials.length > 0) {
+                        nlapiLogExecution('debug', 'serials length() ' + serials.length, serials);
+
+                        itemsArr.push({
+                            itemID: rec.getLineItemValue('item', 'item', i),
+                            description: rec.getLineItemValue('item', 'description', i),
+                            location: DefualtData[0],
+                            account: DefualtData[1],
+                            units: rec.getLineItemValue('item', 'units', i),
+                            quantity: rec.getLineItemValue('item', 'quantity', i),
+                            serials: serials
+                        });
+                    }
                 }
             }
         }
-        nlapiLogExecution('debug', 'itemsArr', JSON.stringify(itemsArr));
-
+        nlapiLogExecution('debug', 'itemsArr: ', JSON.stringify(itemsArr));
 
         var soRecId = rec.getFieldValue('createdfrom');
+        nlapiLogExecution('debug', 'soRecId: ', soRecId);
         try {
             var soRec = nlapiLoadRecord('salesorder', soRecId);
         } catch (e) {
             nlapiLogExecution('debug', 'error details', e);
         }
+        var binsID = searchBin(rec.getFieldValue('entity'));
 
-        createInvAdj(itemsArr, rec);
+        var inventoryAdjId = createAndUpadteTran(itemsArr, rec, binsID, soRec);
+        if (inventoryAdjId != -1) {
+            rec.setFieldValue('custbody_inventoryadjustment', inventoryAdjId);        
+            nlapiSubmitRecord(rec, null, true);
+        }
+        //inventoryAdjId = createInvAdj(itemsArr, rec, binsID);
+        //if (inventoryAdjId != -1) {
+        //    rec.setFieldValue('custbody_inventoryadjustment', inventoryAdjId);
+        //    duplicateSolines(soRec, itemsArr, binsID, rec);
+        //    nlapiSubmitRecord(rec, null, true);
+        //}
 
-        //duplicateSolines(soRec, itemsArr);
-
-        response.write('');
+        response.write(inventoryAdjId);
     } catch (e) {
         response.write('error to create target record: ' + e);
     }
 }
 
 function getInventoryDetails(invDetailID) {
-    var serials = [];
-    //hunt for related inventory detail records
-    filters = [];
-    columns = [];
+    var serials = [], filters = [], columns = [];
+
     filters.push(new nlobjSearchFilter('internalid', null, 'is', invDetailID));
     columns.push(new nlobjSearchColumn('inventorynumber', 'inventorynumber'));
+    columns.push(new nlobjSearchColumn('quantity'));
+    columns.push(new nlobjSearchColumn('expirationdate'));
 
-    count = 0;
     results = nlapiSearchRecord('inventorydetail', null, filters, columns) || [];
+
     if (results != null) {
         results.forEach(function (line) {
-            var inventname = line.getValue('inventorynumber', 'inventorynumber');
-            serials.push(inventname);
-            count++;
+            serials.push({
+                serial: line.getValue('inventorynumber', 'inventorynumber'),
+                quantity: line.getValue('quantity'),
+                expirationdate: line.getValue('expirationdate')
+            });
         });
     }
 
     return serials;
 }
-
 function getInventoryNumnerId(serial, item) {
     //hunt for related inventory detail records
     filters = [];
@@ -101,108 +98,197 @@ function getInventoryNumnerId(serial, item) {
     filters.push(new nlobjSearchFilter('item', null, 'anyof', item));
     columns.push(new nlobjSearchColumn('internalid'));
     //columns.push(new nlobjSearchColumn('baserecordtype'));
-
+    var res = '';
     count = 0;
     results = nlapiSearchRecord('inventorynumber', null, filters, columns) || [];
-    if (results != null) {
-        var res = [];
-        res.push({
-            invId: results[0].getValue('internalid'),
-            //invType: results[0].getValue('baserecordtype'),
-        })
-        nlapiLogExecution('debug', 'res', JSON.stringify(res));
+    if (results.length > 0) {
+        res = results[0].getValue('internalid');
         return res;
     }
     return '';
 }
+function createInvAdj(itemsArr, rec, binsID) {   
+    try {
+        var adjRec = nlapiCreateRecord('inventoryadjustment', { recordmode: "dynamic" });
 
-function getItem(rec, i, serial) {
-    var itemLine = [];
-    itemLine.push({
-        itemID: rec.getLineItemValue('item', 'item', i),
-        description: rec.getLineItemValue('item', 'description', i),
-        location: rec.getLineItemValue('item', 'location', i),
-        units: rec.getLineItemValue('item', 'units', i),
-        quantity: rec.getLineItemValue('item', 'quantity', i),
-        serial: serial
-    })
-    nlapiLogExecution('debug', 'itemLine', JSON.stringify(itemLine));
+        adjRec.setFieldValue('subsidiary', rec.getFieldValue('subsidiary'));
+        adjRec.setFieldValue('account', 1348);
 
-    return itemLine;
-}
+        for (i = 0; i < itemsArr.length; i++) {
+            adjRec.selectNewLineItem('inventory');
+            adjRec.setCurrentLineItemValue('inventory', 'item', itemsArr[i].itemID);
+            adjRec.setCurrentLineItemValue('inventory', 'adjustqtyby', itemsArr[i].quantity);
+            adjRec.setCurrentLineItemValue('inventory', 'location', itemsArr[i].location);
 
-function createInvAdj(itemsArr, rec) {
-    nlapiLogExecution('debug', 'createInvAdj-itemsArr', JSON.stringify(itemsArr));
+            // subrecord
+            var compSubRecord = adjRec.createCurrentLineItemSubrecord('inventory', 'inventorydetail');
+            var seraialsData = itemsArr[i].serials;
+            for (var m = 0; m < seraialsData.length; m++) {
+                compSubRecord.selectNewLineItem('inventoryassignment');
+                compSubRecord.setCurrentLineItemValue('inventoryassignment', 'receiptinventorynumber', seraialsData[m].serial);
+                compSubRecord.setCurrentLineItemValue('inventoryassignment', 'binnumber', binsID);
+                compSubRecord.setCurrentLineItemValue('inventoryassignment', 'quantity', seraialsData[m].quantity);
+                compSubRecord.setCurrentLineItemValue('inventoryassignment', 'expirationdate', seraialsData[m].expirationdate);
+                compSubRecord.commitLineItem('inventoryassignment');
+            }
 
-    var adjRec = nlapiCreateRecord('inventoryadjustment', { recordmode: "dynamic" });
-    //rec.setFieldValue('tranid', '');
-    //rec.setFieldValue('subsidiary', '3');
+            compSubRecord.commit();
 
-    adjRec.setFieldValue('subsidiary', rec.getFieldValue('subsidiary'));
-    adjRec.setFieldValue('account', 1348);
-    //rec.setFieldValue('custbody_adjustment_reason', '13');
-    //rec.setFieldValue('estimatedtotalvalue', '0.00');
+            adjRec.commitLineItem('inventory');
+        }
 
-    //var location = rec.getFieldText('custbody_adjustment_reason');
-    //nlapiLogExecution('debug', 'location', location);
-
-    for (i = 0; i < itemsArr.length; i++) {     
-        adjRec.selectNewLineItem('inventory');
-        adjRec.setCurrentLineItemValue('inventory', 'item', itemsArr[i].itemID);      
-        adjRec.setCurrentLineItemValue('inventory', 'adjustqtyby', itemsArr[i].quantity);
-        adjRec.setCurrentLineItemValue('inventory', 'location', itemsArr[i].location);
-
-        // subrecord
-        var compSubRecord = adjRec.createCurrentLineItemSubrecord('inventory', 'inventorydetail');
-        compSubRecord.selectNewLineItem('inventoryassignment');
-        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'receiptinventorynumber', itemsArr[i].serial);
-        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'binnumber', searchBin(rec.getFieldValue('entity')));
-        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'quantity', itemsArr[i].quantity);
-        compSubRecord.commitLineItem('inventoryassignment');
-        compSubRecord.commit();
-        // subrecord
-
-        adjRec.commitLineItem('inventory');
+        var submitID = nlapiSubmitRecord(adjRec, null, true);
+        nlapiLogExecution('debug', 'submitID', submitID);
+        return submitID;
+    } catch (e) {
+        return -1;
     }
-
-   
-    var submitID = nlapiSubmitRecord(adjRec, null, true);
-    nlapiLogExecution('debug', 'submitID', submitID);
-
 }
+function duplicateSolines(soRec, itemsArr, binsID, rec) {
+    //nlapiLogExecution('DEBUG', 'duplicateSolines()', 'run');
 
-function duplicateSolines(soRec, itemsArr) {
-    nlapiLogExecution('DEBUG', 'duplicateSolines()', 'run');
-
-    //to add lines to the end of sublist in so
     for (var i = 0; i < itemsArr.length; i++) {
         soRec.selectNewLineItem('item');
         soRec.setCurrentLineItemValue('item', 'item', itemsArr[i].itemID);
-        //soRec.setCurrentLineItemValue('item', 'quantity', itemsArr[i].quantity);
-
-        soRec.setCurrentLineItemValue('item', 'quantity', 96);
+        soRec.setCurrentLineItemValue('item', 'inventorylocation', itemsArr[i].location);
+        soRec.setCurrentLineItemValue('item', 'inventorysubsidiary', rec.getFieldValue('subsidiary'));
+        soRec.setCurrentLineItemValue('item', 'quantity', itemsArr[i].quantity);
         soRec.setCurrentLineItemValue('item', 'rate', 0);
-        soRec.commitLineItem('item');
 
-        var submitId = nlapiSubmitRecord(soRec);
-        nlapiLogExecution('DEBUG', 'submitId', submitId);
+        var seraialsData = itemsArr[i].serials;
+        //nlapiLogExecution('DEBUG', 'seraialsData: ', seraialsData);
+
+        var bodySubRecord = soRec.createCurrentLineItemSubrecord('item', 'inventorydetail');
+
+        for (var j = 0; j < seraialsData.length; j++) {
+            var inventoryID = getInventoryNumnerId(seraialsData[j].serial, itemsArr[i].itemID);
+            bodySubRecord.selectNewLineItem('inventoryassignment');
+            bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'issueinventorynumber', inventoryID);
+            //bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'binnumber', binsID);
+            bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'quantity', seraialsData[j].quantity);
+            bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'expirationdate', seraialsData[j].expirationdate);
+            bodySubRecord.commitLineItem('inventoryassignment');
+
+        }
+
+        bodySubRecord.commit();
+        soRec.commitLineItem('item');
+    }
+    var submitId = nlapiSubmitRecord(soRec, null, true);
+    nlapiLogExecution('DEBUG', 'submitId', submitId);
+}
+function searchBin(customer) {
+    var filters = [new nlobjSearchFilter('custrecord_customer', null, 'anyof', customer)];
+
+    var search = nlapiSearchRecord("bin", null, filters, null);
+    var res = '';
+
+    if (search.length > 0) {
+        res = search[0].id
+    }
+
+    return res;
+}
+function createAndUpadteTran(itemsArr, rec, binsID, soRec) {
+    try {
+        var adjRec = createAdjHeader(rec, itemsArr[0].account);
+        for (i = 0; i < itemsArr.length; i++) {
+            var itemsArrLine = itemsArr[i];
+            createAdjLine(itemsArrLine, adjRec, binsID)
+            createSoLine(itemsArrLine, soRec, rec )
+        }
+        var submitID = nlapiSubmitRecord(adjRec, null, true);
+        nlapiLogExecution('debug', 'adjRec', submitID);
+        if (submitID != -1) {
+            nlapiSubmitRecord(soRec, null, true);
+            return submitID;
+        }           
+    } catch (e) {
+        return e;
     }
 }
-function searchBin(entity) {
+function createAdjHeader(rec , account) {
 
-    var binSearch = nlapiSearchRecord("bin", null,
-        [
-            ["custrecord_customer", "anyof", entity]
-        ],
-        [
-            new nlobjSearchColumn("binnumber").setSort(false),
-            new nlobjSearchColumn("location"),
-            new nlobjSearchColumn("memo"),
-            new nlobjSearchColumn("custrecord_customer")
-        ]
-    );
+    var adjRec = nlapiCreateRecord('inventoryadjustment', { recordmode: "dynamic" });
+    adjRec.setFieldValue('subsidiary', rec.getFieldValue('subsidiary'));
+    adjRec.setFieldValue('account', account);
 
-
+    return adjRec
 }
+function createAdjLine(itemsArrLine, adjRec, binsID) {
+
+    adjRec.selectNewLineItem('inventory');
+    adjRec.setCurrentLineItemValue('inventory', 'item', itemsArrLine.itemID);
+    adjRec.setCurrentLineItemValue('inventory', 'adjustqtyby', itemsArrLine.quantity);
+    adjRec.setCurrentLineItemValue('inventory', 'location', itemsArrLine.location);
+    // subrecord
+    var compSubRecord = adjRec.createCurrentLineItemSubrecord('inventory', 'inventorydetail');
+    var seraialsData = itemsArrLine.serials;
+    for (var m = 0; m < seraialsData.length; m++) {
+        compSubRecord.selectNewLineItem('inventoryassignment');
+        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'receiptinventorynumber', seraialsData[m].serial);
+        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'binnumber', binsID);
+        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'quantity', seraialsData[m].quantity);
+        compSubRecord.setCurrentLineItemValue('inventoryassignment', 'expirationdate', seraialsData[m].expirationdate);
+        compSubRecord.commitLineItem('inventoryassignment');
+    }
+
+    compSubRecord.commit();
+    adjRec.commitLineItem('inventory');
+}
+function createSoLine(itemsArrLine, soRec, rec) {
+
+    soRec.selectNewLineItem('item');
+    soRec.setCurrentLineItemValue('item', 'item', itemsArrLine.itemID);
+    soRec.setCurrentLineItemValue('item', 'inventorylocation', itemsArrLine.location);
+    soRec.setCurrentLineItemValue('item', 'inventorysubsidiary', rec.getFieldValue('subsidiary'));
+    soRec.setCurrentLineItemValue('item', 'quantity', itemsArrLine.quantity);
+    soRec.setCurrentLineItemValue('item', 'rate', 0);
+
+    var seraialsData = itemsArrLine.serials;
+    var bodySubRecord = soRec.createCurrentLineItemSubrecord('item', 'inventorydetail');
+    for (var j = 0; j < seraialsData.length; j++) {
+        var inventoryID = getInventoryNumnerId(seraialsData[j].serial, itemsArrLine.itemID);
+        bodySubRecord.selectNewLineItem('inventoryassignment');
+        bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'issueinventorynumber', inventoryID);
+        //bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'binnumber', binsID);
+        bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'quantity', seraialsData[j].quantity);
+        bodySubRecord.setCurrentLineItemValue('inventoryassignment', 'expirationdate', seraialsData[j].expirationdate);
+        bodySubRecord.commitLineItem('inventoryassignment');
+
+    }
+    bodySubRecord.commit();
+    soRec.commitLineItem('item');
+}
+function getDefualtData() {
+
+    var columns = new Array();
+    columns[0] = new nlobjSearchColumn('custrecord_customer_inventory_location');
+    columns[1] = new nlobjSearchColumn('custrecord_inventory_account');
+
+    var search = nlapiCreateSearch('customrecord_customer_inventory_adjustme', null, columns);
+
+    var resultset = search.runSearch();
+    var s = [];
+    var searchid = 0;
+    var results = [];
+
+    do {
+        var resultslice = resultset.getResults(searchid, searchid + 1000);
+        for (var rs in resultslice) {
+            s.push(resultslice[rs]);
+            searchid++;
+        }
+    } while (resultslice != null && resultslice.length >= 1000);
+
+    if (s.length > 0) {
+        results.push(s[0].getValue('custrecord_customer_inventory_location'))
+        results.push(s[0].getValue('custrecord_inventory_account'))     
+        }     
+    return results;
+}
+
+
+
 
 

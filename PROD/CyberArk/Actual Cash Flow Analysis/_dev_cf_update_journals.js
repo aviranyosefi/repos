@@ -4,14 +4,16 @@ function start() {
         var journalsList = getjournalsList();
         for (var m = 0; m < journalsList.length; m++) {
             Context(context);
-            if (!isNullOrEmpty(journalsList[m])) {
+            if (!isNullOrEmpty(journalsList[m].id)) {
                 try {
-                    var rec = nlapiLoadRecord('journalentry', journalsList[m]);
+                    var recType = 'journalentry'
+                    var interCompany = journalsList[m].interCompany
+                    if (interCompany == 'T') { recType = 'advintercompanyjournalentry'}
+                    var rec = nlapiLoadRecord(recType, journalsList[m].id);
+                    updateJournals(rec);
                     //nlapiSubmitField('journalentry', journalsList[m], 'custbody_bank_journal_ind', 'T')
                 } catch (e) {
-                    nlapiLogExecution('error', 'nlapiSubmitField  journal id: ' + journalsList[m], e);
-                    var rec = nlapiLoadRecord('advintercompanyjournalentry', journalsList[m]);
-                    updateJournals(rec);
+                    nlapiLogExecution('error', 'nlapiSubmitField  journal id: ' + journalsList[m].id, e);
                 }
                 
             }
@@ -45,7 +47,11 @@ function getjournalsList() {
     if (s.length > 0) {
 
         for (var i = 0; i < s.length; i++) {
-            results.push(s[i].getValue("internalid", null, "GROUP"))           
+            results.push({
+
+                id: s[i].getValue("internalid", null, "GROUP"),
+                interCompany: s[i].getValue("advintercompany", null, "GROUP")
+            })           
         }
     }
     //var recKeys = Object.keys(results);

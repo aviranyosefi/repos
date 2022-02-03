@@ -26,13 +26,17 @@
                     <macro id="nlheader">
                         <table class="header">
                             <tr>
-                                <td rowspan="3">
-                                    <#if companyInformation.logoUrl?length !=0>
-                                        <img src="${companyInformation.logoUrl}" style="margin-bottom: 7px" />
+                                <td rowspan="4">
+                                    <#if subsidiary.logo@url?length !=0>
+                                        <img src="${subsidiary.logo@url}" style="float: left;width:160px; height:30px;" />
                                     </#if>
-                                    <!-- PTC:BEGIN Company info -->
-                                    <b>${record.custbody_pt_print_companyname}</b>, ${record.custbody_pt_print_companyinfo}
-                                    <!-- PTC:END Company info -->
+                                    <br />
+                                    <p>
+                                        ${subsidiary.name}<br />
+                                        ${subsidiary.custrecord_portuguese_address_new}<br />
+                                        VAT number: ${subsidiary.federalidnumber   }<br />
+                                        ${subsidiary.custrecord_ilo_subsid_english_remit}
+                                    </p>
                                 </td>
                                 <td align="right"><span class="title">${record@title}</span></td>
                             </tr>
@@ -188,7 +192,7 @@
                 </style>
             </head>
             <!-- PTC:NOTE set attibute footer-height="${footerHeight}pt" -->
-            <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="${footerHeight}pt" padding="12.5mm 12.5mm 12.5mm 12.5mm" size="A4">
+            <body header="nlheader" header-height="20%" footer="nlfooter" footer-height="${footerHeight}pt" padding="12.5mm 12.5mm 12.5mm 12.5mm" size="A4">
                 <table>
                     <tr>
                         <td class="addressheader"><b>${record.billaddress@label}</b></td>

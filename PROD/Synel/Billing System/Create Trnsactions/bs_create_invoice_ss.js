@@ -786,7 +786,7 @@ function getBillingPlaneMan(from_date_data, to_date_data, agr_data, agr_line_dat
     if (!isNullOrEmpty(to_date_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bill_plan_billing_on_date', null, 'onorbefore', to_date_data)) }
     if (!isNullOrEmpty(agr_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bill_plan_agr', null, 'anyof', agr_data)) }
     if (!isNullOrEmpty(agr_line_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bill_plan_agr_line', null, 'anyof', agr_line_data)) }
-    if (!isNullOrEmpty(employee_line_data)) { search.addFilterh(new nlobjSearchFilter('custrecord_agr_handled_by', 'custrecord_bill_plan_agr', 'anyof', employee_line_data)) }
+    if (!isNullOrEmpty(employee_line_data)) { search.addFilter(new nlobjSearchFilter('custrecord_agr_handled_by', 'custrecord_bill_plan_agr', 'anyof', employee_line_data)) }
     if (!isNullOrEmpty(customer_data)) { search.addFilter(new nlobjSearchFilter('custrecord_agr_bill_cust', 'custrecord_bill_plan_agr', 'anyof', customer_data)) }
     search.addFilter(new nlobjSearchFilter('custrecord_agr_exclude_from_inv', 'custrecord_bill_plan_agr', 'is', 'F'))
 

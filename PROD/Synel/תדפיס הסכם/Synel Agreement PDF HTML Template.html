@@ -606,7 +606,7 @@
                                         </td>
                                         <td align="right">
                                             <p style="text-align:right;">
-                                                <span>למען הסר ספק  ,מובהר כי השירות אינו כולל</span><br />
+                                                <span>:למען הסר ספק  ,מובהר בזאת כי השירות אינו כולל</span><br />
                                                 <span>${record.custrecord_agr_print_1}</span>
                                             </p>
                                         </td>
@@ -902,23 +902,23 @@
                         </td>
                     </tr>
                     <!--<tr>
-                        <td width="100%" align="right">
-                            <table>
-                                <tr>
-                                    <td width="5%" align="right">
-                                        <p style="text-align:right;" dir="rtl">.12</p>
-                                    </td>
-                                    <td align="right">
-                                        <p style="text-align:right;">
-                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח בכל
-                                            תנאי הסכם זה<br />
-                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>-->
+        <td width="100%" align="right">
+            <table>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl">.12</p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;">
+                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח בכל
+                            תנאי הסכם זה<br />
+                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>-->
                     <tr>
                         <td width="100%" align="right">
                             <table>
@@ -995,7 +995,24 @@
                             </table>
                         </td>
                     </tr>
-
+                    <#if record.custrecord_agr_print_3?has_content>
+                        <tr>
+                            <td width="100%" align="right">
+                                <table>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl">.16</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                ${record.custrecord_agr_print_3}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </#if>
                 </table>
                 <br />
                 <table>
@@ -1685,25 +1702,25 @@
                         </td>
                     </tr>
                     <!--<tr>
-                        <td width="100%" align="right">
-                            <table>
-                                <tr>
-                                    <td width="5%" align="right">
-                                        <p style="text-align:right;" dir="rtl">.4</p>
-                                    </td>
-                                    <td align="right">
-                                        <p style="text-align:right;">
-                                            מתאריך הוצאת החשבונית לפי תשלומים בשנה , באמצעות המחאה או בעת חידוש ההסכם, התמורה
-                                            תוצמד לעליית מדד המחירים לצרכן, כאשר מדד הבסיס הוא המדד הידוע כפי שמופיע<br />
-                                            כרטיס אשראי או באמצעות העברה בנקאית ל- בנק לאומי (מס' 10), סניף ראשי חיפה (מס' 876)
-                                            מס' חשבון<br />
-                                            .בנספח להסכם שרות
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>-->
+        <td width="100%" align="right">
+            <table>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl">.4</p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;">
+                            מתאריך הוצאת החשבונית לפי תשלומים בשנה , באמצעות המחאה או בעת חידוש ההסכם, התמורה
+                            תוצמד לעליית מדד המחירים לצרכן, כאשר מדד הבסיס הוא המדד הידוע כפי שמופיע<br />
+                            כרטיס אשראי או באמצעות העברה בנקאית ל- בנק לאומי (מס' 10), סניף ראשי חיפה (מס' 876)
+                            מס' חשבון<br />
+                            .בנספח להסכם שרות
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>-->
                     <tr>
                         <td width="100%" align="right">
                             <p style="text-align:right;" dir="rtl">:מתן השרות&ensp;&ensp;&ensp;<span>.5</span></p>
@@ -1895,23 +1912,23 @@
                         </td>
                     </tr>
                     <!--<tr>
-                        <td width="100%" align="right">
-                            <table>
-                                <tr>
-                                    <td width="5%" align="right">
-                                        <p style="text-align:right;" dir="rtl">.12</p>
-                                    </td>
-                                    <td align="right">
-                                        <p style="text-align:right;">
-                                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח בכל
-                                            תנאי הסכם זה<br />
-                                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>-->
+        <td width="100%" align="right">
+            <table>
+                <tr>
+                    <td width="5%" align="right">
+                        <p style="text-align:right;" dir="rtl">.12</p>
+                    </td>
+                    <td align="right">
+                        <p style="text-align:right;">
+                            ,מוסכם בזאת כי סינאל תספק שרות לציוד המופיע בנספח א' להסכם, בכפוף לעמידת הלקוח בכל
+                            תנאי הסכם זה<br />
+                            .לרבות אך לא רק, תשלום התמורה בהתאם לתנאי התשלום
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>-->
                     <tr>
                         <td width="100%" align="right">
                             <table>
@@ -1988,7 +2005,24 @@
                             </table>
                         </td>
                     </tr>
-
+                    <#if  record.custrecord_agr_print_3?has_content>
+                        <tr>
+                            <td width="100%" align="right">
+                                <table>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl">.16</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                ${record.custrecord_agr_print_3}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </#if>
                 </table>
                 <br />
                 <table>
@@ -2939,7 +2973,24 @@
                             </table>
                         </td>
                     </tr>
-
+                    <#if record.custrecord_agr_print_3?has_content>
+                        <tr>
+                            <td width="100%" align="right">
+                                <table>
+                                    <tr>
+                                        <td width="5%" align="right">
+                                            <p style="text-align:right;" dir="rtl">.16</p>
+                                        </td>
+                                        <td align="right">
+                                            <p style="text-align:right;">
+                                                ${record.custrecord_agr_print_3}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </#if>
                 </table>
                 <br />
                 <table>

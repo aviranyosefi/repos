@@ -277,19 +277,18 @@ define(['N/sftp', 'N/file', 'N/log', 'N/search', '../Common/NCS.Lib.Common', 'N/
             //	}
         }
 
-        function DownloadFile(connection, fileName, integId) {
-            var folder = '';
+        function DownloadFile(connection, fileName, integId , folder) {
             try {
                 if (!common.isNullOrEmpty(integId)) {
-                    // Get the folder name from the integration type record
-                    folder = search.lookupFields({
-                        type: "customrecord_nc_ba_integration_types",
-                        id: integId,
-                        columns: ['custrecord_nc_ba_int_types_custompushurl']
-                    })['custrecord_nc_ba_int_types_custompushurl'];
-
+                    if (common.isNullOrEmpty(folder)) {
+                        folder = search.lookupFields({
+                            type: "customrecord_nc_ba_integration_types",
+                            id: integId,
+                            columns: ['custrecord_nc_ba_int_types_custompushurl']
+                        })['custrecord_nc_ba_int_types_custompushurl'];
+                    }
+                    // Get the folder name from the integration type record                
                     if (!common.isNullOrEmpty(folder) && !common.isNullOrEmpty(fileName)) {
-                        var fld = '/' + folder;
                         return downloadedFile = connection.download({
                             directory: folder,
                             filename: fileName

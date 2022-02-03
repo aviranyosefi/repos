@@ -44,9 +44,9 @@ function updateDates(request, response) {
             var toDateData = request.getParameter('custpage_ilo_multi_todate');       
             setDatesOnUser(fromDateData, toDateData);          
             var form = nlapiCreateForm('Dates successfully updated');
-            var htmlHeader = form.addField('custpage_header', 'inlinehtml').setLayoutType('outsideabove', 'startrow');
-            htmlHeader.setDefaultValue("Please click <a href='" + nlapiSetRedirectURL('tasklink', 'LIST_SEARCHRESULTS', null, null, { "searchid": "customsearch_cf_update_first_bill" }) +"' target='_blank' >here</a>");
-         
+            //var htmlHeader = form.addField('custpage_header', 'inlinehtml').setLayoutType('outsideabove', 'startrow');
+            //htmlHeader.setDefaultValue("Please click <a href='" + nlapiSetRedirectURL('tasklink', 'LIST_SEARCHRESULTS', null, null, { "searchid": "_CF_by_expenses" }) +"' target='_blank' >here</a>");
+            nlapiSetRedirectURL('tasklink', 'LIST_SEARCHRESULTS', null, null, { "searchid": "customsearch_cf_by_expenses" })
         }
         catch (e) {
             nlapiLogExecution('DEBUG', 'stage two error', e);
@@ -55,43 +55,6 @@ function updateDates(request, response) {
     }
 
     response.writePage(form);
-}
-
-
-function getAllSalesReps() {
-
-    var results = [];
-    var toReturn = [];
-
-
-    var columns = new Array();
-    columns[0] = new nlobjSearchColumn('entityid').setSort();
-    //columns[1] = new nlobjSearchColumn('internlid');
-
-
-    var filters = new Array();
-    filters[0] = new nlobjSearchFilter('salesrep', null, 'is', 'T')
-
-
-    var search = nlapiCreateSearch('employee', filters, columns);
-    var resultset = search.runSearch();
-    results = resultset.getResults(0, 1000);
-
-
-    if (results != []) {
-        results.forEach(function (line) {
-
-
-            toReturn.push({
-                name: line.getValue('entityid'),
-                id: line.id,
-            })
-
-
-        });
-    }
-
-    return toReturn;
 }
 
 function isNullOrEmpty(val) {
