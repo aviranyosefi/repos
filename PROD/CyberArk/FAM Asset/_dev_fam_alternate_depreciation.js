@@ -56,7 +56,7 @@ function (record, runtime, search,email,task ){
             depRec.setValue('custrecord_altdeprmethod', '3');
             //log.debug('custrecord_altdeprmethod: ', 'custrecord_altdeprmethod');
 
-            log.debug('custrecord_altdeprmethod: ', 'custrecord_altdeprmethod');
+            //log.debug('custrecord_altdeprmethod: ', 'custrecord_altdeprmethod');
             depRec.setValue('custrecord_altdepr_subsidiary',  assetRec.getValue('custrecord_assetsubsidiary') );
             depRec.setValue( 'custrecord_altdeprstartdeprdate',  assetRec.getValue('custrecord_assetdeprstartdate') );
             depRec.setValue( 'custrecord_altdeprlifetime',  assetRec.getValue('custrecord_assetlifetime') );
@@ -80,6 +80,7 @@ function (record, runtime, search,email,task ){
 
         return mapContext.value;
     }
+    //FAM Asset Search AY
     function getData() {
   
         var objSearch = search.load({ id: 'customsearch_fam_alternate_dep' });
@@ -116,14 +117,44 @@ function (record, runtime, search,email,task ){
             sublistId: 'accountingbookdetail',
             fieldId: 'exchangerate',
             line: 0
-        })
-        var cost = exchangerate * assetRec.getValue('custrecord_assetcurrentcost')
+        })       
+        if (typeRec.getValue('currency') != '1' && type == 'vendorbill' ) {
+            var line = assetRec.getValue('custrecord_assetsourcetrnline');
+            log.debug('line', line);
+            var lineCount = typeRec.getLineCount({ sublistId: 'expense' });
+            log.debug('lineCount', lineCount);
+            if (lineCount > 0) { var sublistName = 'expense' }
+            else { var sublistName = 'item' }
+            log.debug('sublistName', sublistName);
+            var lineNumber = typeRec.findSublistLineWithValue({
+                sublistId: sublistName,
+                fieldId: 'line',
+                value: line
+            });
+            log.debug('lineNumber', lineNumber);
+            if (lineNumber != -1) {
+                var amount = typeRec.getSublistValue({
+                    sublistId: sublistName,
+                    fieldId: 'amount',
+                    line: lineNumber
+                });
+                log.debug('amount', amount);
+                var cost = exchangerate * amount
+            }
+        }
+        else {
+            var cost = exchangerate * assetRec.getValue('custrecord_assetcurrentcost')
+        }
+     
         log.debug('cost', cost);
         return cost;        
     }
     function getType(parent_trn) {
         if (parent_trn == 'Journal') {
             return 'journalentry'
+        }
+        else if (parent_trn == 'VendBill') {
+            return 'vendorbill'
         }
     }
     return {

@@ -145,11 +145,12 @@ function getSearchData(request, response) {
 
             resultsSubList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
             resultsSubList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
+            resultsSubList.addButton('customscript_export', 'Export To Excel', 'ff()');
 
             resultsSubList.addField('custpage_result_cb', 'checkbox', 'בחירה');
             resultsSubList.addField('custpage_result_view', 'checkbox', 'תצוגה')     
             resultsSubList.addField('custpage_result_sap_num', 'text', 'מספר לקוח בSAP').setDisplayType('disabled');
-            resultsSubList.addField('custpage_result_customer_id', 'text', 'id').setDisplayType('hidden');
+         
             resultsSubList.addField('custpage_result_customer_name', 'text', 'לקוח').setDisplayType('disabled');
             resultsSubList.addField('custpage_result_agreement_name', 'text', 'שם ההסכם').setDisplayType('disabled');
             resultsSubList.addField('custpage_result_biid_tranid', 'text', 'הוראת חיוב').setDisplayType('disabled');
@@ -162,7 +163,7 @@ function getSearchData(request, response) {
             billing_type_field.addSelectOption('2', 'שכירות מכונה');
             billing_type_field.addSelectOption('3', 'חיוב מיוחד');
             billing_type_field.addSelectOption('4', 'ללא חיוב');
-            resultsSubList.addField('custpage_result_biid', 'text', 'BI ID').setDisplayType('hidden');
+  
             if (salesrole == '2') {
                 resultsSubList.addField('custpage_result_matal_sum', 'text', 'סכום חיוב מתל').setDisplayType('disabled');
                 billing_type_field.setDisplayType('inline')
@@ -181,9 +182,7 @@ function getSearchData(request, response) {
             resultsSubList.addField('custpage_result_last2_month_charge', 'text', 'חיוב חודשיים אחורה').setDisplayType('disabled');
             resultsSubList.addField('custpage_result_last3_month_charge', 'text', 'חיוב שלושה חודשים אחורה').setDisplayType('disabled');
 
-            resultsSubList.addField('custpage_result_agreement_id', 'text', 'הסכם ID').setDisplayType('hidden');
-            resultsSubList.addField('custpage_result_beans_kg', 'text', 'סוג').setDisplayType('hidden');
-            resultsSubList.addField('custpage_result_link', 'text', 'סוג').setDisplayType('hidden');
+
             resultsSubList.addField('custpage_result_over_pul', 'text', 'צריכת פולי קפה מעבר להסכם בקג').setDisplayType('disabled');
             resultsSubList.addField('custpage_result_over_kaps', 'text', 'צריכה קפסולות מעבר להסכם').setDisplayType('disabled');
             resultsSubList.addField('custpage_result_over_avk', 'text', 'צריכת אבקות מעבר להסכם בקג').setDisplayType('disabled');
@@ -200,7 +199,11 @@ function getSearchData(request, response) {
             resultsSubList.addField('custpage_result_ils_capsules', 'text', 'צריכה מעבר להסכם קפסולות ב שח').setDisplayType('disabled');
             resultsSubList.addField('custpage_result_ils_pollen', 'text', 'צריכה מעבר להסכם אבקות ב שח').setDisplayType('disabled');
             resultsSubList.addField('custpage_sales_manager_approver', 'text', 'sales_manager_approver').setDisplayType('hidden');
-
+            resultsSubList.addField('custpage_result_customer_id', 'text', 'id').setDisplayType('hidden');
+            resultsSubList.addField('custpage_result_biid', 'text', 'BI ID').setDisplayType('hidden');
+            resultsSubList.addField('custpage_result_agreement_id', 'text', 'הסכם ID').setDisplayType('hidden');
+            resultsSubList.addField('custpage_result_beans_kg', 'text', 'סוג').setDisplayType('hidden');
+            resultsSubList.addField('custpage_result_link', 'text', 'סוג').setDisplayType('hidden');
             for (var j = 0; j < agreementList.length; j++) {
                 if (salesrole == '1') {
                     if (!isNullOrEmpty(agreementList[j].sales_manager_approver)) {
@@ -1038,7 +1041,7 @@ function BillingInstructionApproval(agreement_type, salesrep, customer, price_ch
 function matalSummaryTab(salesrep) {
     nlapiLogExecution('DEBUG', 'matalSummaryTab salesrep', salesrep);
     var loadedSearch = nlapiLoadSearch(null, 'customsearch801');
-    loadedSearch.addFilter(new nlobjSearchFilter('salesrep', null, 'anyof', salesrep))
+    loadedSearch.addFilter(new nlobjSearchFilter('salesrep', 'customer', 'anyof', salesrep))
     var cols = loadedSearch.getColumns();
     var runSearch = loadedSearch.runSearch()
     var searchid = 0;

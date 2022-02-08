@@ -4,13 +4,13 @@ function afterSubmit(type) {
     nlapiLogExecution('debug', 'type', type)
     try { nlapiScheduleScript('customscript_packge_on_fulfillment_sched', 'customdeploy_packge_on_fulfillment_dep', { custscript_packge_on_fulfillment: nlapiGetRecordId() }) } catch (e) {}
         
-    if (type != 'create') {
+    if (type != 'create' && type != 'copy') { //edit mode
         var newRec = nlapiGetNewRecord();
         var oldRec = nlapiGetOldRecord();
         var new_status = newRec.getFieldValue('shipstatus')
         var old_status = oldRec.getFieldValue('shipstatus')
     }
-    else {
+    else { // create mode
         var rec = nlapiLoadRecord('itemfulfillment', nlapiGetRecordId());
         var new_status = rec.getFieldValue('shipstatus');
         var old_status = '';

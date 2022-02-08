@@ -113,12 +113,58 @@ function isNullOrEmpty(val) {
 
 function fnExcelReport() {
 
+    exportExcel('custpage_results_second_splits')
+}
+function fnExcelReport2() {
+
+    exportExcel2('custpage_results_sublist_splits')
+}
+function exportExcel(sublist) {
+
     var tab_text = "<head><meta charset='UTF-8'></head><table border='2px'><tr bgcolor='#87AFC6'>";
-    tab = document.getElementById('custpage_results_second_splits'); // id of table
+    tab = document.getElementById(sublist); // id of table
 
     for (var j = 0; j < tab.rows.length; j++) {
         tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
         //tab_text=tab_text+"</tr>";
+    }
+
+    tab_text = tab_text + "</table>";
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    sa = window.open('data:application/vnd.ms-excel,base64,' + encodeURIComponent(tab_text));
+
+    return (sa);
+}
+function exportExcel2(sublist) {
+
+    var tab_text = "<head><meta charset='UTF-8'></head><table border='2px'><tr bgcolor='#87AFC6'>";
+    tab = document.getElementById(sublist); // id of table
+
+    for (var j = 0; j < tab.rows.length; j++) {
+        tab_text += '<tr>'
+        row = tab.rows[j];
+        cells = row.getElementsByTagName('td');
+        for (var m = 0; m < cells.length; m++) {
+            if ((m == 12 || m == 13) && j !=0) {
+                f = cells[m]            
+                tab_text += '<td>'
+                tab_text += f.getElementsByTagName('input')[0].value
+                 tab_text += '</td>'
+
+            }
+            else {
+                tab_text += '<td>'
+                tab_text += cells[m].innerText
+                tab_text += '</td>'
+            }
+        }
+        tab_text += '</tr>'    
     }
 
     tab_text = tab_text + "</table>";

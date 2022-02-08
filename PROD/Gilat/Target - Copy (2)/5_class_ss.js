@@ -91,7 +91,7 @@ function getSalesRep(years) {
     return Results;
 
 }
-//Target godel tik row data
+//Actual- Godel Tik (ROW DATA) ***
 function getData(period, sales) {
     try {
         var search = nlapiLoadSearch(null, 'customsearch_godel_tik_row_data');

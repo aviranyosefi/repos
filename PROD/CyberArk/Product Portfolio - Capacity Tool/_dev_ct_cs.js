@@ -1,6 +1,6 @@
 empType = nlapiGetFieldValue('custpage_user_type')
-var EmpIdCol = 2
-var TotalCol = 15;
+var EmpIdCol = 2 //EMPLOYEE ID
+var TotalCol = 14; // ASSESSMENT TYPE
 var TotalAggCol = clcColumnindex(18, empType); //VALIDATION STATUS
 var SubmitCol = clcColumnindex(19, empType); //SUBMIT
 var CreateAcCol = clcColumnindex(20, empType); // CREATE ACTUAL
@@ -246,7 +246,6 @@ function lineInit() {
     return true;
 }
 function validateLine() {
-    //debugger;
     fff = document.getElementsByClassName('uir-machine-table-container')[0]
     ScreenOffset = fff.scrollTop
     var custpage_mark = nlapiGetFieldValue('custpage_mark');
@@ -262,9 +261,15 @@ function validateLine() {
             if (!isNullOrEmpty(acual_id)) {
                 flag = 'true'
             }
-            else { flag = nlapiGetFieldValue('custpage_auto_lock_forcast'); }
+            else {
+                if (at == 1) {
+                    flag = nlapiGetFieldValue('custpage_auto_lock_actual');
+                } else {
+                    flag = nlapiGetFieldValue('custpage_auto_lock_forcast');
+                }
+               
+            }
         }
-
         if (flag == "false" && at == 1) {
             var res = getLinesTotal(at, 'validate');
         }
@@ -285,7 +290,7 @@ function insertLine() {
     var curCustId = nlapiGetCurrentLineItemValue('custpage_sublist', 'custpage_emp_id');
     if (!isNullOrEmpty(curCustId))
         setTimeout(function () {
-            var fieldsArr = ['custpage_emp_id', 'custpage_f_name', 'custpage_l_name', 'custpage_job_titel', 'custpage_pd', "custpage_total_aggregated", "custpage_ia", "custpage_segment", "custpage_npd", "custpage_maintenance", "custpage_appm", "custpage_cc"]
+            var fieldsArr = ['custpage_emp_id', 'custpage_f_name', 'custpage_l_name', 'custpage_job_titel', 'custpage_pg','custpage_ol_name', 'custpage_pd', "custpage_total_aggregated", "custpage_ia", "custpage_segment", "custpage_npd", "custpage_maintenance", "custpage_appm", "custpage_cc"]
             var curLine = Number(nlapiGetCurrentLineItemIndex('custpage_sublist'));
             for (var fld in fieldsArr) {
                 var val = fieldsArr[fld]
@@ -331,7 +336,10 @@ function deleteTran(id, at) {
     nlapiDeleteRecord('customrecord_ct_reporting_entity', id)
 }
 function reclac() {
-    setTimeout(function () { fff.scrollTo(0, ScreenOffset ); }, 2000);
+    setTimeout(function () {
+        fff.scrollTo(0, ScreenOffset);
+        hideBtn("uir-machine-button-row", 'class');
+    }, 2000);
 }
 function getForcastByActual(id) {
 
