@@ -1,24 +1,42 @@
-function createTechFromCase() {
+﻿function createTechFromCase() {
     try {
-        var context = nlapiGetContext();
-        var location = context.getSetting('SCRIPT', 'custscript_wf_tech_location');       
-        nlapiLogExecution('debug', ' Location: ', location);
-        if (isNullOrEmpty(location)) { location = 38}
+        //var context = nlapiGetContext();
         var recID = nlapiGetRecordId();
         var recTYPE = nlapiGetRecordType();
         var rec = nlapiLoadRecord(recTYPE, recID);
         nlapiLogExecution('debug', ' recTYPE: ' + recTYPE, 'recID: ' + recID);
+        //var location = context.getSetting('SCRIPT', 'custscript_wf_tech_location');       
+        var assigned = rec.getFieldValue('assigned');
+        var location = nlapiLookupField('employee', assigned, 'location')
+
         var entity = rec.getFieldValue('company');
         var product_line = rec.getFieldValue('custevent_dangot_product_line');
         var replacement_type = rec.getFieldValue('custevent_replacement_type');
-        var sparPartsList = getSparParts(recID)
+        var itemList = [];
+        if (replacement_type == 5) // חלקי חילוף
+        {
+            itemList = getSparParts(recID)
+        }
+        else if (replacement_type == 1) {// קבוע
+            var replacing_same_item = rec.getFieldValue('custevent_dangot_replacing_same_item');
+            if (replacing_same_item == 1) { // YES
+                var item = rec.getFieldValue('custevent_dangot_item')
+            }
+            else if (replacing_same_item == 2) { // NO
+                var item = rec.getFieldValue('custevent_replacing_item')
+            }
+            itemList.push({
+                item: item,
+                qty: 1,
+            });
+        }       
         var data = [];
         data.push({
             entity: entity,
             product_line: product_line,
             location: location,
             caseID: recID,
-            sparPartsList: sparPartsList,
+            itemList: itemList,
             replacement_type: replacement_type
         });
         nlapiLogExecution('DEBUG', 'data: ' + data.length, JSON.stringify(data));
@@ -43,12 +61,12 @@ function createTech(data) {
         rec.setFieldValue('department', 21);   
         rec.setFieldValue('custbody_dangot_replacement_type', data[0].replacement_type);   
         try {
-            var sparPartsList = data[0].sparPartsList
-            for (var i = 0; i < sparPartsList.length; i++) {
+            var itemList = data[0].itemList
+            for (var i = 0; i < itemList.length; i++) {
                 // Lines Fields
                 rec.selectNewLineItem('item');
-                rec.setCurrentLineItemValue('item', 'item', sparPartsList[i].item);
-                rec.setCurrentLineItemValue('item', 'quantity', sparPartsList[i].qty)
+                rec.setCurrentLineItemValue('item', 'item', itemList[i].item);
+                rec.setCurrentLineItemValue('item', 'quantity', itemList[i].qty)
                 rec.setCurrentLineItemValue('item', 'rate', '0');
                 //rec.setCurrentLineItemValue('item', 'location', data[i].location);
                 //var inventorydetailrecord = rec.createCurrentLineItemSubrecord('item', 'inventorydetail');

@@ -1,5 +1,5 @@
-﻿function pageLoad() {
- 
+﻿function pageLoad(){
+
 }
 
 function FieldChange(type, name) {
@@ -33,7 +33,7 @@ function FieldChange(type, name) {
 }
 
 function save() {
-    debugger;
+
     var fromDate = nlapiGetFieldValue('custpage_ilo_multi_fromdate');
     var toDate = nlapiGetFieldValue('custpage_ilo_multi_todate');
     if (!isNullOrEmpty(fromDate)) {
@@ -46,10 +46,18 @@ function save() {
             return false;
             }
     }
-    if (nlapiGetFieldValue('custpage_cb_as_matal') == 'T' && isNullOrEmpty(nlapiGetFieldValue('custpage_sales_rep'))) {
+    var sales_rep = nlapiGetFieldValue('custpage_sales_rep')
+    if (nlapiGetFieldValue('custpage_cb_as_matal') == 'T' && isNullOrEmpty(sales_rep)) {
         alert("בחר איש מכירות")
         return false;
     }
+    if (!isNullOrEmpty(sales_rep)) {
+        var logList = logSearch(sales_rep);
+        if (logList.length > 0) {
+            alert('לא ניתן להיכנס למסך מאחר וקיים תהליך שלא הסתיים ע"י ' + logList[0].owner + ' לאיש מכירות ' + logList[0].sales_rep)
+            return false;
+        }
+    }   
     return true;
 }
 
@@ -178,4 +186,40 @@ function exportExcel2(sublist) {
     sa = window.open('data:application/vnd.ms-excel,base64,' + encodeURIComponent(tab_text));
 
     return (sa);
+}
+function logSearch(saleRep) {
+
+
+    var columns = new Array();
+    columns[0] = new nlobjSearchColumn('entityid', 'owner');
+    columns[1] = new nlobjSearchColumn('custrecord_log_sales_rep');
+   
+    var filters = new Array();
+    filters[0] = new nlobjSearchFilter('custrecord_log_sales_rep', null, 'anyof', saleRep)
+    filters[1] = new nlobjSearchFilter('custrecord_log_processed_finished', null, 'is', 'F')
+
+    var search = nlapiCreateSearch('customrecord_customer_agreement_log', filters, columns);
+
+    var resultset = search.runSearch();
+    var s = [];
+    var searchid = 0;
+    var results = [];
+
+    do {
+        var resultslice = resultset.getResults(searchid, searchid + 1000);
+        for (var rs in resultslice) {
+            s.push(resultslice[rs]);
+            searchid++;
+        }
+    } while (resultslice != null && resultslice.length >= 1000);
+
+    if (s != null && s.length >0) {
+        results.push({
+            owner: s[0].getValue('entityid', 'owner'),
+            sales_rep: s[0].getText('custrecord_log_sales_rep'),
+        });        
+        
+    }
+    return results;
+
 }

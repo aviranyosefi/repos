@@ -9,7 +9,9 @@ function getSearchData() {
     var first_data = context.getSetting('SCRIPT', 'custscript_first_data');
     var second_data = context.getSetting('SCRIPT', 'custscript_second_data');
     var salesrole = context.getSetting('SCRIPT', 'custscript_salesrole');
-    nlapiLogExecution('DEBUG', 'salesrole : ', salesrole);
+    var logid = context.getSetting('SCRIPT', 'custscript_logid');
+    nlapiLogExecution('DEBUG', 'salesrole : ' + salesrole, 'logid : ' + logid );
+    
     first_data = JSON.parse(first_data);
     second_data = JSON.parse(second_data);
     if (salesrole == '1') {
@@ -34,6 +36,7 @@ function getSearchData() {
         }
     }
     numOfLines = first_data.length + second_data.length
+    setResDate(logid)
     summaryEmail();
 }
 
@@ -134,7 +137,7 @@ function Billing_Instruction_Update(data) {
                     rec.setFieldValue('memo', data[i].memo);
                     rec.setFieldValue('custbody_price_change', data[i].change);
                     var id = nlapiSubmitRecord(rec);
-                    nlapiLogExecution('DEBUG', 'id after update: ', id);
+                    //nlapiLogExecution('DEBUG', 'id after update: ', id);
                     billing_instruction.push({
                         id: data[i].billing_instruction,
                         tranid: nlapiLookupField('customsale_billing_instruction', bi_id, 'tranid')
@@ -363,5 +366,14 @@ function DoCreate(entity) {
     return true;
 
 
+}
+function setResDate(logid) {
+    var fields = [];
+    fields[0] = 'custrecord_log_finish_date'
+    fields[1] = 'custrecord_log_processed_finished'
+    var dataField = [];
+    dataField[0] = nlapiDateToString(new Date())
+    dataField[1] = 'T'
+    nlapiSubmitField('customrecord_customer_agreement_log', logid, fields, dataField)
 }
 

@@ -117,14 +117,14 @@ function SearchTable(id, type, record, groupline) {
     if (groupline == 'T') {
         if (list.length > 0) {
             table = '<table class="pl" align="right" style="text-align:right; direction:rtl;width:650px;">' +
-                '<thead><tr><td colspan="2" align="right">תיאור</td>' +
-                '<td align="right">ישוב</td><td align="right">כמות</td><td align="right">מחיר ליחידה</td><td align="right">חודשי חיוב</td><td align="right">סכום</td></tr></thead> ';
+                '<thead><tr><th colspan="2" align="center">תיאור</th>' +
+                '<th align="center">ישוב</th><th align="center">כמות</th><th align="center">מחיר ליחידה</th><th align="center">חודשי חיוב</th><th align="center">סכום</th></tr></thead> ';
             for (var i = 0; i < list.length; i++) {
                 table += '<tr><td colspan="2" align="right"><p dir="rtl" style="width:100%;text-align:right;">' + list[i].des + '</p></td>';
                 table += '<td align="right">' + list[i].city + '</td>';
                 table += '<td align="right">' + list[i].print + '</td>';
                 table += '<td align="center">' + formatNumber(Number(list[i].rate).toFixed(1)) + '</td>';
-                table += '<td align="right">' + list[i].war + '</td>';
+                table += '<td align="center">' + list[i].war + '</td>';
                 table += '<td align="center">' + formatNumber(Number(list[i].amt).toFixed(1)) + '</td>';
                 table += '</tr>';
             }
@@ -141,22 +141,22 @@ function SearchTable(id, type, record, groupline) {
     }
     else {
         if (list.length > 0) {
-            table = '<table class="pl" align="right" style="text-align:right; direction:rtl;width:650px;">' +
-                '<thead><tr><td colspan="2" align="right">תיאור</td>' +
-                '<td align="right">ישוב</td><td align="right">הערות</td><td align="right">מחיר ליחידה</td><td align="right">חודשי חיוב</td><td align="right">סכום</td></tr></thead> ';
+            table = '<table class="pl" align="center" style="text-align:center; direction:rtl;width:650px;">' +
+                '<thead><tr><th colspan="2" align="center">תיאור</th>' +
+                '<th align="center">ישוב</th><th align="center">הערות</th><th align="center">מחיר ליחידה</th><th align="center">חודשי חיוב</th><th align="center">סכום</th></tr></thead> ';
             for (var i = 0; i < list.length; i++) {
                 table += '<tr><td colspan="2" align="right"><p dir="rtl" style="width:100%;text-align:right;">' + list[i].des + '</p></td>';
                 table += '<td align="right">' + list[i].city + '</td>';
                 table += '<td align="right">' + list[i].print + '</td>';
                 table += '<td align="center">' + formatNumber(Number(list[i].rate).toFixed(1)) + '</td>';
-                table += '<td align="right">' + list[i].war + '</td>';
+                table += '<td align="center">' + list[i].war + '</td>';
                 table += '<td align="center">' + formatNumber(Number(list[i].amt).toFixed(1)) + '</td>';
                 table += '</tr>';
             }
-            table += '<tr><td colspan="6" align="right"><b>סה"כ ללא מע"מ</b></td><td align="right"><b>' + formatNumber(total) + '</b></td></tr>'
+            table += '<tr><td colspan="6" align="right"><b>סה"כ ללא מע"מ</b></td><td align="center"><b>' + formatNumber(total) + '</b></td></tr>'
             if (discount > 0) {
-                table += '<tr><td colspan="6" align="right"><b>הנחה</b></td><td align="right"><b>' + formatNumber(discount) + '</b></td></tr>'
-                table += '<tr><td colspan="6" align="right"><p style="font-size: 12pt; text-align:right;" dir="rtl"><b>סה"כ אחרי הנחה</b></p></td><td align="right"><b>' + formatNumber(net_amt) + '</b></td></tr>'
+                table += '<tr><td colspan="6" align="right"><b>הנחה</b></td><td align="center"><b>' + formatNumber(discount) + '</b></td></tr>'
+                table += '<tr><td colspan="6" align="right"><p style="font-size: 12pt; text-align:right;" dir="rtl"><b>סה"כ אחרי הנחה</b></p></td><td align="center"><b>' + formatNumber(net_amt) + '</b></td></tr>'
             }
             table += '</table>'
         }

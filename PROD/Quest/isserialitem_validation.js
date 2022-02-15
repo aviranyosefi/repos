@@ -14,9 +14,18 @@ define(['N/search'],
                 var item = rec.getValue({ fieldId: 'custrecord_spare_part_item' });
                 if (!isNullOrEmpty(item)) {
                     var fieldLookUp = search.lookupFields({ type: 'item', id: item, columns: ['isserialitem'] });
-                    isserialitem = fieldLookUp.isserialitem;                   
+                    isserialitem = fieldLookUp.isserialitem;
                 }
-                rec.setValue('custrecord_sp_is_serialized', isserialitem);                             
+                rec.setValue('custrecord_sp_is_serialized', isserialitem);
+            }
+            else if (name == 'custevent_replacing_item') {
+                var isserialitem = false;
+                var item = rec.getValue({ fieldId: 'custevent_replacing_item' });
+                if (!isNullOrEmpty(item)) {
+                    var fieldLookUp = search.lookupFields({ type: 'item', id: item, columns: ['isserialitem'] });
+                    isserialitem = fieldLookUp.isserialitem;
+                }
+                rec.setValue('custevent_is_serialized', isserialitem);
             }
         }
         function isNullOrEmpty(val) {

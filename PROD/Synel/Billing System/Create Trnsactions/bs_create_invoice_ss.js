@@ -450,7 +450,7 @@ function CreateItem(calc_method, INVOICErec, rec, split_method, amt) {
         var agr_line = rec.getFieldValue('custrecord_bill_plan_agr_line');        
         var item =nlapiLookupField('customrecord_agr_line', agr_line, 'custrecord_agr_line_charging_item')      
         if (isNullOrEmpty(item)) {item = 7538}
-        nlapiLogExecution('debug', 'calc_method', calc_method);
+        //nlapiLogExecution('debug', 'calc_method', calc_method);
         if (calc_method == 1) { // חיוב לפי כמות
             INVOICErec.selectNewLineItem('item');
             INVOICErec.setCurrentLineItemValue('item', 'item', item);

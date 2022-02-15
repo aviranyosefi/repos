@@ -3,10 +3,11 @@
  * @NScriptType MapReduceScript
  * @NModuleScope SameAccount
  */
+var ErrorList = [];
+var SuccessList = [];
 define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.Lib.Common', './dev_legal_tracker_sftp', 'N/file', 'N/email', 'N/cache', 'N/format'],
-
     function (search, record, logger, error, runtime, common, hypCore, file, email, cache, formatter) {
-        var ErrorList = [];
+        var fielsName = ['Tracker Invoice Spreadsheetaccountspayable il', 'Tracker Invoice Spreadsheetaccountspayable apj', 'Tracker Invoice Spreadsheetaccountspayable emea', 'Tracker Invoice Spreadsheetaccounts payable']
         function getInputData() {
 
             var integId = hypCore.GetIntegrationId('legal_tracker');
@@ -38,10 +39,11 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                         integId: integId,
                         folder: fileName,
                         entityName: cols[0],
-                        entity: cols[1],
-                        tranid: cols[2],
-                        currency: cols[4],
-                        trandate: cols[5]
+                        entityShortName: cols[1],
+                        entity: cols[2],
+                        tranid: cols[3],
+                        currency: cols[5],
+                        trandate: cols[6]
                     });
                     line++;
                 }
@@ -52,17 +54,19 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
 
         function map(context) {
             try {
-
                 logger.debug('mapContext', context.value);
                 var ObjLine = JSON.parse(context.value)
                 var integId = ObjLine.integId 
-                var folder = ObjLine.folder + '.zip';
-                //logger.debug('folder', folder);
-                folder = 'Tracker Invoices.accountspayable il.2021-12-07 to 2021-12-07.zip'
-                var fileName = ObjLine.entityName + ' - ' + ObjLine.tranid + '.txt'
-                //logger.debug('fileName', fileName);
                 var connection = hypCore.GetSftpConnection(integId);
-                var fileObj = hypCore.DownloadFile(connection, fileName, integId, 'LegalTracker/New/' + folder);
+                var folder = ObjLine.folder + '.zip';              
+                folder = 'Tracker Invoices.accountspayable il.2021-12-07 to 2021-12-07.zip'
+                var fileName = ObjLine.entityName + ' - ' + ObjLine.tranid                     
+                var fileObj = hypCore.DownloadFile(connection, fileName + '.txt', integId, 'LegalTracker/New/' + folder);
+                if (common.isNullOrEmpty(fileObj)) {
+                    var fileName = ObjLine.entityShortName + ' - ' + ObjLine.tranid
+                    var fileObj = hypCore.DownloadFile(connection, fileName + '.txt', integId, 'LegalTracker/New/' + folder);
+                }
+                //logger.debug('fileObj', fileObj);
                 var savedFile = file.create({
                     name: fileName,
                     fileType: file.Type.PLAINTEXT,
@@ -71,9 +75,16 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                     folder: '1164026'
                 });
                 savedFileId = savedFile.save();               
-                createVendorBill(ObjLine, savedFileId) 
+                var id = createVendorBill(ObjLine, savedFileId);
+                if (id != -1) {
+                    SuccessList.push({
+                        line: ObjLine.line,
+                        entityName: ObjLine.entityName,
+                        billID: id
+                    })
+                }
             } catch (e) {
-                logger.debug('error', e);
+                logger.debug('error map', e);
                 ErrorList.push({               
                     line: ObjLine.line,
                     error: e.message,                    
@@ -81,36 +92,58 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             }
         }
         function createVendorBill(ObjLine, lineFile) {
-            HeaderFields = ['entityName', 'tranid', 'currency' , 'trandate' ]
-            //VendBillRec = record.create({ type: record.Type.VENDOR_BILL, isDynamic: true, defaultValues: { customform: 199 } });
-            for (var key in HeaderFields) {
-                field = HeaderFields[key]
-                if (HeaderFields[key] == 'currency') {
-                    val = getCurrencyId(ObjLine[HeaderFields[key]])
+            try { 
+                HeaderFields = ['entityName', 'tranid', 'currency' , 'trandate' ]
+                VendBillRec = record.create({ type: record.Type.VENDOR_BILL, isDynamic: true, defaultValues: { customform: 199 } });
+                for (var key in HeaderFields) {
+                    field = HeaderFields[key]
+                    if (HeaderFields[key] == 'currency') {
+                        val = getCurrencyId(ObjLine[HeaderFields[key]])
                     
+                    }
+                    else if (HeaderFields[key] == 'trandate') {
+                        val = new Date(ObjLine[HeaderFields[key]])
+                    }
+                    else if (HeaderFields[key] == 'entityName') {
+                        val =  '618100' // getEntityId(ObjLine[HeaderFields[key]]);
+                        field= 'entity'
+                    }
+                    else { val = ObjLine[HeaderFields[key]] }
+                    //logger.debug(HeaderFields[key], val);
+                    VendBillRec.setValue({ fieldId: field, value: val });
                 }
-                else if (HeaderFields[key] == 'trandate') {
-                    val = new Date(ObjLine[HeaderFields[key]])
-                }
-                else if (HeaderFields[key] == 'entityName') {
-                    val = getEntityId(ObjLine[HeaderFields[key]]);
-                    field= 'entity'
-                }
-                else { val = ObjLine[HeaderFields[key]] }
-                logger.debug(HeaderFields[key], val);
-                //VendBillRec.setValue({ fieldId: field, value: val });
+                VendBillRec.setValue({ fieldId: 'memo', value: 'legal bills' });
+                VendBillRec.setValue({ fieldId: 'location', value: 5 });
+                VendBillRec.setValue({ fieldId: 'custbody_il_bill_creator', value: 32229 });
+                VendBillRec.setValue({ fieldId: 'custbody_bill_po_reciever', value: 32229 });
+                var txtFile = file.load({ id: lineFile });
+                txtFile = txtFile.getContents();              
+                var allTextLines = txtFile.split(/\r\n|\n/);
+                for (var i = 2; i < allTextLines.length; i++) {
+                    if (!common.isNullOrEmpty(allTextLines[i])) {
+                         var data = allTextLines[i].replace(/\"/g, '').split('|');         
+                        var qty = data[10];
+                        var desc = data[18]
+                        var rate = data[20]
+                        //logger.debug('qty: ' + qty, 'desc: ' + desc + ' ,rate: ' + rate);  
+                        VendBillRec.selectNewLine({ sublistId: 'item' });
+                        VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'item', value: 2184 });
+                        VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'rate', value: rate });
+                        VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'description', value: desc });
+                        VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'quantity', value: qty });
+                        VendBillRec.commitLine({ sublistId: 'item'});
+                    }      
+                }  
+                var id = VendBillRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
+                logger.debug('id: ', id);
+                return id
+            } catch (e) {
+                logger.debug('error createVendorBill', e);
+                ErrorList.push({
+                    line: ObjLine.line,
+                    error: e.message,
+                })
             }
-           
-            //var txtFile = file.load({ id: lineFile });
-            //txtFile = txtFile.getContents();
-            //txtFileLines = txtFile.split(/\r\n|\n/);
-            //for (var i = 1; i < txtFileLines.length; i++) {
-            //    var cols = txtFileLines[i].replace(/\"/g, '').split('|');
-            //}
-            
-            
-
-            //VendBillRec = vendRecord.save({enableSourcing: true,ignoreMandatoryFields: true});
         }
         function getEntityId(vendorName) {
             var SearchObj = search.create({
@@ -150,51 +183,12 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             });
             return val
         }
-        function reduce(context) {
-          
-        }
-        function AttemptSavingEmp(emp, externalID, oldEmpId) {
-            logger.debug({
-                title: 'Attempt to save the record to netsuite ' + externalID,
-                details: emp
-            });
-
-            // Attempt to save the record to NetSuite
-            var employeeID = emp.save({
-                enableSourcing: true,
-                ignoreMandatoryFields: true
-            });
-            record.submitFields({
-                type: record.Type.EMPLOYEE,
-                id: employeeID,
-                values: {
-                    entityid: externalID
-                },
-                options: {
-                    enableSourcing: false,
-                    ignoreMandatoryFields: true
-                }
-            });
-
-            // Add Reference, in the new employee record, to the old employee record
-            if (!common.isNullOrEmpty(oldEmpId)) {
-                record.submitFields({
-                    type: record.Type.EMPLOYEE,
-                    id: employeeID,
-                    values: {
-                        custentity_nc_pba_app_deleg_rep_employee: employeeID
-                    },
-                    options: {
-                        enableSourcing: false,
-                        ignoreMandatoryFields: true
-                    }
-                });
-            }
-        }
 
 
         function summarize(summary) {
-            handleErrorIfAny(summary);
+            //handleErrorIfAny(summary);
+            logger.debug('SuccessList ' + SuccessList.length, JSON.stringify(SuccessList))
+            logger.debug('ErrorList ' + ErrorList.length, JSON.stringify(ErrorList))
         }
 
         function handleErrorIfAny(summary) {
@@ -312,7 +306,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             getInputData: getInputData,
             map: map,
             //reduce: reduce,
-            //summarize: summarize
+            summarize: summarize
 
         };
     });

@@ -15,6 +15,10 @@ function getSearchData(request, response) {
         form.addSubmitButton('חפש');
         form.setScript('customscript_customer_agreement_cs');
 
+        var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
+        htmlField1.setDefaultValue('\<script type="text / javascript">window.onbeforeunload = function (e) { e = e || window.event; if (e) {e.returnValue = "?";} return "?";};</script >');
+
+
         form.addFieldGroup('custpage_ilo_searchdetails', 'נתונים להזנה');
 
         var startDate = form.addField('custpage_ilo_multi_fromdate', 'date', 'מתאריך', null, 'custpage_ilo_searchdetails');
@@ -141,7 +145,7 @@ function getSearchData(request, response) {
 
             form.setScript('customscript_customer_agreement_cs');
 
-            var resultsSubList = form.addSubList('custpage_results_sublist', 'list', agreementList.length + ':תוצאות - מספר השורות', null);
+            var resultsSubList = form.addSubList('custpage_results_sublist', 'list', 'תוצאות', null);
 
             resultsSubList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
             resultsSubList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
@@ -402,7 +406,7 @@ function getSearchData(request, response) {
             setDatesOnUser(fromDateData, toDateData);
             var agreementList = BillingInstructionApproval(agreement_type, sales_rep, customer, price_change, status, billing_type, bi_status);
 
-            var resultsSubList = form.addSubList('custpage_results_sublist', 'list', agreementList.length + ' :תוצאות - מספר השורות', null);
+            var resultsSubList = form.addSubList('custpage_results_sublist', 'list', 'תוצאות', null);
             resultsSubList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
             resultsSubList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
             resultsSubList.addField('custpage_result_cb', 'checkbox', 'בחירה');
@@ -555,6 +559,8 @@ function getSearchData(request, response) {
             var form = nlapiCreateForm('');
             var screen_type = request.getParameter('custpage_screen_type');
             var LinesNo = request.getLineItemCount('custpage_results_sublist');
+            var salesRep = request.getParameter('custpage_sales_rep');
+           
             if (screen_type == '2') {
                 var toDateData = request.getParameter('custpage_ilo_multi_todate');
                 var salesrole = request.getParameter('custpage_ilo_salesrole');
@@ -614,8 +620,6 @@ function getSearchData(request, response) {
                             memo = request.getLineItemValue('custpage_results_sublist', 'custpage_result_comment', m);
                             sugg_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_sugg_monthly_charge', m);
                             result_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_monthly_charge', m);
-                            //nlapiLogExecution('DEBUG', 'sugg_monthly_charge 3', NumberToRate(sugg_monthly_charge));
-                            //nlapiLogExecution('DEBUG', 'curr_monthly_charge 3', curr_monthly_charge);
                             if (NumberToRate(result_monthly_charge) != NumberToRate(curr_monthly_charge)) { var change = 'T'; }
                             else { var change = 'F'; }
                             data.push({
@@ -630,7 +634,19 @@ function getSearchData(request, response) {
                     }
                 }
                 nlapiLogExecution('DEBUG', 'salesrole', salesrole);
-                try { nlapiScheduleScript('customscript_customer_agreement_ss', null, { custscript_first_data: JSON.stringify(data), custscript_second_data: JSON.stringify(data_for_update), custscript_salesrole: salesrole }) } catch (e) { }
+                var logList = logSearch(salesRep);
+                if (logList.length > 0) {
+                    var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
+                    htmlField1.setDefaultValue('<span style="font-size:18px">לא ניתן להיכנס למסך מאחר וקיים תהליך שלא הסתיים ע"י ' + logList[0].owner + ' לאיש מכירות ' + logList[0].sales_rep + '</span>');
+                } else {
+                    try {
+                        var logId = createLog(salesRep);
+                        nlapiScheduleScript('customscript_customer_agreement_ss', null, { custscript_first_data: JSON.stringify(data), custscript_second_data: JSON.stringify(data_for_update), custscript_salesrole: salesrole, custscript_logid: logId });
+                        var getUserMail = nlapiGetContext().getEmail();
+                        var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
+                        htmlField1.setDefaultValue("<span style='font-size:18px'>An email with the summary of results will be sent to : <b> " + getUserMail + "</b> once completed.<br></span>");
+                    } catch (e) { }                    
+                }             
             }
             else { //(screen_type == '2.1')
                 var data = [];
@@ -651,13 +667,24 @@ function getSearchData(request, response) {
                             reason: reason
                         });
                     }
-                }
-                try { nlapiScheduleScript('customscript_customer_agreement_ss', null, { custscript_first_data: JSON.stringify(data), custscript_second_data: JSON.stringify(data_for_reason), custscript_salesrole: '3' }) } catch (e) { }
-            }
-            var getUserMail = nlapiGetContext().getEmail();
-            var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
-            htmlField1.setDefaultValue("<span style='font-size:18px'>An email with the summary of results will be sent to : <b> " + getUserMail + "</b> once completed.<br></span>");
+                }             
+                try {
+                    var logList = logSearch(salesRep);
+                    if (logList.length > 0) {
+                        var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
+                        htmlField1.setDefaultValue('<span style="font-size:18px">לא ניתן להיכנס למסך מאחר וקיים תהליך שלא הסתיים ע"י ' + logList[0].owner + ' לאיש מכירות ' + logList[0].sales_rep  +'</span>');
+                    } else {
+                        var logId = createLog(salesRep);
+                        nlapiScheduleScript('customscript_customer_agreement_ss', null, { custscript_first_data: JSON.stringify(data), custscript_second_data: JSON.stringify(data_for_reason), custscript_salesrole: '3', custscript_logid: logId })
+                        var getUserMail = nlapiGetContext().getEmail();
+                        var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
+                        htmlField1.setDefaultValue("<span style='font-size:18px'>An email with the summary of results will be sent to : <b> " + getUserMail + "</b> once completed.<br></span>");
 
+                    }
+                    
+                } catch (e) { }
+            }
+           
 
         }
         catch (e) {
@@ -1189,5 +1216,52 @@ function GetBILink(name, id) {
 
     var link = "<a href='https://" + company + ".app.netsuite.com/app/accounting/transactions/cutrsale.nl?id=" + id + "'" + 'target="_blank">' + name + "</a>";
     return link;
+
+}
+function createLog(salesRep) {
+    try {
+        var rec = nlapiCreateRecord('customrecord_customer_agreement_log');
+        rec.setFieldValue('custrecord_log_sales_rep', salesRep);
+        var id = nlapiSubmitRecord(rec);
+        nlapiLogExecution('debug', 'createLog id: ', id);
+    } catch (e) {
+        nlapiLogExecution('debug', 'ERROR', e);
+    }
+    return id;
+}
+function logSearch(saleRep) {
+
+
+    var columns = new Array();
+    columns[0] = new nlobjSearchColumn('entityid', 'owner');
+    columns[1] = new nlobjSearchColumn('custrecord_log_sales_rep');
+
+    var filters = new Array();
+    filters[0] = new nlobjSearchFilter('custrecord_log_sales_rep', null, 'anyof', saleRep)
+    filters[1] = new nlobjSearchFilter('custrecord_log_processed_finished', null, 'is', 'F')
+
+    var search = nlapiCreateSearch('customrecord_customer_agreement_log', filters, columns);
+
+    var resultset = search.runSearch();
+    var s = [];
+    var searchid = 0;
+    var results = [];
+
+    do {
+        var resultslice = resultset.getResults(searchid, searchid + 1000);
+        for (var rs in resultslice) {
+            s.push(resultslice[rs]);
+            searchid++;
+        }
+    } while (resultslice != null && resultslice.length >= 1000);
+
+    if (s != null && s.length > 0) {
+        results.push({
+            owner: s[0].getValue('entityid', 'owner'),
+            sales_rep: s[0].getText('custrecord_log_sales_rep'),
+        });
+
+    }
+    return results;
 
 }
