@@ -1,14 +1,19 @@
-
+var refresh = null;
 function services_update_screen(request, response) {
-    var form = nlapiCreateForm('Monthly Billing Report');
+    var form = nlapiCreateForm('Distribution Process Report');
     if (request.getMethod() == 'GET') {
         var editMode = false;
         nlapiLogExecution('DEBUG', 'stage one', 'stage one');
         form.addSubmitButton('Submit');
+        form.addResetButton('Reset');
         form.addFieldGroup('custpage_ilo_searchdetails', 'Date Range');
-        var fromDate = form.addField('custpage_from_date', 'Date', 'From Date', null, 'custpage_ilo_searchdetails')
+        var fromDate = form.addField('custpage_from_date', 'Date', 'From Date', null, 'custpage_ilo_searchdetails');
+        fromDate.setMandatory(true);
         var toDate = form.addField('custpage_to_date', 'Date', 'To Date', null, 'custpage_ilo_searchdetails');
         toDate.setMandatory(true);
+
+        var region = form.addField('custpage_ilo_region', 'multiselect', 'Region', 'customrecord_cseg_region_test', 'custpage_ilo_searchdetails');
+        var customer = form.addField('custpage_ilo_customer', 'select', 'Customer', 'customer', 'custpage_ilo_searchdetails');
 
         var checkStage = form.addField('custpage_ilo_check_stage', 'text', 'check', null, 'custpage_ilo_searchdetails');
         checkStage.setDefaultValue('stageOne');
@@ -16,12 +21,18 @@ function services_update_screen(request, response) {
 
         response.writePage(form);
     }
-    else if (request.getParameter('custpage_ilo_check_stage') == 'stageOne') { // change to something less broad
+    else if (request.getParameter('custpage_ilo_check_stage') == 'stageOne' || request.getParameter('custpage_reresh_search') == 'T') { // change to something less broad
         nlapiLogExecution('DEBUG', 'stage two', 'stage two');
 
         var FromD = request.getParameter('custpage_from_date');
         var ToD = request.getParameter('custpage_to_date');
-        var editMode = false
+        var editMode = false;
+
+        var regionVal = request.getParameter('custpage_ilo_region');
+        nlapiLogExecution('DEBUG', 'customerVal', customerVal);
+
+        var customerVal = request.getParameter('custpage_ilo_customer');
+        nlapiLogExecution('DEBUG', 'regionVal', regionVal);
         //var strFrom = nlapiDateToString(FromD);
         //var strTo = nlapiDateToString(ToD);
 
@@ -31,15 +42,28 @@ function services_update_screen(request, response) {
         nlapiLogExecution('DEBUG', 'dates has been setted!', 'dates: ' + FromD + ' - ' + ToD);
 
         //nlapiSetRedirectURL('tasklink', 'LIST_SEARCHRESULTS', null, null, 'customsearch_nr_monthly_billing'); 
- 
-        var fromDate = SecondForm.addField('custpage_from_date_second', 'Date', 'From', null, null);
+
+        var reresh_search = SecondForm.addField('custpage_reresh_search', 'checkbox', 'Refresh', null, null);
+        reresh_search.setDefaultValue('F');
+        reresh_search.setDisplayType('hidden');
+
+        var fromDate = SecondForm.addField('custpage_from_date', 'Date', 'From', null, null);
         fromDate.setDefaultValue(FromD);
-        var toDate = SecondForm.addField('custpage_to_date_second', 'Date', 'To', null, null);
+        var toDate = SecondForm.addField('custpage_to_date', 'Date', 'To', null, null);
         toDate.setDefaultValue(ToD);
 
+        var region = SecondForm.addField('custpage_ilo_region', 'multiselect', 'Region', 'customrecord_cseg_region_test', null);
+        region.setDefaultValue(regionVal);
+        //region.setDisplayType('inline');
+
+        var customer = SecondForm.addField('custpage_ilo_customer', 'select', 'Customer', 'customer', null);
+        customer.setDefaultValue(customerVal);
+        //customer.setDisplayType('inline');
+        var script = "nlapiSetFieldValue('custpage_reresh_search', 'T'); submitter.click();"
+
         if (FromD != '' && ToD != '') {
-            var results = Search(ToD,FromD);
-            SecondForm.addButton('custpage_edit_button', 'Edit Fields', 'field_edit');
+            var results = Search(ToD, FromD, regionVal, customerVal);
+            SecondForm.addButton('custpage_edit_button', 'Update Filters', script);
         }
         if (editMode == true) {
             //var resultsSubList = SecondForm.addSubList('custpage_results_sublist', 'editor', 'Results', null);
@@ -48,10 +72,11 @@ function services_update_screen(request, response) {
             var resultsSubList = SecondForm.addSubList('custpage_results_sublist', 'list', 'Results', null);
         }
 
+        resultsSubList.addMarkAllButtons();
         var res_CheckBox2 = resultsSubList.addField('custpage_resultssublist_checkbox2', 'checkbox', 'check');
         var res_tranDate = resultsSubList.addField('custpage_resultssublist_trandate', 'text', 'Date');
-        var res_SoId = resultsSubList.addField('custpage_resultssublist_soid', 'text', 'salsorderid');
-        var res_tranId = resultsSubList.addField('custpage_resultssublist_tranid', 'text', 'Sale Order');   
+        var res_SoId = resultsSubList.addField('custpage_resultssublist_soid', 'text', 'Sals Order ID');
+        var res_tranId = resultsSubList.addField('custpage_resultssublist_tranid', 'text', 'Sale Order').setDisplayType('inline');
         var res_customer = resultsSubList.addField('custpage_resultssublist_customer', 'text', 'Customer');
         var res_status = resultsSubList.addField('custpage_resultssublist_status', 'text', 'Status');
         var res_shipDate = resultsSubList.addField('custpage_resultssublist_shipdate', 'text', 'Ship Date');
@@ -62,16 +87,22 @@ function services_update_screen(request, response) {
         resultsSubList.addField('custpage_resultssublist_quantity', 'text', 'Quantity');
         resultsSubList.addField('custpage_resultssublist_fulfilled', 'text', 'Fulfilled');
         resultsSubList.addField('custpage_resultssublist_lotinformarion', 'text', 'Lot Information');
-        resultsSubList.addField('custpage_resultssublist_regiontest', 'text', 'Region test');
-        resultsSubList.addField('custpage_resultssublist_soline', 'text', 'So Line');
-        resultsSubList.addField('custpage_resultssublist_invlocation', 'text', 'So Line');
-        
+        resultsSubList.addField('custpage_resultssublist_unpickedqty', 'text', 'Unpicked Quantiy');
+        resultsSubList.addField('custpage_resultssublist_lotexpirationdate', 'text', 'Lot Expiration Date');
+        resultsSubList.addField('custpage_resultssublist_regiontest', 'text', 'Region test').setDisplayType('hidden');
+        resultsSubList.addField('custpage_resultssublist_soline', 'text', 'So Line').setDisplayType('hidden');
+        resultsSubList.addField('custpage_resultssublist_invlocation', 'text', 'Inv Location').setDisplayType('hidden');
+        resultsSubList.addField('custpage_resultssublist_invdetail', 'text', 'Inv DetailId').setDisplayType('hidden');
+
 
         if (results != null && results != []) {
+            var baseURL = 'https://system.netsuite.com/app/accounting/transactions/salesord.nl?id=';
             for (var i = 0; i < results.length; i++) {
+                var SoLink = '<font size="2"><a style="color:blue;font-size:3"target="_blank" href =' + baseURL + results[i].saleOrderId + '><b>' + results[i].tranId + '</b></a>'
                 resultsSubList.setLineItemValue('custpage_resultssublist_trandate', i + 1, results[i].trandate);
                 resultsSubList.setLineItemValue('custpage_resultssublist_soid', i + 1, results[i].saleOrderId);
-                resultsSubList.setLineItemValue('custpage_resultssublist_tranid', i + 1, results[i].tranId);
+                //resultsSubList.setLineItemValue('custpage_resultssublist_tranid', i + 1, results[i].tranId);
+                resultsSubList.setLineItemValue('custpage_resultssublist_tranid', i + 1, SoLink);
                 resultsSubList.setLineItemValue('custpage_resultssublist_customer', i + 1, results[i].entity);
                 resultsSubList.setLineItemValue('custpage_resultssublist_status', i + 1, results[i].status);
                 resultsSubList.setLineItemValue('custpage_resultssublist_shipdate', i + 1, results[i].shipDate);
@@ -82,70 +113,137 @@ function services_update_screen(request, response) {
                 resultsSubList.setLineItemValue('custpage_resultssublist_quantity', i + 1, results[i].quantity);
                 resultsSubList.setLineItemValue('custpage_resultssublist_fulfilled', i + 1, results[i].fulfilled);
                 resultsSubList.setLineItemValue('custpage_resultssublist_lotinformarion', i + 1, results[i].invDtail);
+                resultsSubList.setLineItemValue('custpage_resultssublist_unpickedqty', i + 1, results[i].unpickedQty);
+                resultsSubList.setLineItemValue('custpage_resultssublist_lotexpirationdate', i + 1, results[i].lotExpirationDate);
                 resultsSubList.setLineItemValue('custpage_resultssublist_regiontest', i + 1, results[i].custRegion);
                 resultsSubList.setLineItemValue('custpage_resultssublist_soline', i + 1, results[i].so_line);
                 resultsSubList.setLineItemValue('custpage_resultssublist_invlocation', i + 1, results[i].inv_location);
-                nlapiLogExecution('DEBUG', 'resultsSubList_Load_End', results[i].custRegion);
+                resultsSubList.setLineItemValue('custpage_resultssublist_invdetail', i + 1, results[i].invDtailID);
+
             }
+            nlapiLogExecution('DEBUG', 'resultsSubList_Load_End', '');
+            nlapiLogExecution('DEBUG', 'refresh = ' + nlapiGetFieldValue('custpage_reresh_search'), '');
         }
 
         var checkStage = SecondForm.addField('custpage_ilo_check_stage', 'text', 'check', null, 'custpage_ilo_searchdetails');
-        checkStage.setDefaultValue('stagetwo');
+        if (nlapiGetFieldValue('custpage_reresh_search') == "T") {
+            nlapiLogExecution('DEBUG', 'refresh = ' + nlapiGetFieldValue('custpage_reresh_search'), 'stageOne');
+            checkStage.setDefaultValue('stageOne');
+        }
+        else {
+            nlapiLogExecution('DEBUG', 'refresh = ' + nlapiGetFieldValue('custpage_reresh_search'), 'stageTwo');
+            checkStage.setDefaultValue('stagetwo');
+        }
+
         checkStage.setDisplayType('hidden');
         SecondForm.addSubmitButton('Execute');
         response.writePage(SecondForm);
-        
+
     }
 
     else if (request.getParameter('custpage_ilo_check_stage') == 'stagetwo') {
 
         //////////////
         nlapiLogExecution('DEBUG', 'stage 2', 'stage 2');
-        //var lastFormName = 'Ready for Print';
+        nlapiLogExecution('DEBUG', 'refresh_param' + request.getParameter('custpage_reresh_search'), '');
 
-        // GET PARAMETERS FROM LAST SCREEN
-        //var Machine = request.getParameter('custpage_machine_select');
-        //nlapiLogExecution('DEBUG', 'Machine', Machine);
-        //var client = request.getParameter('custpage_client_select');
-        //nlapiLogExecution('DEBUG', 'client', client);
-        //var relatedSC = request.getParameter('custpage_relatedsc_select');
-        //nlapiLogExecution('DEBUG', 'relatedSC', relatedSC);
-        //var assignedLocation = request.getParameter('custpage_location_select');
-        //nlapiLogExecution('DEBUG', 'Location', assignedLocation);
-        //var caseType = nlapiLookupField('supportcase', relatedSC, 'category');
-        //var internalCaseType = nlapiLookupField('supportcase', relatedSC, 'custevent_internal_case_type');
+        if (request.getParameter('custpage_reresh_search') == 'T') {
+            var FromD = request.getParameter('custpage_from_date');
+            nlapiLogExecution('DEBUG', 'FromD', FromD);
 
-        var form = nlapiCreateForm('Summery Report');
-        var sumArr = new Array();
+            var ToD = request.getParameter('custpage_to_date');
+            nlapiLogExecution('DEBUG', 'ToD', ToD);
 
-        var compArr = [];
-        var checkBox;
-        var lineCount = request.getLineItemCount('custpage_results_sublist');
+            var regionVal = request.getParameter('custpage_ilo_region');
+            nlapiLogExecution('DEBUG', 'customerVal', customerVal);
 
-        for (var x = 1; x <= lineCount; x++) {
-            //list = request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_list', x);
-            checkBox = request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_checkbox2', x);
+            var customerVal = request.getParameter('custpage_ilo_customer');
+            nlapiLogExecution('DEBUG', 'regionVal', regionVal);
 
-            if (checkBox == 'T') {// list == 'b'
-                compArr.push({
-                    salesOrderId: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_soid', x),
-                    tranid: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_tranid', x),
-                    lineId: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_soline', x),
-                    inv_Location: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_invlocation', x),
-                });
+            var formTitle = 'middle screen ';
+            var SecondForm = nlapiCreateForm(formTitle);
 
+            var submitter = 'submitter';
+            var script = "alert('flowcontrol' + submitter.click())";
+
+            var button = SecondForm.addButton('custpage_edit_button', 'Edit Fields', script);
+
+            var fromDate = SecondForm.addField('custpage_from_date', 'Date', 'From', null, null);
+            fromDate.setDefaultValue(FromD);
+            var toDate = SecondForm.addField('custpage_to_date', 'Date', 'To', null, null);
+            toDate.setDefaultValue(ToD);
+
+            var region = SecondForm.addField('custpage_ilo_region', 'multiselect', 'Region', 'customrecord_cseg_region_test', null);
+            region.setDefaultValue(regionVal);
+            region.setDisplayType('inline');
+
+            var customer = SecondForm.addField('custpage_ilo_customer', 'select', 'Customer', 'customer', null);
+            customer.setDefaultValue(customerVal);
+            customer.setDisplayType('inline');
+
+            var checkStage = SecondForm.addField('custpage_ilo_check_stage', 'text', 'check', null, 'custpage_ilo_searchdetails');
+            checkStage.setDefaultValue('stageOne');
+            checkStage.setDisplayType('hidden');
+
+            var submit = SecondForm.addSubmitButton('Execute');
+            response.writePage(SecondForm);
+
+            //document.getElementById('submitter').click();
+
+
+        }
+        else {
+            //var lastFormName = 'Ready for Print';
+
+            // GET PARAMETERS FROM LAST SCREEN
+            //var Machine = request.getParameter('custpage_machine_select');
+            //nlapiLogExecution('DEBUG', 'Machine', Machine);
+            //var client = request.getParameter('custpage_client_select');
+            //nlapiLogExecution('DEBUG', 'client', client);
+            //var relatedSC = request.getParameter('custpage_relatedsc_select');
+            //nlapiLogExecution('DEBUG', 'relatedSC', relatedSC);
+            //var assignedLocation = request.getParameter('custpage_location_select');
+            //nlapiLogExecution('DEBUG', 'Location', assignedLocation);
+            //var caseType = nlapiLookupField('supportcase', relatedSC, 'category');
+            //var internalCaseType = nlapiLookupField('supportcase', relatedSC, 'custevent_internal_case_type');
+
+            var form = nlapiCreateForm('Summary Report');
+            var sumArr = new Array();
+
+            var compArr = [];
+            var checkBox;
+            var lineCount = request.getLineItemCount('custpage_results_sublist');
+            nlapiLogExecution('DEBUG', 'lineCount:' + lineCount, '');
+            for (var x = 1; x <= lineCount; x++) {
+                //list = request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_list', x);
+                checkBox = request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_checkbox2', x);
+                nlapiLogExecution('DEBUG', 'checkBox line:' + x, checkBox);
+                if (checkBox == 'T') {// list == 'b'
+                    var soTranId = request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_tranid', x);
+                    soTranId = soTranId.substring(soTranId.indexOf('<b>') + 3, soTranId.indexOf('</b>'));
+                    compArr.push({
+                        salesOrderId: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_soid', x),
+                        tranid: soTranId,
+                        lineId: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_soline', x),
+                        inv_Location: request.getLineItemValue('custpage_results_sublist', 'custpage_resultssublist_invlocation', x),
+                    });
+
+                }
+                //nlapiLogExecution('DEBUG', 'InvArr', InvArr.id + 'type : ' + InvArr.type);
             }
-            //nlapiLogExecution('DEBUG', 'InvArr', InvArr.id + 'type : ' + InvArr.type);
+
+
+            nlapiLogExecution('DEBUG', 'so_to_fulfilment', 'compArr: ' + JSON.stringify(compArr));
+            if (compArr.length > 0) {
+                var getUserMail = nlapiGetContext().getEmail();
+                var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
+                htmlField1.setDefaultValue("<span style='font-size:18px'>The process has been submited and is currently in progress... <br/> An email with the summary of the results will be sent to : <b> " + getUserMail + "</b> once completed.<br></span>");
+                try { nlapiScheduleScript('customscript_fulfill_so_schedule', 'customdeploy_fulfill_so_schedule_dep', { custscript_fileid: JSON.stringify(compArr) }) } catch (e) { }
+            }
+            nlapiSetRedirectURL('suitelet', 'customscript_so_for_fulfl_screen', 'customdeploy_so_for_fulfl_screen_dep', 'internal');
+            response.writePage(form);
         }
 
-        nlapiLogExecution('DEBUG', 'so_to_fulfilment', 'compArr: ' + JSON.stringify(compArr));
-        if (compArr.length > 0) {
-            try { nlapiScheduleScript('customscript_fulfill_so_schedule', 'customdeploy_fulfill_so_schedule_dep', { custscript_fileid: JSON.stringify(compArr) }) } catch (e) { }
-        }
-
-        
-
-        response.writePage(form);
 
         ////
         //var thirdForm = nlapiCreateForm('Services Update Screen - finish');
@@ -167,14 +265,20 @@ function services_update_screen(request, response) {
 } // services_update_screen function - end
 
 //functions
-function Search(To,From) {
+function Search(To, From, region, customer) {
     var filters = new Array();
     var s = [];
     var searchid = 0;
     var columns = new Array();
 
     var search = nlapiLoadSearch(null, 'customsearch_so_item_fulfill');
-    search.addFilter(new nlobjSearchFilter('trandate', null, 'within', [From, To]));
+    search.addFilter(new nlobjSearchFilter('shipdate', null, 'within', [From, To]));
+    if (!isNullOrEmpty(region)) {
+        search.addFilter(new nlobjSearchFilter('custbody_so_region', null, 'anyof', region.split("\u0005")));
+    }
+    if (!isNullOrEmpty(customer)) {
+        search.addFilter(new nlobjSearchFilter('entity', null, 'anyof', customer));
+    }
     var runSearch = search.runSearch();
     var cols = search.getColumns();
 
@@ -198,7 +302,7 @@ function Search(To,From) {
                 shipDate: s[i].getValue('shipdate'),
                 shipAdd: s[i].getValue('shipaddress', "customer", null),
                 region: s[i].getText('custbody_so_region'),
-                item: s[i].getValue('item'),
+                item: s[i].getText('item'),
                 itemName: s[i].getValue('displayname', "item", null),
                 quantity: s[i].getValue('quantity'),
                 fulfilled: s[i].getValue('quantityshiprecv'),
@@ -206,6 +310,9 @@ function Search(To,From) {
                 custRegion: s[i].getText("cseg_region_test", "customer", null),
                 so_line: s[i].getValue("line"),
                 inv_location: s[i].getValue("inventorylocation"),
+                invDtailID: s[i].getValue("internalid", "inventoryDetail", null),
+                unpickedQty: s[i].getValue(cols[16]),
+                lotExpirationDate: s[i].getValue('expirationdate', 'inventoryDetail', null),
             })
         }
     }
@@ -214,9 +321,23 @@ function Search(To,From) {
 }
 
 function field_edit() {
+
     var flowcontrol = document.getElementById('custpage_ilo_check_stage');
     flowcontrol.value = 'EditMode';
+    nlapiLogExecution('DEBUG', 'flowcontrol ', flowcontrol.value);
+
+
 }
+
+function isNullOrEmpty(val) {
+
+    if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
+        return true;
+    }
+    return false;
+}
+
+
 
 
 var salesorderSearch = nlapiSearchRecord("salesorder", null,

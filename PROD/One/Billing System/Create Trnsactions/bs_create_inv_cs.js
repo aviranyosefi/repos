@@ -62,4 +62,3 @@ function ValidationField(field) {
     }
     return true;
 }
-

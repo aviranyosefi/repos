@@ -10,7 +10,7 @@ function CreateInvoice() {
         manage_inv_log = JSON.parse(manage_inv_log);
         var agrType = manage_inv_log[0].type
         nlapiLogExecution('DEBUG', 'agrType :' + agrType, 'manage_inv_log: ' + JSON.stringify(manage_inv_log));
-        var bpList = getBP(agrType, manage_inv_log[0].fromdate, manage_inv_log[0].todate, manage_inv_log[0].agr, manage_inv_log[0].ib, manage_inv_log[0].employee, manage_inv_log[0].customer, manage_inv_log[0].sub_type)
+        var bpList = getBP(agrType, manage_inv_log[0].fromdate, manage_inv_log[0].todate, manage_inv_log[0].agr, manage_inv_log[0].ib, manage_inv_log[0].employee, manage_inv_log[0].customer)
         nlapiLogExecution('DEBUG', 'bpList : ' + bpList.length, JSON.stringify(bpList));
         if (bpList.length > 0) {
             invoice_date = manage_inv_log[0].invoice_date
@@ -21,7 +21,7 @@ function CreateInvoice() {
         nlapiLogExecution('error', 'error CreateInvoice ', e);
     }
 }
-function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data, sub_type) {
+function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data) {
     try {
         var search = nlapiLoadSearch(null, 'customsearch_bp_to_inv');
         var cols = search.getColumns();
@@ -32,7 +32,6 @@ function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, emplo
         if (!isNullOrEmpty(ib_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_ib', null, 'anyof', ib_data)) }
         if (!isNullOrEmpty(employee_line_data)) { search.addFilter(new nlobjSearchFilter('owner', 'custrecord_bp_agr', 'anyof', employee_line_data)) }
         if (!isNullOrEmpty(customer_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_customer', null, 'anyof', customer_data)) }
-        if (!isNullOrEmpty(sub_type)) { search.addFilter(new nlobjSearchFilter('custrecord_agr_sub_type', 'custrecord_bp_agr', 'anyof', sub_type)) }
         var bpList = [];
         var resultset = search.runSearch();
         var s = [];

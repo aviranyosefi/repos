@@ -758,6 +758,7 @@ define(['N/sftp', 'N/file', 'N/log', 'N/search', '../Common/NCS.Lib.Common', 'N/
 
             return key;
         }
+       
 
         return {
             GetSftpConnection: GetSftpConnection,

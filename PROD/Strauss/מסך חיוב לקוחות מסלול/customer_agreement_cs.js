@@ -47,7 +47,10 @@ function save() {
             }
     }
     var sales_rep = nlapiGetFieldValue('custpage_sales_rep')
-    if (nlapiGetFieldValue('custpage_cb_as_matal') == 'T' && isNullOrEmpty(sales_rep)) {
+    var salesrole = nlapiGetFieldValue('custpage_salesrole')
+    var check_stage = nlapiGetFieldValue('custpage_ilo_check_stage')
+    
+    if ((nlapiGetFieldValue('custpage_cb_as_matal') == 'T' && isNullOrEmpty(sales_rep)) || (check_stage == '3' && (salesrole == 2 || salesrole == 1) && isNullOrEmpty(sales_rep)) ) {
         alert("בחר איש מכירות")
         return false;
     }
@@ -151,6 +154,11 @@ function exportExcel(sublist) {
 }
 function exportExcel2(sublist) {
 
+    col = 12; col1 = 13
+    var salesrole = nlapiGetFieldValue('custpage_ilo_salesrole');
+    if (salesrole == '1') { col = 10; col1 = 11 }
+
+
     var tab_text = "<head><meta charset='UTF-8'></head><table border='2px'><tr bgcolor='#87AFC6'>";
     tab = document.getElementById(sublist); // id of table
 
@@ -159,7 +167,7 @@ function exportExcel2(sublist) {
         row = tab.rows[j];
         cells = row.getElementsByTagName('td');
         for (var m = 0; m < cells.length; m++) {
-            if ((m == 12 || m == 13) && j !=0) {
+            if ((m == col || m == col1) && j !=0) {
                 f = cells[m]            
                 tab_text += '<td>'
                 tab_text += f.getElementsByTagName('input')[0].value

@@ -1,11 +1,10 @@
-﻿function CreateTran(request, response) {
-    if (request.getParameter('custpage_page') == '1') {
-        var type = request.getParameter('custpage_type');
-        var sub_type = request.getParameter('custpage_sub_type');
-        var fromdate = request.getParameter('custpage_select_fromdate');
-        var todate = request.getParameter('custpage_select_todate');
-        var agr = request.getParameter('custpage_agr');
-        var ib = request.getParameter('custpage_ib');
+﻿function CreateTran(request, response) {  
+    if (request.getParameter('custpage_page') == '1' ) {
+        var type = request.getParameter('custpage_type');  
+        var fromdate = request.getParameter('custpage_select_fromdate');  
+        var todate = request.getParameter('custpage_select_todate');  
+        var agr = request.getParameter('custpage_agr');  
+        var ib = request.getParameter('custpage_ib');  
         var employee = request.getParameter('custpage_employee');
         var customer = request.getParameter('custpage_customer');
         var invoice_date = request.getParameter('custpage_invoice_date');
@@ -23,12 +22,11 @@
             employee: employee,
             customer: customer,
             type: type,
-            sub_type: sub_type,
             invoice_date: invoice_date
         })
         data = JSON.stringify(data);
         nlapiLogExecution('debug', 'data: ', data)
-        try {
+        try {          
             var params = {
                 custscript_manage_inv_log: data,
             };
@@ -38,33 +36,20 @@
         }
         catch (e) {
             nlapiLogExecution('ERROR', 'ERROR: ', e)
-        }
+        }     
         response.writePage(form)
     }
     else {
-
-        var agrType = request.getParameter('agrType');
-
         var form = nlapiCreateForm('Manage Invoice');
         form.addSubmitButton('Refresh');
-
+      
         form.addFieldGroup('custpage_batch_group', 'Select Details');
 
         var type = form.addField('custpage_type', 'select', 'Type', 'customlist_agreement_type', 'custpage_batch_group').setLayoutType('midrow');
         var type_data = request.getParameter('custpage_type');
-        if (isNullOrEmpty(type_data)) type_data = agrType
         type.setDefaultValue(type_data)
         type.setMandatory(true);
-
-        var sub_type_data = '';
-        if (agrType == 2 || type_data == 2) {
-            var subType = request.getParameter('subType');
-            var sub_type = form.addField('custpage_sub_type', 'select', 'Sub Type', 'customlist_agreement_sub_type', 'custpage_batch_group').setLayoutType('midrow');
-            var sub_type_data = request.getParameter('custpage_sub_type');
-            if (isNullOrEmpty(sub_type_data)) sub_type_data = subType
-            sub_type.setDefaultValue(sub_type_data)
-        }
-
+        
         var selectFromDate = form.addField('custpage_select_fromdate', 'date', 'From Date', null, 'custpage_batch_group').setLayoutType('midrow');
         var from_date_data = request.getParameter('custpage_select_fromdate')
         selectFromDate.setDefaultValue(from_date_data)
@@ -75,18 +60,18 @@
 
         var selectInvoiceDate = form.addField('custpage_invoice_date', 'date', 'Invoice Date', null, 'custpage_batch_group').setLayoutType('midrow');
         var invoice_date_data = request.getParameter('custpage_invoice_date');
-        if (isNullOrEmpty(invoice_date_data)) invoice_date_data = new Date()
+        if (isNullOrEmpty(invoice_date_data)) invoice_date_data=new Date()
         selectInvoiceDate.setDefaultValue(invoice_date_data)
         selectInvoiceDate.setMandatory(true);
 
         var agr = form.addField('custpage_agr', 'select', 'Agreement', 'customrecord_agr', 'custpage_batch_group').setLayoutType('outside');
         var agr_data = request.getParameter('custpage_agr');
-        agr.setDefaultValue(agr_data);
+        agr.setDefaultValue(agr_data);        
 
         var ib = form.addField('custpage_ib', 'select', 'Install Base', 'customrecord_ib', 'custpage_batch_group').setLayoutType('outside');
         var ib_data = request.getParameter('custpage_ib');
         ib.setDefaultValue(ib_data)
-
+   
         var employee = form.addField('custpage_employee', 'select', 'employee', 'employee', 'custpage_batch_group').setLayoutType('outside');
         var employee_line_data = request.getParameter('custpage_employee');
         employee.setDefaultValue(employee_line_data)
@@ -99,44 +84,38 @@
         form.setScript('customscript_bs_create_inv_cs');
 
         if (!isNullOrEmpty(type_data)) {
-            var results = getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data, sub_type_data)
+            var results = getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data)
             if (results.length > 0) {
                 form.addButton('customscript_continue', 'Continue', 'Continue()');
                 form.addButton('customscript_export', 'Export', 'fnExcelReport()');
                 form.addFieldGroup('custpage_timesheet_group', 'List');
                 var subList = form.addSubList('custpage_res_sublist', 'list', 'number of results: ' + results.length, 'custpage_timesheet_group');
                 //subList.addMarkAllButtons()
-                subList.addField('custpage_view', 'text', 'View');
                 subList.addField('custpage_agr', 'text', 'Agreement');
-                subList.addField('custpage_customer', 'text', 'Customer');
                 subList.addField('custpage_amount', 'text', 'Amount');
                 for (var i = 0; i < results.length; i++) {
-                    subList.setLineItemValue('custpage_view', i + 1, results[i].view);
                     subList.setLineItemValue('custpage_agr', i + 1, results[i].agr);
-                    subList.setLineItemValue('custpage_customer', i + 1, results[i].customer);
                     subList.setLineItemValue('custpage_amount', i + 1, results[i].amount);
                 }
-            }
+            }  
         }
-
+                        
         response.writePage(form);
     }
 }//end of suitlet
 
-function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data, sub_type_data) {
+function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data) {
 
     //nlapiLogExecution('debug', ' status_data: ' + status_data, 'agr_data: ' + agr_data)
     var search = nlapiLoadSearch(null, 'customsearch_bs_invoices');
     var cols = search.getColumns();
-    search.addFilter(new nlobjSearchFilter('custrecord_agr_type', 'custrecord_bp_agr', 'anyof', type_data))
+    search.addFilter(new nlobjSearchFilter('custrecord_agr_type', 'custrecord_bp_agr', 'anyof', type_data)) 
     if (!isNullOrEmpty(from_date_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_date_for_inv', null, 'onorafter', from_date_data)) }
-    if (!isNullOrEmpty(to_date_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_date_for_inv', null, 'onorbefore', to_date_data)) }
     //search.addFilter(new nlobjSearchFilter('custrecord_bp_date_for_inv', null, 'onorbefore', to_date_data)) 
     if (!isNullOrEmpty(agr_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_agr', null, 'anyof', agr_data)) }
     if (!isNullOrEmpty(ib_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_ib', null, 'anyof', ib_data)) }
     //if (!isNullOrEmpty(employee_line_data)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_item', null, 'anyof', employee_line_data)) }
     if (!isNullOrEmpty(customer_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bp_customer', null, 'anyof', customer_data)) }
-    if (!isNullOrEmpty(sub_type_data)) { search.addFilter(new nlobjSearchFilter('custrecord_agr_sub_type', 'custrecord_bp_agr', 'anyof', sub_type_data)) }
     var agrList = [];
     var resultset = search.runSearch();
     var s = [];
@@ -150,13 +129,10 @@ function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, emplo
     } while (resultslice != null && resultslice.length >= 1000);
     if (s != null) {
         for (var i = 0; i < s.length; i++) {
-            var agrName = s[i].getText("custrecord_bp_agr", null, "GROUP");
-            var agrId = s[i].getValue("custrecord_bp_agr", null, "GROUP");
             agrList.push({
-                agr: agrName,
+                agr: s[i].getText("custrecord_bp_agr", null, "GROUP"),
                 amount: s[i].getValue("custrecord_bp_amount", null, "SUM"),
                 customer: s[i].getText("custrecord_bp_customer", null, "GROUP"),
-                view: getDrillDownUrl(agrId, agrName)
             });
         }
     }
@@ -171,7 +147,7 @@ function isNullOrEmpty(val) {
     return false;
 }
 function GetLink(name, id, type) {
-    var link = "<a href='https://system.netsuite.com" + nlapiResolveURL('RECORD', type, id) + "'" + ' target="_blank">' + name + "</a>";
+    var link = "<a href='https://system.netsuite.com"+ nlapiResolveURL('RECORD', type,id) + "'" + ' target="_blank">' + name + "</a>";
     return link;
     //"https://system.netsuite.com" + nlapiResolveURL('RECORD', 'customrecord_billing_plan', s[i].id)
 }
@@ -185,11 +161,5 @@ function getScriptID(scriptID) {
         ]
     );
     return scriptSearch[0].id
-}
-function getDrillDownUrl(agrId, agrName) {
-
-    var link = "<a href='https://system.netsuite.com/app/common/search/searchresults.nl?rectype=516&searchtype=Custom&CUSTRECORD_BP_AGRtype=ANYOF&CUSTRECORD_BP_AGR=" + agrId + "&detail=CUSTRECORD_BP_AGR&detailname=" + agrName + "'" + ' target="_blank">' + 'view' + "</a>";
-    return link;
-
 }
 

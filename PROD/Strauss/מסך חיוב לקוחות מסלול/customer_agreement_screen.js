@@ -45,7 +45,11 @@ function getSearchData(request, response) {
             for (var i = 0; i < getSalesReps.length; i++) {
                 salesrep.addSelectOption(getSalesReps[i].id, getSalesReps[i].name);
             }
-            form.addField('custpage_cb_as_matal', 'checkbox', 'ריצה כמתל', null, 'custpage_ilo_searchdetails');
+           //var cbField = form.addField('custpage_cb_as_matal', 'checkbox', 'ריצה כמתל', null, 'custpage_ilo_searchdetails');
+            //cbField.setDefaultValue('F')
+            var priceChange = form.addField('custpage_cb_as_matal', 'select', 'ריצה כמתל', null, 'custpage_ilo_searchdetails');
+            priceChange.addSelectOption('F', 'לא');
+            priceChange.addSelectOption('T', 'כן');
         }
         else if (salesrole == '4') { // נציג כספים
             var salesrep = form.addField('custpage_sales_rep', 'select', 'איש מכירות', null, 'custpage_ilo_searchdetails');
@@ -71,6 +75,10 @@ function getSearchData(request, response) {
         checkStage.setDefaultValue(screenType);
         checkStage.setDisplayType('hidden');
 
+        var salesroleField = form.addField('custpage_salesrole', 'text', 'check', null, 'custpage_ilo_searchdetails');
+        salesroleField.setDefaultValue(salesrole);
+        salesroleField.setDisplayType('hidden');
+
 
     }
 
@@ -85,6 +93,7 @@ function getSearchData(request, response) {
             var status = request.getParameter('custpage_billing_status');
             var billing_type = request.getParameter('custpage_billing_type');
             var as_matal = request.getParameter('custpage_cb_as_matal');
+            var salesroleData = request.getParameter('custpage_salesrole');
             nlapiLogExecution('DEBUG', 'as_matal', as_matal);
             var salesrole = nlapiLookupField('employee', user, 'custentity_sales_rep_role');
             nlapiLogExecution('DEBUG', 'salesrole', salesrole);
@@ -101,6 +110,14 @@ function getSearchData(request, response) {
 
             }
             var form = nlapiCreateForm(screentype);
+
+            var sumOfTotal = 0;
+            var sumOfAprrove = 0;
+            var numOfBi = [];
+
+            var salesroleField = form.addField('custpage_salesrole', 'text', 'check', null, 'custpage_ilo_searchdetails');
+            salesroleField.setDefaultValue(salesroleData);
+            salesroleField.setDisplayType('hidden');
 
             form.addFieldGroup('custpage_ilo_searchdetails', 'נתונים להזנה');
             form.addFieldGroup('custpage_ilo_details', 'מידע כללי');
@@ -144,12 +161,12 @@ function getSearchData(request, response) {
             salesroleField.setDisplayType('hidden');
 
             form.setScript('customscript_customer_agreement_cs');
-
+   
             var resultsSubList = form.addSubList('custpage_results_sublist', 'list', 'תוצאות', null);
 
             resultsSubList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
             resultsSubList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
-            resultsSubList.addButton('customscript_export', 'Export To Excel', 'ff()');
+            resultsSubList.addButton('customscript_export', 'Export To Excel', 'fnExcelReport2()');
 
             resultsSubList.addField('custpage_result_cb', 'checkbox', 'בחירה');
             resultsSubList.addField('custpage_result_view', 'checkbox', 'תצוגה')     
@@ -170,7 +187,7 @@ function getSearchData(request, response) {
   
             if (salesrole == '2') {
                 resultsSubList.addField('custpage_result_matal_sum', 'text', 'סכום חיוב מתל').setDisplayType('disabled');
-                billing_type_field.setDisplayType('inline')
+                //billing_type_field.setDisplayType('inline')
                 resultsSubList.addField('custpage_sales_rep', 'text', 'איש מכירות').setDisplayType('disabled');
             }
             resultsSubList.addField('custpage_result_curr_monthly_charge', 'currency', 'חיוב החודש').setDisplayType('entry');
@@ -248,14 +265,19 @@ function getSearchData(request, response) {
                     resultsSubList.setLineItemValue('custpage_sales_manager_approver', j + 1, agreementList[j].manager_approver);
                     resultsSubList.setLineItemValue('custpage_sales_rep', j + 1, agreementList[j].salesrep);
                     resultsSubList.setLineItemValue('custpage_result_curr_monthly_charge', j + 1, agreementList[j].menael_sum_approval)
+                    sumOfTotal += Number(agreementList[j].menael_sum_approval);
                 }
                 resultsSubList.setLineItemValue('custpage_result_biid', j + 1, agreementList[j].biid);
                 if (isNullOrEmpty(agreementList[j].biid_tranid)) { biid = '<span style="background-color:yellow">לא נוצרה הוראת חיוב<span>' }
-                else { biid = agreementList[j].biid_tranid }
+                else {
+                    biid = agreementList[j].biid_tranid;
+                    numOfBi.push(1);
+                }
                 resultsSubList.setLineItemValue('custpage_result_biid_tranid', j + 1, biid );
                 if (salesrole == '1' && !isNullOrEmpty(agreementList[j].biid_tranid)) {
                     resultsSubList.setLineItemValue('custpage_result_curr_monthly_charge', j + 1, agreementList[j].biid_amount)
                     resultsSubList.setLineItemValue('custpage_sales_manager_approver', j + 1, agreementList[j].sales_manager_approver);
+                    sumOfTotal += Number(agreementList[j].biid_amount);
                 }
                 resultsSubList.setLineItemValue('custpage_result_comment', j + 1, agreementList[j].memo);
                 resultsSubList.setLineItemValue('custpage_result_billing_type', j + 1, agreementList[j].billing_type);
@@ -294,9 +316,8 @@ function getSearchData(request, response) {
             else if (salesrole == '2') {
                 var secondList = menaelSummaryTab(sales_rep);
             }
-            var sumOfTotal = 0;
-            var sumOfAprrove = 0;
-            var numOfBi = [];
+      
+        
             var numOfApprovedBi = [];
             for (var j = 0; j < secondList.length; j++) {
                 secondSubList.setLineItemValue('custpage_result_customer', j + 1, secondList[j].customer_name)
@@ -312,13 +333,13 @@ function getSearchData(request, response) {
                 secondSubList.setLineItemValue('custpage_result_memo', j + 1, secondList[j].memo)
                 secondSubList.setLineItemValue('custpage_result_type', j + 1, secondList[j].type)
                 secondSubList.setLineItemValue('custpage_result_sum_charge', j + 1, secondList[j].sum_charge)
-                sumOfTotal += Number(secondList[j].sum_charge);
+                //sumOfTotal += Number(secondList[j].sum_charge);
                 if (!isNullOrEmpty(secondList[j].menael_sum)) {
                     sumOfAprrove += Number(secondList[j].menael_sum);
                 }
-                if (!isNullOrEmpty(secondList[j].bi)) {
-                    numOfBi.push(1);
-                }
+                //if (!isNullOrEmpty(secondList[j].bi)) {
+                //    numOfBi.push(1);
+                //}
                 if (secondList[j].approved_bi == 'T') {
                     numOfApprovedBi.push(1);
                 }
@@ -327,7 +348,7 @@ function getSearchData(request, response) {
             total.setDefaultValue(formatNumber(sumOfTotal));
             total.setDisplayType('inline');
             var num_of_customer = form.addField('custpage_num_of_customer', 'integer', 'סהכ לקוחות', null, 'custpage_ilo_details');
-            num_of_customer.setDefaultValue(secondList.length);
+            num_of_customer.setDefaultValue(agreementList.length);
             num_of_customer.setDisplayType('inline');
             var num_of_bi = form.addField('custpage_num_of_bi', 'integer', 'סהכ הוראות חיוב', null, 'custpage_ilo_details');
             num_of_bi.setDefaultValue(numOfBi.length);
@@ -563,30 +584,33 @@ function getSearchData(request, response) {
            
             if (screen_type == '2') {
                 var toDateData = request.getParameter('custpage_ilo_multi_todate');
+                var fromdate = request.getParameter('custpage_ilo_multi_fromdate');
                 var salesrole = request.getParameter('custpage_ilo_salesrole');
                 var data = [];
-                var data_for_update = [];
+                var second_data = [];
                 for (var m = 1; m <= LinesNo; m++) {
                     checkBox = request.getLineItemValue('custpage_results_sublist', 'custpage_result_cb', m);
                     if (checkBox == 'T') {
                         billing_type = request.getLineItemValue('custpage_results_sublist', 'custpage_result_billing_type', m);
+                        entity = request.getLineItemValue('custpage_results_sublist', 'custpage_result_customer_id', m);
+                        memo = request.getLineItemValue('custpage_results_sublist', 'custpage_result_comment', m);
+                        agreement = request.getLineItemValue('custpage_results_sublist', 'custpage_result_agreement_id', m);
+                        beans_kg = request.getLineItemValue('custpage_results_sublist', 'custpage_result_beans_kg', m);
+                        biid = request.getLineItemValue('custpage_results_sublist', 'custpage_result_biid', m);
+                        result_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_monthly_charge', m);
                         if (salesrole == '1') {
                             sugg_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_sugg_monthly_charge', m);
                             curr_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_curr_monthly_charge', m);
                             if (isNullOrEmpty(curr_monthly_charge)) { rate = sugg_monthly_charge }
                             else { rate = curr_monthly_charge };
-                            entity = request.getLineItemValue('custpage_results_sublist', 'custpage_result_customer_id', m);
-                            memo = request.getLineItemValue('custpage_results_sublist', 'custpage_result_comment', m);
-                            agreement = request.getLineItemValue('custpage_results_sublist', 'custpage_result_agreement_id', m);
-                            beans_kg = request.getLineItemValue('custpage_results_sublist', 'custpage_result_beans_kg', m);
-                            biid = request.getLineItemValue('custpage_results_sublist', 'custpage_result_biid', m);
-                            result_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_monthly_charge', m);
+                          
                             if (NumberToRate(result_monthly_charge) != NumberToRate(rate)) { var change = 'T'; }
                             else { var change = 'F'; }
                             if (isNullOrEmpty(biid)) {
                                 data.push({
                                     entity: entity,
                                     enddate: toDateData,
+                                    fromdate: fromdate,
                                     rate: rate,
                                     memo: memo,
                                     agreement: agreement,
@@ -600,7 +624,7 @@ function getSearchData(request, response) {
                                 });
                             }
                             else {
-                                data_for_update.push({
+                                second_data.push({
                                     id: biid,
                                     curr_monthly_charge: curr_monthly_charge,
                                     memo: memo,
@@ -616,20 +640,40 @@ function getSearchData(request, response) {
                             }
                             else { rate = curr_monthly_charge };
                             beans_kg = request.getLineItemValue('custpage_results_sublist', 'custpage_result_beans_kg', m);
-                            biId = request.getLineItemValue('custpage_results_sublist', 'custpage_result_biid', m); //todo
-                            memo = request.getLineItemValue('custpage_results_sublist', 'custpage_result_comment', m);
+                            biId = request.getLineItemValue('custpage_results_sublist', 'custpage_result_biid', m); //todo             
                             sugg_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_sugg_monthly_charge', m);
                             result_monthly_charge = request.getLineItemValue('custpage_results_sublist', 'custpage_result_monthly_charge', m);
                             if (NumberToRate(result_monthly_charge) != NumberToRate(curr_monthly_charge)) { var change = 'T'; }
                             else { var change = 'F'; }
-                            data.push({
-                                billing_instruction: biId,
-                                sales_manager_approver: user,
-                                amount_sales_manager: rate,
-                                memo: memo,
-                                change: change,
-                                billing_type: billing_type
-                            });
+                            if (!isNullOrEmpty(biId)) {
+                                data.push({
+                                    billing_instruction: biId,
+                                    sales_manager_approver: user,
+                                    amount_sales_manager: rate,
+                                    memo: memo,
+                                    change: change,
+                                    billing_type: billing_type
+                                });
+                            }
+                            else {
+                                second_data.push({
+                                    entity: entity,
+                                    enddate: toDateData,
+                                    fromdate: fromdate,
+                                    rate: rate,
+                                    memo: memo,
+                                    agreement: agreement,
+                                    beans_kg: beans_kg,
+                                    sugg_monthly_charge: rate,
+                                    sales_manager_approver: user,
+                                    calculated_amount_system: sugg_monthly_charge,
+                                    toDateData: toDateData,
+                                    billing_type: billing_type,
+                                    change: change,
+                                });
+
+                            }
+                        
                         }
                     }
                 }
@@ -641,7 +685,7 @@ function getSearchData(request, response) {
                 } else {
                     try {
                         var logId = createLog(salesRep);
-                        nlapiScheduleScript('customscript_customer_agreement_ss', null, { custscript_first_data: JSON.stringify(data), custscript_second_data: JSON.stringify(data_for_update), custscript_salesrole: salesrole, custscript_logid: logId });
+                        nlapiScheduleScript('customscript_customer_agreement_ss', null, { custscript_first_data: JSON.stringify(data), custscript_second_data: JSON.stringify(second_data), custscript_salesrole: salesrole, custscript_logid: logId });
                         var getUserMail = nlapiGetContext().getEmail();
                         var htmlField1 = form.addField('custpage_header1', 'inlinehtml');
                         htmlField1.setDefaultValue("<span style='font-size:18px'>An email with the summary of results will be sent to : <b> " + getUserMail + "</b> once completed.<br></span>");
@@ -841,6 +885,7 @@ function AgreementDate2(agreement_type, salesrep, customer, status, billing_type
                 manager_approver: s[i].getValue(cols[41]),
                 salesrep: s[i].getValue(cols[44]),
                 menael_sum_approval: menael_sum_approval,
+                agreement_id: s[i].getValue(cols[47]),
 
 
             });

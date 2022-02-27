@@ -446,9 +446,9 @@ function Build4() {
                         pftarget += NTR(re[i][ProductFamilyList[z].id + 'target' + h])
                         pfgap += NTR(re[i][ProductFamilyList[z].id + 'gap' + h]);
                     }
-                    item['total'] = total;
-                    item['totaltarget'] = totaltarget;
-                    item['gaptotal'] = gaptotal;
+                    item['total'] = total + getNumber(TotalPerPf[ProductFamilyList[z].id], 'total');
+                    item['totaltarget'] = totaltarget + getNumber(TotalPerPf[ProductFamilyList[z].id], 'totaltarget');
+                    item['gaptotal'] = gaptotal + getNumber(TotalPerPf[ProductFamilyList[z].id], 'gaptotal');
                     s.setLineItemValue('custpage_m1', line, mounth1)
                     s.setLineItemValue('custpage_m2', line, mounth2)
                     s.setLineItemValue('custpage_m3', line, mounth3)
@@ -477,12 +477,12 @@ function Build4() {
                     pftotal4 = NTR(re[i][ProductFamilyList[z].id + 'mounth4']); pftotal10 = NTR(re[i][ProductFamilyList[z].id + 'mounth11'])
                     pftotal5 = NTR(re[i][ProductFamilyList[z].id + 'mounth5']); pftotal11 = NTR(re[i][ProductFamilyList[z].id + 'mounth11'])
                     pftotal6 = NTR(re[i][ProductFamilyList[z].id + 'mounth6']); pftotal12 = NTR(re[i][ProductFamilyList[z].id + 'mounth12'])
-                    item['pftotal1'] = pftotal1; item['pftotal7'] = pftotal7;
-                    item['pftotal2'] = pftotal2; item['pftotal8'] = pftotal8;
-                    item['pftotal3'] = pftotal3; item['pftotal9'] = pftotal9;
-                    item['pftotal4'] = pftotal4; item['pftotal10'] = pftotal10;
-                    item['pftotal5'] = pftotal5; item['pftotal11'] = pftotal11;
-                    item['pftotal6'] = pftotal6; item['pftotal12'] = pftotal12;
+                    item['pftotal1'] = pftotal1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal1'); item['pftotal7'] = pftotal7 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal7');
+                    item['pftotal2'] = pftotal2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal2'); item['pftotal8'] = pftotal8 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal8');
+                    item['pftotal3'] = pftotal3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal3'); item['pftotal9'] = pftotal9 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal9');
+                    item['pftotal4'] = pftotal4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal4'); item['pftotal10'] = pftotal10 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal10');
+                    item['pftotal5'] = pftotal5 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal5'); item['pftotal11'] = pftotal11 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal11');
+                    item['pftotal6'] = pftotal6 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal6'); item['pftotal12'] = pftotal12 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal12');
                 } else {
                     s.setLineItemValue('custpage_n', line, '');
                     if (m == 1) {
@@ -515,12 +515,12 @@ function Build4() {
                         pftarget4 += NTR(re[i][ProductFamilyList[z].id + 'target4']); pftarget10 += NTR(re[i][ProductFamilyList[z].id + 'target11'])
                         pftarget5 += NTR(re[i][ProductFamilyList[z].id + 'target5']); pftarget11 += NTR(re[i][ProductFamilyList[z].id + 'target11'])
                         pftarget6 += NTR(re[i][ProductFamilyList[z].id + 'target6']); pftarget12 += NTR(re[i][ProductFamilyList[z].id + 'target12'])
-                        item['pftarget1'] = pftarget1; item['pftarget7'] = pftarget7;
-                        item['pftarget2'] = pftarget2; item['pftarget8'] = pftarget8;
-                        item['pftarget3'] = pftarget3; item['pftarget9'] = pftarget9;
-                        item['pftarget4'] = pftarget4; item['pftarget10'] = pftarget10;
-                        item['pftarget5'] = pftarget5; item['pftarget11'] = pftarget11;
-                        item['pftarget6'] = pftarget6; item['pftarget12'] = pftarget12;
+                        item['pftarget1'] = pftarget1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget1'); item['pftarget7'] = pftarget7 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget7');
+                        item['pftarget2'] = pftarget2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget2'); item['pftarget8'] = pftarget8 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget8');
+                        item['pftarget3'] = pftarget3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget3'); item['pftarget9'] = pftarget9 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget9');
+                        item['pftarget4'] = pftarget4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget4'); item['pftarget10'] = pftarget10 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget10');
+                        item['pftarget5'] = pftarget5 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget5'); item['pftarget11'] = pftarget11 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget11');
+                        item['pftarget6'] = pftarget6 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget6'); item['pftarget12'] = pftarget12 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget12');
                     }
                     else if (m == 2) {
                         s.setLineItemValue('custpage_p', line, '% of Target')
@@ -551,12 +551,12 @@ function Build4() {
                         pfgap4 += NTR(re[i][ProductFamilyList[z].id + 'gap4']); pfgap10 += NTR(re[i][ProductFamilyList[z].id + 'gap11'])
                         pfgap5 += NTR(re[i][ProductFamilyList[z].id + 'gap5']); pfgap11 += NTR(re[i][ProductFamilyList[z].id + 'gap11'])
                         pfgap6 += NTR(re[i][ProductFamilyList[z].id + 'gap6']); pfgap12 += NTR(re[i][ProductFamilyList[z].id + 'gap12'])
-                        item['pfgap1'] = pfgap1; item['pfgap7'] = pfgap7;
-                        item['pfgap2'] = pfgap2; item['pfgap8'] = pfgap8;
-                        item['pfgap3'] = pfgap3; item['pfgap9'] = pfgap9;
-                        item['pfgap4'] = pfgap4; item['pfgap10'] = pfgap10;
-                        item['pfgap5'] = pfgap5; item['pfgap11'] = pfgap11;
-                        item['pfgap6'] = pfgap6; item['pfgap12'] = pfgap12;
+                        item['pfgap1'] = pfgap1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap1'); item['pfgap7'] = pfgap7 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap7');
+                        item['pfgap2'] = pfgap2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap2'); item['pfgap8'] = pfgap8 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap8');
+                        item['pfgap3'] = pfgap3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap3'); item['pfgap9'] = pfgap9 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap9');
+                        item['pfgap4'] = pfgap4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap4'); item['pfgap10'] = pfgap10 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap10');
+                        item['pfgap5'] = pfgap5 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap5'); item['pfgap11'] = pfgap11 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap11');
+                        item['pfgap6'] = pfgap6 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap6'); item['pfgap12'] = pfgap12 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap12');
                     }
                 }
                 line = line + 1;
@@ -627,11 +627,11 @@ function Build5() {
                     totalquoarterly3 += NTR(amount3); totalquoarterly4 += NTR(amount4);
                     pftotal1 += NTR(amount1); pftotal2 += NTR(amount2);
                     pftotal3 += NTR(amount3); pftotal4 += NTR(amount4);
-                    item['total'] = total;
-                    item['totaltarget'] = totaltarget;
-                    item['gaptotal'] = gaptotal;
-                    item['pftotal1'] = pftotal1; item['pftotal3'] = pftotal3;
-                    item['pftotal2'] = pftotal2; item['pftotal4'] = pftotal4;
+                    item['total'] = total + getNumber(TotalPerPf[ProductFamilyList[z].id], 'total');
+                    item['totaltarget'] = totaltarget + getNumber(TotalPerPf[ProductFamilyList[z].id], 'totaltarget');
+                    item['gaptotal'] = gaptotal + getNumber(TotalPerPf[ProductFamilyList[z].id], 'gaptotal');
+                    item['pftotal1'] = pftotal1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal1'); item['pftotal3'] = pftotal3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal3');
+                    item['pftotal2'] = pftotal2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal2'); item['pftotal4'] = pftotal4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal4');
                 } else {
                     s.setLineItemValue('custpage_n', line, '');
                     if (m == 1) {
@@ -647,8 +647,8 @@ function Build5() {
                         totaltargetquoarterly3 += NTR(target3); totaltargetquoarterly4 += NTR(target4);
                         pftarget1 += NTR(target1); pftarget3 += NTR(target2);
                         pftarget2 += NTR(target3); pftarget4 += NTR(target4);
-                        item['pftarget1'] = pftarget1; item['pftarget3'] = pftarget3;
-                        item['pftarget2'] = pftarget2; item['pftarget4'] = pftarget4;
+                        item['pftarget1'] = pftarget1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget1'); item['pftarget3'] = pftarget3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget3');
+                        item['pftarget2'] = pftarget2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget2'); item['pftarget4'] = pftarget4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget4');
                     }
                     else if (m == 2) {
                         s.setLineItemValue('custpage_p', line, '% of Target')
@@ -672,8 +672,8 @@ function Build5() {
 
                         pfgap1 += NTR(gap1); pfgap3 += NTR(gap3)
                         pfgap2 += NTR(gap2); pfgap4 += NTR(gap4)
-                        item['pfgap1'] = pfgap1; item['pfgap3'] = pfgap3;
-                        item['pfgap2'] = pfgap2; item['pfgap4'] = pfgap4;
+                        item['pfgap1'] = pfgap1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap1'); item['pfgap3'] = pfgap3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap3');
+                        item['pfgap2'] = pfgap2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap2'); item['pfgap4'] = pfgap4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap4');
 
                     }
                 }
@@ -730,11 +730,11 @@ function Build6() {
                     totalhalfYearly1 += NTR(amount1); totalhalfYearly2 += NTR(amount2);
                     pftotal1 += NTR(amount1);
                     pftotal2 += NTR(amount2);
-                    item['total'] = total;
-                    item['totaltarget'] = totaltarget;
-                    item['gaptotal'] = gaptotal;
-                    item['pftotal1'] = pftotal1;
-                    item['pftotal2'] = pftotal2;
+                    item['total'] = total + getNumber(TotalPerPf[ProductFamilyList[z].id], 'total');
+                    item['totaltarget'] = totaltarget + getNumber(TotalPerPf[ProductFamilyList[z].id], 'totaltarget');
+                    item['gaptotal'] = gaptotal + getNumber(TotalPerPf[ProductFamilyList[z].id], 'gaptotal');
+                    item['pftotal1'] = pftotal1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal1');
+                    item['pftotal2'] = pftotal2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal2');
                 }
                 else {
                     s.setLineItemValue('custpage_n', line, '');
@@ -746,8 +746,8 @@ function Build6() {
                         totaltargethalfYearly1 += NTR(target1); totaltargethalfYearly2 += NTR(target2);
                         pftarget1 += NTR(target1);
                         pftarget2 += NTR(target2);
-                        item['pftarget1'] = pftarget1;
-                        item['pftarget2'] = pftarget2;
+                        item['pftarget1'] = pftarget1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget1');
+                        item['pftarget2'] = pftarget2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget2');
                     }
                     else if (m == 2) {
                         s.setLineItemValue('custpage_p', line, '% of Target')
@@ -764,8 +764,8 @@ function Build6() {
                         totalgaphalfYearly2 += NTR(gap2)
                         pfgap1 += NTR(gap1);
                         pfgap2 += NTR(gap2)
-                        item['pfgap1'] = pfgap1;
-                        item['pfgap2'] = pfgap2;
+                        item['pfgap1'] = pfgap1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap1');
+                        item['pfgap2'] = pfgap2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap2');
 
                     }
                 }
@@ -1075,9 +1075,9 @@ function Build10() {
                         pftarget += NTR(re[i][ProductFamilyList[z].id + 'target' + h])
                         pfgap += NTR(re[i][ProductFamilyList[z].id + 'gap' + h]);
                     }
-                    item['total'] = total;
-                    item['totaltarget'] = totaltarget;
-                    item['gaptotal'] = gaptotal;
+                    item['total'] = total + getNumber(TotalPerPf[ProductFamilyList[z].id], 'total');
+                    item['totaltarget'] = totaltarget + getNumber(TotalPerPf[ProductFamilyList[z].id], 'totaltarget');
+                    item['gaptotal'] = gaptotal + getNumber(TotalPerPf[ProductFamilyList[z].id], 'gaptotal');
                     s.setLineItemValue('custpage_m1', line, mounth1)
                     s.setLineItemValue('custpage_m2', line, mounth2)
                     s.setLineItemValue('custpage_m3', line, mounth3)
@@ -1106,12 +1106,12 @@ function Build10() {
                     pftotal4 = NTR(re[i][ProductFamilyList[z].id + 'mounth4']); pftotal10 = NTR(re[i][ProductFamilyList[z].id + 'mounth11'])
                     pftotal5 = NTR(re[i][ProductFamilyList[z].id + 'mounth5']); pftotal11 = NTR(re[i][ProductFamilyList[z].id + 'mounth11'])
                     pftotal6 = NTR(re[i][ProductFamilyList[z].id + 'mounth6']); pftotal12 = NTR(re[i][ProductFamilyList[z].id + 'mounth12'])
-                    item['pftotal1'] = pftotal1; item['pftotal7'] = pftotal7;
-                    item['pftotal2'] = pftotal2; item['pftotal8'] = pftotal8;
-                    item['pftotal3'] = pftotal3; item['pftotal9'] = pftotal9;
-                    item['pftotal4'] = pftotal4; item['pftotal10'] = pftotal10;
-                    item['pftotal5'] = pftotal5; item['pftotal11'] = pftotal11;
-                    item['pftotal6'] = pftotal6; item['pftotal12'] = pftotal12;
+                    item['pftotal1'] = pftotal1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal1'); item['pftotal7'] = pftotal7 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal7');
+                    item['pftotal2'] = pftotal2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal2'); item['pftotal8'] = pftotal8 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal8');
+                    item['pftotal3'] = pftotal3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal3'); item['pftotal9'] = pftotal9 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal9');
+                    item['pftotal4'] = pftotal4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal4'); item['pftotal10'] = pftotal10 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal10');
+                    item['pftotal5'] = pftotal5 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal5'); item['pftotal11'] = pftotal11 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal11');
+                    item['pftotal6'] = pftotal6 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal6'); item['pftotal12'] = pftotal12 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal12');
                 } else {
                     s.setLineItemValue('custpage_n', line, '');
                     if (m == 1) {
@@ -1144,12 +1144,12 @@ function Build10() {
                         pftarget4 += NTR(re[i][ProductFamilyList[z].id + 'target4']); pftarget10 += NTR(re[i][ProductFamilyList[z].id + 'target11'])
                         pftarget5 += NTR(re[i][ProductFamilyList[z].id + 'target5']); pftarget11 += NTR(re[i][ProductFamilyList[z].id + 'target11'])
                         pftarget6 += NTR(re[i][ProductFamilyList[z].id + 'target6']); pftarget12 += NTR(re[i][ProductFamilyList[z].id + 'target12'])
-                        item['pftarget1'] = pftarget1; item['pftarget7'] = pftarget7;
-                        item['pftarget2'] = pftarget2; item['pftarget8'] = pftarget8;
-                        item['pftarget3'] = pftarget3; item['pftarget9'] = pftarget9;
-                        item['pftarget4'] = pftarget4; item['pftarget10'] = pftarget10;
-                        item['pftarget5'] = pftarget5; item['pftarget11'] = pftarget11;
-                        item['pftarget6'] = pftarget6; item['pftarget12'] = pftarget12;
+                        item['pftarget1'] = pftarget1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget1'); item['pftarget7'] = pftarget7 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget7');
+                        item['pftarget2'] = pftarget2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget2'); item['pftarget8'] = pftarget8 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget8');
+                        item['pftarget3'] = pftarget3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget3'); item['pftarget9'] = pftarget9 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget9');
+                        item['pftarget4'] = pftarget4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget4'); item['pftarget10'] = pftarget10 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget10');
+                        item['pftarget5'] = pftarget5 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget5'); item['pftarget11'] = pftarget11 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget11');
+                        item['pftarget6'] = pftarget6 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget6'); item['pftarget12'] = pftarget12 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget12');
                     }
                     else if (m == 2) {
                         s.setLineItemValue('custpage_p', line, '% of Target')
@@ -1180,12 +1180,12 @@ function Build10() {
                         pfgap4 += NTR(re[i][ProductFamilyList[z].id + 'gap4']); pfgap10 += NTR(re[i][ProductFamilyList[z].id + 'gap11'])
                         pfgap5 += NTR(re[i][ProductFamilyList[z].id + 'gap5']); pfgap11 += NTR(re[i][ProductFamilyList[z].id + 'gap11'])
                         pfgap6 += NTR(re[i][ProductFamilyList[z].id + 'gap6']); pfgap12 += NTR(re[i][ProductFamilyList[z].id + 'gap12'])
-                        item['pfgap1'] = pfgap1; item['pfgap7'] = pfgap7;
-                        item['pfgap2'] = pfgap2; item['pfgap8'] = pfgap8;
-                        item['pfgap3'] = pfgap3; item['pfgap9'] = pfgap9;
-                        item['pfgap4'] = pfgap4; item['pfgap10'] = pfgap10;
-                        item['pfgap5'] = pfgap5; item['pfgap11'] = pfgap11;
-                        item['pfgap6'] = pfgap6; item['pfgap12'] = pfgap12;
+                        item['pfgap1'] = pfgap1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap1'); item['pfgap7'] = pfgap7 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap7');
+                        item['pfgap2'] = pfgap2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap2'); item['pfgap8'] = pfgap8 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap8');
+                        item['pfgap3'] = pfgap3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap3'); item['pfgap9'] = pfgap9 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap9');
+                        item['pfgap4'] = pfgap4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap4'); item['pfgap10'] = pfgap10 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap10');
+                        item['pfgap5'] = pfgap5 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap5'); item['pfgap11'] = pfgap11 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap11');
+                        item['pfgap6'] = pfgap6 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap6'); item['pfgap12'] = pfgap12 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap12');
                     }
                 }
                 line = line + 1;
@@ -1256,11 +1256,11 @@ function Build11() {
                     totalquoarterly3 += NTR(amount3); totalquoarterly4 += NTR(amount4);
                     pftotal1 += NTR(amount1); pftotal2 += NTR(amount2);
                     pftotal3 += NTR(amount3); pftotal4 += NTR(amount4);
-                    item['total'] = total;
-                    item['totaltarget'] = totaltarget;
-                    item['gaptotal'] = gaptotal;
-                    item['pftotal1'] = pftotal1; item['pftotal3'] = pftotal3;
-                    item['pftotal2'] = pftotal2; item['pftotal4'] = pftotal4;
+                    item['total'] = total + getNumber(TotalPerPf[ProductFamilyList[z].id], 'total');
+                    item['totaltarget'] = totaltarget + getNumber(TotalPerPf[ProductFamilyList[z].id], 'totaltarget');
+                    item['gaptotal'] = gaptotal + getNumber(TotalPerPf[ProductFamilyList[z].id], 'gaptotal');
+                    item['pftotal1'] = pftotal1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal1'); item['pftotal3'] = pftotal3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal3');
+                    item['pftotal2'] = pftotal2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal2'); item['pftotal4'] = pftotal4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal4');
                 } else {
                     s.setLineItemValue('custpage_n', line, '');
                     if (m == 1) {
@@ -1276,8 +1276,8 @@ function Build11() {
                         totaltargetquoarterly3 += NTR(target3); totaltargetquoarterly4 += NTR(target4);
                         pftarget1 += NTR(target1); pftarget3 += NTR(target2);
                         pftarget2 += NTR(target3); pftarget4 += NTR(target4);
-                        item['pftarget1'] = pftarget1; item['pftarget3'] = pftarget3;
-                        item['pftarget2'] = pftarget2; item['pftarget4'] = pftarget4;
+                        item['pftarget1'] = pftarget1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget1'); item['pftarget3'] = pftarget3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget3');
+                        item['pftarget2'] = pftarget2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget2'); item['pftarget4'] = pftarget4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget4');
                     }
                     else if (m == 2) {
                         s.setLineItemValue('custpage_p', line, '% of Target')
@@ -1301,8 +1301,8 @@ function Build11() {
 
                         pfgap1 += NTR(gap1); pfgap3 += NTR(gap3)
                         pfgap2 += NTR(gap2); pfgap4 += NTR(gap4)
-                        item['pfgap1'] = pfgap1; item['pfgap3'] = pfgap3;
-                        item['pfgap2'] = pfgap2; item['pfgap4'] = pfgap4;
+                        item['pfgap1'] = pfgap1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap1'); item['pfgap3'] = pfgap3 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap3');
+                        item['pfgap2'] = pfgap2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap2'); item['pfgap4'] = pfgap4 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap4');
 
                     }
                 }
@@ -1359,11 +1359,11 @@ function Build12() {
                     totalhalfYearly1 += NTR(amount1); totalhalfYearly2 += NTR(amount2);
                     pftotal1 += NTR(amount1);
                     pftotal2 += NTR(amount2);
-                    item['total'] = total;
-                    item['totaltarget'] = totaltarget;
-                    item['gaptotal'] = gaptotal;
-                    item['pftotal1'] = pftotal1;
-                    item['pftotal2'] = pftotal2;
+                    item['total'] = total + getNumber(TotalPerPf[ProductFamilyList[z].id], 'total');
+                    item['totaltarget'] = totaltarget + getNumber(TotalPerPf[ProductFamilyList[z].id], 'totaltarget');
+                    item['gaptotal'] = gaptotal + getNumber(TotalPerPf[ProductFamilyList[z].id], 'gaptotal');
+                    item['pftotal1'] = pftotal1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal1');
+                    item['pftotal2'] = pftotal2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftotal2');
                 }
                 else {
                     s.setLineItemValue('custpage_n', line, '');
@@ -1375,8 +1375,8 @@ function Build12() {
                         totaltargethalfYearly1 += NTR(target1); totaltargethalfYearly2 += NTR(target2);
                         pftarget1 += NTR(target1);
                         pftarget2 += NTR(target2);
-                        item['pftarget1'] = pftarget1;
-                        item['pftarget2'] = pftarget2;
+                        item['pftarget1'] = pftarget1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget1');
+                        item['pftarget2'] = pftarget2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pftarget2');
                     }
                     else if (m == 2) {
                         s.setLineItemValue('custpage_p', line, '% of Target')
@@ -1393,8 +1393,8 @@ function Build12() {
                         totalgaphalfYearly2 += NTR(gap2)
                         pfgap1 += NTR(gap1);
                         pfgap2 += NTR(gap2)
-                        item['pfgap1'] = pfgap1;
-                        item['pfgap2'] = pfgap2;
+                        item['pfgap1'] = pfgap1 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap1');
+                        item['pfgap2'] = pfgap2 + getNumber(TotalPerPf[ProductFamilyList[z].id], 'pfgap2');
 
                     }
                 }
@@ -1403,5 +1403,12 @@ function Build12() {
             TotalPerPf[ProductFamilyList[z].id] = item
         }
     }
+}
+function getNumber(line, field) {
+    var number = line;
+    if (number != undefined) { number = Number(number[field]) }
+    else { number = 0 }
+    return number;
+
 }
 

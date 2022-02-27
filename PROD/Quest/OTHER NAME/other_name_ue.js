@@ -72,7 +72,9 @@ define(['N/record', 'N/ui/serverWidget'],
             myAddressSubRecord.setValue({
                 fieldId: 'zip',
                 value: addrRec.getValue({ fieldId: 'zip' }),
-            })           
+            })
+            var companyname = rec.getValue('companyname')
+            entityRec.setCurrentSublistValue({ sublistId: 'addressbook', fieldId: 'label', value: companyname, })
             entityRec.commitLine({
                 sublistId: 'addressbook'
             })               

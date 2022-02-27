@@ -1,0 +1,2 @@
+1. WF: VB Approval Process (ARS- Create) - Context -> all without map reduce
+https://4678143-sb3.app.netsuite.com/app/common/workflow/setup/nextgen/workflowdesktop.nl?id=69&e=T#

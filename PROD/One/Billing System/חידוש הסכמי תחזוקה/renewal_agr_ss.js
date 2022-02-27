@@ -28,40 +28,34 @@ function ActionScreenSS() {
 }
 function UpdateAGR(dataToUpdate, statusType, actionType ) {
     try {
-        var fields = [];
         if (statusType == 1) { // פעיל
-            fields.push('custrecord_ib_rate'); 
-            fields.push('custrecord_ib_discount')
-            fields.push('custrecord_ib_charge_type')
+            field = 'custrecord_ib_rate'
         }
         else if (statusType == 2) { // טיוטה
-            fields.push('custrecord_ib_renewal_amount'); 
-            fields.push('custrecord_ib_new_discount')
-            fields.push('custrecord_ib_charge_type_renewal')
+            field = 'custrecord_ib_renewal_amount'
         }
-          
+        var fields = [];
+        fields.push(field); 
         if (actionType == 2) { // צירוף שורות
-            if (statusType == 1) { // פעיל
+            if (statusType == 1) {
                 fields.push('custrecord_ib_customer')
-                fields.push('custrecord_ib_agr')
+                fields.push('custrecord_ib_agr')             
             }
             else {
                 fields.push('custrecord_ib_new_customer')
                 fields.push('custrecord_ib_new_agreement')
-
+              
             }
-        }       
+        }
         for (var m = 0; m < dataToUpdate.length; m++) {
             try {    
                 Context(context)
                 var vals = [];
                 vals.push(dataToUpdate[m].renewal_amount)
-                vals.push(dataToUpdate[m].discount)
-                vals.push(dataToUpdate[m].charge_type)
                 if (actionType == 2) {
-                    vals.push(dataToUpdate[m].cust_target)
-                    vals.push(dataToUpdate[m].agr_target)
-                }         
+                    vals.push(dataToUpdate[m].cust_target)   
+                    vals.push(dataToUpdate[m].agr_target)                                   
+                }
                 nlapiSubmitField('customrecord_ib', dataToUpdate[m].ib_id, fields, vals);
             } catch (e) {
                 nlapiLogExecution('error', 'UpdateAGR error nlapiSubmitField ' + dataToUpdate[m].ib_id , e);

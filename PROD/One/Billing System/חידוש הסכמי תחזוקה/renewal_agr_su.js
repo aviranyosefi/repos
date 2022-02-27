@@ -12,8 +12,6 @@
                     dataToUpdate.push({
                         ib_id: request.getLineItemValue('custpage_res_sublist', 'custpage_ib_id', i + 1),                      
                         renewal_amount: request.getLineItemValue('custpage_res_sublist', 'custpage_ib_renewal_amount', i + 1),     
-                        discount: request.getLineItemValue('custpage_res_sublist', 'custpage_discount', i + 1),  
-                        charge_type: request.getLineItemValue('custpage_res_sublist', 'custpage_charge_type_select', i + 1),  
                     });                                       
                 }
                 else {
@@ -139,7 +137,7 @@
         form.addField('custpage_page', 'text', 'Next Page', null, null).setDisplayType('hidden');
         nlapiLogExecution('debug', ' action_data ', action_data )
         var results = [];      
-        if (action_data == 1) { // עריכת הסכם
+        if (action_data == 1) {
             results = getAgreementLines( status_data,agr_data,item_data,parseFloat(precent_data));
             if (results.length > 0) {
                 form.addButton('customscript_continue', 'Continue', 'Continue()'); 
@@ -148,39 +146,24 @@
                 var subList = form.addSubList('custpage_res_sublist', 'list', 'number of results: ' + results.length, 'custpage_timesheet_group');
                 subList.addMarkAllButtons()
                 subList.addField('custpage_process', 'checkbox', 'Choose')             
-                subList.addField('custpage_ib_id_view', 'text', 'Install Base');   
-                subList.addField('custpage_ib_id', 'text', 'Install Base').setDisplayType('hidden');  ;   
-                subList.addField('custpage_ib_item', 'text', 'Item');  
-                subList.addField('custpage_ib_description', 'text', 'Description');                  
-                subList.addField('custpage_ib_serial', 'text', 'Serial');   
-                subList.addField('custpage_ib_rate', 'text', 'Rate');   
-                subList.addField('custpage_ib_charge_type', 'text', 'Charge Type');   
-                subList.addField('custpage_ib_renewal_amount', 'CURRENCY', 'renewal amount').setDisplayType('entry');  
-                subList.addField('custpage_charge_type_select', 'select', 'Charge Type', 'customlist_dangot_recurr_charge_type');   
+                subList.addField('custpage_ib_id', 'text', 'Install Base');     
+                subList.addField('custpage_ib_rate', 'text', 'Rate');     
+                subList.addField('custpage_ib_renewal_amount', 'CURRENCY', 'renewal amount').setDisplayType('entry');         
                 subList.addField('custpage_exclude_month_warr', 'text', 'Exclude Month Warranty')
-                subList.addField('custpage_discount', 'percent', 'Discount').setDisplayType('entry');
-                subList.addField('custpage_charge_amount', 'float', 'Charge Amount')//.setDisplayType('entry');
-                subList.addField('custpage_agr_line_id', 'text', 'AGREEMENT LINE').setDisplayType('hidden');               
+                subList.addField('custpage_agr_line_id', 'text', 'AGREEMENT LINE').setDisplayType('hidden');
+                
                 for (var i = 0; i < results.length; i++) {
                     subList.setLineItemValue('custpage_process', i + 1, 'T');
                     subList.setLineItemValue('custpage_update', i + 1, 'T');
                     subList.setLineItemValue('custpage_ib_id', i + 1, results[i].ib_id);
-                    subList.setLineItemValue('custpage_ib_id_view', i + 1, results[i].ib_id_view);
-                    subList.setLineItemValue('custpage_ib_item', i + 1, results[i].ib_item);
-                    subList.setLineItemValue('custpage_ib_description', i + 1, results[i].ib_description);
-                    subList.setLineItemValue('custpage_ib_serial', i + 1, results[i].ib_serial);
                     subList.setLineItemValue('custpage_ib_rate', i + 1, results[i].ib_rate);
                     subList.setLineItemValue('custpage_ib_renewal_amount', i + 1, results[i].ib_renewal_amount);
                     subList.setLineItemValue('custpage_exclude_month_warr', i + 1, results[i].exclude_month_warr);
-                    subList.setLineItemValue('custpage_ib_charge_type', i + 1, results[i].ib_charge_type);
-                    subList.setLineItemValue('custpage_discount', i + 1, results[i].discount);
-                    subList.setLineItemValue('custpage_charge_amount', i + 1, results[i].charge_amount);
-                    subList.setLineItemValue('custpage_charge_type_select', i + 1, results[i].ib_charge_type_select);
     
                 }
             }
         }
-        else if (action_data == 2 ) { // צירוף שורות
+        else if (action_data == 2 ) {
             results = getAgreementLinesMove(customer_data , agr_data,  item_data, parseFloat(precent_data));
             if (results.length > 0) {
                 form.addButton('customscript_continue', 'Continue', 'Continue()');
@@ -190,21 +173,18 @@
                 subList.addMarkAllButtons()
                 subList.addField('custpage_process', 'checkbox', 'Choose')
                 subList.addField('custpage_ib_id', 'text', 'Install Base');
-                subList.addField('custpage_ib_item', 'text', 'Item');
-                subList.addField('custpage_ib_serial', 'text', 'Serial');  
                 subList.addField('custpage_agr', 'text', 'Agreement');
                 subList.addField('custpage_ib_rate', 'text', 'Rate');
                 subList.addField('custpage_ib_renewal_amount', 'CURRENCY', 'renewal amount').setDisplayType('entry');
                 subList.addField('custpage_exclude_month_warr', 'text', 'Exclude Month Warranty')
                 subList.addField('custpage_disabled', 'text', 'disabled').setDisplayType('hidden');
+
                 for (var i = 0; i < results.length; i++) {
                     var process = 'T'
                     var disabled = results[i].disabled
                     if (disabled == 'T') { process ='F'}
                     subList.setLineItemValue('custpage_process', i + 1, process);
                     subList.setLineItemValue('custpage_ib_id', i + 1, results[i].ib_id);
-                    subList.setLineItemValue('custpage_ib_item', i + 1, results[i].ib_item);
-                    subList.setLineItemValue('custpage_ib_serial', i + 1, results[i].ib_serial);
                     subList.setLineItemValue('custpage_agr', i + 1, results[i].agr);
                     subList.setLineItemValue('custpage_ib_rate', i + 1, results[i].ib_rate);
                     subList.setLineItemValue('custpage_ib_renewal_amount', i + 1, results[i].ib_renewal_amount);
@@ -233,13 +213,13 @@ function getAgreementLines(status_data , agr_data, item_data, percent) {
     if (status_data == 1) { // פעיל
         search.addFilter(new nlobjSearchFilter('custrecord_ib_agr', null, 'anyof', agr_data))
     }
-    else { // DRAFT
+    else {
         search.addFilter(new nlobjSearchFilter('custrecord_ib_new_agreement', null, 'anyof', agr_data))      
     }
    
-    var columns = new Array();
-    columns.push(new nlobjSearchColumn('custrecord_ib_serial_number'))
-    search.addColumns(columns);
+    //var columns = new Array();
+    //columns.push(new nlobjSearchColumn('custrecord_item_location'))
+    //search.addColumns(columns);
 
     var agrLineList = [];
     var resultset = search.runSearch();
@@ -255,37 +235,15 @@ function getAgreementLines(status_data , agr_data, item_data, percent) {
     if (s != null) {
         if (status_data == 1) {
             var field = 'custrecord_ib_excluded_warranty_month'
-            var CHARGE_TYPE_FIELD = 'custrecord_ib_charge_type'
         }
-        else { // DRAFT
-            var field = 'custrecordib_next_agr_exclude_month_warr';
-            var  CHARGE_TYPE_FIELD = 'custrecord_ib_charge_type_renewal'
-
-            //custrecord_ib_new_agreement_amount
-
-
-        }
-        for (var i = 0; i < s.length; i++) {  
-            renewal_amount = NewSum(s[i].getValue('custrecord_ib_rate'), percent);
-            discount1 = s[i].getValue('custrecord_ib_discount');
-            exclude_month_warr = s[i].getValue(field);
+        else { var field = 'custrecordib_next_agr_exclude_month_warr' }
+        for (var i = 0; i < s.length; i++) {   
             agrLineList.push({
-                ib_id_view: GetLink(s[i].getValue('altname'), s[i].id, 'customrecord_ib'),
-                ib_id: s[i].id,
-                ib_renewal_amount: renewal_amount ,
+                ib_id: s[i].id,               
+                ib_renewal_amount: NewSum(s[i].getValue('custrecord_ib_rate'), percent),
                 ib_rate: s[i].getValue('custrecord_ib_rate'),
-                exclude_month_warr: exclude_month_warr,                
-                ib_item: s[i].getText('custrecord_ib_item'),
-                ib_serial: s[i].getText('custrecord_ib_serial_number'),
-                ib_description: s[i].getValue('custrecord_ib_description'),
-                ib_charge_type: s[i].getText(CHARGE_TYPE_FIELD),
-                ib_charge_type_select: s[i].getValue(CHARGE_TYPE_FIELD),
-                discount: discount1 ,
-                charge_amount: chargeAmtCalc(renewal_amount, exclude_month_warr, discount1 ),
-                
-
-                
-
+                exclude_month_warr: s[i].getValue(field),                
+                //agr_line: GetLink(s[i].getValue('name'), s[i].id, 'customrecord_agr_line'),
             
             });
         }                  
@@ -298,10 +256,6 @@ function getAgreementLinesMove( customer ,agr_data, item_data, percent) {
     if (!isNullOrEmpty(customer)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_customer', null, 'anyof', customer)) }
     if (!isNullOrEmpty(item_data)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_item', null, 'anyof', item_data)) }
     if (!isNullOrEmpty(agr_data)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_agr', null, 'anyof', agr_data)) }
-
-    var columns = new Array();
-    columns.push(new nlobjSearchColumn('custrecord_ib_serial_number'))
-    search.addColumns(columns);
 
     var agrLineList = [];
     var resultset = search.runSearch();
@@ -322,10 +276,7 @@ function getAgreementLinesMove( customer ,agr_data, item_data, percent) {
                 ib_renewal_amount: NewSum(s[i].getValue('custrecord_ib_rate'), percent),
                 ib_rate: s[i].getValue('custrecord_ib_rate'),
                 exclude_month_warr: s[i].getValue('custrecord_ib_excluded_warranty_month'),
-                disabled: s[i].getValue('formulatext'),  
-                ib_item: s[i].getText('custrecord_ib_item'),
-                ib_serial: s[i].getText('custrecord_ib_serial_number') ,
-
+                disabled: s[i].getValue('formulatext'),               
                 //agr_line: GetLink(s[i].getValue('name'), s[i].id, 'customrecord_agr_line'),
 
             });
@@ -336,14 +287,11 @@ function getAgreementLinesMove( customer ,agr_data, item_data, percent) {
 function NewSum(cuuRate, percent) {
     //nlapiLogExecution('DEBUG', 'percent:' + percent, 'cuuRate' + cuuRate );
     if (!isNullOrEmpty(percent) && !isNullOrEmpty(cuuRate)) {
-        cuuRate = Number(cuuRate) + (Number(cuuRate) * Number(percent)) / 100;
-        cuuRate = cuuRate.toFixed(2)
+        cuuRate = Number(cuuRate) + (Number(cuuRate) * Number(percent)) / 100
     }
-    else if (!isNullOrEmpty(cuuRate)) { cuuRate = cuuRate.toFixed(2)}
     else if (isNullOrEmpty(cuuRate)) {
         return 0
     }
-   
     return cuuRate;
 
 }
@@ -396,12 +344,11 @@ function customer_agr(customer, status) {
 }
 function isNullOrEmpty(val) {
 
-    if (typeof (val) == 'undefined' || (typeof (val) != 'string' && isNaN(val)) || val == null || (typeof (val) == 'string' && val.length == 0)) {
+    if (typeof (val) == 'undefined' || isNaN(val) || val == null || (typeof (val) == 'string' && val.length == 0)) {
         return true;
     }
     return false;
 }
-
 function getScriptID() {
     var scriptSearch = nlapiSearchRecord("script", null,
         [
@@ -413,13 +360,6 @@ function getScriptID() {
     );
     return scriptSearch[0].id
 }
-function chargeAmtCalc(renewal_amount, exclude_month_warr, discount) {
-    var clc = (renewal_amount / 12) * exclude_month_warr;
-    if (!isNullOrEmpty(discount)) {
-        discount = Number(discount.substring(0, discount.length - 1))    
-        clc = ((100 - discount) * clc) / 100;                
-    }
-    return clc.toFixed(2);
-}
+
 
 

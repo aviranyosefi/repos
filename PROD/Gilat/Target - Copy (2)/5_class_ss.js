@@ -171,10 +171,10 @@ function getTarget(period, sales) {
         if (allSelection != null && allSelection.length > 0) {
             for (var i = 0; i < allSelection.length; i++) {
                 if (allSelection[i].getValue("custrecord_target_classification",'custrecord_gt_class',null) == '1') {
-                    targetOfHLS += parseFloat(allSelection[i].getValue("custrecord_gt_amount"))
+                    targetOfHW += parseFloat(allSelection[i].getValue("custrecord_gt_amount"))
                 }
                 else if (allSelection[i].getValue("custrecord_target_classification", 'custrecord_gt_class', null) == '2') {
-                    targetOfHW += parseFloat(allSelection[i].getValue("custrecord_gt_amount"))
+                    targetOfHLS += parseFloat(allSelection[i].getValue("custrecord_gt_amount"))
                 }
                 else if (allSelection[i].getValue("custrecord_target_classification", 'custrecord_gt_class', null) == '3') {
                     targetOfIC += parseFloat(allSelection[i].getValue("custrecord_gt_amount"))

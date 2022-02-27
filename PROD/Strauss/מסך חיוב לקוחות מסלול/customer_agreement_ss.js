@@ -26,6 +26,9 @@ function getSearchData() {
         if (first_data.length > 0) {
             updateData = Billing_Instruction_Update(first_data);
         }
+        if (second_data.length > 0) {
+            createData = Billing_Instruction_Generate_Menael(second_data);
+        }
     }
     else if (salesrole == '4') {
         if (first_data.length > 0) {
@@ -72,7 +75,7 @@ function Billing_Instruction_Generate(data) {
                 } catch (err) {
                     nlapiLogExecution('DEBUG', 'error Billing_Instruction_Generate - lines', err);
                 }
-                var alreadyCreated = DoCreate(entity)  
+                var alreadyCreated = DoCreate(entity, data[i].fromdate, data[i].enddate )  
                 if (alreadyCreated) {
                     var id = nlapiSubmitRecord(rec);
                     //nlapiLogExecution('debug', 'billing_instruction id: ', id);
@@ -152,6 +155,60 @@ function Billing_Instruction_Update(data) {
         resUpdate = e;
         return billing_instruction;
     }
+}
+function Billing_Instruction_Generate_Menael(data) {
+    nlapiLogExecution('DEBUG', 'Billing_Instruction_Generate_Menael data: ' + data.length, JSON.stringify(data));
+    try {
+        var billing_instruction = [];
+        for (var i = 0; i < data.length; i++) {
+            try {
+                Context(context)
+                var entity = data[i].entity
+                var rec = nlapiCreateRecord('customsale_billing_instruction');
+                //Header Fields 
+                rec.setFieldValue('entity', entity);
+                rec.setFieldValue('enddate', data[i].enddate);
+                rec.setFieldValue('memo', data[i].memo);
+                rec.setFieldValue('custbody_agreement', data[i].agreement);
+                rec.setFieldValue('custbody_amount_sales_manager', NumberToRate(data[i].sugg_monthly_charge));
+                rec.setFieldValue('custbody_sales_manager_approver', data[i].sales_manager_approver);
+                rec.setFieldValue('custbody_calculated_amount_system', NumberToRate(data[i].calculated_amount_system));
+                rec.setFieldValue('trandate', data[i].toDateData);
+                rec.setFieldValue('custbody_billing_type', billing_type(data[i].billing_type, NumberToRate(data[i].calculated_amount_system), NumberToRate(data[i].rate)));
+                rec.setFieldValue('custbody_price_change', data[i].change);
+                try {
+                    // lines Fields
+                    rec.selectNewLineItem('item');
+                    rec.setCurrentLineItemValue('item', 'item', '7643');// הוראת חיוב
+                    rec.setCurrentLineItemValue('item', 'quantity', '1')
+                    rec.setCurrentLineItemValue('item', 'rate', NumberToRate(data[i].rate))
+                    rec.setCurrentLineItemValue('item', 'custcol_beans_kg', data[i].beans_kg)
+                    rec.setCurrentLineItemValue('item', 'custcol_bill_instruct_sys_calculation', NumberToRate(data[i].sugg_monthly_charge))
+                    rec.commitLineItem('item');
+                } catch (err) {
+                    nlapiLogExecution('DEBUG', 'error Billing_Instruction_Generate - lines', err);
+                }
+                var alreadyCreated = DoCreate(entity, data[i].fromdate, data[i].enddate)
+                if (alreadyCreated) {
+                    var id = nlapiSubmitRecord(rec);
+                    //nlapiLogExecution('debug', 'billing_instruction id: ', id);
+                    if (id != -1) {
+                        billing_instruction.push({
+                            id: id,
+                            tranid: nlapiLookupField('customsale_billing_instruction', id, 'tranid')
+                        });
+                        getAgreementsTrans(id, data[i].agreement);
+                    }
+                }
+            } catch (e) {
+                nlapiLogExecution('DEBUG', 'error nlapiSubmitRecord ', e);
+            }
+        }
+    } catch (e) {
+        nlapiLogExecution('DEBUG', 'error Billing_Instruction_Generate_Menael ', e);
+    }
+
+    return billing_instruction;
 }
 
 function isNullOrEmpty(val) {
@@ -347,13 +404,15 @@ function Context(context) {
 
 }
 
-function DoCreate(entity) {
+function DoCreate(entity, fromdate, enddate) {
  
     var transactionSearch = nlapiSearchRecord("transaction", null,
         [
             ["type", "anyof", "CuTrSale100"],
             "AND",
-            ["trandate", "within", "thismonth"],
+            ["trandate", "onorafter", fromdate],
+            "AND",
+            ["trandate", "onorbefore", enddate],
             "AND",
             ["mainline", "is", "T"],
              "AND",

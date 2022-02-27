@@ -57,8 +57,7 @@ function fieldChange(type, name, linenum) {
                 nlapiGetField('custpage_agr_target').setDisplayType('normal');
                 nlapiGetField('custpage_cust_target').setDisplayType('normal');
                 nlapiGetField('custpage_status_target').setDisplayType('normal');   
-                nlapiSetFieldMandatory('custpage_agr_target', true);
-                nlapiSetFieldValue('custpage_cust_target', nlapiGetFieldValue('custpage_customer'))
+                nlapiSetFieldMandatory('custpage_agr_target', true)    
             }  
             if (!isNullOrEmpty(customer) && !isNullOrEmpty(status)) {
                 var agrList = customer_agr(customer, status);
@@ -83,22 +82,6 @@ function fieldChange(type, name, linenum) {
                 nlapiInsertSelectOption(field, agrList[i].id, agrList[i].name, false);
             }
         }
-    }
-    else if (name == 'custpage_discount') {
-        var index = nlapiGetCurrentLineItemIndex('custpage_res_sublist');
-        renewal_amount = nlapiGetCurrentLineItemValue('custpage_res_sublist', 'custpage_ib_renewal_amount')
-        exclude_month_warr = nlapiGetLineItemValue('custpage_res_sublist', 'custpage_exclude_month_warr', index )
-        discount = nlapiGetCurrentLineItemValue('custpage_res_sublist', 'custpage_discount')
-        var charge_amount = chargeAmtCalc(renewal_amount, exclude_month_warr, discount)
-        //nlapiSelectLineItem('custpage_res_sublist', index)
-        //nlapiSetCurrentLineItemValue('custpage_res_sublist', 'custpage_charge_amount', charge_amount);
-        //nlapiCommitLineItem('custpage_res_sublist');
-        //nlapiSetCurrentLineItemValue('custpage_res_sublist', 'custpage_charge_amount', charge_amount)
-        var sublistLine = 'custpage_res_sublistrow' + (index - 1);
-        var row = document.getElementById(sublistLine);
-        cells = row.getElementsByTagName('td');
-        var td = cells[12];
-        td.innerHTML = charge_amount
     }
 }
 function validateActionToType(action, type) {
@@ -219,14 +202,6 @@ function hidden(field, type) {
     if (!isNullOrEmpty(field)) {
         field.hidden = type;
     }
-}
-function chargeAmtCalc(renewal_amount, exclude_month_warr, discount) {
-    var clc = (renewal_amount / 12) * exclude_month_warr;
-    if (!isNullOrEmpty(discount)) {
-        discount = Number(discount.substring(0, discount.length - 1))
-        clc = ((100 - discount) * clc) / 100;
-    }
-    return clc.toFixed(2);
 }
 //document.getElementById("custpage_res_sublistmarkall").onclick = function () { calcTotalReneual() };
 //document.getElementById("custpage_res_sublistmarkall").addEventListener("click", calcTotalReneual);
