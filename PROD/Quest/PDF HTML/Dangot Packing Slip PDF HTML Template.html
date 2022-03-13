@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://4922366-sb1.app.netsuite.com/c.4922366_SB1/suitebundle147355/com.netsuite.acasupport/lib/semantic_ui/themes/basic/assets/fonts/arial.ttf"
+              src-bold="https://4922366-sb1.app.netsuite.com/c.4922366_SB1/suitebundle147355/com.netsuite.acasupport/lib/semantic_ui/themes/basic/assets/fonts/arialb.ttf" />
+
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 10pt;">
+                    <tr>
+                        <td>
+                            <img src="https://4922366-sb1.app.netsuite.com/core/media/media.nl?id=2200039&amp;c=4922366_SB1&amp;h=bezxFOJV2ViCtE1UTUnCR_WAPybeTelL6FPKKF9IhkAWDTPP" style="width: 595px; height:65px" />
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer">
+                    <tr>
+                        <#if preferences.PRINT_BARCODES>
+                            <td><barcode codetype="code128" showtext="true" value="${record.tranid}" /></td>
+                        </#if>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td align="center">
+                            <img src="https://4922366-sb1.app.netsuite.com/core/media/media.nl?id=2200040&amp;c=4922366_SB1&amp;h=1tkfaBBOrkKQvOB2-PddSHGAdKaqJckfgkXco7asl46ExM6m" style="width: 595px; height:111px; border:1" />
+                        </td>
+                        <td></td>
+                    </tr>  
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif;
+            }
+
+            b {
+                font-weight: bold;
+            }
+
+            table {
+                font-size: 9pt;
+                table-layout: fixed;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 9pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+            }
+
+            td {
+                padding: 4px 6px;
+            }
+
+            table.header td {
+                padding: 0;
+                font-size: 9pt;
+            }
+
+            table.footer td {
+                padding: 0;
+                font-size: 9pt;
+            }
+
+            table.itemtable {
+                padding: 2px;
+                font-size: 9pt;
+                text-align: center;
+                border: 1px solid white;
+            }
+
+                table.itemtable th {
+                    padding: 0px;
+                    color: #ffffff;
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 10pt;
+                    background-color: darkblue;
+                    border: 1px solid white;
+                }
+
+                table.itemtable td {
+                    color: black;
+                    font-size: 9pt;
+                    border: 1px solid white;
+                }
+
+                table.itemtable tr {
+                    background-color: #f2f2f2
+                }
+
+            table.body td {
+                padding-top: 2px;
+                padding-left:2px;
+                padding-right:2px;
+            }
+
+            td.addressheader {
+                font-size: 10pt;
+                font-weight: bold;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            td.address {
+                padding-top: 0;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+
+            span.itemname {
+                font-weight: bold;
+                line-height: 150%;
+            }
+
+            div.returnform {
+                width: 100%;
+                /* To ensure minimal height of return form */
+                height: 200pt;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+
+
+            table.titleheader {
+                width: 100%;
+                background-color: darkblue;
+                margin-top: 2px;
+            }
+
+                table.titleheader td {
+                    width: 670px;
+                    text-align: center;
+                    vertical-align: middle;
+                    text-overflow: ellipsis;
+                }
+        </style>
+    </head>
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="12%" size="Letter">
+
+        <#assign contact=salesorder.entity.custbody_contact_person>
+            <table class="titleheader">
+                <tr>
+                    <td align="center"><h2 style="color: #ffffff; text-align: center; vertical-align: central"><b>${salesorder.tranid} תעודת משלוח מספר </b></h2></td>
+                </tr>
+            </table>
+
+            <table style="width:100%;padding:0px; margin:2px;" dir="rtl">
+                <tr>
+                    <td colspan="6"><p style="text-align: left;">תאריך: ${salesorder.trandate}</p></td>
+                </tr>
+                <tr>
+                    <th style="text-align:left; width:50%;" align="left">
+                        <p style="font-size:12pt;"></p>
+                    </th>
+                    <th colspan="6">
+                        <p style="width: 100%; text-align:right; line-height: 18px; font-size: 1.4em;"></p>
+                    </th>
+                    <th colspan="4">
+                        <p style="width: 100%; text-align:right; line-height: 18px; font-size: 1.4em;"></p>
+                    </th>
+                    <th colspan="6" align="right">
+                        <p style="width: 100%; text-align:right; font-size: 1.1em;"> :לכבוד </p>
+                    </th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="6" class="default" align="left">
+                        <p style="text-align: left;"><br /><br /><br /></p>
+                    </td>
+                    <td colspan="4" class="default">
+                        <p style="text-align: right; width: 220px;"><br /><br /><br /></p>
+                    </td>
+                    <td colspan="6" class="default" align="right">
+                        <p style="text-align: right; width: 220px;">
+                            ${salesorder.entity.companyname} | מספר לקוח: ${salesorder.entity.entityid} | ע.מ  ${salesorder.entity.vatregnumber}<br />
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="6" class="default" align="left">
+                        <p style="text-align: left;"><br /><br /><br /></p>
+                    </td>
+                    <td colspan="4" class="default">
+                        <p style="text-align: right; width: 220px;"><br /><br /><br /></p>
+                    </td>
+                    <td colspan="6" class="default" align="right">
+                        <p style="text-align: right; width: 220px;">
+                            ${record.shipaddress}<br />
+                        </p>
+                        <p style="text-align: right; width: 220px;">
+                            טל: ${salesorder.entity.phone}  פקס: ${salesorder.entity.phone}<br />
+                        </p>
+                        <p style="text-align: right; width: 220px;">
+                            לידי ${record.custbody_contact_person} ${record.custbody_contact_person_phone}<br />
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <#assign Reference=record.createdfrom>
+                <table class="body" style="width: 100%; margin-top: 10px;">
+                    <tr>
+                        <th colspan="2"></th>
+                        <th colspan="6">${salesorder.salesrep} :סוכן מכירות</th>
+                        <th colspan="6">
+                            <p> ${Reference?remove_beginning("Sales Order")} :אסמכתא </p>
+                        </th>
+                        <th colspan="6">מספר הזמנתכם: ${salesorder.otherrefnum}</th>
+                    </tr>
+                </table>
+
+                <#assign item_index=0>
+                    <#if salesorder.item?has_content>
+                        <table class="itemtable" style="width: 100%; margin-top: 10px; padding:2px; border:0px" align="right">
+                            <#list salesorder.item as tranline>
+                                <#if item_index=0>
+                                    <tr>
+                                        <th colspan="6" align="right" style=" padding: 2px;">תאריך סיום אחריות</th>
+                                        <th colspan="7" align="right" style=" padding: 2px;">חודשי אחריות מעבדה</th>
+                                        <th colspan="6" align="right" style=" padding: 2px;">חודשי אחריות אתר</th>
+                                        <th colspan="3" align="right" style=" padding: 2px;">כמות</th>
+                                        <th colspan="4" align="right" style=" padding: 2px;">תיאור</th>
+                                        <th colspan="10" align="right" style="padding:2px; text-align:right">מספר פריט</th>
+                                        <th colspan="2" align="right" style=" padding: 2px;">מספר</th>
+                                    </tr>
+                                </#if>
+
+                                <!--<#assign endWarranty= salesorder.trande + tranline.custcol_site_warranty + tranline.custcol_lab_warranty>-->
+
+                                <tr>
+                                    <td colspan="6" align="right">${record.trandate}</td>
+                                    <td colspan="7" align="right">${tranline.custcol_lab_warranty}</td>
+                                    <td colspan="6" align="right">${tranline.custcol_site_warranty}</td>
+                                    <td align="right" colspan="3">${tranline.quantity}</td>
+                                    <td align="right" colspan="4">${tranline.description}</td>
+                                    <td align="right" colspan="10" style="direction:rtl">${tranline.item}</td>
+                                    <td align="right" colspan="2">${item_index +1}</td>
+                                    <#assign item_index=item_index +1>
+                                </tr>
+                            </#list>
+                        </table>
+                    </#if>
+
+                    <table style="width:100%;padding:0px; margin:2px;" dir="rtl">
+                        <tr>
+                            <th></th>
+                            <td colspan="6" class="default" align="left">
+                                <p style="text-align: left;"><br /><br /><br /></p>
+                            </td>
+                            <td colspan="4" class="default">
+                                <p style="text-align: right; width: 220px;"><br /><br /><br /></p>
+                            </td>
+                            <th colspan="6" class="default" align="right">
+                                <p style="text-align: right; width: 220px;">
+                                    סה"כ יחידות: ${record.item.length} &nbsp; סה"כ חבילות: ${record.custbody_mumber_of_packages}
+                                </p>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="text-align:left; width:50%;" align="left">
+                                <p style="font-size:12pt;"></p>
+                            </th>
+                            <th colspan="6">
+                                <p style="width: 100%; text-align:right; line-height: 18px; font-size: 1.4em;"></p>
+                            </th>
+                            <th colspan="4">
+                                <p style="width: 100%; text-align:right; line-height: 18px; font-size: 1.4em;"></p>
+                            </th>
+                            <td colspan="6" align="right">
+                                <p style="width: 100%; text-align:right; font-size: 1.1em;">${record.custbody_delivery_method} <b>:שם הנהג</b> ${record.custbody_dangot_carrier}  <b>:הובלה</b><br /><br /><br /></p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td colspan="6" class="default" align="left">
+                                <p style="text-align: left;"><br /><br /><br /></p>
+                            </td>
+                            <td colspan="7" class="default" align="right">
+                                <p style="text-align: right; width: 300px; border-bottom: 1px solid #000;"><br /></p>
+                                <p style="text-align: right; width: 300px; border-bottom: 1px solid #000;"><br /></p>
+                                <p style="text-align: right; width: 300px; border-bottom: 1px solid #000;"><br /></p>
+                            </td>
+                            <td colspan="3" class="default" align="right">
+                                <p style="text-align: right; width: 220px;">
+                                    <b> :שם מלא של המקבל</b> <br />
+                                </p>
+                                <p style="text-align: right; width: 220px;">
+                                    <b>:טלפון</b> <br />
+                                </p>
+                                <p style="text-align: right; width: 220px;">
+                                    <b>:חתימה</b> <br />
+                                </p>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <pbr></pbr>
+
+                    <table class="titleheader" style="margin-left:0px">
+                        <thead>
+                            <tr>
+                                <td align="center"><h2 style="color: #ffffff; text-align: center; vertical-align: central"><b>פירוט מספרים סידוריים | ${salesorder.tranid} תעודת משלוח </b></h2></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <br />
+
+                    <table class="titleheader" style="margin-left:0px; background-color:white;">
+                        <tr>
+                            <td align="right"><h2 style="color: darkblue; text-align: right;"><b>נספח</b></h2></td>
+                        </tr>
+                    </table>
+
+                    <#list record.item as item>                      
+                        <#if item.inventorydetail?has_content>
+                            <table class="body" style="margin-top: 5px; table-layout: fixed; width:100%">
+                                <tr>
+                                    <td align="right" style=" width: 100%; direction:rtl; white-space:nowrap">
+                                        <p style="white-space:nowrap">
+                                            ${item.description} <b>:שם פריט</b> ${item.item} <b>:מס פריט</b>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <#assign serialData=item.inventorydetail?split('<br />')>
+                                        <#list serialData as sValue>
+                                            <tr>
+                                                <td align="right" style="padding: 0;">
+                                                    <barcode codetype="code128" showtext="true" value="${sValue}" />
+                                                </td>
+                                            </tr>
+                                        </#list>
+                            </table>
+                        </#if>
+                       
+                    </#list>
+                    
+
+
+</body>
+</pdf>

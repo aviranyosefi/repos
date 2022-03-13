@@ -13,7 +13,7 @@ var trandate = nlapiGetFieldValue('trandate');
 var exechange = nlapiExchangeRate('USD', currency, trandate);
 
 
-nlapiLogExecution('debug', 'exechange()', exechange)
+//nlapiLogExecution('debug', 'exechange()', exechange)
 
 if (customer_price_list != '' && customer_price_list != undefined && customer_price_list != null && customer_pl_approval == 'T') {
     var customer_price_list_text = nlapiLookupField('customer', customer, 'custentity_customer_price_list', true);
@@ -93,10 +93,10 @@ function validateLine(type, name) {
 
         currency = nlapiGetFieldValue('currency');
         trandate = nlapiGetFieldValue('trandate');
-        exechange = nlapiExchangeRate('USD', currency, trandate);
+        //exechange = nlapiExchangeRate('USD', currency, trandate);
 
 
-        nlapiLogExecution('debug', 'exechange()', exechange)
+        //nlapiLogExecution('debug', 'exechange()', exechange)
 
         if (customer_price_list != '' && customer_price_list != undefined && customer_price_list != null && customer_pl_approval == 'T') {
             customer_price_list_text = nlapiLookupField('customer', customer, 'custentity_customer_price_list', true);
@@ -233,15 +233,17 @@ function get_generic_price(itemm) {
 
 function gilat_price(itemm) {
 
-    //var type_item = nlapiGetCurrentLineItemValue('item', 'itemtype');
-    //nlapiLogExecution('debug', ' gilat_price type_item',   type_item)
-    //if (type_item == 'InvtPart') { type_item = nlapiGetCurrentLineItemValue('item', 'custcol_baserecordtype') }
-    //var item_type = getType(type_item);
-    //var gilat_price = nlapiLookupField(item_type, itemm, 'custitem_gilat_price');
     var currency = nlapiGetFieldValue('currency');
     var trandate = nlapiGetFieldValue('trandate');
-    var exechange = nlapiExchangeRate('USD', currency, trandate);
-    var gilat_price = getGilatPrice(itemm)
+    //var exechange = nlapiExchangeRate('USD', currency, trandate);
+    var itemData = nlapiLookupField('item', itemm, ['custitem_gilat_price','custitem_gilat_price_currency']);
+    var gilat_price_currency = itemData.custitem_gilat_price_currency
+    var gilat_price = itemData.custitem_gilat_price
+    if (isNullOrEmpty(gilat_price_currency)) {
+        gilat_price_currency = 'USD';
+    }
+    var exechange = nlapiExchangeRate(gilat_price_currency, currency, trandate);
+    //var gilat_price = getGilatPrice(itemm)
     nlapiLogExecution('debug', 'exechange', exechange)
     if (gilat_price != '' && gilat_price != null) {
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list_price', gilat_price * exechange);
@@ -315,7 +317,6 @@ function saveRecord() {
 
 }
 
-
 function get_individual_price_2(itemm, line) {
     debugger;
     for (var j = 1; j <= plRec_items; j++) {
@@ -388,19 +389,19 @@ function get_generic_price_2(itemm, line) {
 
 function gilat_price_2(itemm, line) {
 
-    debugger;
-
-    //var type_item = nlapiGetCurrentLineItemValue('item', 'itemtype');
-    //nlapiLogExecution('debug', ' gilat_price type_item',   type_item)
-    //if (type_item == 'InvtPart') { type_item = nlapiGetCurrentLineItemValue('item', 'custcol_baserecordtype') }
-    //var item_type = getType(type_item);
-    //var gilat_price = nlapiLookupField(item_type, itemm, 'custitem_gilat_price');
     var currency = nlapiGetFieldValue('currency');
     var trandate = nlapiGetFieldValue('trandate');
-    var exechange = nlapiExchangeRate('USD', currency, trandate);
-    var gilat_price = getGilatPrice(itemm)
-    console.log('gilat_price: ' + gilat_price)
-    nlapiLogExecution('debug', 'exechange', exechange)
+    var itemData = nlapiLookupField('item', itemm, ['custitem_gilat_price', 'custitem_gilat_price_currency']);
+    var gilat_price_currency = itemData.custitem_gilat_price_currency
+    var gilat_price = itemData.custitem_gilat_price
+    if (isNullOrEmpty(gilat_price_currency)) {
+        gilat_price_currency = 'USD';
+    }
+    var exechange = nlapiExchangeRate(gilat_price_currency, currency, trandate);
+    //var exechange = nlapiExchangeRate('USD', currency, trandate);
+    //var gilat_price = getGilatPrice(itemm)
+    //console.log('gilat_price: ' + gilat_price)
+    //nlapiLogExecution('debug', 'exechange', exechange)
 
     if (gilat_price != '' && gilat_price != null) {
         nlapiSelectLineItem('item', line)

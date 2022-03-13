@@ -18,6 +18,12 @@ define(['N/record', 'N/http', 'N/search', 'N/format', 'N/runtime'],
                     type: record.Type.ITEM_FULFILLMENT,
                     id: ff,
                 });
+
+
+                //var newRecord = context.newRecord;
+                // var succeeded = newRecord.getValue({ fieldId: 'custbody_bd_succeeded' });
+                // var custbody_not_for_billing = newRecord.getValue({ fieldId: 'custbody_not_for_billing' });
+
                 var status = newRecord.getValue({ fieldId: 'shipstatus' });
                 var ffId = newRecord.getValue("id")
                 //var topic = newRecord.getValue({ fieldId: 'custbody_topic' });                 
@@ -436,10 +442,10 @@ define(['N/record', 'N/http', 'N/search', 'N/format', 'N/runtime'],
             //log.debug('runtime.EnvType ', runtime.EnvType);
             var CurrEnvironment = runtime.envType;
             //log.debug('CurrEnvironment', CurrEnvironment);
-            if (CurrEnvironment == 'PRODUCTION') {              
-                url = "http://192.116.79.26:80/WebAPI/api/bill/input";
+            if (CurrEnvironment == 'PRODUCTION') {
+                url = "http://192.116.79.26:80/WebAPI/api/bill/input";              
             }
-            else url = "http://81.199.108.27:80/WebAPI/api/bill/input";
+            else url = "http://192.116.79.27:80/WebAPI/api/bill/input";
 
             return url;
         }
@@ -447,3 +453,6 @@ define(['N/record', 'N/http', 'N/search', 'N/format', 'N/runtime'],
             execute: execute
         };
     });
+
+
+

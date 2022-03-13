@@ -12,8 +12,8 @@ if (context == 'suitelet') {
     var currency = nlapiGetFieldValue('currency');
     var trandate = nlapiGetFieldValue('trandate');
 
-    var exechange = nlapiExchangeRate('USD', currency, trandate);
-    nlapiLogExecution('debug', 'exechange()', exechange)
+    //var exechange = nlapiExchangeRate('USD', currency, trandate);
+    //nlapiLogExecution('debug', 'exechange()', exechange)
 
     if (customer_price_list != '' && customer_price_list != undefined && customer_price_list != null && customer_pl_approval == 'T') {
         var customer_price_list_text = nlapiLookupField('customer', customer, 'custentity_customer_price_list', true);
@@ -87,7 +87,7 @@ function Price_list_to_quote() {
 
                     }
 
-                    if ((replacing_service_id != '' && replacing_service_id != null && (custbody_topic != '30' || custbody_topic != '8')) || custbody_topic == '24') {
+                    if ((replacing_service_id != '' && replacing_service_id != null && (custbody_topic != '30' && custbody_topic != '8')) || custbody_topic == '24') {
                         nlapiLogExecution('error', 'INSIDE RATE: ' + i, price_for_rate)
                         rec.setLineItemValue('item', 'rate', i, price_for_rate)
                     }
@@ -171,8 +171,15 @@ function get_generic_price(itemm) {
 
 function gilat_price(itemm) {
 
-    nlapiLogExecution('debug', 'item()', itemm)
-    var gilat_price = nlapiLookupField('item', itemm, 'custitem_gilat_price');
+   //nlapiLogExecution('debug', 'item()', itemm)
+    //var gilat_price = nlapiLookupField('item', itemm, 'custitem_gilat_price');
+    var itemData = nlapiLookupField('item', itemm, ['custitem_gilat_price', 'custitem_gilat_price_currency']);
+    var gilat_price_currency = itemData.custitem_gilat_price_currency
+    var gilat_price = itemData.custitem_gilat_price
+    if (isNullOrEmpty(gilat_price_currency)) {
+        gilat_price_currency = 'USD';
+    }
+    var exechange = nlapiExchangeRate(gilat_price_currency, currency, trandate);
     if (gilat_price != '' && gilat_price != null) {
         rec.setLineItemValue('item', 'custcol_price_list_price', line, gilat_price * exechange);
         rec.setLineItemValue('item', 'custcol_price_list', line, 'Gilat Price');
@@ -182,30 +189,12 @@ function gilat_price(itemm) {
 
 }
 
-function getType(type) {
-    nlapiLogExecution('debug', 'getType()', type)
-    var serialized = 'serializedinventoryitem';
-    var notSerialized = 'inventoryitem';
+function isNullOrEmpty(val) {
 
-    var res = '';
-    if (type == 'Yes') {
-        res = serialized;
+    if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
+        return true;
     }
-    if (type == '' || type == 'No') {
-
-        res = notSerialized;
-    }
-    if (type == 'NonInvtPart') {
-        res = 'noninventoryitem';
-    }
-    if (type == 'Assembly') {
-        res = 'serializedassemblyitem';
-    }
-    if (type == 'Kit') {
-        res = 'kititem';
-    }
-    return res;
-
+    return false;
 }
 
 

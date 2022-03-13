@@ -604,7 +604,7 @@ define(['require', 'N/log', 'N/record', '../Common/NCS.Lib.Common', 'N/search', 
                                 helpers.createProjectForSO(rec);
                                 helpers.populateSublistEndDates(rec);
                             });
-                        }            
+                        }
                         // create maintenance lines
                         var endUserCountry = rec.getValue({
                             fieldId: 'custbody_cbr_so_end_user_country'
@@ -615,7 +615,7 @@ define(['require', 'N/log', 'N/record', '../Common/NCS.Lib.Common', 'N/search', 
                         if (!fromZab) {
                             updateOrderAndRMALines(rec, scriptContext);
                         }
-                        		
+
                         /*
                         require(['../Common/NCS.Lib.Helpers' ], function(helpers) {
                             helpers.splitMaintenanceItems(rec, scriptContext.type, endUserCountry);
@@ -905,7 +905,7 @@ define(['require', 'N/log', 'N/record', '../Common/NCS.Lib.Common', 'N/search', 
                     var tranIdRaw = originalRec.getSublistValue({
                         sublistId: 'revenueelement',
                         fieldId: 'sourceid',
-                        line: 1
+                        line: 0
                     });
                     try {
                         var ZABrec = record.load({
@@ -920,8 +920,8 @@ define(['require', 'N/log', 'N/record', '../Common/NCS.Lib.Common', 'N/search', 
                     catch (e) {
                     }
                     logger.debug({
-                        title: 'createdFromZab',
-                        details: createdFromZab
+                        title: 'createdFromZab: ' + createdFromZab,
+                        details: refVal
                     });
                     for (var lineNumber = 0; lineNumber < revenueElementsLineCount; lineNumber++) {
                         var tranIdRaw = originalRec.getSublistValue({
