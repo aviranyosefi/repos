@@ -1,0 +1,4 @@
+<refFields type='DSK BNK Bulgaria Template'>
+<refField id='custrecord_2663_entity_iban' label='IBAN' mandatory='true' /> 
+<refField id='custrecord_2663_entity_acct_name' label='Bank Name' mandatory='true' /> 
+</refFields>

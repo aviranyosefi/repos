@@ -2,7 +2,11 @@
 <!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
 <pdf>
     <head>
-        <link name="sans-serif" type="font" subtype="truetype" src="https://1283062.app.netsuite.com/core/media/media.nl?id=86668&amp;c=1283062&amp;h=491015685f2f289a872f&amp;_xt=.ttf" src-bold="https://1283062.app.netsuite.com/core/media/media.nl?id=86669&amp;c=1283062&amp;h=218e421a5b34fe30d569&amp;_xt=.ttf" />
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://1283062.app.netsuite.com/core/media/media.nl?id=86668&amp;c=1283062&amp;h=491015685f2f289a872f&amp;_xt=.ttf"
+              src-bold="https://1283062.app.netsuite.com/core/media/media.nl?id=86669&amp;c=1283062&amp;h=218e421a5b34fe30d569&amp;_xt=.ttf" />
+
+   
 
         <style type="text/css">
             p {
@@ -29,6 +33,9 @@
                 padding-left: 6px;
                 padding-bottom: 3px;
                 color: #333333;
+            }
+            .test {
+                font-size: 19pt;
             }
 
             td {
@@ -75,8 +82,7 @@
                 padding-top: 10px;
                 font-weight: bold;
                 font-size: 10pt;
-            }
-
+            }   
             table.linetb td {
                 border: 1px solid #bdd1e2;
                 background-color: #eeeeee;
@@ -119,13 +125,17 @@
                     padding-bottom: 10px;
                     padding-top: 10px;
                     font-size: 10pt;
-                }
-
+                }   
             hr {
                 height: 1px;
                 width: 100%;
                 color: #add8e6;
                 background-color: #add8e6;
+            }
+            table.linetb_Total th.amountdue {
+                font-size: 14pt;
+                background-color: #eeeeee;
+                color:black
             }
         </style>
 
@@ -162,7 +172,7 @@
                     <#if record.entity.custentity_ilo_print_hebrew==false>
                         <#assign title="Tax Invoice">
                             <#if record.subsidiary?lower_case?contains("inc")>
-                                <#assign title="Invoice">
+                                <#assign title="Invoice " + record.tranid>
                             </#if>
                             <table border="0" cellpadding="0" class="header">
                                 <tr>
@@ -175,7 +185,9 @@
                                     </td>
                                     <td width="33%">
                                         <p style="font-size: 14pt"><b>${title}</b></p>
-                                        <p>Invoice#: ${record.tranid}</p>
+                                        <#if !record.subsidiary?lower_case?contains("inc")>
+                                            <p>Invoice#: ${record.tranid}</p>
+                                        </#if>
                                         <p>Invoice Date: ${record.trandate?string("dd-MMM-yyyy")}</p>
                                         <p>Due Date: ${record.duedate?string("dd-MMM-yyyy")}</p>
                                         <#if record.otherrefnum !=''>
@@ -184,6 +196,10 @@
                                         <#if record.custbody_ilo_end_user?has_content>
                                             <p>End User: ${record.custbody_ilo_end_user}</p>
                                         </#if>
+                                        <#if record.subsidiary?lower_case?contains("inc") && record.terms?has_content>
+                                            <p>Terms: ${record.terms}</p>
+                                        </#if>
+
                                     </td>
                                     <td width="34%" align="right"><#if companyInformation.logoUrl?length !=0><img src="${companyInformation.logoUrl}" style="float: left;" height="30px" width="110px" /> </#if><p style="font-size:19px; line-height: 10px;"></p></td>
 
@@ -622,7 +638,7 @@
                     <table class="linetb_Total" style="width:650px;">
                         <!-- start items -->
                         <tr>
-                            <td rowspan="4" colspan="16" style="background-color:#fff; border: 1px solid white; padding-right:10px">
+                            <td rowspan="5" colspan="16" style="background-color:#fff; border: 1px solid white; padding-right:10px">
                                 <br /><br />
                                 <#if record.memo?has_content>
                                     <p><b>Comments:</b></p>
@@ -656,9 +672,21 @@
                             </tr>
                         </#if>
                         <tr>
-                            <th colspan="8" class="linetb" align="left" style="height:25px; vertical-align: middle;color:#fff; font-weight:bold;">TOTAL<br /></th>
-                            <th colspan="8" class="linetb" align="right" style="height:25px; vertical-align: middle;color:#fff; "> ${curr_symbol}${record.total?string[",##0.00"]}</th>
+                            <th colspan="8" align="left" style="height:25px; vertical-align: middle;color:#fff; font-weight:bold;">TOTAL<br /></th>
+                            <th colspan="8" align="right" style="height:25px; vertical-align: middle;color:#fff; "> ${curr_symbol}${record.total?string[",##0.00"]}</th>
                         </tr>
+                        <#if record.subsidiary?lower_case?contains("inc") && record.amountpaid?has_content >
+                            <tr>
+                                <th colspan="8" align="left" style="height:25px; vertical-align: middle;color:#fff; font-weight:bold;">Amount Paid<br /></th>
+                                <th colspan="8" align="right" style="height:25px; vertical-align: middle;color:#fff; "> ${curr_symbol}${record.amountpaid?string[",##0.00"]}</th>
+                            </tr>
+                        </#if>
+                        <#if record.subsidiary?lower_case?contains("inc") && record.amountremaining?has_content && record.amountremaining !=record.total>
+                            <tr>
+                                <th colspan="8"  class="amountdue" align="left" style="height:25px; vertical-align: middle; font-weight:bold;">AMOUNT DUE</th>
+                                <th colspan="8"  class="amountdue" align="right" style="height:25px; vertical-align: middle;">${curr_symbol}${record.amountremaining?string[",##0.00"]}</th>
+                            </tr>
+                        </#if>
                         <tr><td colspan="8"></td><td colspan="8"></td></tr>
 
                         <#if record.currencysymbol !='ILS' && record.entity.billcountry=="Israel">

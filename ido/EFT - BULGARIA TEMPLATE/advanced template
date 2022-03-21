@@ -1,0 +1,41 @@
+<#-- format specific processing -->
+
+<#function getReferenceNote payment>
+<#assign note = "">
+<#assign paymentTrans = transHash[payment.internalid]>
+<#if paymentTrans?size == 1>
+<#assign transaction = paymentTrans[0]>
+<#assign note = transaction.tranid > 
+</#if> 
+<#if !note?has_content>
+<#assign note = pfa.name >
+</#if>
+<#return note>
+</#function>
+
+<#function getCustomFormattedAmount amount>
+<#assign value = formatAmount(amount,"dec")>
+<#assign value = value?replace(".",",")>
+<#return value>
+</#function>
+
+<#-- template building -->
+#OUTPUT START#
+<#list payments as payment>
+<#assign ebank = ebanks[payment_index]>
+<#assign entity = entities[payment_index]>
+:20:${getReferenceNote(payment)}
+:32A:${pfa.custrecord_2663_process_date?string("yyMMdd")}${getCurrencySymbol(payment.currency)}${getCustomFormattedAmount(getAmount(payment))}
+:50A:/${cbank.custpage_eft_custrecord_2663_iban}
+${cbank.custpage_eft_custrecord_2663_bic}
+${cbank.custpage_eft_custrecord_2663_bank_name}
+:57A:${ebank.custrecord_2663_entity_bank_no}
+${ebank.custrecord_2663_entity_acct_name}
+${ebank.custrecord_2663_entity_branch_no}
+:59:/${ebank.custrecord_2663_entity_acct_no}
+${buildEntityName(entity,false)}
+${ebank.custrecord_2663_entity_bban}
+:70:${getReferenceNote(payment)}
+:71A:SHA
+</#list>
+#OUTPUT END#

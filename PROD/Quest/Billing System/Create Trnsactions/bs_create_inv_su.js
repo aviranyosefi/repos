@@ -152,11 +152,12 @@ function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, emplo
         for (var i = 0; i < s.length; i++) {
             var agrName = s[i].getText("custrecord_bp_agr", null, "GROUP");
             var agrId = s[i].getValue("custrecord_bp_agr", null, "GROUP");
+            var CustID = s[i].getValue("custrecord_bp_customer", null, "GROUP");
             agrList.push({
                 agr: agrName,
                 amount: s[i].getValue("custrecord_bp_amount", null, "SUM"),
                 customer: s[i].getText("custrecord_bp_customer", null, "GROUP"),
-                view: getDrillDownUrl(agrId, agrName)
+                view: getDrillDownUrl(CustID, agrId, to_date_data)
             });
         }
     }
@@ -186,9 +187,14 @@ function getScriptID(scriptID) {
     );
     return scriptSearch[0].id
 }
-function getDrillDownUrl(agrId, agrName) {
+function getDrillDownUrl(CustID, Agr, date_search) {
+    if (isNullOrEmpty(date_search)) {
+        var today = new Date();
+        var todayStr = nlapiDateToString(today);
+        date_search = todayStr
 
-    var link = "<a href='https://system.netsuite.com/app/common/search/searchresults.nl?rectype=516&searchtype=Custom&CUSTRECORD_BP_AGRtype=ANYOF&CUSTRECORD_BP_AGR=" + agrId + "&detail=CUSTRECORD_BP_AGR&detailname=" + agrName + "'" + ' target="_blank">' + 'view' + "</a>";
+    }
+    var link = "<a href='https://system.netsuite.com" + nlapiResolveURL('SUITELET', 'customscript_first_suitlet', 'customdeploy1') + '&custscript_cust=' + CustID + '&custscript_agr=' + Agr + '&custscript_end_date=' + date_search + "'" + ' target="_blank">' + 'View' + "</a>";
     return link;
 
 }

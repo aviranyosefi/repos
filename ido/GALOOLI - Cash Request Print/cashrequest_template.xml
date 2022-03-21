@@ -1,0 +1,194 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 16pt;
+            table-layout: fixed;
+            width: 90%;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 10px;
+            padding-bottom: 3px;
+            color: #fff;
+            height: 10px;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 10px;
+            vertical-align: middle;
+        }
+
+        table.body td {
+            padding-top: 2px;
+            padding-right: 1px;
+        }
+
+
+        table.header td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        .footer {
+            background-color: #F1F1F2;
+            width: 100%;
+            font-size: 14px;
+            padding: 50px;
+            padding-top: 10px;
+            margin: 0px;
+        }
+
+        .terms {
+            font-family: sans-serif;
+            color: #555;
+            /*text-overflow: ellipsis;
+            overflow: hidden;*/
+            /*white-space: nowrap;*/
+            font-size: 9pt;
+        }
+
+        .header {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            padding: 5px;
+        }
+
+
+        table.linetb th {
+            background-color: #d3d3d3;
+            font-weight: bold;
+            color: #777;
+            border: 1px solid #333;
+        }
+
+        table.linetb td {
+            background-color: #fff;
+            color: #777;
+            /*text-overflow: ellipsis;
+            white-space: nowrap;*/
+            border: 1px solid #333;
+            font-size: 8pt;
+            padding-right: 1px;
+            padding-left: 5px;
+        }
+
+        table.headertable th {
+            background-color: #d3d3d3;
+            color: #555;
+            white-space: nowrap;
+            border: 1px solid #686666;
+            font-size: 9pt;
+            padding-left: 5px;
+        }
+
+        table.headertable td {
+            background-color: #fff;
+            color: #555;
+            white-space: nowrap;
+            border: 1px solid #686666;
+            font-size: 9pt;
+            padding-left: 5px;
+        }
+
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+
+        .title {
+            color: #6D6E70;
+            font-size: 10px !important;
+        }
+
+        .maintitle {
+            color: #32338A;
+        }
+
+        .maintext {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body padding="15" margin="15" size="A4" footer="nlfooter" footer-height="120px"  header="nlheader" header-height="200px">
+         <table border="0" cellpadding="0" class="header"><tr>
+	<td width="700px" align="left"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=1053&c=4855789&h=75d7d40994f9abfbbba0" style="width:180px; height:60px;"/></td>
+  </tr>
+
+</table>
+
+
+  <table style="width:650px;">
+    <tr>
+          <td style="width:650px; align: center;">
+        <div class="default" style="font-size:1em;"><u><b>Cash Request :#{{_tran_num}}</b></u></div></td>
+    </tr>
+</table>
+    <table style="width:650px; align:center;">
+    <tr>
+      <td class="title" ><b>ID:</b> <br /><span >{{_tran_num}}<br /><br /></span></td>
+       <td class="title" ><b>Date created:</b> <br /><span >{{_created}}<br /><br /></span></td>
+        <td class="title" ><b>Amount:</b> <br /><span >{{_amount}}<br /><br /></span></td>
+       
+       </tr>
+       <tr>
+           <td class="title" ><b>Creator:</b> <br /><span >{{_creator}}<br /><br /></span></td>
+           <td class="title" ><b>Requestor</b> <br /><span >{{_employee}}<br /><br /></span></td>
+          <td class="title" ><b>Status:</b> <br /><span >{{_status}}<br /><br /></span></td>
+  
+ 
+      </tr>
+      <tr>
+          <td class="title" ><b>Employee signature:</b> <br /><span >{{_emp_signature}}<br /><br /></span></td>
+       <td class="title" ><b>Approver signature:</b> <br /><span >{{_approve_signature}}<br /><br /></span></td>
+             <td class="title" ><b>Comment:</b> <br /><span >{{_comment}}<br /><br /></span></td>
+    </tr>
+
+
+    </table>
+
+</body>
+</pdf>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+  <link name="sans-serif" type="font" subtype="truetype" src="https://system.eu2.netsuite.com/c.4947798/suitebundle149431/Heb-Regular.ttf"/>
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+           
+            font-size: 8pt;
+            background-color: #e3e3e3;
+            vertical-align: middle;
+          text-align : center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+             font-size: 7pt;
+            
+        }
+
+        table.linetb td {
+            border: 1px solid;
+             font-size: 7pt;
+
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+          width: 40%;
+         	
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+<body padding="0.2in 0.5in 0.1in 0.5in" size="A4">
+
+
+<table border="0" cellpadding="0" class="header"><tr>
+	<td width="350px" align="left"><p style="font-size:19px; line-height: 10px; left:2%;"><span > {{_subsid_vat}} �.�.<br /><br /></span></p></td>
+  <td width="350px" align="right" style="top: 15px;"><p style="font-size: 2em; top:10px" >{{_subsid_name}}</p>
+
+
+  </td>
+  </tr>
+
+</table>
+
+  <table style="width:650px;top:-2%;">
+    <tr>
+
+      
+          <td style="width:650px; align: center;">
+        <div class="default" style="font-size:1.2em;"><u>{{_deposit_trannum}} :�����</u></div></td>
+    </tr>
+</table>
+
+         
+    <table style="width:100%;">
+  	<tr>
+
+	<td class="default" align="left" style="padding-top: 3px;" rowspan="2">
+      <p style="line-height: 7px; text-align:left;">{{_time}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ���</p>
+       <p style="line-height: 7px;">����� :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{_date}}</p>
+       <p style="line-height: 7px;">���� :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{_acc_number}}</p>
+        <p style="line-height: 7px;">���� :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{_currency}}</p>
+
+	</td>
+	</tr>
+    <tr>
+
+    </tr>
+
+</table>
+
+<table style="width:45%; left:65%; top: -8%">
+  	<tr>
+	<td class="default" > <p style="text-align: right; right: 50px; width: 220px; line-height: 30px; font-size: 1.1em">����� : </p></td>
+	<td class="default"></td>
+	</tr>
+        <tr>
+     <td colspan="2" class="default"><p style="text-align: right; direction:rtl; right:40px; width: 220px;">{{_acc_details}}</p></td>
+    </tr>
+    <tr>
+    <td colspan="2" class="default"><p style="text-align: right; direction:rtl; right:40px; width: 220px;">{{_acc_bankdetails}}</p></td>
+    </tr>
+</table>
+
+
+
+
+
+<table class="linetb" style="width: 100%; margin-top: 10px;"><!-- start apply sublist -->
+<thead>
+	<tr>
+	  
+		
+
+
+	 <th align="center" colspan="4">����</th>
+	 <th align="center" colspan="3">����\���</th>
+	 <th align="center" colspan="3">�����</th>
+	 <th align="center" colspan="4">�. �����</th>
+	 <th align="center" colspan="4">�����</th>
+	 <th align="center" colspan="3">�� ���</th>
+	 <th align="center" colspan="3">�. �����</th>
+  	 <th align="center" colspan="3">����</th>
+	 <th align="center" colspan="3">����</th>
+
+
+	
+
+	</tr>
+</thead>
+--startlist--
+<tr>
+
+	<td align="center" colspan="4">{{deposit_total}}</td>
+  	<td align="center" colspan="6">{{deposit_refnum}}</td>
+	<td align="center" colspan="2">{{deposit_accNum}}</td>
+  	<td align="center" colspan="2">{{deposit_bankbranch}}</td>
+	<td align="center" colspan="2">{{deposit_bankNum}}</td>
+	<td align="center" colspan="3">{{deposit_checkNum}}</td>
+	<td align="center" colspan="3">{{deposit_checkDate}}</td>
+	
+
+	</tr>
+	--endlist--
+    </table>
+  
+             <table style="width:50%; left: 50%; top: 5%;">
+      <tr>
+    <td align="right"><p style="font-size: 1.1em;">{{_totallines}}</p></td>
+	<td align="right"><p style="font-size: 1.1em;">��"� ������ ������ : </p></td>
+      </tr>
+            <tr>
+    <td align="right"><p style="font-size: 1.1em;">{{_memo}}</p></td>
+	<td align="right"><p style="font-size: 1.1em;"></p></td>
+      </tr>
+    </table>
+         
+
+         
+             <table class="total" style="top: 2em;">
+      <tr>
+    <td align="left"><p style="font-size: 1em;">{{_date}}</p></td>
+	<td align="left"><p style="font-size: 1em;">����� ������ : </p></td>
+      </tr>
+	<tr>
+    <td align="left"><p style="font-size: 1.3em;">{{_currency_symbol}} {{_total}} </p></td>
+	<td align="left"><p style="font-size: 1.3em;">��"� : </p></td>
+
+	</tr>
+</table>
+    
+     
+
+
+</body>
+</pdf>
+

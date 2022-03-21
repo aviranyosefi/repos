@@ -1,0 +1,81 @@
+<fieldValidatorList>
+
+<fieldValidator>
+<fieldName>custrecord_2663_issuer_num</fieldName>
+<validatorList>
+<validator type='len'>
+<param name="maxLength">16</param>
+</validator>
+</validatorList>
+</fieldValidator>
+
+<fieldValidator>
+<fieldName>custrecord_2663_bic</fieldName>
+<validatorList>
+<validator type="len">
+<param name="validLength">8</param>
+</validator>
+<validator type='custom' />
+</validatorList>
+</fieldValidator>
+
+<fieldValidator>
+<fieldName>custrecord_2663_entity_bic</fieldName>
+<validatorList>
+<validator type="len">
+<param name="validLength">8</param>
+</validator>
+<validator type='custom' />
+</validatorList>
+</fieldValidator>
+
+
+<fieldValidator>
+<fieldName>custrecord_2663_entity_address1</fieldName>
+<validatorList>
+<validator type="len">
+<param name="validLength">35</param>
+</validator>
+<validator type='custom' />
+</validatorList>
+</fieldValidator>
+
+<fieldValidator>
+<fieldName>custrecord_2663_bank_address1</fieldName>
+<validatorList>
+<validator type='len'>
+<param name="maxLength">35</param>
+</validator>
+</validatorList>
+</fieldValidator>
+
+<fieldValidator>
+<fieldName>custrecord_2663_bank_city</fieldName>
+<validatorList>
+<validator type='len'>
+<param name="maxLength">35</param>
+</validator>
+</validatorList>
+</fieldValidator>
+
+<fieldValidator>
+<fieldName>custrecord_2663_iban</fieldName>
+<validatorList>
+<validator type='len'>
+<param name="maxLength">34</param>
+</validator>
+<validator type='custom' />
+</validatorList>
+</fieldValidator>
+
+<fieldValidator>
+<fieldName>custrecord_2663_entity_iban</fieldName>
+<validatorList>
+<validator type='len'>
+<param name="maxLength">34</param>
+</validator>
+<validator type='custom' />
+</validatorList>
+</fieldValidator>
+
+</fieldValidatorList>

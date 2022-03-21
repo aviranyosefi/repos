@@ -1,0 +1,400 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            background-color: #e3e3e3;
+            vertical-align: middle;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+<body padding="0.2in 0.5in 0.1in 0.5in" size="A4">
+<table border="0" cellpadding="0" class="header"><tr>
+	<td width="350px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=954&amp;c=4520481&amp;h=64ed597496f76d275c40&amp;whence=" style="width:265px; height:100px" /></td>
+<!--    <td class="default" align="right" style="valign:bottom; margin-top:200px"> Invoice Date:  &nbsp;${record.trandate?string("MMM-dd-yyyy")}
+        <br/>
+    Due Date: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.duedate?string("MMM-dd-yyyy")}
+        <br/>
+    Currency: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.currency}
+        <br />
+        ${record.memo}
+        <br />
+        PO #:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${record.otherrefnum}
+    </td>-->
+
+    </tr>
+
+</table>
+    <#assign vatESSS = 'F'> 
+    <#if record.subsidiary == 'Optimove UK Limited' && record.item?has_content>
+        <#if record.item?has_content>
+            <#list record.item as item>
+                <#if item.taxcode?has_content && item.taxcode == "VAT:ESSS-GB">
+                  <#assign vatESSS = 'T'> 
+                </#if>
+            </#list>
+        </#if>
+    </#if>
+<div >
+    <table style="width:650px;">
+  	<tr>
+	<td class="default" style="font-size:19px;"><span ><b> ${record.subsidiary}</b><br /><br /></span></td>
+	<td class="default" align="right" style="padding-top: 3px;" rowspan="2">
+         Invoice Date:  &nbsp;${record.trandate?string("MMM-dd-yyyy")}<br />
+        Due Date: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.duedate?string("MMM-dd-yyyy")} <br />
+         Currency: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.currency} <br />
+             PO #:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${record.otherrefnum} <br />
+             <b>  ${record.memo}</b> <br /> 
+	</td>
+	</tr>
+    <tr>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <td class="default">
+        VAT #: 515245173 <br />                                                                     
+        2 Hashlosha St.   <br />                                                                         
+        P.O Box 9071    <br />                                                                         
+        Tel Aviv <br />
+        6109001 <br />
+        Israel              <br />
+        Email: billing@optimove.com <br />
+    
+    </td>
+    </#if>
+
+    <#if  record.subsidiary == 'Optimove Inc'>
+    <td class="default">
+        217 West 21 St.<br />                                                                     
+        2nd Floor.   <br />                                                                         
+        New York, NY 10011 <br />                                                                         
+        Email: billing@optimove.com <br />
+    
+    </td>
+    </#if>
+
+
+    <#if record.subsidiary == 'Optimove UK Limited'>
+    <td class="default">
+        VAT #: 258697344 <br />                                                                    
+        138-142 Holborn    <br />                                                                         
+        Units 2.035 &amp; 2.066 <br />
+        London EC1N 2SW             <br />
+        United Kingdom            <br />
+        Email: billing@optimove.com <br />    
+    </td>
+    </#if>
+    </tr>
+
+</table>
+
+  <#assign primarycur_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign primarycur_exchange = record.exchangerate> 
+     </#if>
+    </#if>
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+                                                        
+
+
+
+
+<table style="width:650px;">
+       <tr>
+       <td class="default"><span ><u>Bill To:</u></span></td>
+       <td class="default"></td>
+       </tr>
+    <tr>
+    <td colspan="2" class="default">${record.billaddress}</td>
+    </tr>
+       <#if (record.shipaddress != "" && record.shipaddress != record.billaddress )>
+           <tr style="padding-top:15px;">
+       <td class="default"><span ><u>Ship To:</u></span></td>
+       <td class="default"></td>
+       </tr>
+        <tr>
+    <td colspan="2" class="default">${record.shipaddress}</td>
+    </tr>
+     </#if>
+    <#if (record.vatregnum != "" &&  !record.vatregnum?contains('99999999'))>
+        <tr style="padding-top:1px; padding-bottom:5px;">
+        <td colspan="2" class="default"> VAT #: ${record.vatregnum}</td>
+        </tr>
+    </#if>
+
+</table>
+
+          <#assign print_type = ' Original'> 
+          <#if record.custbody_ilo_org_printed>
+            <#assign print_type = ' Copy'> 
+              </#if>
+            <#if record.custbodycustbody_ilo_print_draft>
+              <#assign print_type = ' Draft'> 
+                </#if>
+
+    <#if record.subsidiary == 'Optimove UK Limited'>
+              <#assign print_type = ''> 
+      </#if>
+
+
+  <table style="width:650px; ">
+    <tr>
+    <td align="left" style="width:410px">
+        <div class="default" style="font-size:16px; "><b><u>Tax Invoice #${record.tranid}  </u></b></div>
+      </td>
+            <td align="right">
+        <div style="font-size:14pt; "><b>${print_type}</b></div>
+      </td>
+    </tr>
+</table>
+
+</div>
+
+  <#if record.item?has_content>
+<table class="linetb" style="width:680px"><!-- start items -->
+  <#list record.item as item><#if item_index==0>
+<thead>
+	<tr>
+	<th colspan="13">Item</th>
+	<th colspan="2">Quantity</th>
+    <th colspan="4">Unit Price</th>
+    <th colspan="4">Total Item</th>
+	</tr>
+</thead>
+</#if>
+	<tr>
+	<td colspan="13" style="ext-align:justify; text-justify:none; ">
+      ${item.item} <br/>
+       <#if item.custcol_oprate?has_content>
+         Unit Rate: ${item.custcol_oprate} 
+      </#if>
+      <#if item.custcol_opexrate?has_content>
+       Ex. Rate: ${item.custcol_opexrate} 
+     </#if>
+      <#if item.custcol_fromdate?has_content && item.custcol_todate?has_content>
+        From: ${item.custcol_fromdate?string("MMM-dd-yyyy")} To:  ${item.custcol_todate?string("MMM-dd-yyyy")}  <br/>
+        </#if>
+           ${item.description} <br/>
+                <#assign currency_sym = ''> 
+       <#if record.currency == 'ILS'>
+                <#assign currency_sym = '¤'> 
+      </#if>
+      </td>
+	<td colspan="2"><span class="desc">${item.quantity}</span></td>
+	<td colspan="4">${(item.rate  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+	<td colspan="4">${(item.amount  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+</tr>
+	</#list><!-- end items -->
+</table>
+    </#if>
+    <table class="total">
+	<tr>
+	<td colspan="4"></td>
+	<td align="right"><b>Sub Total</b></td>
+	<td align="right"><b>${(record.subtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</b></td>
+	</tr>
+    <#if record.taxtotal != 0>
+    <tr>
+    <td colspan="4"></td>
+    <#if  record.subsidiary == 'Optimove Inc'>
+    <td align="right"><b>Tax  ${record.taxrate}%</b></td>
+    <#else>
+    <td align="right"><b>Tax ${(record.taxtotal / record.subtotal * 100)?string[",##0.000"]}%</b></td>
+    </#if>
+    <td align="right"><b>${(record.taxtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</b></td>
+    </tr>
+    </#if>
+            <#if record.taxtotal == 0 &&  record.subsidiary =='Optimove UK Limited'>
+    <tr>
+    <td colspan="4"></td>
+    <td align="right"><b>Total Vat</b></td>
+    <td align="center"><b>0</b></td>
+    </tr>
+    </#if>
+
+
+	<tr>
+	<td colspan="4"></td>
+	<td align="right"><b>Total Invoice</b></td>
+	<td align="right"><b>${(record.total  * total_exchange)?string[",##0.00"]} ${currency_symbol}</b></td>
+	</tr>
+        <#if  record.subsidiary =='Optimove UK Limited' && currency_symbol != 'GBP' && record.taxtotal != 0 >
+        <tr>
+        <td colspan="4"></td> 
+        <td align="right" width="100px"><b>Total Vat</b></td>
+        <td align="right" width="120px"><u><b>${(record.taxtotal * (secondary_exchange))?string[",##0.00"]} (GBP)</b></u></td>
+        </tr>
+        </#if>
+</table>
+  <table style="padding-top:15px">
+    <tr>
+              <#if  record.subsidiary == 'Mobius Solutions LTD'>
+      <td>
+                <u>Wire Instructions:</u><br />
+                <#if record.entity.custentity_opt_customer_bankacc_accname != ''>
+                 Bank Name: ${record.entity.custentity_opt_customer_bankacc_accname}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankacc_address != ''>
+                 Bank Address: ${record.entity.custentity_opt_customer_bankacc_address}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankacc_swift != ''>
+                 Swift Code: ${record.entity.custentity_opt_customer_bankacc_swift}<br />
+                </#if>
+                   <#if record.entity.custentity_opt_customer_bankacc_branch != ''>
+                 Bank Branch: ${record.entity.custentity_opt_customer_bankacc_branch}<br />
+                </#if>
+                        <#if record.entity.custentity_opt_customer_bankacc_sorting != ''>
+                 Sorting Code: ${record.entity.custentity_opt_customer_bankacc_sorting}<br />
+                </#if>
+                   <#if record.entity.custentity_opt_customer_bankaccaba != ''>
+                 Bank ABA/Routing: ${record.entity.custentity_opt_customer_bankaccaba}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankaccname != ''>
+                 Account Name: ${record.entity.custentity_opt_customer_bankaccname}<br />
+                </#if>
+                       <#if record.entity.custentity_opt_customer_bankaccnum != ''>
+                 Account Number: ${record.entity.custentity_opt_customer_bankaccnum}<br />
+                </#if>
+                             <#if record.entity.custentity_opt_customer_bankacc_iban != ''>
+                 IBAN: ${record.entity.custentity_opt_customer_bankacc_iban}<br />
+                </#if>
+        </td>
+               </#if>
+             <#if record.subsidiary == 'Optimove UK Limited' || record.subsidiary == 'Optimove Inc'>>
+      <td>
+                <u>Wire Instructions:</u><br />
+                <#if record.entity.custentity_opt_customer_bankacc_accname != ''>
+                 Bank Name: ${record.entity.custentity_opt_customer_bankacc_accname}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankacc_address != ''>
+                 Bank Address: ${record.entity.custentity_opt_customer_bankacc_address}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankacc_swift != ''>
+                 Swift Code: ${record.entity.custentity_opt_customer_bankacc_swift}<br />
+                </#if>
+                   <#if record.entity.custentity_opt_customer_bankacc_branch != ''>
+                 Bank Branch: ${record.entity.custentity_opt_customer_bankacc_branch}<br />
+                </#if>
+                        <#if record.entity.custentity_opt_customer_bankacc_sorting != ''>
+                 Sorting Code: ${record.entity.custentity_opt_customer_bankacc_sorting}<br />
+                </#if>
+                   <#if record.entity.custentity_opt_customer_bankaccaba != ''>
+                 Bank ABA/Routing: ${record.entity.custentity_opt_customer_bankaccaba}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankaccname != ''>
+                 Account Name: ${record.entity.custentity_opt_customer_bankaccname}<br />
+                </#if>
+                       <#if record.entity.custentity_opt_customer_bankaccnum != ''>
+                 Account Number: ${record.entity.custentity_opt_customer_bankaccnum}<br />
+                </#if>
+                             <#if record.entity.custentity_opt_customer_bankacc_iban != ''>
+                 IBAN: ${record.entity.custentity_opt_customer_bankacc_iban}<br />
+                </#if>
+        </td>
+            </#if>
+   </tr>
+</table>
+
+
+</body>
+</pdf>

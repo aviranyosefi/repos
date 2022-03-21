@@ -1,0 +1,5 @@
+<refFields type='Bulgaria EFT Template'>
+<refField id='custrecord_2663_entity_bank_no' label='BIC' mandatory='true' /> 
+<refField id='custrecord_2663_entity_acct_no' label='IBAN' mandatory='true' /> 
+<refField id='custrecord_2663_entity_acct_name' label='Bank Name' mandatory='true' /> 
+</refFields>

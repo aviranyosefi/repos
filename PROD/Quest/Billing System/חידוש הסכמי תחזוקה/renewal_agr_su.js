@@ -1,4 +1,5 @@
-﻿function ActionScreen(request, response) {
+﻿var screenType;
+function ActionScreen(request, response) {
     if (request.getParameter('custpage_page') == '1') {
         var action = request.getParameter('custpage_action');         
         var lineCount = request.getLineItemCount('custpage_res_sublist');
@@ -64,23 +65,16 @@
         response.writePage(form)
     }
     else {
-        //var idd = request.getParameter('Recid');
-        //var actionType = request.getParameter('action');
-        //nlapiLogExecution('debug', ' idd: idd', 'actionType' + actionType )
-        //if (!isNullOrEmpty(idd)) {
-        //    var customerAgr = nlapiLookupField('customrecord_agreement', idd, 'custrecord_agr_bill_cust')
-        //    var agreementVal = request.getParameter('from');
-        //}
-        var form = nlapiCreateForm('Action Screen');
+        screenType = request.getParameter('screenType');    
+        if (isNullOrEmpty(screenType)) { screenType = request.getParameter('custpage_screen_type');}
+        var form = nlapiCreateForm(buildFormName(screenType));
         form.addSubmitButton('Refresh');
         form.setScript('customscript_renewal_agr_cs');
         form.addFieldGroup('custpage_batch_group', 'Select Details');
 
         var customer = form.addField('custpage_customer', 'select', 'customer', 'customer', 'custpage_batch_group').setLayoutType('midrow');
         var customer_data = request.getParameter('custpage_customer');
-        //if (!isNullOrEmpty(idd)) {
-        //    customer_data = customerAgr;
-        //}
+
         customer.setDefaultValue(customer_data)
         customer.setMandatory(true);
     
@@ -88,7 +82,6 @@
         action.addSelectOption('1', 'עריכת הסכם')
         action.addSelectOption('2', 'צירוף שורות')
         var action_data = request.getParameter('custpage_action');
-        //if (!isNullOrEmpty(actionType)) { action_data = actionType}
         action.setDefaultValue(action_data)
         action.setMandatory(true);
 
@@ -98,14 +91,24 @@
         var status_data = request.getParameter('custpage_status');
         status.setDefaultValue(status_data)
         status.setMandatory(true);
+        if (screenType == 2) {
+            status.setDefaultValue('1')
+            status.setDisplayType('hidden');
+        }
+
+        if (screenType == 2) {
+            var sub_type = form.addField('custpage_sub_type', 'select', 'Sub Type', 'customlist_agreement_sub_type', 'custpage_batch_group').setLayoutType('midrow');
+            var sub_type_data = request.getParameter('custpage_sub_type');
+            sub_type.setDefaultValue(sub_type_data)
+        }
 
         var agr = form.addField('custpage_agr', 'select', 'Agreement', null, 'custpage_batch_group').setLayoutType('midrow');
         var agr_data = request.getParameter('custpage_agr');
-        //if (!isNullOrEmpty(agreementVal)) { agr_data = agreementVal }
         if (!isNullOrEmpty(customer_data))
-            setAgr(customer_data, status_data, agr ,1);
+            setAgr(customer_data, status_data, agr, 1, screenType);
         agr.setDefaultValue(agr_data);
-
+     
+    
         var item = form.addField('custpage_item', 'select', 'ITEM', 'item', 'custpage_batch_group').setLayoutType('midrow');
         var item_data = request.getParameter('custpage_item');
         item.setDefaultValue(item_data)
@@ -125,11 +128,15 @@
         var status_target_data = request.getParameter('custpage_status_target');
         status_target.setDefaultValue(status_target_data)
         status_target.setMandatory(true);
+        if (screenType == 2) {
+            status_target.setDefaultValue('1')
+            status_target.setDisplayType('hidden');
+        }
   
         var agr_2 = form.addField('custpage_agr_target', 'select', 'Target Agreement', null, 'custpage_batch_group').setLayoutType('outside');
         var agr_data_2 = request.getParameter('custpage_agr_target');
         if (!isNullOrEmpty(cust_target_data))
-            setAgr(cust_target_data, status_target_data, agr_2 ,2); 
+            setAgr(cust_target_data, status_target_data, agr_2, 2, screenType ); 
         agr_2.setDefaultValue(agr_data_2);
         
         var precent = form.addField('custpage_percent', 'FLOAT', 'Percent', null, 'custpage_batch_group').setLayoutType('outside');
@@ -140,7 +147,7 @@
         nlapiLogExecution('debug', ' action_data ', action_data )
         var results = [];      
         if (action_data == 1) { // עריכת הסכם
-            results = getAgreementLines( status_data,agr_data,item_data,parseFloat(precent_data));
+            results = getAgreementLines(status_data, agr_data, item_data, parseFloat(precent_data), sub_type_data);
             if (results.length > 0) {
                 form.addButton('customscript_continue', 'Continue', 'Continue()'); 
                 form.addButton('customscript_export', 'Export', 'fnExcelReport()');                
@@ -157,10 +164,11 @@
                 subList.addField('custpage_ib_charge_type', 'text', 'Charge Type');   
                 subList.addField('custpage_ib_renewal_amount', 'CURRENCY', 'renewal amount').setDisplayType('entry');  
                 subList.addField('custpage_charge_type_select', 'select', 'Charge Type', 'customlist_dangot_recurr_charge_type');   
-                subList.addField('custpage_exclude_month_warr', 'text', 'Exclude Month Warranty')
+                var month_warr_field = subList.addField('custpage_exclude_month_warr', 'text', 'Exclude Month Warranty')
                 subList.addField('custpage_discount', 'percent', 'Discount').setDisplayType('entry');
                 subList.addField('custpage_charge_amount', 'float', 'Charge Amount')//.setDisplayType('entry');
-                subList.addField('custpage_agr_line_id', 'text', 'AGREEMENT LINE').setDisplayType('hidden');               
+                subList.addField('custpage_agr_line_id', 'text', 'AGREEMENT LINE').setDisplayType('hidden');  
+                if (screenType == 2) { month_warr_field.setDisplayType('hidden');  }
                 for (var i = 0; i < results.length; i++) {
                     subList.setLineItemValue('custpage_process', i + 1, 'T');
                     subList.setLineItemValue('custpage_update', i + 1, 'T');
@@ -181,7 +189,7 @@
             }
         }
         else if (action_data == 2 ) { // צירוף שורות
-            results = getAgreementLinesMove(customer_data , agr_data,  item_data, parseFloat(precent_data));
+            results = getAgreementLinesMove(customer_data, agr_data, item_data, parseFloat(precent_data), sub_type_data);
             if (results.length > 0) {
                 form.addButton('customscript_continue', 'Continue', 'Continue()');
                 form.addButton('customscript_export', 'Export', 'fnExcelReport()');
@@ -213,12 +221,17 @@
                 }
             }
         }
+
+        var screen_type = form.addField('custpage_screen_type', 'text', 'check', null, null);
+        screen_type.setDefaultValue(screenType);
+        screen_type.setDisplayType('hidden');
+
         response.writePage(form);
     }
 }//end of suitlet
 
 //Renewal Agreement
-function getAgreementLines(status_data , agr_data, item_data, percent) {
+function getAgreementLines(status_data, agr_data, item_data, percent, sub_type_data) {
 
     nlapiLogExecution('debug', ' status_data: ' + status_data, 'agr_data: ' + agr_data )
     if (status_data == 1) { // פעיל
@@ -236,6 +249,7 @@ function getAgreementLines(status_data , agr_data, item_data, percent) {
     else { // DRAFT
         search.addFilter(new nlobjSearchFilter('custrecord_ib_new_agreement', null, 'anyof', agr_data))      
     }
+    if (!isNullOrEmpty(sub_type_data)) { search.addFilter(new nlobjSearchFilter('custrecord_agr_sub_type', 'custrecord_ib_agr', 'anyof', sub_type_data)) }
    
     var columns = new Array();
     columns.push(new nlobjSearchColumn('custrecord_ib_serial_number'))
@@ -266,11 +280,15 @@ function getAgreementLines(status_data , agr_data, item_data, percent) {
 
         }
         for (var i = 0; i < s.length; i++) {  
+           
             renewal_amount = NewSum(s[i].getValue('custrecord_ib_rate'), percent);
+            if (screenType == 2) { exclude_month_warr = 12 }
+            else { exclude_month_warr = s[i].getValue(field);}
+
             discount1 = s[i].getValue('custrecord_ib_discount');
-            exclude_month_warr = s[i].getValue(field);
+            
             agrLineList.push({
-                ib_id_view: GetLink(s[i].getValue('altname'), s[i].id, 'customrecord_ib'),
+                ib_id_view: GetLink(s[i].getValue('name'), s[i].id, 'customrecord_ib'),
                 ib_id: s[i].id,
                 ib_renewal_amount: renewal_amount ,
                 ib_rate: s[i].getValue('custrecord_ib_rate'),
@@ -292,12 +310,14 @@ function getAgreementLines(status_data , agr_data, item_data, percent) {
     }
     return agrLineList;
 }
-function getAgreementLinesMove( customer ,agr_data, item_data, percent) {
+//BS_Move IB
+function getAgreementLinesMove(customer, agr_data, item_data, percent, sub_type_data) {
 
     var search = nlapiLoadSearch(null, 'customsearch_move_ib');
     if (!isNullOrEmpty(customer)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_customer', null, 'anyof', customer)) }
     if (!isNullOrEmpty(item_data)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_item', null, 'anyof', item_data)) }
     if (!isNullOrEmpty(agr_data)) { search.addFilter(new nlobjSearchFilter('custrecord_ib_agr', null, 'anyof', agr_data)) }
+    if (!isNullOrEmpty(sub_type_data)) { search.addFilter(new nlobjSearchFilter('custrecord_agr_sub_type', 'custrecord_ib_agr', 'anyof', sub_type_data)) }
 
     var columns = new Array();
     columns.push(new nlobjSearchColumn('custrecord_ib_serial_number'))
@@ -337,9 +357,9 @@ function NewSum(cuuRate, percent) {
     //nlapiLogExecution('DEBUG', 'percent:' + percent, 'cuuRate' + cuuRate );
     if (!isNullOrEmpty(percent) && !isNullOrEmpty(cuuRate)) {
         cuuRate = Number(cuuRate) + (Number(cuuRate) * Number(percent)) / 100;
-        cuuRate = cuuRate.toFixed(2)
+        cuuRate = cuuRate.toFixed(2);
     }
-    else if (!isNullOrEmpty(cuuRate)) { cuuRate = cuuRate.toFixed(2)}
+    else if (!isNullOrEmpty(cuuRate)) { cuuRate = Number(cuuRate).toFixed(2)}
     else if (isNullOrEmpty(cuuRate)) {
         return 0
     }
@@ -351,8 +371,8 @@ function GetLink(name, id, type) {
     var link = "<a href='https://system.netsuite.com" + nlapiResolveURL('RECORD', type, id) + "'" + ' target="_blank">' + name + "</a>";
     return link;   
 }
-function setAgr(customer_data, status_data, field , typeField ) {
-    var agrList = customer_agr(customer_data, status_data);
+function setAgr(customer_data, status_data, field, typeField, screenType ) {
+    var agrList = customer_agr(customer_data, status_data, screenType);
     if (agrList.length > 0) {
         if (typeField == 1) { field.addSelectOption('', '', false)}   
         for (var i = 0; i < agrList.length; i++) {
@@ -360,7 +380,7 @@ function setAgr(customer_data, status_data, field , typeField ) {
         }
     }   
 }
-function customer_agr(customer, status) {
+function customer_agr(customer, status, screenType) {
 
     var columns = new Array();
     columns[0] = new nlobjSearchColumn('name');
@@ -369,7 +389,7 @@ function customer_agr(customer, status) {
     filters[0] = new nlobjSearchFilter('custrecord_agr_customer', null, 'is', customer)
     filters[1] = new nlobjSearchFilter('isinactive', null, 'is', 'F')
     filters[2] = new nlobjSearchFilter('custrecord_agr_status', null, 'anyof', status)
-    filters[3] = new nlobjSearchFilter('custrecord_agr_type', null, 'anyof', 1) // שירות
+    filters[3] = new nlobjSearchFilter('custrecord_agr_type', null, 'anyof', screenType) 
 
     var search = nlapiCreateSearch('customrecord_agr', filters, columns);
 
@@ -420,6 +440,12 @@ function chargeAmtCalc(renewal_amount, exclude_month_warr, discount) {
         clc = ((100 - discount) * clc) / 100;                
     }
     return clc.toFixed(2);
+}
+function buildFormName(screenType) {
+    var formName = 'Action Screen'
+    if (screenType == 1) { formName += ' Service' }
+    else if (screenType ==2) { formName += ' Recurring' }
+    return formName
 }
 
 

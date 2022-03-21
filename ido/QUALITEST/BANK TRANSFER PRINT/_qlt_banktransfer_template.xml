@@ -1,0 +1,250 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+  <link name="sans-serif" type="font" subtype="truetype" src="  https://system.eu2.netsuite.com/c.4969978/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 10pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+        th {
+            font-size: 8pt;
+            vertical-align: middle;
+            text-align: center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-left: 10px;
+              margin-right: 10px;
+        }
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+        }
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.linetb_Total {
+            table-layout: fixed;
+            border-collapse: collapse;
+            page-break-inside: avoid;
+            font-size: 10pt;
+                 margin-left: 10px;
+              margin-right: 10px;
+        }
+            table.linetb_Total td {
+                border: 1px solid;
+                text-overflow: ellipsis;
+                word-wrap: break-word;
+                background-color: #edeaea;
+            }
+        hr {
+            height: 1px;
+            width: 100%;
+               margin-left: 10px;
+              margin-right: 10px;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+    
+            <macrolist>      
+        <macro id="nlheader">
+        
+
+
+         <table border="0" cellpadding="0" class="header" style="margin-right: 10px"><tr>
+<td width="700px" align="left"><img src="https://system.eu1.netsuite.com/core/media/media.nl?id=41774&amp;c=4619195_SB2&amp;h=fb76733e9fae3003bd22"  style="float: left;" /><p style="font-size:19px; line-height: 10px;"></p></td>
+        <td width="700px" align="right">
+       <p style="font-size: 2em;">{{_subsidiary_legalname}} </p>
+        <p style="font-size: 10pt;  text-align:right; ">יגיע כפיים 21 ד' , קרית-אריה
+<br/>ת.ד. 3194
+<br/>פתח תקווה 4913020
+<br/> 03-9275005 :טלפון: 03-9275000 פקס
+<br/>{{_subsidiary_custrecordil_tax_payer_id_subsidary}} : עוסק מורשה<br/>{{_subsidiary_custrecordil_tiknik}} : מס. תיק ניכויים </p> 
+
+  </td>
+  </tr>
+</table>
+<hr/>
+
+        </macro>    
+                        <macro id="nlfooter">
+            <table style="width:100%;">
+         <tr>
+            <td colspan="2" align="right"><img width="60px" height="60px" src="https://system.eu1.netsuite.com/core/media/media.nl?id=41775&amp;c=4619195_SB2&amp;h=10b2c3fc699b5f488170"></img></td>
+         </tr>
+         </table>	
+            <table style="width: 100%; font-size: 8pt;"><tr>
+	            <td align="right" style="padding: 0;"><pagenumber/> of <totalpages/></td>
+	            </tr></table>
+         </macro>
+    </macrolist>
+    
+                    </head>
+                    
+
+                <body padding="0.2in 0.5in 0.05in 0.5in" size="A4" header="nlheader" header-height="180px" header-width="80%" footer="nlfooter" footer-height="120px">          
+            
+  <table style="width: 100%; top: -4%">
+ <tr>
+ 
+<td>
+    <table style="width:250px;">
+  	<tr>
+  	        	<td align="left">
+       <p style="line-height: 5px;">{{_record_trandate}}</p></td>
+  	<td align="right">
+       <p style="line-height: 5px;">תאריך הוראה :</p></td>
+  		</tr>
+  		  		  	<tr>
+        	<td align="left">
+       <p style="line-height: 5px;">{{_now_date}}</p></td>
+         	<td align="right">
+       <p style="line-height: 5px;">תאריך הדפסה :</p></td>
+  		</tr>
+  		  		  		  	<tr>
+        	<td align="left">
+       <p style="line-height: 5px;">{{_now_time}}</p></td>
+         	<td align="right">
+       <p style="line-height: 5px;">שעת הדפסה :</p></td>
+  		</tr>
+		
+
+  	
+
+
+  		
+</table>
+</td>
+ <td>
+   <table style="width:320px; left:85px; top: -5%">
+  <thead>
+	<tr>
+        <th colspan="6"><p style="width: 100%; text-align:left; font-size: 10pt; left:180px;">לכבוד :</p></th>
+          <th colspan="6"><p style="width: 100%; text-align:right; line-height: 18px; font-size: 10pt;"></p></th>
+         <th colspan="4"><p style="width: 100%; text-align:right; line-height: 18px; font-size: 10pt;"></p></th>    
+	</tr>
+</thead>
+
+      <tr>
+    </tr>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: right; width: 220px; font-size: 10pt;">{{_billTo}}</p></td>
+        <td colspan="6" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+
+     
+</table>
+</td>
+</tr>
+
+</table>
+
+       <table style="width:100%; top:-2%;">
+    <tr>
+          <td align="center" class="default" style="text-align: center; font-size:1.2em;">
+       <u>{{_record_transactionnumber}} :'הוראת העברה מס</u></td>
+    </tr>
+</table>
+
+
+<table class="linetb" style="width:670px;"><!-- start items -->
+
+	<tr>
+	<td colspan="12"><p style="width: 100%; text-align:right;">&nbsp;על פי הפרוט להלן:<b>{{_record_trandate}}</b>&nbsp;נא לבצע העברה בנקאית בתאריך</p></td> 
+	</tr>
+	<tr>
+	<td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:right;"><span style="font-size: 1.2em"><u>חשבון לזיכוי</u></span>
+	<br/><br/>
+	
+	{{_receiverdetails_}}
+	
+
+	<br/><br/>
+	</p></td> 
+
+	
+
+	<td colspan="6" style="text-align:center; text-justify:none;"><p style="width: 100%; text-align:right;"><span style="font-size: 1.2em"><u>חשבון לחיוב</u></span>
+	<br/><br/>
+	מס. חשבון: {{_record_account_custrecord_bank_account_gl}}<br/>
+	על שם:  קווליטסט בע"מ <br/>
+	בנק: {{_record_bankname}}<br/>
+	סניף: {{_record_bankbranch}}<br/>
+	<br/><br/>
+	</p></td> 
+
+	</tr>
+	<tr>
+		<td colspan="12"><p style="width: 100%; text-align:right;">{{_record_totalamt}}<br/>
+		{{_record_totalamt_words}}
+		</p></td> 
+	</tr>
+
+</table>
+
+    <table class="linetb_Total" style="width:100%; text-align:right; margin-left: 100px; margin-top: 100px;"><!-- start items -->
+
+        	       <tr>  
+    <td rowspan="3" colspan="14" align="left" style="background-color:#fff; border: 1px solid white; ">
+  <span style="margin-left: 40px;">
+חתימה:</span>
+ <br />
+ קווליטסט בע"מ
+   
+
+  </td>
+  </tr>    
+</table>
+      
+            </body>
+</pdf>

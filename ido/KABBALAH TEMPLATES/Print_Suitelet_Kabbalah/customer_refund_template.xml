@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+ <link name="sans-serif" type="font" subtype="truetype" src="https://system.eu2.netsuite.com/c.4947798/suitebundle149431/Heb-Regular.ttf"/>
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+           
+            font-size: 8pt;
+            background-color: #e3e3e3;
+            vertical-align: middle;
+          text-align : center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            
+        }
+
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+          width: 40%;
+         	
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+<body padding="0.2in 0.5in 0.1in 0.5in" size="A4">
+
+<table border="1px solid black" cellpadding="10px" class="header">
+	<tr>
+		<td colspan="6" width="700px" align="left">
+			<p style="font-size: 1.4em; text-align: left;">{{_subsidiary_name_eng}}</p>
+			<p style="font-size: 1.3em; text-align: left">
+				{{_subsidiary_address_eng}}<br />Tel Aviv<br />Company Number : {{_subsidiary_taxpayerid}}
+				
+			</p>
+
+		</td>
+
+				<td colspan="6" width="700px" align="center"><img src="{{_subsidiary_logo}}" style="width: 100px; height: 100px" />
+		<p style="font-size: 19px; line-height: 10px;"></p></td>
+		
+		<td colspan="6" width="700px" align="right">
+			<p style="font-size: 1.4em; text-align: right">{{_subsidiary_name}} </p>
+			<p style="font-size: 1.3em; text-align: right">
+				     14 בן עמי <br />תל אביב<br />{{_subsidiary_taxpayerid}}
+				:עוסק מורשה
+			</p>
+
+		</td>
+	</tr>
+
+</table>
+
+
+   <table style="width:100%;border-top:1px solid black;border-bottom:1px solid black; height: 25px; font-size: 18pt">
+    <tr>
+    <td colspan="4" align="left"><p> </p></td>
+    <td colspan="4" align="center"><p>{{_rec_tranid}}</p></td>
+    <td colspan="4" align="right"><p>זיכוי לקוח</p></td>
+    </tr>
+</table>
+  <table style="width: 100%;">
+ <tr>
+<td>
+				<table style="width: 180px; border: 1px solid black; padding: 3px">
+					<tr>
+						<td align="left">
+							<p style="line-height: 5px;">{{_rec_date}}</p>
+						</td>
+						<td align="right">
+							<p style="line-height: 5px;">תאריך :</p>
+						</td>
+					</tr>
+								<tr>
+						<td align="left">
+							<p style="line-height: 5px;">{{_payment_method}}</p>
+						</td>
+						<td align="right">
+							<p style="line-height: 5px;">אופן זיכוי :</p>
+						</td>
+					</tr>
+				</table>
+			</td>
+ <td>
+   <table style="width:320px; top: -9px">
+
+	<tr>
+        <td colspan="6"><p style="width: 100%; text-align:right; font-size: 1.4em;"></p></td>
+          <td colspan="6"><p style="width: 100%; text-align:right; font-size: 1.4em;"></p></td>
+         <td colspan="10"><p style="width: 100%; text-align:right; font-size: 1.4em;">לכבוד :</p></td>
+	</tr>
+
+
+
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: right; width: 100%"></p> </td>
+        <td colspan="6" class="default"><p style="text-align: right; width: 100%"><br/><br/><br/></p> </td>
+                <td colspan="10" class="default" style="width: 300px"><p style="text-align: right; width: 100%;">{{_rec_address}}</p> </td>
+    </tr>
+
+
+
+</table>
+</td>
+</tr>
+
+</table>
+
+<hr />
+
+
+<table class="linetb" style="width:100%;">
+<thead>
+	<tr>
+        <th colspan="4" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:right;">תשלום</p></th>
+        <th colspan="3" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:center;">מטבע</p></th>   
+        <th colspan="4" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:center;">הסכום שנותר</p></th> 
+        <th colspan="4" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:center;">הסכום המקורי</p></th> 
+        <th colspan="4" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:center;">מס סימוכין</p></th> 
+        <th colspan="4" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:center;">סוג העסקה</p></th>
+        <th colspan="4" style="background-color:#D3D3D3;"><p style="width: 100%; text-align:center;">תאריך</p></th>
+	</tr>
+</thead>
+       --startlist--  
+	<tr>
+      	 <td colspan="6" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:right;">${(item.amount  * total_exchange)?string[",##0.00"]}</p></td>
+      	<td colspan="3" style="text-align:justify; text-justify:none; "><p style="width: 100%; text-align:center;">יח'<br/><br/></p></td>       
+        <td colspan="4"><p style="width: 100%; text-align:right;">${item.rate?string[",##0.00"]}</p></td>
+      	<td colspan="2"><p style="width: 100%; text-align:center;">${item.quantity}</p></td>
+        <td colspan="12"><p style="width: 100%; text-align:right;">${item.description}</p></td>
+      	<td colspan="6"><p style="width: 100%; text-align:right;">${item.item}</p></td>
+      	      	<td colspan="2"><p style="width: 100%; text-align:center;">${item.line}</p></td>
+</tr>
+  	--endlist-- 
+  	
+</table>
+
+
+
+    
+
+        <table class="total"  style="width:40%;">
+	<tr>
+    <td align="left" style="width:43%; border:1px solid black; font-size: 9pt">{{_curr_symbol}} {{_rec_total}}</td>
+	<td align="left" style="width:43%; font-size: 9pt">סה"כ  : </td>
+	</tr>
+	
+</table>
+ 
+
+<table style="width:100%; border: 0px solid white; height: 10px;">
+    <tr>
+      	<td style="text-align:justify; border:0px solid black"><p style="width: 100%; text-align:right;">{{_rec_memo}}</p></td>
+    </tr>
+        <tr>
+      	<td style="text-align:justify; border:0px solid black"><p style="width: 100%; text-align:right;"><b>This is the Company Disclaimer</b></p></td>
+    </tr>
+            <tr>
+      	<td align="right" style="text-align:justify;"><p style="width: 25%; text-align:right; border-bottom:1px solid black">חתימה</p></td>
+    </tr>
+
+</table>
+
+    
+</body>
+</pdf>

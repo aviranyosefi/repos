@@ -1,0 +1,533 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+  <link name="sans-serif" type="font" subtype="truetype" src="  https://system.eu2.netsuite.com/c.4969978/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+            font-size: 8pt;
+            vertical-align: middle;
+            text-align: center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.linetb {
+            border: 0.2px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 10pt;
+            line-height: 15px;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 0.2px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        table.linetb td {
+            border: 0.2px solid;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            width: 35%;
+        }
+
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+
+                    <script>var w = window; if (w.performance || w.mozPerformance || w.msPerformance || w.webkitPerformance) { var d = document; AKSB = w.AKSB || {}, AKSB.q = AKSB.q || [], AKSB.mark = AKSB.mark || function (e, _) { AKSB.q.push(["mark", e, _ || (new Date).getTime()]) }, AKSB.measure = AKSB.measure || function (e, _, t) { AKSB.q.push(["measure", e, _, t || (new Date).getTime()]) }, AKSB.done = AKSB.done || function (e) { AKSB.q.push(["done", e]) }, AKSB.mark("firstbyte", (new Date).getTime()), AKSB.prof = { custid: "501074", ustr: "", originlat: "0", clientrtt: "50", ghostip: "104.115.80.15", ipv6: false, pct: "10", clientip: "37.142.200.193", requestid: "c8f579", region: "8117", protocol: "h2", blver: 13, akM: "x", akN: "ae", akTT: "O", akTX: "1", akTI: "c8f579", ai: "329458", ra: "false", pmgn: "", pmgi: "", pmp: "", qc: "" }, function (e) { var _ = d.createElement("script"); _.async = "async", _.src = e; var t = d.getElementsByTagName("script"), t = t[t.length - 1]; t.parentNode.insertBefore(_, t) }(("https:" === d.location.protocol ? "https:" : "http:") + "//ds-aksb-a.akamaihd.net/aksb.min.js") }</script>
+                    
+        <macrolist>      
+        <macro id="nlheader">
+<#if record.custbody_layout_language = 'English'>
+<table border="0" cellpadding="0" class="first"><tr>
+	<td colspan="3" width="750px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=715&amp;c=5008583&amp;h=cc618b0af9c83fddf9d2" style="width:100%; height:100%" /></td>
+ </tr>
+    <tr style="padding-top:-13px;">
+        <td style="font-size:12px;">
+        <p style="padding-left:12px;">
+         <#if record.subsidiary == "Optibus INC"> 
+           ${record.subsidiary?string?replace('INC', 'Inc.')}
+         </#if>
+                <#if record.subsidiary == "Optibus LTD"> 
+           ${record.subsidiary?string?replace('LTD', 'Ltd.')}
+         </#if>
+          </p>
+        </td>
+        <td></td>
+                    <td align="right" style="font-size:12px;">
+                    <p style="padding-right:12px;">
+        <#if subsidiary.custrecordil_tax_payer_id_subsidary != ''>
+         ID : ${subsidiary.custrecordil_tax_payer_id_subsidary}
+            </#if>
+&nbsp;&nbsp;
+</p>
+        </td>
+        
+    </tr>
+	<tr>
+	<td class="header" align="center" colspan="3" style="margin-top:8px; font-size:1.2em;">
+	         <#assign print_type = '- Original'> 
+       <#if record.custbody_ilo_org_printed>
+        <#assign print_type = '- Copy'> 
+      </#if>
+         <#if record.custbodycustbody_ilo_print_draft>
+              <#assign print_type = '- Draft'> 
+                </#if>
+         	 <span style="border-bottom: 1px solid black"> Invoice No.${record.tranid} ${print_type}</span>
+	</td>
+	</tr>
+</table>
+</#if>
+
+        </macro> 
+                <macro id="nlfooter">
+
+
+<#if record.custbody_layout_language = 'English'>
+                <table class="footer" style="width: 100%">
+                <tr>
+                    <td colspan="3">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="text-align:left; width: 250px;">
+                <u>Wire Instructions :</u><br />
+                <#if record.entity.custentity_opt_customer_bankacc_accname != ''>
+                 Bank Name : ${record.entity.custentity_opt_customer_bankacc_accname}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankacc_address != ''>
+                 Bank Address: ${record.entity.custentity_opt_customer_bankacc_address}<br />
+                </#if>
+                    <#if record.entity.custentity_opt_customer_bankacc_swift != ''>
+                 Swift : ${record.entity.custentity_opt_customer_bankacc_swift}<br />
+                </#if>
+                   <#if record.entity.custentity_opt_customer_bankacc_branch != ''>
+                 Bank Branch : ${record.entity.custentity_opt_customer_bankacc_branch}<br />
+                </#if>
+                   <#if record.entity.custentity_opt_customer_bankacc_aba != ''>
+                 Bank ABA/Routing : ${record.entity.custentity_opt_customer_bankacc_aba}<br />
+                </#if>
+                       <#if record.entity.custentity_opt_customer_bankaccnum != ''>
+                 Account Number : ${record.entity.custentity_opt_customer_bankaccnum}<br />
+                </#if>
+                             <#if record.entity.custentity_opt_customer_bankacc_iban != ''>
+                 IBAN : ${record.entity.custentity_opt_customer_bankacc_iban}<br />
+                </#if>
+                 </p>
+                    </td>
+                    
+                     <#if record.subsidiary == "Optibus INC"> 
+                    <td style="margin-left: 50px;">
+                        <u>Remittance Address :</u><br />                
+                        Optibus Inc.<br />
+						1160 Battery Street East<br />
+						Suite 100<br />
+						San Francisco, CA <br />
+						United States<br />
+						94111<br />
+                       </td>
+                         </#if>
+                         
+                     <#if record.subsidiary == "Optibus LTD"> 
+                    <td style="margin-left: 50px;">
+                        <u>Remittance Address :</u><br />             
+              		    Optibus Ltd.<br />
+						Menachem Begin 23<br />
+						Levinstein Tower<br />
+						Tel Aviv, Israel<br />
+						6618356<br />
+                       </td>
+                         </#if>
+                   
+                 <td style=" font-size:10pt; height:100%;">
+                     <p style="text-align:center;">
+                        If you have any questions concerning this invoice please contact us at :<br/><br/>
+                         
+                     <a href="mailto:ar@optibus.com?Subject=Optibus Invoice" target="_blank" style="font-size:1.1em;">ar@optibus.com</a>
+                         </p>
+                 </td>
+                </tr>
+                       
+                </table>
+
+</#if>
+
+        </macro>    
+
+         <macro id="watermark">
+                 <#if record.custbody_layout_language = 'English'>
+ <p id="watermarkbody" valign="middle" align="center" style="border:1px solid black; top: 300px;">
+ Confidential
+ </p>
+ </#if>
+ </macro>
+    </macrolist>                
+                    </head>
+                    
+                    
+<body padding="-0.11in 0.5in 0.1in 0.5in" size="A4" header="nlheader" header-height="230px" footer="nlfooter" footer-height="180px" background-macro="watermark">
+
+ <#assign EOMterms = record.terms>
+ 
+       <#if EOMterms = 'Due on receipt'>
+   <#assign EOMterms = ''>
+ </#if>
+ 
+ <#if EOMterms = 'EOM + 0M + 30D'>
+   <#assign EOMterms = 'Net 30 EOM'>
+ </#if>
+  <#if EOMterms = 'EOM + 0M + 60D'>
+   <#assign EOMterms = 'Net 60 EOM'>
+ </#if>
+ 
+
+
+                        <#assign curr_symbol = '¤'> 
+          <#if record.currencysymbol = 'USD'>
+            <#assign curr_symbol = '$'> 
+              </#if>
+              <#if record.currencysymbol = 'GBP'>
+            <#assign curr_symbol = '£'> 
+              </#if>
+               <#if record.currencysymbol = 'EUR'>
+            <#assign curr_symbol = '€'> 
+              </#if>
+              <#if record.currencysymbol = 'AUD'>
+            <#assign curr_symbol = 'AUD'> 
+              </#if>
+             <#if record.currencysymbol = 'CAD'>
+            <#assign curr_symbol = 'CAD'> 
+              </#if>
+              <#if record.currencysymbol = 'RUB'>
+            <#assign curr_symbol = 'RUB'> 
+              </#if>
+ 
+  <#assign primarycur_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign primarycur_exchange = record.exchangerate> 
+     </#if>
+    </#if>
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+     
+       <#assign exRate = secondary_exchange?string[",##0.00"]>
+       
+   
+   <#if record.custbody_layout_language = 'English'>
+      <table style="width: 100%;">
+ <tr>
+ 
+       <#assign vat_reg = record.custbody_ilo_tax_payer_id> 
+          <#if vat_reg = ''>
+            <#assign vat_reg = record.vatregnum> 
+              </#if>
+              
+          		<#assign billTo = record.entity.billaddress> 
+       <#assign customerID = record.entity.entitynumber?string?replace(",", "")>
+       <#assign companyName = record.entity.companyname>
+       <#assign billTo = billTo?replace(customerID, '')>
+          <#if billTo = ''>
+            <#assign billTo = companyName> 
+              </#if>
+              
+              				   		<#assign billContact ='ATTN : '+record.entity.custentity_opt_primary_billing_contact>
+              				   		 <#if record.subsidiary == "Optibus INC"> 
+              				   		 <#assign billContact ='Attention : '+record.entity.custentity_opt_primary_billing_contact>
+              				   		 </#if>
+   		<#if record.entity.custentity_opt_primary_billing_contact == ''>
+   		<#assign billContact = ''>
+   		</#if>
+      
+<td>
+<table style="width:350px; top: -30%">
+<thead>
+	<tr>
+        <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em">Bill To : </p></th>
+          <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>
+                    <th colspan="4"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>    
+	</tr>
+</thead>
+      <tr>
+    </tr>
+    <#if record.entity.billaddress == ''>
+    <tr>
+  
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px; line-height: 25px; font-size:10pt"><br/>${billTo}<br/><br/></p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+    <#if record.entity.billaddress != '' && record.entity.custentityil_tax_payer_id == '999999999'>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px; font-size:10pt"><br/>${billTo}<br/><br/>${billContact}</p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+    </#if>
+    <#if record.entity.billaddress != '' && record.entity.custentityil_tax_payer_id != '999999999'>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px; font-size:10pt"><br/>${billTo}<br/><br/>${billContact}</p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+</table>
+</td>
+<td>
+
+    <table style="width:230px; left:75px; font-size:10pt">
+  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Invoice Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.trandate?date?string["M/d/yyyy"]}</p></td>
+  		</tr>
+  		  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Due Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.duedate?date?string["M/d/yyyy"]}</p></td>
+  		</tr>
+  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Currency :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.currencysymbol}</p></td>
+  		</tr>
+  		
+  		  		<#if curr_symbol != "¤" && record.entity.billcountry == 'Israel'>
+  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Exchange Rate :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${exRate}</p></td>
+  		</tr>
+  		</#if>
+  		  		<#if EOMterms != ''>
+  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Payment Terms :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${EOMterms}</p></td>
+  		</tr>
+  		</#if>
+
+
+
+</table>
+      
+      </td>
+</tr>
+</table>
+  </#if>
+  
+  <#if record.item?has_content>
+
+
+   <#if record.custbody_layout_language = 'English'>
+<table class="linetb" style="width:100%;"><!-- start items -->
+  <#list record.item as item><#if item_index==0>
+
+
+
+
+<thead>
+	<tr>
+	    <th colspan="2"><p style="width: 100%; text-align:center;">#</p></th>
+      <!--   <th colspan="6"><p style="width: 100%; text-align:center;">Item</p></th>  -->
+             <th colspan="10"><p style="width: 100%; text-align:center;">Description</p></th>  
+                   <th colspan="2"><p style="width: 100%; text-align:center;">Qty</p></th>  
+                <th colspan="6"><p style="width: 100%; text-align:center;">Price</p></th> 
+      <th colspan="6"><p style="width: 100%; text-align:center;">Subtotal</p></th>
+
+	</tr>
+</thead>
+ 
+</#if>
+
+                      <#assign curr_symbol = '¤'> 
+          <#if record.currencysymbol = 'USD'>
+            <#assign curr_symbol = '$'> 
+              </#if>
+              <#if record.currencysymbol = 'GBP'>
+            <#assign curr_symbol = '£'> 
+              </#if>
+               <#if record.currencysymbol = 'EUR'>
+            <#assign curr_symbol = '€'> 
+              </#if>
+                    <#if record.currencysymbol = 'AUD'>
+            <#assign curr_symbol = 'AUD'> 
+              </#if>
+                           <#if record.currencysymbol = 'CAD'>
+            <#assign curr_symbol = 'CAD'> 
+              </#if>
+                                       <#if record.currencysymbol = 'RUB'>
+            <#assign curr_symbol = 'RUB'> 
+              </#if>
+        
+	<tr>
+	     	 <td colspan="2" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:center;">${item_index +1}</p></td>
+     <!--  	 <td colspan="6" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:left;">${item.item}</p></td> --> 
+      	       	<td colspan="10" style="text-align:justify; text-justify:none; "><p style="width: 100%; text-align:left;">${item.description}<br/><br/>
+            </p></td>  
+      	   <td colspan="2"><p style="width: 100%; text-align:center;"><#if item.custcol_optibus_quantity != 0>${item.custcol_optibus_quantity}<#else>${item.quantity}</#if></p></td>  
+                               <td colspan="6"><p style="width: 100%; text-align:center;"><#if item.custcol_optibus_rate != 0>${curr_symbol}${item.custcol_optibus_rate?string[",##0.00"]}<#else>${curr_symbol}${item.rate?string[",##0.00"]}</#if></p></td>   
+      	<td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol}${item.amount?string[",##0.00"]}</p></td>
+
+</tr>
+
+	</#list><!-- end items -->
+</table>
+
+</#if>
+
+
+</#if>
+
+
+
+   
+    
+    
+
+    
+
+   
+<!-- TOTALS BOX AND REMITTANCE -->
+
+  <#if record.custbody_layout_language = 'English'> 
+
+
+    <table class="total" style="width: 400px; left: 40%;">
+
+
+
+		<tr>
+		   <#if record.subsidiary == "Optibus INC"> 
+			<td align="right">Total before Tax :</td>
+      <td align="right">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+     </#if>
+        <#if record.subsidiary == "Optibus LTD">
+			<td align="right">Total before VAT :</td>
+      <td align="right">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+      </#if>
+	</tr>
+	
+	
+
+    <tr>
+       <#if record.subsidiary == "Optibus INC" && record.taxrate?string != "0"> 
+       <td align="right">Sales Tax :</td>
+       <td align="right">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+       </#if>
+   <#if record.subsidiary == "Optibus LTD">
+        <td align="right"> VAT ${record.taxtotal / record.subtotal * 100}% :</td>
+        <td align="right">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+      </#if>
+   
+    </tr>
+   
+	<tr>
+      	<td align="right"><p style="font-size: 1.2em;">Total :</p></td>
+    <td align="right"><p style="font-size: 1.2em;">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+
+
+
+	</tr>
+
+</table>
+
+
+         <#if record.memo != ''>
+                       <table style="width:100%;">
+      <tr>
+    <td align="left"><p style="font-size: 1.1em;">Comments : ${record.memo}</p></td>
+
+      </tr>
+    </table>
+     </#if>
+         
+
+ </#if>
+ 
+  
+ 
+
+</body>
+</pdf>

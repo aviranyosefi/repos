@@ -1,0 +1,362 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+  <link name="sans-serif" type="font" subtype="truetype" src="https://system.na2.netsuite.com/c.3861426/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+           
+            font-size: 8pt;
+            background-color: #e3e3e3;
+            vertical-align: middle;
+          text-align : center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            
+        }
+
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+          width: 35%;
+         	
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"501074",ustr:"",originlat:"0",clientrtt:"26",ghostip:"104.115.80.15",ipv6:false,pct:"10",clientip:"37.142.200.193",requestid:"905cc1a",region:"8117",protocol:"h2",blver:13,akM:"x",akN:"ae",akTT:"O",akTX:"1",akTI:"905cc1a",ai:"329458",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                    </head>
+<body padding="0.2in 0.5in 0.1in 0.5in" size="A4">
+
+  
+       <#if record.customer.billcountry != 'Israel'>
+         
+         <table border="0" cellpadding="0" class="header"><tr>
+            <td width="700px" align="left" style="top: 15px;"><p style="font-size: 2em; top:10px" >SeatGeek Israel LTD.</p>
+ <p style="font-size: 1.5em; line-height: 4px;">12 HaNapach St. P.O.Box 1137</p>
+    <p style="font-size: 1.5em; line-height: 4px;">Karmiel 21651 Israel</p>
+ <p style="font-size: 1.5em; line-height: 4px;">Tel: +972-4-908-8900 Fax: +972-4-908-8908</p>
+     <p style="font-size: 1.5em; line-height: 4px;">https://enterprise.seatgeek.com/</p>
+     <p style="font-size: 1.5em; line-height: 4px;"></p>
+  </td>
+	<td width="700px" align="right"><img src="https://system.na2.netsuite.com/core/media/media.nl?id=11535&amp;c=3861426&amp;h=904b1c15ef11f5f6d3d2" style="width:158px; height:56px; top:8px" /><p style="font-size:19px; line-height: 10px;"><span>ID: 512897620<br /><br /></span></p></td>
+ 
+  </tr>
+
+</table>
+
+  <table style="width:650px;top:-2%;">
+    <tr>
+            
+
+          <td style="width:450px;">
+        <div class="default" style="font-size:1.2em; left: 210px;;"><u>Receipt No: ${record.tranid}</u></div></td>
+      
+      
+    </tr>
+</table>
+
+              </#if>
+            
+               <#if record.customer.billcountry = 'Israel'>
+
+<table border="0" cellpadding="0" class="header"><tr>
+	<td width="350px" align="left"><img src="https://system.na2.netsuite.com/core/media/media.nl?id=11535&amp;c=3861426&amp;h=904b1c15ef11f5f6d3d2" style="width:158px; height:56px; top:8px" /> 	<p style="font-size:19px; line-height: 10px; left:2%;"><span > 512897620 ח.פ.<br /><br /></span></p></td>
+  <td width="350px" align="right" style="top: 15px;"><p style="font-size: 2em; top:10px" >סיטגיק ישראל בע"מ</p>
+ <p style="font-size: 1.5em; line-height: 4px;">הנפח 12 ת.ד 1137 כרמיאל 2165318 </p>
+ <p style="font-size: 1.5em; line-height: 4px;">טל: 04-9088900 פקס: 04-9088908</p>
+     <p style="font-size: 1.5em; line-height: 4px;">https://enterprise.seatgeek.com/</p>
+  </td>
+  </tr>
+
+</table>
+
+  <table style="width:650px;top:-2%;">
+    <tr>
+
+
+      
+          <td style="width:450px;">
+        <div class="default" style="font-size:1.2em; left: 220px;;"><u>${record.tranid} :'קבלה מס</u></div></td>
+    </tr>
+</table>
+   </#if>
+
+
+
+  <#assign primarycur_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign primarycur_exchange = record.exchangerate> 
+     </#if>
+    </#if>
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+                           <#assign curr_symbol = '₪'> 
+          <#if record.currencysymbol = 'USD'>
+            <#assign curr_symbol = '$'> 
+              </#if>
+              <#if record.currencysymbol = 'GBP'>
+            <#assign curr_symbol = '£'> 
+              </#if>
+      
+     <div >
+                   <#if record.customer.billcountry != 'Israel'>
+                   
+                          <#assign billTo = record.customer.billaddress> 
+          <#if billTo = ''>
+            <#assign billTo = record.customer.custentitylegalname> 
+              </#if>
+              
+    <table style="width:100%;">
+  	<tr>
+
+	<td class="default" align="right" style="padding-top: 3px;" rowspan="2">
+           <p style="line-height: 7px;">Time :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${.now?time}</p>
+       <p style="line-height: 7px;">Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.trandate}</p>
+       <p style="line-height: 7px;">Key :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.customer.id}</p>
+       <p style="line-height: 7px;">Currency :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.currency}</p>
+
+	</td>
+	</tr>
+    <tr>
+    </tr>
+
+</table>
+
+<table style="width:35%; top: -50%;">
+  	<tr>
+	<td class="default" > <p style="text-align: left;  width: 220px; line-height: 30px; font-size: 1.1em">To : </p></td>
+	<td class="default"></td>
+	</tr>
+    <tr>
+    <td colspan="2" class="default"><p style="text-align: left; width: 220px;">${billTo}</p> </td>
+    </tr>
+</table>
+   </#if>
+         
+     <#if record.customer.billcountry = 'Israel'>
+     <#assign curr_text = record.currency>
+     <#if curr_text = 'ILS'>
+     <#assign curr_text =  'ש"ח'> 
+     </#if>
+    <table style="width:100%;">
+  	<tr>
+
+	<td class="default" align="left" style="padding-top: 3px;" rowspan="2">
+           <p style="line-height: 7px; text-align:left;">${.now?time}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: שעה</p>
+       <p style="line-height: 7px;">תאריך :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.trandate}</p>
+       <p style="line-height: 7px;">מפתח :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${record.customer.id}</p>
+       <p style="line-height: 7px;">מטבע :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${curr_text}</p>
+
+	</td>
+	</tr>
+    <tr>
+
+    </tr>
+
+</table>
+   
+       <#assign billTo = record.customer.billaddress> 
+       <#assign legalName = record.customer.custentitylegalname>
+       <#assign companyName = record.customer.companyname>
+       <#assign billTo = billTo?replace(companyName, legalName)>
+          <#if billTo = ''>
+            <#assign billTo = record.customer.custentitylegalname> 
+              </#if>
+<table style="width:35%; left: 65%; top: -60%;">
+  	<tr>
+	<td class="default"> <p style="text-align: right; width: 220px; line-height: 30px; font-size: 1.1em">לכבוד : </p></td>
+	<td class="default"></td>
+	</tr>
+    <tr>
+    <td colspan="2" class="default" align="right"><p style="text-align: right; width: 220px;">${billTo}</p></td>
+    </tr>
+</table>
+   </#if>
+
+</div>
+
+
+<#if record.customer.billcountry = 'Israel'>
+<#if record.apply?has_content>
+
+<table class="linetb" style="width: 100%; margin-top: 10px;"><!-- start apply sublist --><#list record.apply as apply><#if apply_index==0>
+<thead>
+	<tr>
+	 <th align="center" colspan="4">סכום</th>
+    <th align="center" colspan="6">פרטים</th>
+    <th align="center" colspan="2">חשבון</th>
+	<th align="center" colspan="2">סניף</th>
+	<th align="center" colspan="2">בנק</th>
+	<th align="center" colspan="2">המחאה</th>
+	<th align="center" colspan="3">תאריך</th>
+	</tr>
+</thead>
+</#if><tr>
+	<td align="center" colspan="4">${apply.total?string[",##0.00"]}</td>
+  	<td align="center" colspan="6">${apply.refnum}</td>
+	<td align="center" colspan="2">${record.custbody_ilo_cust_account_number}</td>
+  	<td align="center" colspan="2">${record.custbody_ilo_cust_bank_branch}</td>
+	<td align="center" colspan="2">${record.custbody_ilo_cust_bank_number}</td>
+	<td align="center" colspan="2">${record.checknum}</td>
+	<td align="center" colspan="3">${record.custbody_ilo_cust_check_date}</td>
+	</tr>
+	</#list><!-- end apply --></table>
+</#if>
+  
+
+         
+             <table class="total" style="top: 2em;">
+	<tr>
+      <td align="left">0.00</td>
+	<td align="left">ניכוי במקור : </td>
+	
+	</tr>
+	<tr>
+    <td align="left"><p style="font-size: 1.2em;">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+	<td align="left"><p style="font-size: 1.2em;">סה"כ : </p></td>
+
+	</tr>
+</table>
+  </#if>  
+     <#if record.customer.billcountry != 'Israel'>
+     
+     <#if record.apply?has_content>
+
+<table class="linetb" style="width: 100%; margin-top: 10px;"><!-- start apply sublist --><#list record.apply as apply><#if apply_index==0>
+<thead>
+	<tr>
+	 <th align="center" colspan="3">Date</th>
+    <th align="center" colspan="2">Check</th>
+    <th align="center" colspan="2">Bank</th>
+	<th align="center" colspan="2">Branch</th>
+	<th align="center" colspan="2">Account</th>
+	<th align="center" colspan="6">Details</th>
+	<th align="center" colspan="4">Total</th>
+	</tr>
+</thead>
+</#if><tr>
+	<td align="center" colspan="3">${record.custbody_ilo_cust_check_date}</td>
+  	<td align="center" colspan="2">${record.checknum}</td>
+	<td align="center" colspan="2">${record.custbody_ilo_cust_bank_number}</td>
+  	<td align="center" colspan="2">${record.custbody_ilo_cust_bank_branch}</td>
+	<td align="center" colspan="2">${record.custbody_ilo_cust_account_number}</td>
+	<td align="center" colspan="6">${apply.refnum}</td>
+	<td align="center" colspan="4">${apply.total?string[",##0.00"]}</td>
+	</tr>
+	</#list><!-- end apply --></table>
+</#if>
+  
+
+         
+    <table class="total" style= "width: 340px; left:25em; top: 2em;">
+
+    <tr>
+        <td align="right">Withholding Tax :</td>
+    <td align="right">0.00</td>
+  
+    </tr>
+	<tr>
+      	<td align="right"><p style="font-size: 1.2em;">Total</p></td>
+    <td align="right"><p style="font-size: 1.2em;">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+
+
+	</tr>
+</table>
+     
+     
+     
+  </#if> 
+
+</body>
+</pdf>

@@ -1,0 +1,610 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+           
+            font-size: 8pt;
+           
+            vertical-align: middle;
+          text-align : center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+            color: #333333;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+         
+        }
+
+
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+          
+            
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            
+        }
+
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+               word-wrap:break-word;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+          width: 35%;
+         	
+        }
+        
+        
+
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+    
+            <macrolist> 
+
+<macro id="nlfooter">
+
+              <table class="total" style="width: 400px; border:1px solid black">
+	<tr>
+      	<td align="left"  style="width: 100%;">
+      	${subsidiary.custrecord_ctrlup_inv_remittance}
+      </td>
+      
+      </tr>
+         </table> 
+
+</macro>
+
+ 
+
+</macrolist>
+                    
+
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"501074",ustr:"",originlat:"0",clientrtt:"42",ghostip:"104.115.80.15",ipv6:false,pct:"10",clientip:"37.142.200.193",requestid:"9e6703",region:"8117",protocol:"h2",blver:13,akM:"x",akN:"ae",akTT:"O",akTX:"1",akTI:"9e6703",ai:"329458",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                    
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"501074",ustr:"",originlat:"0",clientrtt:"50",ghostip:"104.115.80.15",ipv6:false,pct:"10",clientip:"37.142.200.193",requestid:"c8f579",region:"8117",protocol:"h2",blver:13,akM:"x",akN:"ae",akTT:"O",akTX:"1",akTI:"c8f579",ai:"329458",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                    </head>
+<body padding="0.2in 0.5in 0.1in 0.5in" size="A4"  footer="nlfooter"  footer-height="185px">
+
+         <table border="0" cellpadding="0" class="header"><tr>
+            <td width="700px" align="left" style="top: 15px;">
+             <p style="font-size: 2em; top:20px; font-weight: bold;">${subsidiary.name}</p>
+              <p style="font-size: 1.6em; top:10px">${subsidiary.custrecord_ctrlup_inv_address}</p>
+              
+  </td>
+	<td width="700px" align="right"><img src="${companyInformation.logoUrl}" style="width:252px; height:100px" /><p style="font-size:19px; line-height: 10px;"></p></td>
+ 
+  </tr>
+
+</table>
+          <#assign print_type = 'Original'> 
+          <#if record.custbody_ilo_org_printed>
+            <#assign print_type = 'Restored Copy'> 
+              </#if>
+            <#if record.custbodycustbody_ilo_print_draft>
+              <#assign print_type = 'Draft'> 
+                </#if>
+
+  <table style="width:650px;top:-2%;">
+    <tr>
+            
+
+          <td style="width:450px;">
+        <div class="default" style="font-size:1.2em; left: 210px;;"><u>Invoice No: ${record.tranid}</u></div></td>
+      
+<td><p style="font-size: 14pt; top: 30%; left: 35%;">${print_type}</p></td>
+      
+    </tr>
+</table>
+      
+          
+
+ <#assign totalDiscount = 0> 
+ <#assign totalBeforeDiscount = 0>
+ <#assign EOMterms = record.terms>
+ <#if EOMterms = 'EOM + 0M + 30D'>
+   <#assign EOMterms = 'Net 30 EOM'>
+ </#if>
+  <#if EOMterms = 'EOM + 0M + 60D'>
+   <#assign EOMterms = 'Net 60 EOM'>
+ </#if>
+ 
+
+   <#assign showDiscounts = 0>
+<#list record.item as item>
+  <#assign showDiscounts = (showDiscounts+item.custcol_quote_line_level_discount)>
+  </#list>
+  
+                                  <#assign curr_symbol = '¤'> 
+          <#if record.currencysymbol = 'USD'>
+            <#assign curr_symbol = '$'> 
+              </#if>
+                       <#if record.currencysymbol = 'AUD'>
+            <#assign curr_symbol = 'AUD '> 
+              </#if>
+                <#if record.currencysymbol = 'CAD'>
+            <#assign curr_symbol = 'CAD '> 
+              </#if>
+              <#if record.currencysymbol = 'GBP'>
+            <#assign curr_symbol = '£'> 
+              </#if>
+               <#if record.currencysymbol = 'EUR'>
+            <#assign curr_symbol = '€'> 
+              </#if>
+              
+ 
+  <#assign primarycur_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign primarycur_exchange = record.exchangerate> 
+     </#if>
+    </#if>
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+     
+ <#assign exRate = secondary_exchange?string["0.####"]> 
+       <div>
+
+   
+                   <#if record.custbody_reseller == ''>
+    <table style="width:25%; left: 490px; top: 35px;">
+  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.trandate}</p></td>
+  		</tr>
+  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Terms :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${EOMterms}</p></td>
+  		</tr>
+  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Due Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.duedate}</p></td>
+  		</tr>
+  		  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Currency :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.currency}</p></td>
+  		</tr>
+  		  		<#if curr_symbol != '¤' && record.billcountry == 'IL'>
+  		  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Ex. Rate :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${exRate}</p></td>
+  		</tr>
+  		
+  		</#if>
+
+  		
+</table>
+       <#assign vat_reg = record.custbody_ilo_tax_payer_id> 
+          <#if vat_reg = ''>
+            <#assign vat_reg = record.vatregnum> 
+              </#if>
+
+
+              
+               <#assign billTo = record.entity.billaddress> 
+          <#if billTo = ''>
+            <#assign billTo = record.entity.companyname> 
+              </#if>
+              
+
+<table style="width:670px; top: -40%;">
+<thead>
+	<tr>
+        <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em">Bill To: </p></th>
+          <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>
+                    <th colspan="4"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>    
+	</tr>
+</thead>
+      <tr>
+    </tr>
+    <#if record.entity.billaddress == ''>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px; line-height: 25px;"><br/>${billTo}<br/><br/><br/><br/></p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+    <#if record.entity.billaddress != ''>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/>${billTo}<br/><br/></p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+</table>
+   </#if>
+   
+
+        <#if record.custbody_reseller != ''>
+        
+    <table style="width:25%; left: 490px; top: 35px;">
+  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.trandate}</p></td>
+  		</tr>
+  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Terms :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${EOMterms}</p></td>
+  		</tr>
+  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Due Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.duedate}</p></td>
+  		</tr>
+  		  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Currency :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.currency}</p></td>
+  		</tr>
+  		<#if curr_symbol != '¤' && record.billcountry == 'IL'>
+  		  		  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Ex. Rate :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${exRate}</p></td>
+  		</tr>
+  		
+  		</#if>
+
+
+  		
+</table>
+
+       <#assign vat_reg = record.custbody_ilo_tax_payer_id> 
+          <#if vat_reg = ''>
+            <#assign vat_reg = record.vatregnum> 
+              </#if>
+
+              
+   		<#assign shipTo = record.entity.billaddress> 
+       <#assign customerID = record.entity.entitynumber?string?replace(",", "")>
+       <#assign companyName = record.custbody_reseller.companyname>
+       <#assign shipTo = shipTo?replace(customerID, '')>
+          <#if shipTo = ''>
+            <#assign shipTo = companyName> 
+              </#if>
+              
+   		<#assign billTo = record.custbody_reseller.billaddress> 
+       <#assign customerID = record.custbody_reseller.entitynumber?string?replace(",", "")>
+       <#assign companyName = record.entity.companyname>
+       <#assign billTo = billTo?replace(customerID, '')>
+          <#if billTo = ''>
+            <#assign billTo = companyName> 
+              </#if>
+               
+
+<table style="width:670px; top: -40%;">
+<thead>
+	<tr>
+        <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em">Bill To:</p></th>
+          <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;">Ship To :</p></th>
+                    <th colspan="4"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>    
+	</tr>
+</thead>
+      <tr>
+    </tr>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/>${billTo}<br/><br/></p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/>${shipTo}<br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+
+</table>
+
+
+   </#if>
+
+</div>
+
+      
+
+  <#if record.item?has_content>
+<table class="linetb" style="width:670px; top: -5.5%;"><!-- start items -->
+  <#list record.item as item><#if item_index==0>
+<thead>
+	<tr>
+        <th colspan="6"><p style="width: 100%; text-align:center;">Product</p></th>
+             <th colspan="12"><p style="width: 100%; text-align:center;">Line Item Description</p></th>   
+             <th colspan="3"><p style="width: 100%; text-align:center;">No. of Years</p></th>   
+               <#if showDiscounts != 0>
+                 <th colspan="6"><p style="width: 100%; text-align:center;">List Price</p></th> 
+             <th colspan="6"><p style="width: 100%; text-align:center;">Discount</p></th> 
+             </#if>
+      <th colspan="6"><p style="width: 100%; text-align:center;">Total</p></th>
+
+	</tr>
+</thead>
+ 
+</#if>
+
+
+                                  <#assign curr_symbol = '¤'> 
+          <#if record.currencysymbol = 'USD'>
+            <#assign curr_symbol = '$'> 
+              </#if>
+                       <#if record.currencysymbol = 'AUD'>
+            <#assign curr_symbol = 'AUD '> 
+              </#if>
+                <#if record.currencysymbol = 'CAD '>
+            <#assign curr_symbol = 'CAD'> 
+              </#if>
+              <#if record.currencysymbol = 'GBP'>
+            <#assign curr_symbol = '£'> 
+              </#if>
+               <#if record.currencysymbol = 'EUR'>
+            <#assign curr_symbol = '€'> 
+              </#if>
+              
+      
+      <#if !(item.item)?lower_case?contains("discount")>       
+	<tr>
+      	 <td colspan="6" style="text-align:justify; text-justify:none;"><p style="width: 100%; text-align:left;">${item.custcol_sf_product_code}</p></td>
+      	<td colspan="12" style="text-align:justify; text-justify:none; "><p style="width: 100%; text-align:left;">${item.description} <br/><br/>
+            </p></td> 
+       
+          <td colspan="3"><p style="width: 100%; text-align:center;">${item.custcol_sf_number_of_years}</p></td> 
+        
+  <#if showDiscounts != 0>
+      			 <td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol}${item.custcol_sf_price_before_discount?string[",##0.00"]}</p></td>
+               	<td colspan="6"><p style="width: 100%; text-align:center;">(${curr_symbol}${item.custcol_quote_line_level_discount?string[",##0.00"]})</p></td>
+               	</#if>
+      	<td colspan="6"><p style="width: 100%; text-align:center;">${curr_symbol}${(item.custcol_sf_price_before_discount - item.custcol_quote_line_level_discount)?string[",##0.00"]}</p></td>
+
+</tr>
+ </#if>
+<#assign totalDiscount = (totalDiscount+item.custcol_quote_total_level_discount)> 
+<#assign totalBeforeDiscount = (totalBeforeDiscount+(item.custcol_sf_price_before_discount - item.custcol_quote_line_level_discount))> 
+	</#list><!-- end items -->
+</table>
+    </#if>
+
+      		  			<#if record.otherrefnum != ''>
+
+       <p>PO# : ${record.otherrefnum}</p>
+
+	</#if>
+    
+ <#assign vatPercent = record.taxtotal / record.subtotal * 100>   
+
+<!-- TOTALS BOX AND REMITTANCE -->
+
+<#if curr_symbol != '¤' && record.billcountry == 'IL'>
+
+              <table style="width:35%; left: 60%; top: 10%;">
+      <tr>
+    <td align="right"><p style="font-size: 1.1em;">${record.memo}</p></td>
+
+      </tr>
+    </table>
+
+    <table class="total" style="width: 400px; left: 40%; top: -5%">
+
+<#if totalDiscount != 0>
+    		<tr>
+      	<td align="right">Subtotal:</td>
+    <td align="right">¤${(totalBeforeDiscount  * exRate?number)?string[",##0.00"]}</td>
+       <td align="right">${curr_symbol}${totalBeforeDiscount?string[",##0.00"]}</td>
+	</tr>
+    		<tr>
+      	<td align="right">Additional Discount:</td>
+    <td align="right">(¤${(totalDiscount  * exRate?number)?string[",##0.00"]})</td>
+       <td align="right">(${curr_symbol}${totalDiscount?string[",##0.00"]})</td>
+	</tr>
+	</#if>
+		<tr>
+			<td align="right">Total before Vat :</td>
+			         <td align="right">¤${(record.subtotal  * exRate?number)?string[",##0.00"]}</td>
+      <td align="right">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+
+          
+	</tr>
+	
+	
+
+    <tr>
+        <td align="right"> VAT ${vatPercent?round}% :</td>
+              <td align="right">¤${(record.taxtotal  * exRate?number)?string[",##0.00"]}</td>
+        <td align="right">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+      
+   
+    </tr>
+   
+	<tr>
+      	<td align="right"><p style="font-size: 1.2em;">Total Payment :</p></td>
+      	     <td align="right"><p style="font-size: 1.2em;">¤${(record.total  * exRate?number)?string[",##0.00"]}</p></td>
+    <td align="right"><p style="font-size: 1.2em;">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+
+
+
+	</tr>
+
+</table>
+
+</#if>
+
+
+
+<#if curr_symbol != '¤' && record.billcountry != 'IL'>
+
+              <table style="width:40%; top: 15%;">
+      <tr>
+    <td align="right"><p style="font-size: 1.1em;">${record.memo}</p></td>
+
+      </tr>
+    </table>
+
+    <table class="total" style="width: 400px; left: 40%; top: -5%">
+
+<#if totalDiscount != 0>
+    		<tr>
+      	<td align="right">Subtotal:</td>
+       <td align="right">${curr_symbol}${totalBeforeDiscount?string[",##0.00"]}</td>
+	</tr>
+    		<tr>
+      	<td align="right">Additional Discount :</td>
+       <td align="right">(${curr_symbol}${totalDiscount?string[",##0.00"]})</td>
+	</tr>
+	</#if>
+		<tr>
+			<td align="right">Total before Vat:</td>
+      <td align="right">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+	</tr>
+    <tr>
+        <td align="right"> VAT ${vatPercent?round}%:</td>
+        <td align="right">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+      
+   
+    </tr>
+   
+	<tr>
+      	<td align="right"><p style="font-size: 1.2em;">Total Payment :</p></td>
+    <td align="right"><p style="font-size: 1.2em;">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+
+
+
+	</tr>
+
+</table>
+
+</#if>
+
+<#if curr_symbol == '¤'>
+
+              <table style="width:40%; top: 15%;">
+      <tr>
+    <td align="right"><p style="font-size: 1.1em;">${record.memo}</p></td>
+
+      </tr>
+    </table>
+
+
+
+    <table class="total" style="width: 400px; left: 40%; top: -5%">
+
+<#if totalDiscount != 0>
+    		<tr>
+      	<td align="right">Subtotal:</td>
+       <td align="right">${curr_symbol}${totalBeforeDiscount?string[",##0.00"]}</td>
+	</tr>
+    		<tr>
+      	<td align="right">Additional Discount:</td>
+    <td align="right">(${curr_symbol}${totalDiscount?string[",##0.00"]})</td>
+	</tr>
+	</#if>
+		<tr>
+			<td align="right">Total before Vat :</td>
+      <td align="right">${curr_symbol}${(record.subtotal  * total_exchange)?string[",##0.00"]}</td>
+	</tr>
+	
+	
+
+    <tr>
+        <td align="right"> VAT ${vatPercent?round}%</td>
+        <td align="right">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+   
+    </tr>
+   
+	<tr>
+      	<td align="right"><p style="font-size: 1.2em;">Total Payment :</p></td>
+    <td align="right"><p style="font-size: 1.2em;">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+     
+
+
+	</tr>
+
+</table>
+
+</#if>
+
+
+</body>
+</pdf>

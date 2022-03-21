@@ -1,0 +1,227 @@
+<fileformat country="BGN" name="Bulgaria EFT Template" extension="txt">
+<recordStructure>
+<recordInfo>Header</recordInfo>
+<recordInfo type="body">Detail</recordInfo>
+<recordInfo>Footer</recordInfo>
+</recordStructure>
+
+
+
+
+<record name="Header">
+<field name="Debtor Identification Tag">
+<position>1</position>
+<length>16</length>
+<source type="value">:20:</source>
+</field>
+<field name="Debtor Identification">
+<position>1</position>
+<length>16</length>
+<source type="field">
+<sourceRec>Bank</sourceRec>
+<sourceFld>custrecord_2663_issuer_num</sourceFld>
+</source>
+</field>
+<field name="Group Transfer Reference">
+<position>1</position>
+<length>16</length>
+<source type="field">
+<sourceRec>File</sourceRec>
+<sourceFld>name</sourceFld>
+</source>
+</field>
+<field name="Group Transfer Sender Tag">
+<position>1</position>
+<length>6</length>
+<source type="value">:50A:/</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Group Transfer Sender">
+<position>1</position>
+<length>34</length>
+<source type="field">
+<sourceRec>Bank</sourceRec>
+<sourceFld>custrecord_2663_iban</sourceFld>
+</source>
+</field>
+<field name="Group Transfer Sender Name">
+<position>1</position>
+<length>35</length>
+<source type="field">
+<sourceRec>Bank</sourceRec>
+<sourceFld>custrecord_2663_legal_name</sourceFld>
+</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Address">
+<position>1</position>
+<length>35</length>
+<source type="bankAddress1" />
+<onNewline>true</onNewline>
+</field>
+<field name="City">
+<position>1</position>
+<length>35</length>
+<source type="bankCity" />
+<onNewline>true</onNewline>
+</field>
+<field name="Country">
+<position>1</position>
+<length>35</length>
+<source type="bankCountryName" />
+<onNewline>true</onNewline>
+</field>
+<field name="Sender Bank Code Tag">
+<position>1</position>
+<length>5</length>
+<source type="value">:52A:</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Sender Bank Code">
+<position>1</position>
+<length>8</length>
+<source type="field">
+<sourceRec>Bank</sourceRec>
+<sourceFld>custrecord_2663_bic</sourceFld>
+</source>
+</field>
+<field name="Execution Date Tag">
+<position>1</position>
+<length>4</length>
+<source type="value">:30:</source>
+<onNewline>true</onNewline>
+</field>
+</record>
+
+<record name="Detail">
+<field name="Currency Code Tag">
+<position>1</position>
+<length>5</length>
+<source type="value">:32A:</source>
+</field>
+<field name="Execution Date">
+<position>1</position>
+<length>6</length>
+<source type="field">
+<sourceRec>File</sourceRec>
+<sourceFld>custrecord_2663_process_date</sourceFld>
+</source>
+<format type="date">YYMMDD</format>
+</field> 
+<field name="Currency Code">
+<position>6</position>
+<length>3</length>
+<source type="currency"></source>
+</field>
+<field name="Amount">
+<position>10</position>
+<length>15</length>
+<source type="amount" />
+<format type="decimal">,</format>
+</field>
+<field name="Recipient BIC Code Tag">
+<position>26</position>
+<length>5</length>
+<source type="value">:57A:</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Recipient BIC Code">
+<position>31</position>
+<length>10</length>
+<source type="field">
+<sourceRec>Entity</sourceRec>
+<sourceFld>custrecord_2663_entity_bic</sourceFld>
+</source>
+</field>
+<field name="Recipient IBAN Code Tag">
+<position>41</position>
+<length>5</length>
+<source type="value">:59:/</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Recipient IBAN Code">
+<position>47</position>
+<length>34</length>
+<source type="field">
+<sourceRec>Entity</sourceRec>
+<sourceFld>custrecord_2663_entity_iban</sourceFld>
+</source>
+</field>
+<field name="Recipient Name">
+<position>82</position>
+<length>35</length>
+<source type="field">
+<sourceRec>Entity</sourceRec>
+<sourceFld>entityname</sourceFld>
+</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Address">
+<position>117</position>
+<length>35</length>
+<source type="entityAddress1"></source>
+<onNewline>true</onNewline>
+</field>
+<field name="City">
+<position>152</position>
+<length>35</length>
+<source type="entityCity"></source>
+<onNewline>true</onNewline>
+</field>
+<field name="Country">
+<position>187</position>
+<length>35</length>
+<source type="entityCountryName"></source>
+<onNewline>true</onNewline>
+</field>
+<field name="Reason for Payment Tag">
+<position>223</position>
+<length>4</length>
+<source type="value">:70:</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Reason for Payment">
+<position>228</position>
+<length>35</length>
+<source type="referenceNote"></source>
+</field>
+<field name="Costs Tag">
+<position>264</position>
+<length>5</length>
+<source type="value">:71A:</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Costs">
+<position>270</position>
+<length>3</length>
+<source type="value">SHA</source>
+</field>
+</record>
+
+<record name="Footer">
+<field name="Number of Payments Tag">
+<position>1</position>
+<length>5</length>
+<source type="value">:19A:</source>
+</field>
+<field name="Number of Payments">
+<position>1</position>
+<length>5</length>
+<source type="totalPayments"></source>
+<padding>0</padding>
+<align>right</align>
+</field>
+<field name="Total Amount Tag">
+<position>1</position>
+<length>4</length>
+<source type="value">:19:</source>
+<onNewline>true</onNewline>
+</field>
+<field name="Total Amount">
+<position>1</position>
+<length>17</length>
+<source type="totalAmt"></source>
+<format type="decimal">,</format>
+</field>
+</record>
+</fileformat>

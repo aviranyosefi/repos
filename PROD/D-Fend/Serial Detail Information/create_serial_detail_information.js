@@ -10,6 +10,7 @@ function create_serial_detail_information(type) {
         if (type != 'delete') {
             var typeRecord = nlapiGetRecordType();
             var Recid = nlapiGetRecordId()
+            nlapiLogExecution('debug', ' typeRecord ' + typeRecord, 'Recid ' + Recid);
             var rec = nlapiLoadRecord(typeRecord, Recid);
             var itemCount = rec.getLineItemCount('item');
             var data = [];
@@ -18,10 +19,11 @@ function create_serial_detail_information(type) {
                 var ordertype = rec.getFieldValue('ordertype');
                 var trandate = rec.getFieldValue('trandate');
                 var vendorOrCustomer = rec.getFieldValue('entity');
-                for (var i = 1; i <= itemCount; i++) {
-                    var item = rec.getLineItemValue('item', 'item', i);
-                    var manage_sw_version = nlapiLookupField('item', item, 'custitemcustitem_manage_sw_version')                
-                    if (manage_sw_version == 'T') {
+                for (var i = 1; i <= itemCount; i++) {                   
+                    //var manage_sw_version = nlapiLookupField('item', item, 'custitemcustitem_manage_sw_version')
+                    var isserial = rec.getLineItemValue('item', 'isserial', i);
+                    if (isserial == 'T') {
+                        var item = rec.getLineItemValue('item', 'item', i);
                         subrecord = "";
                         subrecord = rec.viewLineItemSubrecord('item', 'inventorydetail', i);
                         if (subrecord != "" && subrecord != null) {
@@ -130,7 +132,7 @@ function create_serial_detail_information(type) {
                                                 }
                                             }
                                         }
-                                        else if (typeRecord == 'returnauthorization' && type == 'create') {
+                                        else if (typeRecord == 'returnauthorization') {
                                             if (res[serials[j]] != null) {
                                                 var resData = res[serials[j]];
                                                 for (var t = 0; t < resData.length; t++) {
@@ -140,7 +142,7 @@ function create_serial_detail_information(type) {
                                                         break;
                                                     }
                                                 }
-                                                if (pd_id != '') {
+                                                if (pd_id != '' && type == 'create') {
                                                     try { updatePdRMA(pd_id, serials[j], item, Recid ) } catch (e) { }
                                                 }
                                             }   
@@ -149,11 +151,14 @@ function create_serial_detail_information(type) {
                                 } //     if (serials != null) -end
                             } // if (invDetailID != "" && invDetailID != null) - end
                         } //   if (subrecord != "" && subrecord != null) - end
-                    } //     if (manage_sw_version == 'T') - end                    
+                    } //     if (isserial == 'T') - end                    
                 } // loop - end
 
                 if (typeRecord == 'itemreceipt') { create_pd(data, Recid) }
-                rec.setFieldValues('custbody_related_sdi', pdList)
+                //nlapiLogExecution('debug', ' pdList ' + pdList.length, pdList);
+                if (pdList.length > 0) {
+                    rec.setFieldValues('custbody_related_sdi', pdList)
+                }            
                 nlapiSubmitRecord(rec);
             } // if (itemCount > 0) - end   
 
@@ -268,7 +273,7 @@ function isNullOrEmpty(val) {
 }
 function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCustomer, trandate, type, serial, item) {
     try {
-        nlapiLogExecution('debug', 'pd_id', pd_id);
+        //nlapiLogExecution('debug', 'pd_id', pd_id);
         var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', pd_id);
         var name = pdRec.getFieldValue('name')
         if (isNullOrEmpty(name)) {

@@ -11,7 +11,7 @@ define(['N/search', 'N/ui/dialog'],
             if (sublistId == 'item' && fieldId == 'custcol_end_customer') {
                 var end_customer = rec.getCurrentSublistValue('item', 'custcol_end_customer');
                 var ismultishipto = rec.getValue('ismultishipto');
-                if (!isNullOrEmpty(end_customer) && ismultishipto == true) {
+                if (!isNullOrEmpty(end_customer) && ismultishipto) {
                     var addrressId = getOtherNameAddress(end_customer)
                     if (!isNullOrEmpty(addrressId)) {
                         rec.setCurrentSublistValue('item', 'shipaddress', addrressId);

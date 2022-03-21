@@ -1,0 +1,282 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 90%;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+             vertical-align: middle;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 10px;
+            padding-bottom: 3px;
+            color: #fff;
+            height: 40px;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 10px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        .footer {
+            background-color: #F1F1F2;
+            width: 100%;
+            font-size: 14px;
+            padding: 50px;
+            padding-top: 10px;
+            margin: 0px;
+        }
+
+        .header {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            background-color: #F1F1F2;
+        }
+
+
+        table.linetb th {
+        }
+
+        table.linetb td {
+            background-color: #F1F1F2;
+            color: #808080;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            border: 1px solid #fff;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+
+        .title {
+            color: #6D6E70;
+            font-size: 10px !important;
+        }
+
+        .maintitle {
+
+        }
+
+        .maintext {
+            font-size: 20px;
+        }
+    </style>
+
+    <macrolist>  	
+        <macro id="nlheader">
+        <table border="0" cellpadding="0" class="header">
+            <tr>
+                <td width="700px" align="center"><img src="https://system.eu1.netsuite.com/core/media/media.nl?id=3096&amp;c=4753085_SB1&amp;h=ed6b0f7311560056fd99&amp;whence=" style="width:700px; height:120px" /></td>
+            </tr>
+        </table>
+        </macro>
+        <macro id="nlfooter">
+                
+                      <table class="footer" style="width: 100%;">
+
+            	<tr>
+					<td>
+                        <div>
+                            <table style="width:400px;">
+                                <tr><td colspan="2" class="maintitle">Please Note Wire Instructions:<br /><br /></td></tr>
+                                <tr>
+                                    <td class="title">Account Name</td>
+                                    <td>TG Marketing N.V.</td>
+                                </tr>
+                                <tr>
+                                    <td class="title">Address</td>
+                                    <td>Einsteinring 35, 85609 Aschheim, Germany</td>
+                                </tr>                                
+                                <tr>
+                                    <td class="title">Account No.</td>
+                                    <td>30142</td>
+                                </tr>                               
+                                 <tr>
+                                    <td class="title">IBAN No.</td>
+                                    <td>DE52 5123 0800 0000 0301 42</td>
+                                </tr>                                
+                                <tr>
+                                    <td class="title">SWIFT</td>
+                                    <td>WIREDEMMXXX</td>
+                                </tr>
+                            </table>
+                        </div>                                               
+					</td>
+				</tr>
+			</table>
+             </macro>      
+    </macrolist>
+</head>
+<body padding="0" margin="0" size="A4" footer="nlfooter" footer-height="120px"  header="nlheader" header-height="130px">
+<div style="margin:0 50px 0 50px; width:100%">
+    <div>
+    <table style="width:100%;">
+    <tr>
+        <td class="maintitle maintext" style="width:130px">INVOICE </td>
+        <td ><span class="title"  align="center" >No.</span> <span class="maintext"> ${record.tranid} </span> </td>
+        <td class="title" align="right" >Total <span class="maintitle maintext"> &nbsp;&nbsp;${record.subtotal}</span></td>
+    </tr>
+    </table>
+        <hr  class="title"/>
+    <table style="width:650px;">
+    <tr>
+    <td class="title" colspan="2">BILL TO: <br /><span ><b> ${record.billaddress}</b><br /><br /></span></td>
+    <td class="title"  align="right" style="padding-top: 3px;width:100px" rowspan="2">
+            INVOICE DATE: <br />
+            <span style="font-weight:bold; color:#333">DUE DATE:</span>  <br />
+            BILL CURRENCY: <br />
+            PERIOD:  <br />
+            
+    </td>
+            <td class="title" align="right" style="padding-top: 3px; width:100px; color:#333 !important" rowspan="2">
+            ${record.trandate?string("dd.MM.yyyy")}<br />
+            <b>${record.duedate?string("dd.MM.yyyy")}</b> <br />
+            ${record.currency} <br />
+            ${record.trandate?string("MM.yyyy")} <br />
+            
+    </td>
+    </tr>
+
+    </table>
+
+    <#assign primarycur_exchange =  record.exchangerate> 
+    <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+    <#assign currency_text = record.currency> 
+        <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign primarycur_exchange = record.exchangerate> 
+        </#if>
+    </#if>
+        <#if  currency_text == 'ILS'>
+            <#assign currency_symbol = "ILS"> 
+        </#if>
+                                                        
+
+    </div>
+    <#if record.item?has_content>
+    <table  style="width:650px" class="linetb"><!-- start items -->
+    <#list record.item as item><#if item_index==0>
+    <thead>
+    <tr>
+    <th colspan="13">Description</th>
+    <th colspan="2">Qty</th>
+    <th colspan="4">Unit Price</th>
+    <th colspan="4">Total</th>
+    </tr>
+    </thead>
+    </#if>
+    <tr>
+    <td colspan="13" style="text-align:justify; text-justify:none; ">
+        ${item.item} <br/>
+        <#if item.custcol_oprate?has_content>
+            Unit Rate: ${item.custcol_oprate} 
+        </#if>
+        <#if item.custcol_opexrate?has_content>
+        Ex. Rate: ${item.custcol_opexrate} 
+        </#if>
+        <#if item.custcol_fromdate?has_content && item.custcol_todate?has_content>
+        From: ${item.custcol_fromdate?string("MMM-dd-yyyy")} To:  ${item.custcol_todate?string("MMM-dd-yyyy")}  <br/>
+        </#if>
+            ${item.description} <br/>
+                <#assign currency_sym = ''> 
+        <#if record.currency == 'ILS'>
+                <#assign currency_sym = '¤'> 
+        </#if>
+        </td>
+    <td colspan="2"><span class="desc">${item.quantity}</span></td>
+    <td colspan="4">${(item.rate  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    <td colspan="4">${(item.amount  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    </#list><!-- end items -->
+    </#if>
+    <tr>
+    <td colspan="15" style="background-color:#fff">
+        * Servicees subject reverse charge - VAT to be<br />
+        accounted for by the recipient as per articale 196 of<br />
+        Council Directive 2006/112/EC<br />
+
+    </td>
+    <td  colspan="4" >Sub Total</td>
+    <td  colspan="4" >${(record.subtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    <#if record.taxtotal != 0>
+    <tr>
+    <td colspan="15" style="background-color:#fff"></td>
+    <td  colspan="4">${record.taxtotal / record.subtotal * 100}% Vat ${record.currency}</td>
+    <td  colspan="4">${(record.taxtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    </#if>
+    <tr>
+    <td colspan="15" style="background-color:#fff"></td>
+    <th  colspan="4">Total</th>
+    <th  colspan="4">${(record.total  * total_exchange)?string[",##0.00"]} ${currency_symbol}</th>
+    </tr>
+    </table>
+ </div>
+
+</body>
+</pdf>

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://4922366-sb1.app.netsuite.com/c.4922366_SB1/suitebundle147355/com.netsuite.acasupport/lib/semantic_ui/themes/basic/assets/fonts/arial.ttf"
+              src-bold="https://4922366-sb1.app.netsuite.com/c.4922366_SB1/suitebundle147355/com.netsuite.acasupport/lib/semantic_ui/themes/basic/assets/fonts/arialb.ttf" />
+
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%;">
+                    <tr>
+                        <td rowspan="3">
+                            <#if record.entity.custentity_ilo_print_hebrew==true>
+                                <#if subsidiary.logo?length !=0><img src="${subsidiary.custrecord_il_logo@url}" style="height:40px; width:220px" /> </#if>
+                                <#else>
+                                    <#if subsidiary.logo?length !=0><img src="${subsidiary.logo@url}" style="height:40px; width:220px" /> </#if>
+
+                                </#if>
+                                <#if record.entity.custentity_ilo_print_hebrew==false>
+                                    <span class="nameandaddress">${subsidiary.name}</span><br /><span class="nameandaddress">${subsidiary.custrecord_ilo_subsid_eng_address}</span>
+                                    <#else>
+                                        <span class="nameandaddress">${subsidiary.custrecord_ilo_subsid_heb_companyname}</span><br /><span class="nameandaddress">${subsidiary.custrecord_ilo_subsid_hebrew_address}</span>
+
+                                </#if>
+                        </td>
+                        <#if record.entity.custentity_ilo_print_hebrew==false>
+
+                            <td align="right"><span class="title">${record@title}</span></td>
+                        <#else>
+                            <td align="right"><span class="title">תעודת ליקוט</span></td>
+
+                        </#if>
+                    </tr>
+                    <tr>
+                        <td align="right"><span class="number">#${record.tranid}</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">${record.trandate}</td>
+                    </tr>
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="footer" style="width: 100%;">
+                    <tr>
+                        <td><barcode codetype="code128" showtext="true" value="${record.tranid}" /></td>
+                        <td align="right"><pagenumber /> of <totalpages /></td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif;
+            }
+
+            b {
+                color: #444;
+                font-weight: bold;
+            }
+
+            table {
+                font-size: 9pt;
+                table-layout: fixed;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 8pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+            }
+
+            td {
+                padding: 4px 6px;
+            }
+
+                td p {
+                    align: left
+                }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+            }
+
+            table.header td {
+                padding: 0;
+                font-size: 10pt;
+            }
+
+            table.footer td {
+                padding: 0;
+                font-size: 8pt;
+            }
+
+            table.itemtable th {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            table.body td {
+                padding-top: 2px;
+            }
+
+            td.addressheader {
+                font-size: 8pt;
+                padding-top: 6px;
+                padding-bottom: 2px;
+            }
+
+            td.address {
+                padding-top: 0;
+            }
+
+            span.title {
+                font-size: 28pt;
+            }
+
+            span.number {
+                font-size: 16pt;
+            }
+
+            span.itemname {
+                font-weight: bold;
+                line-height: 150%;
+            }
+
+            hr {
+                width: 100%;
+                color: #d3d3d3;
+                background-color: #d3d3d3;
+                height: 1px;
+            }
+
+        </style>
+    </head>
+    <body header="nlheader" header-height="15%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+        <#if record.entity.custentity_ilo_print_hebrew==false>
+            <table style="width: 100%; margin-top: 10px;">
+                <tr>
+                    <td class="addressheader"><b>${record.shipaddress@label}</b></td>
+                </tr>
+                <tr>
+                    <td class="address">${record.shipaddress}</td>
+                </tr>
+            </table>
+        </#if>
+
+        <#if record.entity.custentity_ilo_print_hebrew==true>
+            <table style="width: 100%; margin-top: 10px;">
+                <tr>
+                    <td class="addressheader"><b>נשלח אל</b></td>
+                </tr>
+                <tr>
+                    <td class="address">${record.shipaddress}</td>
+                </tr>
+            </table>
+        </#if>
+
+        <#if record.entity.custentity_ilo_print_hebrew==false>
+            <table class="body" style="width: 100%; margin-top: 10px;">
+                <tr>
+                    <th>${record.shipmethod@label}</th>
+                </tr>
+                <tr>
+                    <td>${record.shipmethod}</td>
+                </tr>
+            </table>
+        </#if>
+
+        <#if record.entity.custentity_ilo_print_hebrew==true>
+            <table class="body" style="width: 100%; margin-top: 10px;">
+                <tr>
+                    <th>שיטת המשלוח</th>
+                </tr>
+                <tr>
+                    <td>${record.shipmethod}</td>
+                </tr>
+            </table>
+        </#if>
+        <#assign item_index=0>
+
+            <#if record.item?has_content>
+                <#if record.entity.custentity_ilo_print_hebrew==false>
+
+                    <table class="itemtable" style="width: 100%; margin-top: 10px;">
+                        <!-- start items -->
+                        <#list record.item as item>
+                            <#if item_index==0>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;" colspan="2">#</th>
+                                        <th style="text-align: left;" colspan="4">${item.item@label}</th>
+                                        <th style="text-align:left;" colspan="10">Description</th>
+                                        <th style="text-align:left;" colspan="4">${item.quantity@label}</th>
+                                        <th style="text-align:left;" colspan="4">Committed</th>
+                                        <th style="text-align:left;" colspan="4">Inventory Detail</th>
+                                    </tr>
+                                </thead>
+                            </#if><tr>
+                                <td colspan="2" style="line-height: 125%"><span class="itemname">${item_index + 1}</span></td>
+                                <td colspan="4" style="line-height: 125%">${item.item}</td>
+                                <td colspan="10" style="line-height: 125%">${item.description}</td>
+                                <td colspan="4" style="line-height: 125%">${item.quantity}</td>
+                                <td colspan="4" style="line-height: 125%">${item.commitinventory}</td>
+                                <td colspan="4" style="line-height: 125%">${item.inventorylocation}</td>
+                            </tr>
+                        </#list><!-- end items -->
+                    </table>
+                </#if>
+            </#if>
+
+            <#assign item_index=0>
+                <#if record.item?has_content>
+                    <#if record.entity.custentity_ilo_print_hebrew==true>
+                        <table class="itemtable" style="width: 100%; margin-top: 10px;">
+                            <!-- start items -->
+                            <#list record.item as item>
+                                <#if item_index=0>
+                                        <tr>
+                                            <th colspan="4">מיקום במחסן<span class="itemname"></span></th>
+                                            <th colspan="4">כמות משוריינת</th>
+                                            <th colspan="4">כמות</th>
+                                            <th colspan="10">תיאור</th>
+                                            <th colspan="4">מק"ט</th>
+                                            <th colspan="2">#</th>
+                                        </tr>
+                                </#if>
+                                <tr>
+                                    <td colspan="4" style="line-height: 125%"><span class="itemname">${item.inventorylocation}</span></td>
+                                    <td colspan="4" style="line-height: 125%">${item.commitinventory} </td>
+                                    <td colspan="4" style="line-height: 125%">${item.quantity}</td>
+                                    <td colspan="10" style="line-height: 125%">${item.description}</td>
+                                    <td colspan="4" style="line-height: 125%">${item.item}</td>
+                                    <td colspan="2" style="line-height: 125%">${item_index + 1}</td>
+                                    <#assign item_index=item_index +1>
+
+                                </tr>
+                            </#list><!-- end items -->
+                        </table>
+                    </#if>
+                </#if>
+</body>
+</pdf>

@@ -1,0 +1,9 @@
+<refFields type="Bulgaria EFT Template">
+<refField id="custrecord_2663_issuer_num" label="Issuer Number" mandatory="true" helptext="Enter the alphanumeric code (up to 16 characters) that identifies your company's account in the bank."/>
+<refField id="custrecord_2663_iban" label="IBAN" mandatory="true" helptext="Enter your company's International Bank Account Number (IBAN)."/>
+<refField id="custrecord_2663_bank_address1" label="Address 1" mandatory="true" helptext="Enter the address of your company's bank (street address, and building or apartment address).	"/>
+<refField id="custrecord_2663_bank_city" label="Bank City" mandatory="true" helptext="Enter the city where your company's bank is located."/>
+<refField id="custrecord_2663_bank_country" label="Bank Country" mandatory="true" helptext="Select the country where your company's bank is located."/>
+<refField id="custrecord_2663_bic" label="BIC" mandatory="true" helptext="Enter the Business Identifier Code, also called SWIFT code, of your company's bank (eight or 11 characters)."/>
+<refField id="custrecord_2663_bank_name" label="Bank Name" mandatory="true" helptext=""/>
+</refFields>

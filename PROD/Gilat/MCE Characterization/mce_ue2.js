@@ -2,7 +2,7 @@
  *@NApiVersion 2.x
  *@NScriptType UserEventScript
  */
-define(['N/ui/serverWidget', ' N/ui/message', 'N/search', 'N/task'],
+define(['N/ui/serverWidget', 'N/ui/message', 'N/search', 'N/task'],
     function (serverWidget, mess, search, task) {
         var sites = [];
         function beforeLoad(context) {

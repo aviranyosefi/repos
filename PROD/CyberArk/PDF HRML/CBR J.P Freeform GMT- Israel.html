@@ -77,12 +77,12 @@
 
       <#function buildBankCharge ebank>
 	    <#assign value=ebank.custrecord_2663_bank_charge>
-	    <#if value =="Shared">
-		    <#assign value='SHA'>	  
+	    <#if value =="Beneficiary">
+		    <#assign value='BEN'>	  
         <#elseif value =="Remitter">
 		    <#assign value='OUR'>
         <#else>
-		    <#assign value='BEN'>
+		    <#assign value='SHA'>
 	    </#if>
 	    <#return value>
     </#function>

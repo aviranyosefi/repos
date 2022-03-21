@@ -1,0 +1,206 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+<link name="sans-serif" type="font" subtype="truetype" src="https://system.na2.netsuite.com/c.3861426/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+<#if .locale == "ru_RU">
+    <link name="verdana" type="font" subtype="opentype" src="${nsfont.verdana}" src-bold="${nsfont.verdana_bold}" bytes="2" />
+</#if>
+    <style type="text/css">
+
+      table {
+        border-bottom : 1px solid black;
+         border-collapse: collapse;
+      
+      }
+
+
+</style>
+
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"501074",ustr:"",originlat:"0",clientrtt:"30",ghostip:"104.115.80.15",ipv6:false,pct:"10",clientip:"37.142.200.193",requestid:"20fa3118",region:"8117",protocol:"h2",blver:13,akM:"x",akN:"ae",akTT:"O",akTX:"1",akTI:"20fa3118",ai:"329458",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                    
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"501074",ustr:"",originlat:"0",clientrtt:"29",ghostip:"104.115.80.15",ipv6:false,pct:"10",clientip:"37.142.200.193",requestid:"21107b6f",region:"8117",protocol:"h2",blver:13,akM:"x",akN:"ae",akTT:"O",akTX:"1",akTI:"21107b6f",ai:"329458",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                    </head>
+<body padding="0.5in 0.3in 0in 0.5in" size="A4-landscape">
+
+
+
+
+
+    <#list records as check>
+<div style="position: relative;font-family: Helvetica,sans-serif; bottom: 0px;height: 250pt;width: 100%;page-break-inside: avoid;font-size: 8pt;">
+  
+      <table style="position: absolute;overflow: hidden;top: 30pt; left: 240pt;height: 10pt;width:160pt; border: 0px solid black;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 2pt;"><p style="text-align: rigth; width:45pt; font-size:0.7em">To:</p></td>
+      <td style="line-height:10pt; top: 10pt; padding-left: 0pt;"><p style="text-align: center; width:137pt; font-size:0.7em">:לכבוד</p></td>
+      </tr></table>
+  
+    <table style="position: absolute;overflow: hidden;left: 240pt;top: 40pt;height: 50pt;width:148pt; border: 0px solid black;  padding-right: -6pt;"><tr>
+      <td style="line-height:10pt; top: 10pt;height: 50pt; border: 1px solid black"><p style="text-align: right; width:150pt; padding-right: 2pt;">${check.address?replace('`', '')}</p></td>
+      </tr></table>
+  
+
+  
+    <table style="position: absolute;overflow: hidden;top: 40pt;height: 50pt;width:148pt; border: 0px solid black;  padding-right: -6pt;"><tr>
+            <td class="default" align="left" style="padding-top: 3px;" rowspan="2">
+           <p style="line-height: 7px; text-align:left;">${.now?time}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: שעה</p>
+       <p style="line-height: 7px;">${.now?date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: תאריך</p>
+       <p style="line-height: 7px;">${check.entity.id}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: מפתח </p>
+
+      </td>
+      </tr></table>
+  
+  
+  
+ <table style="position: absolute;overflow: hidden;top:150pt;width:350pt; border:0px solid black;">
+    <#assign checkTotal = 0>
+  <#if check.apply?has_content>
+    <thead>
+    <tr style="border: 1px solid black; border-bottom: 0px solid black; border-left: 0px solid black">
+        <th colspan="1" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black;"><p colspan="1" style="left: 33.3%">סכום</p></th>
+        <th colspan="8" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black"><p colspan="8" style="left: 42.3%">פריטים</p></th>
+        <th colspan="2" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black"><p colspan="2" style="left: 33.3%">חשבונית</p></th>
+        <th colspan="1" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black"><p colspan="1" style="left: 33.3%">תאריך</p></th>
+     </tr>
+    </thead>
+    <#list check.apply as apply>
+    
+    <#assign checkTotal = checkTotal + apply.total>
+    <tr style="border: 1px solid black;">
+        <td colspan="1" style="text-align:justify; text-justify:none; border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-top: 0px solid black;">${apply.total?html?replace("₪","")}</td>
+        <td  colspan="8" style="text-align:justify; text-justify:none; border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black">${apply.memo?split("", "r")?reverse?join("")}</td>
+        <td colspan="2" style="white-space:pre-line;text-align:justify;text-justify:none;border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black">${apply.refnum}</td>
+        <td  colspan="1" style="text-align:justify; text-justify:none; border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black">${apply.applydate}</td>
+    </tr> 
+      </#list>
+    </#if>
+    <tr>
+        <td  colspan="1" style="border: 1px solid black; border-bottom: 1px solid black; border-top: 0px solid black">${check.custbody_ilo_gross_amount}</td>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">סה"כ</td>
+    </tr>
+          <tr>
+        <td  colspan="1" style="border: 1px solid black; border-bottom: 1px solid black; border-top: 0px solid black">${check.custbody_ilo_wht_amount}</td>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">ניכוי מס במקור</td>
+    </tr>
+                <tr>
+        <td  colspan="1" style="border: 1px solid black; border-bottom: 1px solid black; border-top: 0px solid black">${check.custbody_ilo_net_amount}</td>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">סה"כ לתשלום</td>
+    </tr>
+          </table>
+
+  
+      <table style="position: absolute;overflow: hidden;top: 30pt; left: 600pt;height: 10pt;width:160pt; border: 0px solid black;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 2pt;"><p style="text-align: rigth; width:45pt; font-size:0.7em">To:</p></td>
+      <td style="line-height:10pt; top: 10pt; padding-left: 0pt;"><p style="text-align: center; width:137pt; font-size:0.7em">:לכבוד</p></td>
+      </tr></table>
+  
+    <table style="position: absolute;overflow: hidden;left: 600pt;top: 40pt;height: 50pt;width:148pt; border: 0px solid black;  padding-right: -6pt;"><tr>
+      <td style="line-height:10pt; top: 10pt;height: 50pt; border: 1px solid black"><p style="text-align: right; width:150pt; padding-right: 2pt;">${check.address?replace('`', '')}</p></td>
+      </tr></table>
+  
+      <table style="position: absolute;overflow: hidden;top: 40pt;height: 50pt; left: 460pt;width:148pt; border: 0px solid black;  padding-right: -6pt;"><tr>
+            <td class="default" align="left" style="padding-top: 3px;" rowspan="2">
+           <p style="line-height: 7px; text-align:left;">${.now?time}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: שעה</p>
+       <p style="line-height: 7px;">${.now?date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: תאריך</p>
+       <p style="line-height: 7px;">${check.entity.id}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: מפתח </p>
+
+      </td>
+      </tr></table>
+  
+   <table style="position: absolute;overflow: hidden;top:150pt;width:285pt; left: 460pt;border:0px solid black;">
+    
+  <#if check.apply?has_content>
+    <thead>
+    <tr style="border: 1px solid black; border-bottom: 0px solid black; border-left: 0px solid black">
+        <th colspan="1" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black;"><p colspan="1" style="left: 33.3%">סכום</p></th>
+        <th colspan="8" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black"><p colspan="8" style="left: 42.3%">פריטים</p></th>
+        <th colspan="2" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black"><p colspan="2" style="left: 33.3%">חשבונית</p></th>
+        <th colspan="1" style="border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black"><p colspan="1" style="left: 33.3%">תאריך</p></th>
+     </tr>
+    </thead>
+    <#list check.apply as apply>
+
+    <tr style="border: 1px solid black;">
+        <td colspan="1" style="text-align:justify; text-justify:none; border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-top: 0px solid black;">${apply.total?html?replace("₪","")}</td>
+        <td  colspan="8" style="text-align:justify; text-justify:none; border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black">${apply.memo}</td>
+        <td colspan="2" style="white-space:pre-line;text-align:justify;text-justify:none;border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black">${apply.refnum}</td>
+        <td  colspan="1" style="text-align:justify; text-justify:none; border: 1px solid black; border-bottom: 0px solid black; border-top: 0px solid black; border-left: 0px solid black">${apply.applydate}</td>
+    </tr>
+          
+      </#list>
+    </#if>
+    <tr>
+        <td  colspan="1" style="border: 1px solid black; border-bottom: 1px solid black; border-top: 0px solid black">${check.custbody_ilo_gross_amount}</td>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">סה"כ</td>
+    </tr>
+          <tr>
+        <td  colspan="1" style="border: 1px solid black; border-bottom: 1px solid black; border-top: 0px solid black">${check.custbody_ilo_wht_amount}</td>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">ניכוי מס במקור</td>
+    </tr>
+                <tr>
+        <td  colspan="1" style="border: 1px solid black; border-bottom: 1px solid black; border-top: 0px solid black">${check.custbody_ilo_net_amount}</td>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">סה"כ לתשלום</td>
+    </tr>
+          </table>
+
+  
+  
+  
+  
+  
+    <table style="position: absolute;overflow: hidden;left: 2pt;top: 450pt;height: 10pt;width:325pt;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 2pt;"><p style="text-align: left; width:323pt; font-size:0.7em">Pay To:</p></td>
+      <td style="line-height:10pt; top: 10pt; padding-left: 2pt;"><p style="text-align: center; width:300pt; font-size:0.7em">:שלמו ל</p></td>
+      </tr></table>
+  <table style="position: absolute;overflow: hidden;left: 2pt;top: 450pt;height: 10pt;width:325pt; border-bottom: 0px solid black;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 15pt;"><p style="text-align: right; width:295pt;">${check.entity.legalname} </p></td>
+      </tr></table>
+  <#assign totalWordsArr = check.totalwords?split(' and ') > <#assign words = totalWordsArr[0] > 
+  <table style="position: absolute;overflow: hidden;left: 2pt;top: 469pt;height: 10pt;width: 325pt;"><tr>
+    
+      <td style="line-height:10pt;"><p style="text-align: right; width:315pt;">${check.custbody_ilo_total_words} בלבד </p></td>
+      </tr>
+   </table>
+    <table style="position: absolute;overflow: hidden;left: 326pt;top: 469pt;height: 10pt;width: 72pt;"><tr>
+            <td style="line-height:10pt;border-right:1px solid black; border-left:1px solid black"><p style="text-align: center;">${check.custbody_ilo_net_amount}***</p></td>
+      </tr>
+   </table>
+        <table style="position: absolute;overflow: hidden;top: 505pt; left: 198pt;height: 10pt;width:200pt;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 2pt;"><p style="text-align: left; width:300pt; font-size:0.7em">Date:</p></td>
+      <td style="line-height:10pt; top: 10pt; padding-left: 20pt;"><p style="text-align: center; width:152pt; font-size:0.7em">תאריך:</p></td>
+      </tr></table>
+        <table style="position: absolute;overflow: hidden;left: 198pt;top: 505pt;height: 10pt;width: 200pt;  border-bottom: 0px solid black;"><tr>
+            <td style="line-height:10pt; padding-left: 83pt">${check.trandate}</td>
+      </tr>
+   </table>
+
+        <table style="position: absolute;overflow: hidden;left: 460pt;top: 450pt; height: 10pt;width:262pt;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 2pt;"><p style="text-align: left; width:260pt; font-size:0.7em">Pay To:</p></td>
+      <td style="line-height:10pt; top: 10pt; padding-left: 2pt;"><p style="text-align: center; width:232pt; font-size:0.7em">:שלמו ל</p></td>
+      </tr></table>
+      <table style="position: absolute;overflow: hidden;left: 460pt;top: 450pt;height: 10pt;width:262pt; border-bottom: 0px solid black;"><tr>
+
+            <td style="line-height:10pt; top: 10pt; padding-right: 15pt;"><p style="text-align: right; width:232pt;">${check.entity.legalname}</p></td>
+      </tr></table>
+  <table style="position: absolute;overflow: hidden;left: 460pt;top: 469pt;height: 10pt;width: 262pt;"><tr>
+    
+      <td style="line-height:10pt;"><p style="text-align: right; width:255pt;">${check.custbody_ilo_total_words} בלבד </p></td>
+      </tr>
+   </table>
+    <table style="position: absolute;overflow: hidden;left: 722pt;top: 469pt;height: 10pt;width: 62pt;"><tr>
+            <td style="line-height:10pt;border-right:1px solid black; border-left:1px solid black">${check.custbody_ilo_net_amount}***</td>
+      </tr>
+   </table>
+            <table style="position: absolute;overflow: hidden;left: 650pt;top: 505pt;height: 10pt;width:135pt;"><tr>
+      <td style="line-height:10pt; top: 10pt; padding-right: 2pt;"><p style="text-align: left; width:264pt; font-size:0.7em">Date:</p></td>
+      <td style="line-height:10pt; top: 10pt; padding-left: 0pt;"><p style="text-align: center; width:120pt; font-size:0.7em">תאריך:</p></td>
+      </tr></table>
+        <table style="position: absolute;overflow: hidden;left: 650pt;top: 505pt;height: 10pt;width: 135pt;  border-bottom: 0px solid black;"><tr>
+            <td style="line-height:10pt; padding-left: 50pt;">${check.trandate}</td>
+      </tr>
+   </table>
+
+
+</div>
+</#list>
+</body>
+</pdf>

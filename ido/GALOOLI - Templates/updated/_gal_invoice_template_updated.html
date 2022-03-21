@@ -1,0 +1,333 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 10pt;
+            table-layout: fixed;
+            width: 90%;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 10px;
+            padding-bottom: 3px;
+            color: #fff;
+            height: 10px;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 10px;
+            vertical-align: middle;
+        }
+
+        table.body td {
+            padding-top: 2px;
+            padding-right: 1px;
+        }
+
+
+        table.header td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        .footer {
+            background-color: #F1F1F2;
+            width: 100%;
+            font-size: 14px;
+            padding: 50px;
+            padding-top: 10px;
+            margin: 0px;
+        }
+
+        .terms {
+            font-family: sans-serif;
+            color: #555;
+            /*text-overflow: ellipsis;
+            overflow: hidden;*/
+            /*white-space: nowrap;*/
+            font-size: 9pt;
+        }
+
+        .header {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            padding: 5px;
+        }
+
+
+        table.linetb th {
+            background-color: #d3d3d3;
+            font-weight: bold;
+            color: #777;
+            border: 1px solid #333;
+        }
+
+        table.linetb td {
+            background-color: #fff;
+            color: #777;
+            /*text-overflow: ellipsis;
+            white-space: nowrap;*/
+            border: 1px solid #333;
+            font-size: 8pt;
+            padding-right: 1px;
+            padding-left: 5px;
+        }
+
+        table.headertable th {
+            background-color: #d3d3d3;
+            color: #555;
+            white-space: nowrap;
+            border: 1px solid #686666;
+            font-size: 9pt;
+            padding-left: 5px;
+        }
+
+        table.headertable td {
+            background-color: #fff;
+            color: #555;
+            white-space: nowrap;
+            border: 1px solid #686666;
+            font-size: 9pt;
+            padding-left: 5px;
+        }
+
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+
+        .title {
+            color: #6D6E70;
+            font-size: 10px !important;
+        }
+
+        .maintitle {
+            color: #32338A;
+        }
+
+        .maintext {
+            font-size: 20px;
+        }
+    </style>
+
+    <macrolist>  	
+        <macro id="nlheader">
+        <table border="0" cellpadding="0" class="header">
+            <tr>
+	            <td width="35%" align="left" style="vertical-align: top;">
+                    <#if subsidiary.logo@url?length != 0><img src="${subsidiary.logo@url}" style="width:180px; height:60px;" /> </#if> 
+                    <div style="padding-left:15px">
+                        <span class="nameandaddress">${subsidiary.mainaddress_text} <br />${subsidiary.federalidnumber}</span>
+                        <br /><span class="nameandaddress"><b>Email</b>  ${subsidiary.custrecord_email}</span>
+                        <br /><span class="nameandaddress"><b>Phone</b>  ${subsidiary.custrecord_phone}</span>
+                           <br /><span class="nameandaddress"><b>Website</b>  ${companyInformation.url}</span>
+                    </div>
+         </td> 
+                <td width="18%" align="center" >
+
+                  </td>
+                <td width="47%" align="right" style="padding-top:10px">
+                    <h1>Tax Invoice</h1>
+                    <table class="headertable">
+                    <tr>
+                        <th>Invoice No</th><td> ${record.tranid}</td></tr><tr>
+                        <th>Invoice Date</th><td> ${record.trandate?string("dd-MMM-yyyy")}</td></tr><tr>
+                        <th>Payment Terms</th><td>${record.terms}</td></tr><tr>
+                        <th>Shipping Date</th><td> ${record.shipdate?string("dd-MMM-yyyy")}</td></tr><tr>
+                        <th>Shipping VIA</th><td>${record.custbody_shippingvia}</td></tr><tr>
+                        <th>Sales Person</th><td>${record.salesrep?substring(record.salesrep?index_of(" ") + 1, record.salesrep?length)}</td></tr><tr>
+                        <th>S.O Number</th><td>${record.createdfrom?replace("Sales Order", "")}</td></tr><tr>
+                        <th>Currency</th><td> ${record.currency}</td>
+                    </tr>                                               
+                    </table>
+                    <br />
+                        <#assign print_type = ' Original'> 
+                        <#if record.custbody_ilo_org_printed>
+                        <#assign print_type = ' Copy'> 
+                        </#if>
+                        <#if record.custbodycustbody_ilo_print_draft>
+                        <#assign print_type = ' Draft'> 
+                        </#if>
+                        <h2>${print_type}</h2>
+
+                </td>
+            </tr>
+        </table>
+        </macro>
+        <macro id="nlfooter">
+            <table style="width: 100%; font-size: 8pt;"><tr>
+	            <td align="right" style="padding: 0;"><pagenumber/> of <totalpages/></td>
+	            </tr></table>
+         </macro>
+    </macrolist>
+</head>
+<body padding="15" margin="15" size="A4" footer="nlfooter" footer-height="120px"  header="nlheader" header-height="250px">
+
+    <table style="width:650px;padding-top:50px; ">
+    <tr>
+      <td class="title" ><b>Bill to:</b> <br /><span > ${record.billaddress}<br /><br /></span></td>
+      <td class="title" ><b>Ship to:</b> <br /><span > ${record.shipaddress}<br /><br /></span></td>
+    </tr>
+
+    </table>
+    <#assign amounttotal = 0> 
+    <#assign primarycur_exchange =  record.exchangerate> 
+    <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+    <#assign currency_text = record.currency> 
+        <#assign currency_symbol = record.currency> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    
+    
+      
+          <#assign curr_symbol = '¤'> 
+          <#if record.currency = 'USD'>
+            <#assign curr_symbol = '$'> 
+              </#if>
+              <#if record.currency = 'GBP'>
+            <#assign curr_symbol = '£'> 
+              </#if>
+               <#if record.currency = 'EUR'>
+            <#assign curr_symbol = '€'> 
+              </#if>
+               <#if record.currency = 'NGN'>
+            <#assign curr_symbol = 'NGN '> 
+              </#if>
+            <#if record.currency = 'UGX'>
+            <#assign curr_symbol = 'USh '> 
+              </#if>
+              
+
+
+       <#assign total_inspection = 0> 
+    <#if record.item?has_content>
+    <table  style="width:680px;margin-top: -20px;"  class="linetb" ><!-- start items -->
+    <#list record.item as item><#if item_index==0>
+    <thead>
+    <tr>
+        <th colspan="2" >line#</th>
+        <th colspan="4">Item</th>
+        <th colspan="3">Description </th>
+        <th  colspan="3" >Unit price</th>
+        <th  colspan="3">Quantity</th>
+        <th  colspan="3">Total cost</th>
+     </tr>
+    </thead>
+    </#if>
+<#if (item.item)?contains("Inspection")>
+      <#assign total_inspection = (item.amount  * total_exchange)>
+<#else>
+    <tr>
+        <td  colspan="2" style="text-align:justify; text-justify:none; ">    ${item_index + 1}  </td>
+        <td  colspan="4" style="text-align:justify; text-justify:none; ">    ${item.item?substring(0, item.item?index_of(" ") + 1)}   </td>
+        <td colspan="3" style="white-space:pre-line;text-align:justify;text-justify:none;"> ${item.description}</td>
+        <td  colspan="3" align="right">${(item.rate  * total_exchange)?string[",##0.00"]}</td>
+        <td colspan="3" align="center"><span class="desc">${item.quantity}</span></td>
+        <td  colspan="3" align="right">${(item.amount  * total_exchange)?string[",##0.00"]}</td>
+    </tr>
+</#if>
+    </#list><!-- end items -->
+    </#if>
+        <tr>
+        <td colspan="12" style="background-color:#fff; border:0px">
+        </td>
+        <td  colspan="3" >Total FOB:</td>
+        <td  colspan="3" align="right">${curr_symbol}${(record.subtotal  * total_exchange - total_inspection)?string[",##0.00"]}</td>
+        </tr>
+        <#if total_inspection != 0>
+        <tr>
+        <td colspan="12" style="background-color:#fff; border:0px">
+        </td>
+        <td  colspan="3" >Inspection &amp; Shipping:</td>
+        <td  colspan="3" align="right">${curr_symbol}${(record.shippingcost + total_inspection)?string[",##0.00"]}</td>
+        </tr>
+        <#else>
+         <tr>
+        <td colspan="12" style="background-color:#fff; border:0px">
+        </td>
+        <td  colspan="3" >Shipping:</td>
+        <td  colspan="3" align="right">${curr_symbol}${record.shippingcost?string[",##0.00"]}</td>
+        </tr>
+        </#if>
+          <#if record.subtotal != 0 && companyInformation.companyName == "Galooli Ltd">
+        <tr>
+        <td colspan="12" style="background-color:#fff;  border:0px"></td>
+        <td  colspan="3">${record.taxtotal / record.subtotal * 100}% Vat ${curr_symbol}</td>
+        <td  colspan="3" align="right">${curr_symbol}${(record.taxtotal  * total_exchange)?string[",##0.00"]}</td>
+        </tr>
+        <tr>
+        <td colspan="12" style="background-color:#fff;  border:0px"></td>
+        <td  colspan="3">Total:</td>
+        <td  colspan="3" align="right">${curr_symbol}${(record.total  * total_exchange)?string[",##0.00"]}</td>
+        </tr>
+        </#if>
+  </table>
+    <div class="terms">
+        <br /> <br />
+           <b><u>Special Instructions:</u><br /></b>
+        <#if record.entity=="94 ATC NIGERIA">
+        ${subsidiary.custrecord_invoice_alt_footer}       
+        <#else>
+        ${subsidiary.custrecord_invoice_footer}
+        </#if>
+        <br />
+
+       
+ </div>
+    <div style="width:100%; padding-left:150px;">
+    </div>
+     
+
+
+    
+
+
+</body>
+</pdf>

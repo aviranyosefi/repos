@@ -1,0 +1,337 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 90%;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+			background-color: #f6921e;
+             vertical-align: middle;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 10px;
+            padding-bottom: 3px;
+            color: #fff;
+            height: 40px;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 10px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        .footer {
+            background-color: #F1F1F2;
+            width: 100%;
+            font-size: 14px;
+            padding: 50px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+     		margin: 0px;
+        }
+
+        .header {
+            width: 100%;
+            padding: 0px 50px;
+            margin-top: -10px;
+            background-color: #F1F1F2;
+
+        }
+
+
+
+        table.linetb th {
+        }
+
+        table.linetb td {
+            background-color: #F1F1F2;
+            color: #808080;
+            text-overflow: ellipsis;
+               word-wrap:break-word;
+            border: 1px solid #fff;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+
+        .title {
+            color: #6D6E70;
+            font-size: 10px !important;
+        }
+
+        .maintitle {
+       color: #f6921e;
+        }
+
+        .maintext {
+            font-size: 20px;
+        }
+    </style>
+
+    <macrolist>  	
+        <macro id="nlheader">
+        <table border="0" cellpadding="0" class="header">
+            <tr>
+				<td width="700px" align="center"><img src="https://system.eu1.netsuite.com/core/media/media.nl?id=3703&amp;c=4753085_SB1&amp;h=b33ace427357d5f8d31a" style="width:650px; height:120px" /></td>          
+            </tr>
+        </table>
+        </macro>
+        <macro id="nlfooter">
+                      <table class="footer" style="width: 100%;">
+
+            	<tr>
+					<td>                  
+    <table class="footer" style="width: 100%;">
+                    <tr>
+                    <td>
+                    <div>
+                    <table style="width:450px;">
+                        <tr><td colspan="2" class="maintitle">Please Note Wire Instructions:<br /><br /></td></tr>
+                        <tr>
+                            <td class="title">Account Name</td>
+                            <td>SBTech Global Limited</td>
+                        </tr>
+                        <tr>
+                            <td class="title">Address</td>
+                            <td>{{_bank_address}}</td>
+                        </tr>                                
+                        <tr>
+                            <td class="title">Account No.</td>
+                            <td>{{_bank_account}}</td>
+                        </tr>                               
+                            <tr>
+                            <td class="title">IBAN No.</td>
+                          <td>{{_bank_iban}}</td>
+                        </tr>                                
+                        <tr>
+                            <td class="title">SWIFT</td>
+                              <td>{{_bank_swift}}</td>
+                        </tr>
+                    </table>
+                    </div>                                               
+                    </td>
+                    </tr>
+                    </table>                                     
+					</td>
+				</tr>
+			</table>  
+             </macro>      
+    </macrolist>
+</head>
+<body padding="25px" margin="20px" size="A4" footer="nlfooter" footer-height="120px"  header="nlheader" header-height="130px">
+
+    <table style="width:100%;">
+    <tr>
+        <td class="maintitle maintext" style="width:130px">INVOICE </td>
+        <td ><span class="title"  align="center" >No.</span> <span class="maintext"> ${record.tranid} </span> </td>
+        <td class="title" align="right" >Total <span class="maintitle maintext"> &nbsp;&nbsp;${record.total}</span></td>
+    </tr>
+    </table>
+        <hr  class="title"/>
+    <table style="width:650px;">
+    <tr>
+    <td class="title" colspan="2">BILL TO: <br /><span ><b> ${record.billaddress}</b><br /><#if record.entity.custentity_customer_vat_id != ''><b>VAT : ${record.entity.custentity_customer_vat_id}</b></#if></span></td>
+    <td class="title"  align="right" style="padding-top: 3px;width:100px" rowspan="2">
+            INVOICE DATE: <br />
+            <span style="font-weight:bold; color:#333">DUE DATE:</span>  <br />
+            BILL CURRENCY: <br />
+            PERIOD:  <br />
+            
+    </td>
+            <td class="title" align="right" style="padding-top: 3px; width:100px; color:#333 !important" rowspan="2">
+            ${record.trandate?string("dd.MM.yyyy")}<br />
+            <b>${record.duedate?string("dd.MM.yyyy")}</b> <br />
+            ${record.currency} <br />
+            ${record.trandate?string("MM.yyyy")} <br />
+            
+    </td>
+    </tr>
+
+    </table>
+
+    <#assign primarycur_exchange =  record.exchangerate> 
+    <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+    <#assign currency_text = record.currency> 
+        <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'Mobius Solutions LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign primarycur_exchange = record.exchangerate> 
+        </#if>
+    </#if>
+        <#if  currency_text == 'ILS'>
+            <#assign currency_symbol = "ILS"> 
+        </#if>
+        
+            
+<#assign vatPercent = '0.00'>
+<#list record.item as item>
+<#if ((item.taxrate1?replace('%','')?string?number > 0) && (item.taxrate1?string?replace('%','')?number > vatPercent?string?number))>
+<#assign vatPercent = item.taxrate1?replace('%','')>
+</#if>
+</#list>                                 
+
+
+   
+    <#if record.item?has_content>
+       <table  style="width:650px" class="linetb"><!-- start items -->
+    <#list record.item as item><#if item_index==0>
+    <thead>
+    <tr>
+
+    <th colspan="16">Description</th>
+    <th colspan ="6" align="center">Monthly Results ${currency_symbol}</th>
+    <th colspan="5" align="center">Total ${currency_symbol}</th>
+    </tr>
+    </thead>
+    </#if>
+    <tr>
+    <td colspan="16" style="text-align:justify; text-justify:none; ">
+    
+      <#assign desc = item.description?string?replace("&amp;", "and")>
+      
+    <#if (desc)?lower_case?contains(";;;")> 
+ 		<b><u>${desc?string?replace(";;;", "")}</u></b><br/>
+ 		 <#elseif (desc)?lower_case?contains(";;")>
+ 		 <u>${desc?string?replace(";;", "")}</u><br/>
+ 		<#elseif (desc)?lower_case?contains(";")>
+ 		 <b>${desc?string?replace(";", "")}</b><br/>
+ 		 <#else>
+ 		 ${desc}<br/>
+ 		</#if>
+        </td>
+        <#assign monthlyResults = item.custcol_sbtech_invoice_rate>
+        <#if monthlyResults == '-'>
+		<#assign monthlyResults = ''>        
+        </#if>
+            <#if monthlyResults == '0'>
+		<#assign monthlyResults = ''> 
+         </#if>
+    <td colspan="6" align="center">${monthlyResults}</td>
+    
+    <#if (item.amount  * total_exchange)?string == '0'>
+     <td colspan="5" align="center">  </td> 
+    </#if>
+        <#if (item.amount  * total_exchange)?string != '0'>
+     <td colspan="5" align="center"><#if item.amount?string?contains("-")>(${(item.amount  * total_exchange)?string[",##0.00"]?replace("-", "")})<#else>${(item.amount  * total_exchange)?string[",##0.00"]}</#if></td> 
+    </#if>
+    </tr>
+    </#list><!-- end items -->
+
+
+    </#if>
+    
+    
+        <#if record.subsidiary == 'GamingTech LTD'>
+       <tr style="border-top: 1px solid black">
+    <td rowspan="3" colspan="16" style="background-color:#fff;">
+         <br /> 
+    </td>
+    <td  colspan="6" align="center" >Sub Total</td>
+    <td  colspan="5" align="center" >${(record.subtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    </#if>
+    
+    <#if record.subsidiary != 'GamingTech LTD'>
+       <tr style="border-top: 1px solid black">
+    <td rowspan="3" colspan="16" style="background-color:#fff;">
+      <#if record.entity.custentity_sbtech_eu_vat_comment>
+         <br />
+        * Services subject reverse charge - VAT to be<br />
+        accounted for by the recipient as per article 196 of<br />
+        Council Directive 2006/112/EC<br />
+        </#if>    
+    </td>
+    <td  colspan="6" align="center" >Sub Total</td>
+    <td  colspan="5" align="center" >${(record.subtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    </#if>
+
+    <tr>
+    <#if vatPercent?string = '0.00'>
+    <#assign vatPercent = '0%'>
+    </#if>
+    <td  colspan="6" align="center">VAT ${vatPercent}</td>
+    <td  colspan="5" align="center">${(record.taxtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    <#if record.taxtotal != 0 && currency_symbol != 'GBP' && record.subsidiary == 'SBTECH (GLOBAL) LIMITED'>
+        <tr>
+    <td colspan="6" align="center">VAT ${vatPercent} (GBP)</td>
+    <td colspan="5" align="center">${(record.taxtotal  * secondary_exchange)?string[",##0.00"]} GBP</td>
+    </tr>
+    </#if>
+	<tr>
+	    <#if record.taxtotal != 0 && currency_symbol != 'GBP' && record.subsidiary == 'SBTECH (GLOBAL) LIMITED'>
+	    <td rowspan="3" colspan="16" style="background-color:#fff;"></td>
+	        </#if>
+    <th  colspan="6" align="center" style="font-size: 10pt">Total</th>
+    <th  colspan="5" align="center" style="font-size: 10pt">${(record.total  * total_exchange)?string[",##0.00"]} ${currency_symbol}</th>
+    </tr>
+
+	<#if record.entity.custentity_sbtech_invoice_comment != ''>
+    <tr>
+     <td rowspan="3" colspan="16" style="background-color:#fff;">${record.entity.custentity_sbtech_invoice_comment}</td> 
+    </tr>
+</#if>
+    </table>
+</body>
+</pdf>

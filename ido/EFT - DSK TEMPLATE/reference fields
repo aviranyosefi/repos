@@ -1,0 +1,4 @@
+<refFields type="DSK BNK Bulgaria Template">
+<refField id="custrecord_2663_iban" label="IBAN" mandatory="true" helptext="Enter your company's International Bank Account Number (IBAN)."/>
+<refField id="custrecord_2663_bank_name" label="Bank Name" mandatory="true" helptext=""/>
+</refFields>

@@ -1,0 +1,340 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+ <style type="text/css">
+        table {
+            table-layout: fixed;
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 9pt;
+            margin-top: 0px;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding-bottom: 3px;
+            padding-top: 2px;
+            padding-right: 6px;
+            padding-left: 6px;
+            background-color: #e2e2e2;
+            color: #444;
+        }
+
+        td {
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+        }
+
+        b {
+            font-weight: bold;
+            color: #444;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+        table.first td {
+            padding: 0px;
+            font-size: 7pt;
+        }
+
+        table.last td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+
+        table.lines {
+            border: 0px solid;
+        }
+
+            table.lines th {
+                padding-bottom: 10px;
+                padding-top: 2px;
+                background-color: #fff;
+                border: 0px solid;
+            }
+
+            table.lines td {
+                border: 0px solid;
+                padding: 4px;
+            }
+
+        table.summary {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        td.gen {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        td.header {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+    <macrolist>
+        <macro id="nlheader">
+            <p style="text-align: center;"><span style="font-size:24px;"><strong>Israeli Withholding Tax Annual Certificate To Vendors Report<br />(Instead Of Forms 0806,0837,0857)</strong></span></p>
+        </macro>
+    </macrolist>
+</head>
+<body header="nlheader" header-height="10%" padding="0.5in 0.5in 0.5in 0.5in" size="A4">
+
+  <table class="lines" style="width:680px">
+	<tr>
+	<td style="font-size:16px;" colspan="8"><strong>Tax Year : 2017</strong></td>
+	<td style="font-size:16px;" colspan="4"><strong>(01/01/17 - 31/12/17)</strong></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+</table>
+  
+  <table class="lines" style="width:680px; font-size:12px;">
+    	<tr>
+	<td colspan="12"><strong>Payer Information</strong></td>
+		</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    
+	<tr>
+	<td colspan="6">Name </td>
+	<td colspan="6">Name Value</td>
+</tr>
+	<tr>
+	<td colspan="6">Address </td>
+	<td colspan="6">Address Value</td>
+</tr>
+    	<tr>
+	<td colspan="6">Deduction File Number </td>
+	<td colspan="6">Deduction File Number Value</td>
+</tr>
+    	<tr>
+	<td colspan="6">Tax Registration Number </td>
+	<td colspan="6">Tax Registration Number Value</td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+</table>
+    <table class="lines" style="width:680px; font-size:12px;">
+    	<tr>
+	<td colspan="12"><strong>Payee Information</strong></td>
+		</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    
+	<tr>
+	<td colspan="6">Supplier Name </td>
+	<td colspan="6">Name Value</td>
+</tr>
+      	<tr>
+	<td colspan="6">Supplier Number </td>
+	<td colspan="6">Name Value</td>
+</tr>
+	<tr>
+	<td colspan="6">Supplier Address </td>
+	<td colspan="6">Address Value</td>
+</tr>
+    	<tr>
+	<td colspan="6">VAT Registration Number </td>
+	<td colspan="6">VAT Registration Number Value</td>
+</tr>
+    	<tr>
+	<td colspan="6">Tax Registration Number </td>
+	<td colspan="6">Tax Registration Number Value</td>
+</tr>
+          	<tr>
+	<td colspan="6">Occupation Description </td>
+	<td colspan="6">Occupation Description Value</td>
+</tr>
+          	<tr>
+	<td colspan="6">Payment Type </td>
+	<td colspan="6">Payment Type Value</td>
+</tr>
+                	<tr>
+	<td colspan="6">Payment Amount </td>
+	<td colspan="6">Payment Amount Value</td>
+</tr>
+                      	<tr>
+	<td colspan="6">Gross Amount </td>
+	<td colspan="6">Gross Amount Value</td>
+</tr>
+                            	<tr>
+	<td colspan="6">Withheld Amount </td>
+	<td colspan="6">Withheld Amount Value</td>
+</tr>
+                                  	<tr>
+	<td colspan="6">Withheld amounts have been transferred to the Tax Officer in : </td>
+	<td colspan="6">Ramla</td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+
+
+</table>
+    <table style="width:100%">
+	<tr>
+	<td style="font-size:14px;" colspan="4"><strong>Signature</strong></td>
+	<td style="font-size:14px;" colspan="4"><strong>Report Date</strong></td>
+    <td style="font-size:14px;" colspan="4"><strong>Subsidary's Name</strong></td>
+</tr>
+      	<tr>
+	<td style="font-size:14px;" colspan="4"><strong></strong></td>
+	<td style="font-size:14px;" colspan="4"><strong>01/08/17</strong></td>
+    <td style="font-size:14px;" colspan="4"><strong>One1up NetSuite</strong></td>
+</tr>
+
+</table>
+</body>
+</pdf>

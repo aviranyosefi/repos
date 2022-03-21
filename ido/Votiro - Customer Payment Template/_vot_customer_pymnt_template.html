@@ -1,0 +1,447 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+  <link name="sans-serif" type="font" subtype="truetype" src="https://system.sandbox.netsuite.com/c.3861426/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+
+    <style type="text/css">
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        th {
+           
+            font-size: 8pt;
+            vertical-align: middle;
+          text-align : center;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 3px;
+  
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 6px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            
+        }
+
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+          width: 36%;
+         	
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+    </style>
+
+                    
+                    
+                    <script>var w=window;if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document;AKSB=w.AKSB||{},AKSB.q=AKSB.q||[],AKSB.mark=AKSB.mark||function(e,_){AKSB.q.push(["mark",e,_||(new Date).getTime()])},AKSB.measure=AKSB.measure||function(e,_,t){AKSB.q.push(["measure",e,_,t||(new Date).getTime()])},AKSB.done=AKSB.done||function(e){AKSB.q.push(["done",e])},AKSB.mark("firstbyte",(new Date).getTime()),AKSB.prof={custid:"501074",ustr:"",originlat:"0",clientrtt:"26",ghostip:"104.115.80.15",ipv6:false,pct:"10",clientip:"37.142.200.193",requestid:"905cc1a",region:"8117",protocol:"h2",blver:13,akM:"x",akN:"ae",akTT:"O",akTX:"1",akTI:"905cc1a",ai:"329458",ra:"false",pmgn:"",pmgi:"",pmp:"",qc:""},function(e){var _=d.createElement("script");_.async="async",_.src=e;var t=d.getElementsByTagName("script"),t=t[t.length-1];t.parentNode.insertBefore(_,t)}(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")}</script>
+                  
+                          <macrolist>      
+        <macro id="nlheader">
+<#if record.custbody_layout_language = 'English'>
+
+         <table border="0" cellpadding="0" class="header"><tr>
+            <td width="700px" align="left">
+             <p style="font-size: 2em; font-weight: bold;">${subsidiary.name}</p>
+              <p style="font-size: 1.6em;">${subsidiary.custrecord_vot_english_address}<br/><br/><br/></p>
+              
+  </td>
+	<td width="700px" align="right"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=552&amp;c=4969978&amp;h=411e48f2e4893187ea97" style="width:212px; height:120px" /><p style="font-size:19px; line-height: 10px;"></p></td>
+ 
+  </tr>
+
+</table>
+
+  </#if>
+  
+  <#if record.custbody_layout_language = 'Hebrew'>
+
+         <table border="0" cellpadding="0" class="header"><tr>
+		<td width="700px" align="left"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=552&amp;c=4969978&amp;h=411e48f2e4893187ea97" style="width:212px; height:120px" /><p style="font-size:19px; line-height: 10px;"></p></td>
+        <td width="700px" align="right">
+       <p style="font-size: 2em; font-weight: bold;">${subsidiary.name}</p>
+        <p style="font-size: 1.6em;  text-align:right">${subsidiary.custrecord_vot_hebrew_address}<br/><br/><br/></p>
+              
+  </td>
+  </tr>
+
+</table>
+
+  </#if>
+        </macro>    
+    </macrolist>
+                  
+                    </head>
+                    
+                    
+                    
+<body padding="0.2in 0.5in 0.1in 0.5in" size="A4" header="nlheader" header-height="220px">
+
+  <#if record.custbody_layout_language = 'Hebrew'>
+  <table style="width:650px;top:-2%;">
+    <tr>
+          <td style="width:650px;">
+        <div class="default" style="font-size:1.2em; text-align: center; left:275px"><u>${record.tranid} :'קבלה מס</u></div></td>
+    </tr>
+</table>
+  </#if>
+    <#if record.custbody_layout_language = 'English'>
+  <table style="width:650px;top:-2%;">
+    <tr>
+          <td style="width:650px;">
+        <div class="default" style="font-size:1.2em; text-align: center; left:275px"><u>Receipt: ${record.tranid}</u></div></td>
+    </tr>
+</table>
+  </#if>
+          
+
+
+ 
+  <#assign primarycur_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+     
+       <#assign exRate = secondary_exchange?string[",##0.00"]>
+
+  
+         <#assign vat_reg = record.custbody_ilo_tax_payer_id> 
+          <#if vat_reg = ''>
+            <#assign vat_reg = record.vatregnum> 
+              </#if>
+
+       <#assign billTo = record.customer.billaddress> 
+       <#assign legalName = record.customer.custentity_vot_legal_name>
+       <#assign companyName = record.customer.companyname>
+       <#assign billTo = billTo?replace(companyName, legalName)>
+          <#if billTo = ''>
+            <#assign billTo = record.customer.custentity_vot_legal_name> 
+              </#if>
+              
+ 
+   <#if record.custbody_layout_language = 'Hebrew'>             
+  <table style="width: 100%;">
+ <tr>
+<td>
+    <table style="width:230px;">
+  	<tr>
+  	        	<td align="left">
+       <p style="line-height: 5px;">${record.trandate}</p></td>
+  	<td align="right">
+       <p style="line-height: 5px;">תאריך קבלה :</p></td>
+  		</tr>
+  		  	<tr>
+  	        	<td align="left">
+       <p style="line-height: 5px;">${record.currency}</p></td>
+  	<td align="right">
+       <p style="line-height: 5px;">מטבע :</p></td>
+  		</tr>
+</table>
+
+</td>
+ <td>
+   <table style="width:320px;">
+  <thead>
+	<tr>
+          <th colspan="6"><p style="width: 100%; text-align:right; line-height: 30px; font-size: 1.4em;"></p></th>
+         <th colspan="4"><p style="width: 100%; text-align:right; line-height: 30px; font-size: 1.4em;"></p></th>    
+         <th colspan="6"><p style="width: 100%; text-align:left; font-size: 1.4em; left:60px;">לכבוד :</p></th>
+	</tr>
+</thead>
+
+      <tr>
+    </tr>
+   		<#assign billContact ='ATTN : '+record.customer.custentity_vot_primary_contact>
+   		<#if record.customer.custentity_vot_primary_contact == ''>
+   		<#assign billContact = ''>
+   		</#if>
+    <#if record.customer.billaddress == ''>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: right; width: 220px;"><br/>${billTo}<br/><br/></p> </td>
+        <td colspan="6" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+     <#if record.customer.billaddress != '' && record.customer.custentityil_tax_payer_id == '999999999'>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: right; width: 220px; left:80px"><br/>${billTo}<br/>${billContact}</p> </td>
+        <td colspan="6" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+        <#if record.customer.billaddress != '' && record.customer.custentityil_tax_payer_id != '999999999'>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: right; width: 220px; left:80px"><br/>${billTo}<br/>${record.customer.custentityil_tax_payer_id} : מס' חברה<br/>${record.vatregnum} : מס' תיק במע"מ <br/><br/>${billContact}</p> </td>
+        <td colspan="6" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: right; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+
+</table>
+</td>
+</tr>
+
+</table>
+    </#if>
+       <#if record.custbody_layout_language = 'English'>  
+             <table style="width: 100%;">
+ <tr>
+ 
+       <#assign vat_reg = record.custbody_ilo_tax_payer_id> 
+          <#if vat_reg = ''>
+            <#assign vat_reg = record.vatregnum> 
+              </#if>
+
+				   		<#assign billContact ='ATTN : '+record.customer.custentity_vot_primary_contact>
+   		<#if record.customer.custentity_vot_primary_contact == ''>
+   		<#assign billContact = ''>
+   		</#if>
+
+              
+              
+               <#assign billTo = record.customer.billaddress> 
+          <#if billTo = ''>
+            <#assign billTo = record.customer.companyname> 
+              </#if>
+      
+<td>
+<table style="width:320px; top: -10px;">
+<thead>
+	<tr>
+        <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em">Bill To: </p></th>
+          <th colspan="6"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>
+                    <th colspan="4"><p style="width: 100%; text-align:left; line-height: 30px; font-size: 1.4em;"></p></th>    
+	</tr>
+</thead>
+      <tr>
+    </tr>
+    <#if record.customer.billaddress == ''>
+    <tr>
+  
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px; line-height: 25px;">${billTo}<br/><br/></p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+    <#if record.customer.billaddress != '' && record.customer.custentityil_tax_payer_id == '999999999'>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/>${billTo}<br/><br/>${billContact}</p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+    </#if>
+    <#if record.customer.billaddress != '' && record.customer.custentityil_tax_payer_id != '999999999'>
+    <tr>
+    <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/>${billTo}<br/>Company Number : ${record.customer.custentityil_tax_payer_id}<br/>VAT Number : ${record.vatregnum}<br/><br/>${billContact}</p> </td>
+        <td colspan="6" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+                <td colspan="4" class="default"><p style="text-align: left; width: 220px;"><br/><br/><br/></p> </td>
+    </tr>
+</#if>
+</table>
+</td>
+<td>
+
+    <table style="width:230px; left:75px;">
+  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Receipt Date :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.trandate}</p></td>
+  		</tr>
+  		  	<tr>
+  	<td align="left">
+       <p style="line-height: 5px;">Currency :</p></td>
+        	<td align="right">
+       <p style="line-height: 5px;">${record.currency}</p></td>
+  		</tr>
+</table>
+      
+      </td>
+</tr>
+</table>
+       </#if>
+       
+<#if record.custbody_layout_language = 'Hebrew'>
+<#if record.apply?has_content>
+
+<table class="linetb" style="width: 100%; margin-top: 10px;"><!-- start apply sublist --><#list record.apply as apply><#if apply_index==0>
+<thead>
+	<tr>
+
+	<th align="center" colspan="6">סכום</th>
+	<th align="center" colspan="6">פרטים</th>
+	<th align="center" colspan="6">מתאריך</th>
+	<th align="center" colspan="6">חשבונית</th>
+	</tr>
+</thead>
+</#if><tr>
+
+ 	<td align="center" colspan="6">${record.currency} ${apply.due?string[",##0.00"]}</td>
+ 	<td align="center" colspan="6">${apply.memo}</td>
+  	<td align="center" colspan="6">${apply.applydate}</td>
+  	<td align="center" colspan="6">${apply.refnum}</td>
+	</tr>
+	</#list><!-- end apply --></table>
+</#if>
+
+    <table class="total" style="width: 100%;">
+<tr>
+   <td align="center" colspan="6"><p style="font-size: 1.2em;">${record.currency} ${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+	<td align="center" colspan="6"><p style="font-size: 1.2em;">סה"כ חשבוניות : </p></td>
+  	<td align="center" colspan="6"></td>
+  	<td align="center" colspan="6"></td>
+	</tr>
+</table>
+
+                  <#if record.memo != ''>
+                        <table style="width:100%;">
+      <tr>
+    <td align="right"><p style="font-size: 1.1em;">${record.memo} : הערות</p></td>
+
+      </tr>
+    </table>
+    </#if>
+         
+                       <table class="total" style="width: 100%;">
+	<tr>
+      	<td align="right">
+      	<br/><br/><br/>
+      	<p style="width: 100%; text-align:right;">${subsidiary.custrecord_vot_inv_hebrew_employee}</p>
+      </td>
+      
+      </tr>
+         </table> 
+    </#if>
+    
+    <#if record.custbody_layout_language = 'English'>
+<#if record.apply?has_content>
+
+<table class="linetb" style="width: 100%; margin-top: 10px;"><!-- start apply sublist --><#list record.apply as apply><#if apply_index==0>
+<thead>
+	<tr>
+
+	<th align="center" colspan="6">Invoice No.</th>
+	<th align="center" colspan="6">Invoice Date</th>
+	<th align="center" colspan="6">Details</th>
+	<th align="center" colspan="6">Amount</th>
+	</tr>
+</thead>
+</#if><tr>
+
+	<td align="center" colspan="6">${apply.refnum}</td>
+	<td align="center" colspan="6">${apply.applydate}</td>
+	<td align="center" colspan="6">${apply.memo}</td>
+ 	<td align="center" colspan="6">${record.currency} ${apply.due?string[",##0.00"]}</td>
+	</tr>
+	</#list><!-- end apply --></table>
+</#if>
+
+    <table class="total" style="width: 100%;">
+<tr>
+  	<td align="center" colspan="6"></td>
+  	<td align="center" colspan="6"></td>
+	<td align="center" colspan="6"><p style="font-size: 1.2em;">Total for Invoices : </p></td>
+	<td align="center" colspan="6"><p style="font-size: 1.2em;">${record.currency} ${(record.total  * total_exchange)?string[",##0.00"]}</p></td>
+	</tr>
+</table>
+
+                  <#if record.memo != ''>
+                        <table style="width:100%;">
+      <tr>
+    <td align="left"><p style="font-size: 1.1em;">Comments : ${record.memo}</p></td>
+
+      </tr>
+    </table>
+    </#if>
+         
+                       <table class="total" style="width: 100%;">
+	<tr>
+      	<td align="left">
+      	<br/><br/><br/>
+      	<p style="width: 100%; text-align:left;">${subsidiary.custrecord_vot_inv_english_employee}</p>
+      </td>
+      
+      </tr>
+         </table> 
+    </#if>
+     
+
+
+</body>
+</pdf>

@@ -1,0 +1,541 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+    <style type="text/css">
+        table {
+            table-layout: fixed;
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 9pt;
+            margin-top: 0px;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding-bottom: 3px;
+            padding-top: 2px;
+            padding-right: 6px;
+            padding-left: 6px;
+            background-color: #e2e2e2;
+            color: #444;
+        }
+
+        td {
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+        }
+
+        b {
+            font-weight: bold;
+            color: #444;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+        table.first td {
+            padding: 0px;
+            font-size: 7pt;
+        }
+
+        table.last td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+
+        table.lines {
+            border: 1px solid;
+        }
+
+            table.lines th {
+                padding-bottom: 10px;
+                padding-top: 2px;
+                background-color: #fff;
+                border: 1px solid;
+            }
+
+            table.lines td {
+                border: 1px solid;
+                padding: 2px;
+            }
+
+        table.summary {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+        
+           table.summary_india {
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        td.gen {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+                span.gen {
+            font-size: 10pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        td.header {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+
+    <macrolist>
+    <macro id="ilfooter">
+    <table>
+    <tr>
+    <#if  record.subsidiary == 'JFrog INC'>
+        <td width="100%"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Bank1.png" style="width:500px; height:280px" /></td>
+    </#if>
+    <#if  record.subsidiary == 'JFrog LTD'>
+        <td width="100%"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Bank2.png" style="width:540px; height:240px" /></td>
+    </#if>
+    <#if record.custbodyil_customer_lang == 'French (France)' && record.subsidiary == 'JFrog SAS'>
+        <td width="100%"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Bank3.png" style="width:600px; height:310px" /></td>
+    </#if>
+    <#if (record.custbodyil_customer_lang == 'English (US)'  || record.custbodyil_customer_lang == '') && record.subsidiary == 'JFrog SAS'>
+        <td width="100%"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Bank4.png" style="width:570px; height:310px" /></td>
+    </#if>
+
+    </tr>
+    <tr style="padding-top:10px">
+    <#if  record.subsidiary == 'JFrog INC'>
+        <td width="100%" align="center"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Footer1.png" style="width:500px; height:70px" /></td>
+    </#if>
+    <#if  record.subsidiary == 'JFrog LTD'>
+        <td width="100%"  align="center"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Footer2.png" style="width:500px; height:70px" /></td>
+    </#if>
+    <#if record.custbodyil_customer_lang == 'French (France)' && record.subsidiary == 'JFrog SAS'>
+        <td width="100%" align="center"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Footer3.png" style="width:610px; height:70px" /></td>
+    </#if>
+    <#if (record.custbodyil_customer_lang == 'English (US)'  || record.custbodyil_customer_lang == '') && record.subsidiary == 'JFrog SAS'>
+        <td width="100%" align="center"><img src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Footer4.png" style="width:580px; height:70px" /></td>
+    </#if>
+           <#if  record.subsidiary == 'Jfrog India'>
+        <td width="100%">	Kindly credit account no. 0713863009<br/>
+								favouring JFrog India Private Limited held at Citibank NA<br/>
+								DLF Capitol Point, Baba Kharak Singh Marg<br/>
+								Connaught Place, New Delhi -110001, India.<br/>
+								IFSC:CITI0000002<br/><br/>
+								CIN : U72900KA2017FTC107066<br/>
+								PAN : AAECJ0949G</td>
+    </#if>
+    </tr>
+    </table>
+    </macro>
+    </macrolist>
+</head>
+<body padding="0in 0.5in 0in 0.5in" footer="ilfooter"  footer-height="400px" size="A4">
+
+<#if record.subsidiary != 'Jfrog India'>
+<table border="0" cellpadding="0" class="first"><tr>
+	<td colspan="3" width="650px"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=1191&amp;c=4511400&amp;h=6f16b2979d7fa94df4af" style="width:650px; height:120px" /></td>
+ </tr>
+    <tr style="padding-top:-13px;">
+        <td style="font-size:12px;padding-left:2px;">
+            ${record.subsidiary}
+        </td>
+        <td></td>
+        
+        <td align="right" style="font-size:12px;">
+        <#if  record.subsidiary == 'JFrog LTD'>
+          <u>VAT: 514130491</u>
+        </#if>
+        <#if  record.subsidiary == 'JFrog INC'>
+          <u>FEIN: 33-1224916</u>
+        </#if>
+        <#if  record.subsidiary == 'JFrog SAS'>
+          <u>TVA: FR90810589838</u>
+        </#if>&nbsp;&nbsp;
+        </td>
+    </tr>
+	<tr>
+	<td class="header" align="center" colspan="3" style="margin-top:8px;">
+	         <#assign print_type = '- Original'> 
+       <#if record.custbody_ilo_org_printed>
+        <#assign print_type = '- Copy'> 
+      </#if>
+           <#if record.custbodyil_customer_lang == 'French (France)'>
+             FACTURE No.${record.tranid}
+             <#assign print_type = ''> 
+   	    <#else>
+                <#if  record.subsidiary == 'JFrog LTD' && record.billaddress?contains("Israel") >
+                 	    TAX INVOICE No.${record.tranid}
+   	            <#else>
+         	          INVOICE No.${record.tranid}
+                </#if>
+      </#if>
+
+
+	     ${print_type}
+	</td>
+	</tr>
+</table>
+
+<div>
+    <#assign print_license = 'T'> 
+ <#if record.item?has_content>
+  <#list record.item as item>
+    <#if item.custcol_ilo_jfrog_hide_license>
+    <#assign print_license = 'F'> 
+    </#if>
+	</#list><!-- end items -->
+        </#if>
+<table style="width:325px; float:left;">
+  	<tr>
+	<td class="gen"><span style="font-size:10pt;"><u> <#if record.custbodyil_customer_lang == 'French (France)'>Pour:<#else>Bill To:</#if></u></span></td>
+	<td class="gen"></td>
+	</tr>
+    <#if record.custbodyzuoraorigin?contains("ZUORA")>
+    <tr>
+    <td colspan="2" class="gen">${record.entity.altname}</td>
+    </tr>
+    </#if>
+    <tr>
+    <td colspan="2" class="gen">${record.billaddress}</td>
+    </tr>
+    <#if record.billaddress?contains("Israel") &&  record.entity.custentityil_tax_payer_id?has_content && record.entity.custentityil_tax_payer_id != '999999999'>
+    <tr style="padding-top:2px; padding-bottom:5px;">
+    <td class="gen" colspan="2" ><#if record.custbodyil_customer_lang == 'French (France)'> TVA #:<#else> VAT #:</#if> ${record.entity.custentityil_tax_payer_id}</td>
+    </tr>
+    <#elseif record.entity.custentityil_tax_payer_id?has_content && record.entity.custentityil_tax_payer_id != '999999999'>
+    <tr style="padding-top:2px; padding-bottom:5px;">
+    <td class="gen" colspan="2" ><#if record.custbodyil_customer_lang == 'French (France)'> TVA #:<#else> VAT #:</#if> ${record.entity.custentityil_tax_payer_id}</td>
+    </tr>
+    </#if>
+    <tr style="padding-bottom:5px;padding-top:10px;">
+    <td class="gen" colspan="2"><#if record.custbodyil_customer_lang == 'French (France)'> N° Compte Client: <#else> Customer #:</#if> ${record.entity}</td>
+    </tr>
+    <tr style="padding-top:15px;">
+    <td class="gen" colspan="2"><#if record.custbodyil_customer_lang == 'French (France)'> Contact:<#else> Attn:</#if>  ${record.custbody_ilo_contact_name} </td>
+    </tr>
+    <tr>
+    <td class="gen" colspan="2"><#if record.custbodyil_customer_lang == 'French (France)'> Phone #:<#else> Phone #:</#if> ${record.custbody_ilo_contact_phone}</td>
+    </tr>
+    <tr>
+    <td class="gen" colspan="2"><#if record.custbodyil_customer_lang == 'French (France)'> Email:<#else> Email:</#if> ${record.custbody_ilo_contact_email}</td>
+    </tr>
+</table>
+  <table style="width:300px; float:right; padding-top:5px; padding-left:5px; padding-right:5px;">
+    <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Date de Facture:<#else> Invoice Date:</#if> </td>
+    <td class="gen">${record.trandate?string("MMM, dd yyyy")}</td>
+    </tr>
+    <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Échéance:<#else><b> Due Date:</b></#if> </td>
+    <td class="gen">${record.duedate?string("MMM, dd yyyy")}</td>
+    </tr>
+          <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Réf. Commande:<#else> PO No:</#if> </td>
+    <td class="gen">${record.otherrefnum}</td>
+    </tr>
+    <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Titulaire de Licence:<#else> License Owner:</#if> </td>
+    <td class="gen">${record.custbody_ilo_license_owner}</td>
+    </tr>
+      <#if record.custbody_ilo_license_start?has_content && print_license == 'T' >
+    <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Début de Souscription: <#else> Subscription Start Date:</#if> </td>
+    <td class="gen">${record.custbody_ilo_license_start?string("MMM, dd yyyy")}</td>
+    </tr>
+      </#if>
+      <#if record.custbody_ilo_license_end?has_content && print_license == 'T'>
+    <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Fin de Souscription: <#else> Subscription End Date:</#if> </td>
+    <td class="gen">${record.custbody_ilo_license_end?string("MMM, dd yyyy")}</td>
+    </tr>
+        </#if>
+    <#if record.custbodyzuorareferencenumber?has_content>
+    <tr>
+    <td class="gen"><#if record.custbodyil_customer_lang == 'French (France)'> Zuora Reference Number: <#else> Zuora Reference Number:</#if> </td>
+    <td class="gen">${record.custbodyzuorareferencenumber}</td>
+    </tr>
+    </#if>
+      
+</table>
+
+</div>
+  <#assign usd_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'JFrog LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign usd_exchange = record.exchangerate> 
+     </#if>
+    </#if>
+    <#if  record.subsidiary == 'JFrog SAS'>
+   </#if>
+    <#if  record.subsidiary == 'JFrog INC'>
+    <#assign currency_text = 'USD'> 
+    <#assign total_exchange =  usd_exchange> 
+     <#assign currency_symbol = "$"> 
+   </#if>
+
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+      <#if  record.custbodyil_customer_lang == 'French (France)' >
+          <#setting locale="hu">
+     </#if>
+          
+    
+  <#if record.item?has_content>
+<table class="lines" style="width:680px"><!-- start items --> 
+  <#list record.item as item><#if item_index==0>
+<thead>
+	<tr>
+	<th colspan="12"><#if record.custbodyil_customer_lang == 'French (France)'> Désignation  <#else> Item Description</#if></th>
+	<th colspan="3"><#if record.custbodyil_customer_lang == 'French (France)'> Quantité  <#else> ${item.quantity@label}</#if></th>
+     <#if  record.subsidiary != 'JFrog SAS'>
+    <th colspan="4"><#if record.custbodyil_customer_lang == 'French (France)'> Montant($) <#else> Extentded Price(USD) </#if> </th>
+     </#if>
+    <#if  currency_text != 'USD'>
+    <th colspan="4"><#if record.custbodyil_customer_lang == 'French (France)'> Montant  <#else> Extentded Price</#if>(${currency_text})</th>
+    </#if>
+
+     <#if  currency_text == 'USD' && record.subsidiary == 'JFrog SAS'>
+    <th colspan="4"><#if record.custbodyil_customer_lang == 'French (France)'> Montant  <#else> Extentded Price</#if>(${currency_text})</th>
+    </#if>
+	</tr>
+</thead>
+</#if>
+	<tr>
+	<td colspan="12">${item.item} </td>
+	<td colspan="3" align="center">${item.quantity}</td>
+    <#if  record.subsidiary  != 'JFrog SAS'>
+        <td colspan="4" align="center">${(item.amount * usd_exchange)?string[",##0.00"]} $</td>
+    </#if>
+    <#if  currency_text != 'USD'>
+	<td colspan="4" align="center">${(item.amount * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </#if>
+
+     <#if  currency_text == 'USD' && record.subsidiary == 'JFrog SAS'>
+	<td colspan="4" align="center">${(item.amount * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </#if>
+</tr>
+	</#list><!-- end items -->
+</table>
+    </#if>
+    <table class="summary" style="padding-top:5px;width:660px;" align="right">
+	<tr>
+	<td align="left" colspan="4">${record.memo}</td>
+	<td align="right" width="100px"><b><#if record.custbodyil_customer_lang == 'French (France)'> Désignation  <#else> ${record.subtotal@label}</#if></b></td>
+	<td align="right" width="150px"><u><b>${(record.subtotal * total_exchange)?string[",##0.00"]} (${currency_text})</b></u></td>
+	</tr>
+    <#if record.taxtotal != 0>
+        <#if  record.subsidiary == 'JFrog LTD' || record.subsidiary == 'JFrog SAS'>
+        <tr>
+        <td colspan="4"></td>
+        <td align="right" width="100px"><b><#if record.custbodyil_customer_lang == 'French (France)'> TVA  <#else> VAT</#if></b></td>
+        <td align="right" width="120px"><u><b>${(record.taxtotal * total_exchange)?string[",##0.00"]}  (${currency_text})</b></u></td>
+        </tr>
+        <#else> 
+        <tr>
+        <td colspan="4"></td>
+        <td align="right" width="100px"><b>Tax Total</b></td>
+        <td align="right" width="120px"><u><b>${(record.taxtotal * total_exchange)?string[",##0.00"]}  (${currency_text})</b></u></td>
+        </tr>
+        </#if>
+    </#if>
+	<tr>
+	<td colspan="4"></td>
+	<td align="right" width="100px"><b><#if record.custbodyil_customer_lang == 'French (France)'> Total  <#else> ${record.total@label}</#if></b></td>
+	<td align="right" width="120px"><u><b>${(record.total * total_exchange)?string[",##0.00"]}  (${currency_text})</b></u></td>
+	</tr>
+</table>
+     </#if>
+     
+     <#if record.subsidiary == 'Jfrog India'>
+  <table border="0" cellpadding="0" class="first"><tr>
+	<td colspan="3" width="650px"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=1191&amp;c=4511400&amp;h=6f16b2979d7fa94df4af" style="width:650px; height:120px" /></td>
+ </tr>
+ 	<tr>
+	<td class="header" align="center" colspan="3" style="margin-top:8px; font-size: 12px">
+SUPPLY MEANT FOR EXPORT UNDER LETTER OF UNDERTAKING (LUT) WITHOUT PAYMENT OF IGST
+	</td>
+	</tr>
+</table>
+
+<div>
+    <#assign print_license = 'T'> 
+ <#if record.item?has_content>
+  <#list record.item as item>
+    <#if item.custcol_ilo_jfrog_hide_license>
+    <#assign print_license = 'F'> 
+    </#if>
+	</#list><!-- end items -->
+        </#if>        
+<table style="width:325px; float:left;">
+  	<tr>
+	<td  colspan="2" class="gen" ><span style="font-size:10pt;"><b>JFROG INDIA PRIVATE LIMITED</b></span></td>
+	<td class="gen"></td>
+	</tr>
+    <tr>
+    <td colspan="2" class="gen">No. 785 15th Cross 100 Feet Road<br/>
+							Sarakki, 1st Phase JP Nagar<br/>
+							Bengaluru<br/>
+							Karnataka, 560078<br/>
+							India<br/><br/>
+							GSTIN : 29AAECJ0949G1ZF
+    </td>
+    </tr>
+</table>
+
+  <table style="width:325px; float:right; padding-left:35px; padding-right:5px;">
+      	         <#assign print_type = 'Original'> 
+       <#if record.custbody_ilo_org_printed>
+        <#assign print_type = 'Duplicate'> 
+      </#if>
+    	<tr>
+	<td  colspan="2" class="gen" ><span style="font-size:10pt;"><b>Tax Invoice (${print_type}) </b></span></td>
+	<td class="gen"></td>
+	</tr>
+      <tr>
+    <td class="gen">Invoice Number:</td>
+    <td class="gen">
+
+    ${record.tranid}</td>
+    </tr>
+    <tr>
+    <td class="gen">Invoice Date:</td>
+    <td class="gen">${record.trandate?string("MMM, dd yyyy")}</td>
+    </tr>
+      
+</table>
+</div>
+<div>      
+<table style="width:325px; float:left;">
+  	<tr>
+	<td class="gen"><span style="font-size:10pt;"><u>Bill To:</u></span></td>
+	<td class="gen"></td>
+	</tr>
+    <tr style="padding-bottom:5px;padding-top:10px;">
+    <td class="gen" colspan="2">Customer : ${record.entity.accountnumber}</td>
+    </tr>
+        <tr style="padding-bottom:5px;">
+    <td class="gen" colspan="2">Address : ${record.billaddress}</td>
+    </tr>
+            <tr style="padding-bottom:5px;">
+    <td class="gen" colspan="2">Place of supply : ${record.entity.country}</td>
+    </tr>
+    <tr style="padding-top:15px;">
+    <td class="gen" colspan="2">Attention To: ${record.custbody_ilo_contact_name} </td>
+    </tr>
+
+</table>
+</div>
+
+  <#assign usd_exchange =  record.exchangerate> 
+  <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+ <#assign currency_text = record.currency> 
+     <#assign currency_symbol = record.currencysymbol> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    <#if  record.subsidiary == 'JFrog LTD'>
+    <#if  record.taxtotal != 0>
+        <#assign currency_text = 'ILS'> 
+        <#assign total_exchange = secondary_exchange > 
+        <#assign usd_exchange = record.exchangerate> 
+     </#if>
+    </#if>
+    <#if  record.subsidiary == 'JFrog SAS'>
+   </#if>
+    <#if  record.subsidiary == 'JFrog INC'>
+    <#assign currency_text = 'USD'> 
+    <#assign total_exchange =  usd_exchange> 
+     <#assign currency_symbol = "$"> 
+   </#if>
+
+     <#if  currency_text == 'ILS'>
+           <#assign currency_symbol = "ILS"> 
+     </#if>
+      <#if  record.custbodyil_customer_lang == 'French (France)' >
+          <#setting locale="hu">
+     </#if>
+          
+    
+  <#if record.item?has_content>
+<table class="lines" style="width:660px"><!-- start items --> 
+  <#list record.item as item><#if item_index==0>
+<thead>
+	<tr>
+	<th style="vertical-align:middle" colspan="2">Sr. No</th>
+	<th style="vertical-align:middle" colspan="12">Description</th>
+	<th style="vertical-align:middle"  colspan="4">Service<br/> Accounting<br/> Code</th>
+	<th style="vertical-align:middle" colspan="3">${item.quantity@label}</th>
+	<th style="vertical-align:middle" colspan="4">Unit Price</th>
+    <th style="vertical-align:middle" colspan="4">Value of Service</th>
+	</tr>
+</thead>
+</#if>
+	<tr>
+	<td colspan="2" align="center">${item_index +1} </td>
+	<td colspan="12">${item.description}</td>
+	<td colspan="4" align="center">${item.item.custitem_hsnsac_code_gst}</td>
+	<td colspan="3" align="center">${item.quantity}</td>
+	<td colspan="4" align="center">${item.rate}</td>
+	<td colspan="4" align="center">${item.amount}</td>
+</tr>
+	</#list><!-- end items -->
+</table>
+    </#if>
+    
+    
+    
+    <table class="summary_india" style="padding-top : 5px">
+	<tr>
+	<td align="left" colspan="4"></td>
+	<td align="right" width="150px"><b>Total (in figure)</b></td>
+	<td align="right" width="150px"><u><b>${record.subtotal?string[",##0.00"]} (${currency_text})</b></u></td>
+	</tr>
+	<tr>
+	<td align="left" colspan="4"></td>
+	<td align="right" width="100px"><b>Amount Due</b></td>
+	<td align="right" width="120px"><u><b>${record.total?string[",##0.00"]}  (${currency_text})</b></u></td>
+	</tr>
+	</table>
+	
+	
+	<#assign igstVal = (0.18 * record.total)>
+	    <table class="summary_india" style="padding-top : 5px; width: 640px" align="left">
+	<tr>
+	<td align="right" colspan="4"></td>
+	<td align="left" width="620px"><u><b>Summary of IGST</b></u><br/><br/>IGST 18% : <b>${igstVal?string[",##0.00"]} (${currency_text})</b>
+	</td>
+	</tr>
+	
+
+
+	</table>
+	
+
+     </#if>
+</body>
+</pdf>

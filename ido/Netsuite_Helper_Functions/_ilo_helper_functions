@@ -1,0 +1,131 @@
+/**
+ * Module Description
+ * 
+ * Version Date Author Remarks 1.00 08 May 2017 idor
+ * 
+ */
+
+function getSavedSearch(ss_id) {
+
+	var obj = {};
+
+	var search = nlapiLoadSearch(null, ss_id);
+
+	var allresults = [];
+	var resultObjs = [];
+	var resultArr = [];
+	var searchid = 0;
+	var resultset = search.runSearch();
+	var rs;
+
+	do {
+		var resultslice = resultset.getResults(searchid, searchid + 1000);
+		for (rs in resultslice) {
+
+			allresults.push(resultArr[resultslice[rs].id] = resultslice[rs]);
+			searchid++;
+		}
+	} while (resultslice.length >= 1000);
+
+	if (allresults != null) {
+		allresults.forEach(function(line) {
+
+			var cols = search.getColumns();
+
+			for (var i = 0; i < cols.length; i++) {
+
+				var colName = renameField(cols[i].name);
+
+				obj[colName] = line.getValue(cols[i]);
+			}
+
+			resultObjs.push(obj);
+
+		});
+
+	}
+	;
+
+	return resultObjs;
+
+
+
+function renameField(field) {
+
+	var check = /custrecord|custbody|custentity|custcol/.test(field);
+
+	if (check == true) {
+
+		field = field.split('_').pop();
+	}
+
+	return field;
+}
+
+// PolyFills
+
+if (!String.prototype.includes) {
+	String.prototype.includes = function(search, start) {
+		'use strict';
+		if (typeof start !== 'number') {
+			start = 0;
+		}
+
+		if (start + search.length > this.length) {
+			return false;
+		} else {
+			return this.indexOf(search, start) !== -1;
+		}
+	};
+}
+
+}
+
+var a = getSavedSearch('customsearch_ilo_numbering_saved_search');
+
+console.log(a);
+
+
+function getDateFormat() {
+
+	var whatFormat;
+	var dateFormat;
+	var dateMMDD = '3/31/17';
+
+	var check = nlapiStringToDate(dateMMDD);
+
+	whatFormat = isNaN(check);
+
+	if (whatFormat == true) {
+
+		dateFormat = 'MMDDYY'
+
+		return dateFormat;
+	} else {
+		dateFormat = 'DDMMYY';
+
+		return dateFormat;
+	}
+}
+
+var a = getDateFormat();
+console.log(a)
+
+
+function massDeleteRec(record) {
+	
+	var toDelete = [];
+	var search = nlapiSearchRecord(record, null, null, null);
+
+	for (var i = 0; i < search.length; i++) {
+
+	  toDelete.push(search[i].id);
+	}
+
+	for (var x = 0; x < toDelete.length; x++) {
+
+	  nlapiDeleteRecord(record, parseInt(toDelete[x]));
+
+	}
+		
+};

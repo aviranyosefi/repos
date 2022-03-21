@@ -1,0 +1,28 @@
+
+
+<table style="position: absolute;overflow: hidden;left: 36pt;top: 90pt;width: 436pt;">
+
+  <#if check.apply?has_content>
+      <tr>
+        <td>&nbsp;</td>
+        <td>Date Due</td>
+        <td>Type</td>
+        <td>Ref No.</td>
+        <td>Orig. Amt.</td>
+        <td>Amt. Due</td>
+        <td>Currency</td>
+      </tr>
+    <#list check.apply as apply>
+      <tr>
+        <td>&nbsp;</td>
+        <td>${apply.applydate}</td>
+        <td>${apply.type}</td>
+        <td>${apply.refnum}</td>
+        <td>${apply.total}</td>
+        <td>${apply.due}</td>
+        <td>${apply.currency}</td>                  
+      </tr>
+      </#list>
+    </#if>
+
+</table>

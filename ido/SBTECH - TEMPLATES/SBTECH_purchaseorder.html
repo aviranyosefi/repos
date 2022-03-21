@@ -1,0 +1,301 @@
+<!--?xml version="1.0" ?-->
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+		<link name="verdana" type="font" subtype="opentype" src="${nsfont.verdana}" src-bold="${nsfont.verdana_bold}" bytes="2" />
+
+	
+	<style type="text/css">
+
+        b {
+            color: #444;
+            font-weight: bold;
+        }
+
+        table {
+            margin-top: 10px;
+             font-family: verdana;
+            font-size: 9pt;
+            table-layout: fixed;
+            width: 90%;
+        }
+
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            <#if record.subsidiary == 'TG Marketing'> background-color: #32338A;
+           </#if> <#if record.subsidiary == 'SBTECH (GLOBAL) LIMITED' || record.subsidiary == 'GamingTech LTD' || record.subsidiary == 'SBTECH Global limited Subsidiary Bulgaria'> background-color: #f6921e;
+            </#if> <#if record.subsidiary == 'SBTech Malta'> background-color: #f6921e; 
+        	</#if> <#if record.subsidiary == 'Sky Star Eight Limited'> background-color: #32338A;
+            </#if> vertical-align: middle;
+            padding-top: 5px;
+            padding-right: 6px;
+            padding-left: 10px;
+            padding-bottom: 3px;
+            color: #fff;
+            height: 40px;
+        }
+
+        td {
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-right: 6px;
+            padding-left: 10px;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+        .footer {
+            background-color: #F1F1F2;
+            width: 100%;
+            font-size: 14px;
+            padding: 50px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin: 0px;
+        }
+
+        .header {
+            width: 100%;
+            padding: 0px 50px;
+            margin-top: -10px;
+            background-color: #F1F1F2;
+        }
+
+
+        table.linetb th {
+        }
+
+        table.linetb td {
+            background-color: #F1F1F2;
+            color: #808080;
+            border: 1px solid #fff;
+        }
+
+        td.default {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        table.total {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        span.desc {
+            font-weight: bold;
+            line-height: 150%;
+        }
+
+        hr {
+            height: 1px;
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+        }
+
+        .title {
+            color: #6D6E70;
+            font-size: 10px !important;
+        }
+
+        .maintitle {
+            <#if record.subsidiary == 'TG Marketing'> color: #32338A;
+            </#if> <#if record.subsidiary == 'SBTECH (GLOBAL) LIMITED' || record.subsidiary == 'GamingTech LTD' || record.subsidiary == 'SBTECH Global limited Subsidiary Bulgaria'> color: #f6921e;
+            </#if> <#if record.subsidiary == 'SBTech Malta'> color: #f6921e;
+            </#if> <#if record.subsidiary == 'Sky Star Eight Limited'> color: #32338A;
+            </#if>;
+        }
+
+        .maintext {
+            font-size: 20px;
+        }
+    </style>
+
+    <macrolist>  	
+        <macro id="nlheader">
+        <table border="0" cellpadding="0" class="header">
+            <tr>
+                <#if  record.subsidiary == 'GamingTech LTD'>
+                <td width="700px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=2804&amp;c=4753085&amp;h=f3c9a240bb17809d1f37" style="width:650px; height:120px" /></td>
+                </#if>
+                <#if  record.subsidiary == 'TG Marketing'>
+                <td width="700px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=4050&amp;c=4753085&amp;h=3f67468f9484d5c6f155" style="width:650px; height:120px" /></td>
+                </#if>
+                <#if  record.subsidiary == 'SBTECH (GLOBAL) LIMITED'>
+                <td width="700px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=2348&amp;c=4753085&amp;h=49de70bcff4feec03e4d" style="width:650px; height:120px" /></td>
+                </#if>
+                <#if  record.subsidiary == 'SBTech Malta'>
+                <td width="700px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=2349&amp;c=4753085&amp;h=c1c5c82e580e15402e5b" style="width:650px; height:120px" /></td>               
+                </#if>
+                  <#if  record.subsidiary == 'Sky Star Eight Limited'>
+                <td width="700px" align="center"><img src="https://system.eu2.netsuite.com/core/media/media.nl?id=5795&amp;c=4753085&amp;h=e22596ff19cf58596fb3" style="width:650px; height:120px" /></td>               
+                </#if>
+                <#if record.subsidiary == 'SBTECH Global limited Subsidiary Bulgaria'>
+                <td width="700px" align="center"><img src="https://system.eu1.netsuite.com/core/media/media.nl?id=2348&amp;c=4753085_SB1&amp;h=4464e6cb977becab63a2" style="width:650px; height:120px" /></td>               
+                </#if>
+            </tr>
+        </table>
+        </macro>     
+    </macrolist>
+</head>
+<body padding="25px" margin="20px" size="A4" footer="nlfooter" footer-height="120px"  header="nlheader" header-height="130px">
+
+    <table style="width:100%;">
+    <tr>
+        <td class="maintitle maintext" style="width:130px">PURCHASE ORDER</td>
+        <td ><span class="title"  align="center" >No.</span> <span class="maintext"> ${record.tranid} </span> </td>
+        <td class="title" align="right" >Total <span class="maintitle maintext"> &nbsp;&nbsp;${record.total?remove_ending(".")}</span></td>
+    </tr>
+    </table>
+        <hr  class="title"/>
+    <table style="width:650px;">
+    <tr>
+    <td class="title" colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif;">TO: <br /><span ><b> ${record.entity.companyname}</b><br /></span></td>
+    <td class="title" colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif;">BILL TO: <br /><span ><b> ${record.billaddress}</b><br /></span></td>
+    <td class="title"  align="right" style="padding-top: 3px;width:120px" rowspan="2">
+
+    		P.O. NUMBER: <br />
+            DATE: <br />
+            PAYMENT TERMS: <br />
+            CURRENCY: <br />
+            REQUESTER:  <br />
+            
+    </td>
+            <td class="title" align="right" style="padding-top: 3px; width:100px; color:#333 !important" rowspan="2">
+               
+            ${record.tranid}<br />
+            ${record.trandate?string("dd.MM.yyyy")}<br />
+     		${record.terms} <br />
+            ${record.currency} <br />
+            ${record.employee?string?replace('[0-9]','','r')} <br />
+            
+    </td>
+    </tr>
+
+    </table>
+
+    <#assign primarycur_exchange =  record.exchangerate> 
+    <#assign secondary_exchange = 1> 
+    <#assign total_exchange = 1> 
+    <#assign currency_text = record.currency> 
+        <#assign currency_symbol = record.currency> 
+    <#if record.accountingbookdetail?has_content>
+    <#list record.accountingbookdetail as abd>
+    <#assign secondary_exchange = abd.exchangerate> 
+    </#list>
+    </#if>
+    
+<#assign vatPercent = '0.00'>
+<#list record.item as item>
+<#if ((item.taxrate1?replace('%','')?string?number > 0) && (item.taxrate1?string?replace('%','')?number > vatPercent?string?number))>
+<#assign vatPercent = item.taxrate1?replace('%','')>
+</#if>
+</#list>
+                                                         
+
+    
+    <#if record.item?has_content>
+    <table  style="width:650px" class="linetb"><!-- start items -->
+    <#list record.item as item><#if item_index==0>
+    <thead>
+    <tr>
+
+	
+	  <th colspan="6"><p style="width: 100%; text-align:center;">Item</p></th>   
+      <th colspan="10"><p style="width: 100%; text-align:center;">Description</p></th>   
+      <th colspan="6"><p style="width: 100%; text-align:center;">Location</p></th>
+      <th colspan="2"><p style="width: 100%; text-align:center;">Qty</p></th> 
+      <th colspan="6"><p style="width: 100%; text-align:center;">Rate</p></th> 
+      <th colspan="6"><p style="width: 100%; text-align:center;">Line Amount</p></th> 
+
+    </tr>
+    </thead>
+    </#if>
+    <tr>
+
+	  <td colspan="6"><p style="width: 100%; text-align:left;">${item.item}</p></td>   
+      <td colspan="10"><p style="width: 100%; text-align:left;">${item.description}</p></td>   
+      <td colspan="6"><p style="width: 100%; text-align:left;">${item.custcol_cseg1}</p></td>
+      <td colspan="2"><p style="width: 100%; text-align:center;">${item.quantity}</p></td> 
+      <td colspan="6"><p style="width: 100%; text-align:center;">${item.rate?remove_ending(".")}</p></td> 
+      <td colspan="6"><p style="width: 100%; text-align:center;">${item.amount?remove_ending(".")}</p></td> 
+    </tr>
+    </#list><!-- end items -->
+
+
+    </#if>
+       <tr style="border-top: 1px solid black">
+    <td rowspan="3" colspan="24" style="background-color:#fff;">
+     <!--    <#if record.entity.custentity_sbtech_eu_vat_comment != ''>
+         <br />
+        * Services subject reverse charge - VAT to be<br />
+        accounted for by the recipient as per article 196 of<br />
+        Council Directive 2006/112/EC<br />
+        </#if>   -->   
+    </td>
+    <td  colspan="6" align="center" >Sub Total</td>
+    <td  colspan="6" align="center" >${(record.subtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+
+    <tr>
+    <#if vatPercent?string = '0.00'>
+    <#assign vatPercent = '0'>
+    </#if>
+    <td  colspan="6" align="center">VAT ${vatPercent}%</td>
+    <td  colspan="6" align="center">${(record.taxtotal  * total_exchange)?string[",##0.00"]} ${currency_symbol}</td>
+    </tr>
+    <#if record.taxtotal != 0 && currency_symbol != 'GBP' && record.subsidiary == 'SBTECH (GLOBAL) LIMITED'>
+        <tr>
+    <td colspan="6" align="center">VAT ${vatPercent} (GBP)</td>
+    <td colspan="5" align="center">${(record.taxtotal  * secondary_exchange)?string[",##0.00"]} GBP</td>
+    </tr>
+    </#if>
+	<tr>
+	    <#if record.taxtotal != 0 && currency_symbol != 'GBP' && record.subsidiary == 'SBTECH (GLOBAL) LIMITED'>
+	    <td rowspan="3" colspan="16" style="background-color:#fff;"></td>
+	        </#if>
+    <th  colspan="6" align="center" style="font-size: 10pt">Total</th>
+    <th  colspan="6" align="center" style="font-size: 9pt">${(record.total  * total_exchange)?string[",##0.00"]} ${currency_symbol}</th>
+    </tr>
+
+    </table>
+
+
+         <#if record.memo != ''>
+                       <table style="width:100%; color: #808080;">
+      <tr>
+    <td align="left">${record.memo}</td>
+
+      </tr>
+    </table>
+     </#if>
+         
+                       <table class="total" style="width: 100%;">
+	<tr>
+      	<td align="left"  style="width: 100%; color: #808080;">
+      	<br/><br/><br/>
+     ${subsidiary.custrecord_po_terms_and_conditions}
+      </td>
+      
+      </tr>
+         </table> 
+
+</body>
+</pdf>

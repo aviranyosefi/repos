@@ -277,7 +277,7 @@ define(['N/sftp', 'N/file', 'N/log', 'N/search', '../Common/NCS.Lib.Common', 'N/
             //	}
         }
 
-        function DownloadFile(connection, fileName, integId , folder) {
+        function DownloadFile(connection, fileName, integId, folder) {
             try {
                 if (!common.isNullOrEmpty(integId)) {
                     if (common.isNullOrEmpty(folder)) {
@@ -322,7 +322,7 @@ define(['N/sftp', 'N/file', 'N/log', 'N/search', '../Common/NCS.Lib.Common', 'N/
                     if (data[28] == '') { key = '1' }
                     else { key = GetCurrencyKey(data[28]) }
 
-                    var isManager = false ;
+                    var isManager = false;
                     if (data[35] == 'Yes') {
                         isManager = true
                     }
@@ -332,7 +332,7 @@ define(['N/sftp', 'N/file', 'N/log', 'N/search', '../Common/NCS.Lib.Common', 'N/
                         var parts = date.split(/\-|T/g);
                         var terminated_date = parts[1] + '/' + parts[2] + '/' + parts[0];
                     }
-                        
+
 
                     var tempEmp = {
                         subsidiary: data[0],
@@ -758,7 +758,6 @@ define(['N/sftp', 'N/file', 'N/log', 'N/search', '../Common/NCS.Lib.Common', 'N/
 
             return key;
         }
-       
 
         return {
             GetSftpConnection: GetSftpConnection,

@@ -37,7 +37,7 @@ function fieldChange(type, name, linenum) {
         var customer = nlapiGetFieldValue('custpage_customer');
         var action = nlapiGetFieldValue('custpage_action');
         var status = nlapiGetFieldValue('custpage_status');
-        if (!isNullOrEmpty(action) ) {
+        if (!isNullOrEmpty(action) && !isNullOrEmpty(customer) ) {
             if (action == 1) { // עריכת הסכם
                 var field = 'custpage_agr'
                 nlapiSetFieldMandatory(field, true)
@@ -182,14 +182,15 @@ function fnExcelReport() {
 }
 function customer_agr(customer,status) {
 
+    var screenType = nlapiGetFieldValue('custpage_screen_type')
     var columns = new Array();
     columns[0] = new nlobjSearchColumn('name');
 
     var filters = new Array();
-    filters[0] = new nlobjSearchFilter('custrecord_agr_customer', null, 'is', customer)
+    filters[0] = new nlobjSearchFilter('custrecord_agr_customer', null, 'anyof', customer)
     filters[1] = new nlobjSearchFilter('isinactive', null, 'is', 'F')
     filters[2] = new nlobjSearchFilter('custrecord_agr_status', null, 'anyof', status)
-    filters[3] = new nlobjSearchFilter('custrecord_agr_type', null, 'anyof', 1) // שירות
+    filters[3] = new nlobjSearchFilter('custrecord_agr_type', null, 'anyof', screenType) 
 
     var search = nlapiCreateSearch('customrecord_agr', filters, columns);
 

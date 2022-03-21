@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+<link name="sans-serif" type="font" subtype="truetype" src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+ <style type="text/css">
+        table {
+            table-layout: fixed;
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 9pt;
+            margin-top: 0px;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding-bottom: 3px;
+            padding-top: 2px;
+            padding-right: 6px;
+            padding-left: 6px;
+            background-color: #e2e2e2;
+            color: #444;
+        }
+
+        td {
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+            font-size: 14px;
+        }
+
+        b {
+            font-weight: bold;
+            color: #444;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+        table.first td {
+            padding: 0px;
+            font-size: 7pt;
+        }
+
+        table.last td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+
+        table.lines {
+            border: 0px solid;
+            
+        }
+
+            table.lines th {
+                padding-bottom: 10px;
+                padding-top: 2px;
+                background-color: #fff;
+                border: 0px solid;
+            }
+
+            table.lines td {
+                border: 0px solid;
+                padding: 4px;
+            }
+
+        table.summary {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        td.gen {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        td.header {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+                table.linetb {
+            border: 1px solid;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        table.header td {
+            font-size: 7pt;
+            padding: 0px;
+        }
+
+        table.footer td {
+            font-size: 8pt;
+            padding: 0px;
+        }
+
+
+        table.linetb th {
+            background-color: #fff;
+            border: 1px solid;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            color: black;
+            
+        }
+
+        table.linetb td {
+            border: 1px solid;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body padding="0.5in 0.5in 0.5in 0.5in" size="A4">
+
+  <table class="lines" style="width:100%">
+    	<tr>
+	<td colspan="12" align="center" style="font-size:24px;">בדיקת רצף מספור</td>
+		</tr>
+		    	<tr>
+	<td colspan="12" align="center" style="font-size:24px;">{{_TODAYSDATE}}</td>
+		</tr>
+</table>
+<br/>
+<br/>
+  <table class="lines" align="center" style="width:50%; font-size:12px;">
+	<tr>
+	<td colspan="6" align="left">{{_COMPANYNAME}}</td>
+	<td colspan="6" align="right">שם החברה : </td>
+</tr>
+	<tr>
+	<td colspan="6" align="left">{{_TAXPAYERID}}</td>
+	<td colspan="6" align="right">מס ח.פ : </td>
+</tr>
+    	<tr>
+    <td colspan="6" align="left">{{_TIKNIKUIM}}</td>
+	<td colspan="6" align="right">מס תיק ניכויים : </td>
+</tr>
+    	<tr>
+	<td colspan="6" align="left">{{_TRANTYPE}}</td>
+	<td colspan="6" align="right">ישות :</td>
+</tr>
+
+    	<tr>
+	<td colspan="8" align="left" style="text-align: right; font-size: 14px;">{{_RESULTS}}</td>
+	<td colspan="4" align="right">תוצאות :</td>
+</tr>
+</table>
+<br/>
+<br/>
+
+</body>
+</pdf>
