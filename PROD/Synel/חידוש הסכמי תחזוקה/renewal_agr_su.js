@@ -72,6 +72,13 @@
         };
         nlapiScheduleScript('customscript_renewal_agr_ss', null, params);
         if (action == 3 || action == 2) {
+            var count = data.length
+            if (action == 3) {
+                var preCount = nlapiLookupField('customrecord_agreement', RedirecAgr, 'custrecord_total_lines_agr');
+                preCount = Number(preCount);
+                count = count + preCount
+            }
+            nlapiSubmitField('customrecord_agreement', RedirecAgr, 'custrecord_total_lines_agr', count)
             nlapiSetRedirectURL('record', 'customrecord_agreement', RedirecAgr, 'view', null);
         }
         else {
@@ -290,7 +297,8 @@
                 subList.addField('custpage_war_end_date', 'text', 'WARRANTY END DATE');  
                 subList.addField('custpage_agreement_id', 'text', 'Agreement').setDisplayType('hidden');
                 subList.addField('custpage_agr_line_id', 'text', 'AGREEMENT LINE').setDisplayType('hidden');
-
+                subList.addField('custpage_agr_line_new_agr', 'text', 'New Agreement').setDisplayType('hidden');
+                
                 for (var i = 0; i < results.length; i++) {
                     subList.setLineItemValue('custpage_process', i + 1, 'T');
                     subList.setLineItemValue('custpage_update', i + 1, 'T');
@@ -307,6 +315,7 @@
                     subList.setLineItemValue('custpage_masav', i + 1, results[i].masav);
                     subList.setLineItemValue('custpage_print_comment', i + 1, results[i].print_comment);
                     subList.setLineItemValue('custpage_installment_date', i + 1, results[i].installment_date);
+                    subList.setLineItemValue('custpage_agr_line_new_agr', i + 1, results[i].agr_line_new_agr);
                     
                 }
             }
@@ -369,6 +378,10 @@ function getAgreementLines(action_data, agr_data, employee_line_data, customer_d
                 masav: s[i].getValue('custrecord_agr_line_sn_searchable'),
                 print_comment: s[i].getValue("custrecord_agr_line_print_comments"),
                 installment_date: s[i].getValue("custrecord_agr_line_installment_date"),
+                agr_line_new_agr: s[i].getValue("custrecord_agr_line_new_agr"),
+                
+
+
             });
         }                  
     }

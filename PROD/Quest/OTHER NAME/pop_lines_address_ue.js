@@ -14,12 +14,20 @@ define([],
                         if (!isNullOrEmpty(end_customer)) {
                             var lineCount = rec.getLineCount({ sublistId: 'item' });
                             for (var i = 0; i < lineCount; i++) {
-                                rec.setSublistValue({
+                                var item_display = rec.getSublistValue({
                                     sublistId: 'item',
-                                    fieldId: 'custcol_end_customer',
+                                    fieldId: 'item_display',
                                     line: i,
-                                    value: end_customer
                                 });
+                                if (item_display != 'End of Group') {
+                                    rec.setSublistValue({
+                                        sublistId: 'item',
+                                        fieldId: 'custcol_end_customer',
+                                        line: i,
+                                        value: end_customer
+                                    });
+
+                                }                                                        
                             }
                         }                       
                     }

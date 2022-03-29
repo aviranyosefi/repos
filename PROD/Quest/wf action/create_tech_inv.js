@@ -11,25 +11,26 @@
 
         var entity = rec.getFieldValue('company');
         var product_line = rec.getFieldValue('custevent_dangot_product_line');
-        var replacement_type = rec.getFieldValue('custevent_replacement_type');
+        //var replacement_type = rec.getFieldValue('custevent_replacement_type');
         var itemList = [];
-        if (replacement_type == 5) // חלקי חילוף
-        {
-            itemList = getSparParts(recID)
-        }
-        else if (replacement_type == 1) {// קבוע
-            var replacing_same_item = rec.getFieldValue('custevent_dangot_replacing_same_item');
-            if (replacing_same_item == 1) { // YES
-                var item = rec.getFieldValue('custevent_dangot_item')
-            }
-            else if (replacing_same_item == 2) { // NO
-                var item = rec.getFieldValue('custevent_replacing_item')
-            }
-            itemList.push({
-                item: item,
-                qty: 1,
-            });
-        }
+        itemList = getSparParts(recID)
+        //if (replacement_type == 5) // חלקי חילוף
+        //{
+        //    itemList = getSparParts(recID)
+        //}
+        //else if (replacement_type == 1) {// קבוע
+        //    var replacing_same_item = rec.getFieldValue('custevent_dangot_replacing_same_item');
+        //    if (replacing_same_item == 1) { // YES
+        //        var item = rec.getFieldValue('custevent_dangot_item')
+        //    }
+        //    else if (replacing_same_item == 2) { // NO
+        //        var item = rec.getFieldValue('custevent_replacing_item')
+        //    }
+        //    itemList.push({
+        //        item: item,
+        //        qty: 1,
+        //    });
+        //}
         var data = [];
         data.push({
             entity: entity,
@@ -37,7 +38,7 @@
             location: location,
             caseID: recID,
             itemList: itemList,
-            replacement_type: replacement_type
+           
         });
         nlapiLogExecution('DEBUG', 'data: ' + data.length, JSON.stringify(data));
         var id = createTech(data);
@@ -59,7 +60,7 @@ function createTech(data) {
         rec.setFieldValue('custbody_related_support_case', data[0].caseID);
         rec.setFieldValue('location', data[0].location);
         rec.setFieldValue('department', 21);
-        rec.setFieldValue('custbody_dangot_replacement_type', data[0].replacement_type);
+        //rec.setFieldValue('custbody_dangot_replacement_type', data[0].replacement_type);
         try {
             var itemList = data[0].itemList
             for (var i = 0; i < itemList.length; i++) {
@@ -68,7 +69,9 @@ function createTech(data) {
                 rec.setCurrentLineItemValue('item', 'item', itemList[i].item);
                 rec.setCurrentLineItemValue('item', 'quantity', itemList[i].qty)
                 rec.setCurrentLineItemValue('item', 'rate', '0');
-
+                rec.setCurrentLineItemValue('item', 'custcol_action_type', itemList[i].action_type)
+                rec.setCurrentLineItemValue('item', 'custcol_inventory_report_id', itemList[i].id) 
+                rec.setCurrentLineItemValue('item', 'location', data[0].location) 
                 if (itemList[i].serial != '') {
                     var inventorydetailrecord = rec.createCurrentLineItemSubrecord('item', 'inventorydetail');
                     inventorydetailrecord.selectNewLineItem('inventoryassignment');
@@ -80,7 +83,7 @@ function createTech(data) {
                 rec.commitLineItem('item');
             }
         } catch (err) {
-            nlapiLogExecution('DEBUG', 'error createTech - lines', err);
+            nlapiLogExecution('DEBUG', 'error createTech - lines - line ' + i, err);
         }
         var id = nlapiSubmitRecord(rec, false, true);
         nlapiLogExecution('debug', 'tech id: ', id);
@@ -107,12 +110,13 @@ function isNullOrEmpty(val) {
 function getSparParts(caseID) {
 
     var columns = new Array();
-    columns.push(new nlobjSearchColumn('custrecord_spare_part_item'));
+    columns.push(new nlobjSearchColumn('custrecord_issued_item'));
     columns.push(new nlobjSearchColumn('custrecord_spare_part_qty'));
     columns.push(new nlobjSearchColumn('custrecord_sp_serial_number'));
+    columns.push(new nlobjSearchColumn('custrecord_sp_action_type'));
 
     var filters = new Array();
-    filters[0] = new nlobjSearchFilter('custrecord_related_case', null, 'anyof', caseID)
+    filters[0] = new nlobjSearchFilter('custrecord_sp_related_case', null, 'anyof', caseID)
     filters[1] = new nlobjSearchFilter('custrecord_sp_incorrect_reporting', null, 'is', 'F')
 
     var search = nlapiCreateSearch('customrecord_spare_parts', filters, columns);
@@ -132,9 +136,11 @@ function getSparParts(caseID) {
 
     for (var i = 0; i < s.length; i++) {
         results.push({
-            item: s[i].getValue('custrecord_spare_part_item'),
+            id: s[i].id,
+            item: s[i].getValue('custrecord_issued_item'),
             qty: s[i].getValue('custrecord_spare_part_qty'),
-            serial: s[i].getValue('custrecord_sp_serial_number')
+            serial: s[i].getValue('custrecord_sp_serial_number'),
+            action_type: s[i].getValue('custrecord_sp_action_type')
         });
     }
     return results;

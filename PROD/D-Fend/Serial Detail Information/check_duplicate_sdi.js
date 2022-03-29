@@ -30,6 +30,7 @@ function getSdi(item, serial ) {
     var filters = new Array();
     filters[0] = new nlobjSearchFilter('custrecord_sd_item', null, 'anyof', item)
     filters[1] = new nlobjSearchFilter('custrecord_sd_serial_number', null, 'is', serial)
+    filters[2] = new nlobjSearchFilter('isinactive', null, 'is', 'F')
 
     var columns = new Array();
     columns[0] = new nlobjSearchColumn('name');

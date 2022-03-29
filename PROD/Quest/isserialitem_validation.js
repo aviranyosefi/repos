@@ -9,9 +9,9 @@ define(['N/search'],
             debugger;
             var rec = scriptContext.currentRecord;
             var name = scriptContext.fieldId;
-            if (name == 'custrecord_spare_part_item') {
+            if (name == 'custrecord_issued_item') {
                 var isserialitem = false;
-                var item = rec.getValue({ fieldId: 'custrecord_spare_part_item' });
+                var item = rec.getValue({ fieldId: 'custrecord_issued_item' });
                 if (!isNullOrEmpty(item)) {
                     var fieldLookUp = search.lookupFields({ type: 'item', id: item, columns: ['isserialitem'] });
                     isserialitem = fieldLookUp.isserialitem;

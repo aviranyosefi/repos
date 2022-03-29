@@ -54,8 +54,21 @@ function pageLoad() {
         nlapiGetField('custpage_percent').setDisplayType('normal');
         nlapiGetField('custpage_agr_target').setDisplayType('normal');
         nlapiSetFieldMandatory('custpage_agr_target', true)
-        calcTotalReneual()
+        calcTotalReneual();
+        debugger;
+        for (var i = 1; i <= lines; i++) {
+            var agreement_id = nlapiGetLineItemValue('custpage_res_sublist', 'custpage_agr_line_new_agr', i)
+            var targetAgr = nlapiGetFieldValue('custpage_agr_target')
+            if (agreement_id == targetAgr) {
+                //nlapiSetLineItemValue('custpage_res_sublist', 'custpage_process', i, 'F')
+                nlapiSelectLineItem('custpage_res_sublist', i)
+                nlapiSetCurrentLineItemValue('custpage_res_sublist', 'custpage_process', 'F');
+                nlapiCommitLineItem('custpage_res_sublist');
+                nlapiSetLineItemDisabled('custpage_res_sublist', 'custpage_process', true, i)     
+            }
+        }
     }
+
 }
 function save() {
     var action = nlapiGetFieldValue('custpage_action')

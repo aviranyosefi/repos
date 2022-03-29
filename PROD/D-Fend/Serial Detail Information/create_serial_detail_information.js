@@ -5,6 +5,7 @@ var user = context.user;
 var so_type = '';
 var today = nlapiDateToString(new Date());
 var pdList = [];
+var sublist;
 function create_serial_detail_information(type) {
     try {
         if (type != 'delete') {
@@ -12,7 +13,9 @@ function create_serial_detail_information(type) {
             var Recid = nlapiGetRecordId()
             nlapiLogExecution('debug', ' typeRecord ' + typeRecord, 'Recid ' + Recid);
             var rec = nlapiLoadRecord(typeRecord, Recid);
-            var itemCount = rec.getLineItemCount('item');
+            sublist = 'item';
+            if (typeRecord == 'inventoryadjustment') { sublist = 'inventory'}
+            var itemCount = rec.getLineItemCount(sublist);
             var data = [];
             var create = true;
             if (itemCount > 0) {
@@ -20,12 +23,11 @@ function create_serial_detail_information(type) {
                 var trandate = rec.getFieldValue('trandate');
                 var vendorOrCustomer = rec.getFieldValue('entity');
                 for (var i = 1; i <= itemCount; i++) {                   
-                    //var manage_sw_version = nlapiLookupField('item', item, 'custitemcustitem_manage_sw_version')
-                    var isserial = rec.getLineItemValue('item', 'isserial', i);
+                    var isserial = rec.getLineItemValue(sublist, 'isserial', i);
                     if (isserial == 'T') {
-                        var item = rec.getLineItemValue('item', 'item', i);
+                        var item = rec.getLineItemValue(sublist, 'item', i);
                         subrecord = "";
-                        subrecord = rec.viewLineItemSubrecord('item', 'inventorydetail', i);
+                        subrecord = rec.viewLineItemSubrecord(sublist, 'inventorydetail', i);
                         if (subrecord != "" && subrecord != null) {
                             //nlapiLogExecution('debug', ' subrecord', subrecord.id);
                             var invDetailID = subrecord.id;
@@ -33,9 +35,9 @@ function create_serial_detail_information(type) {
                                 var serials = getInventoryDetails(invDetailID);
                                 if (serials != null) {
                                     nlapiLogExecution('debug', ' serials.length ' + serials.length, JSON.stringify(serials));
-                                    var description = rec.getLineItemValue('item', 'itemdescription', i);
-                                    var location = rec.getLineItemValue('item', 'location', i);
-                                    rec.setLineItemValue('item', 'custcol_invserials', i, serial_string)
+                                    var description = rec.getLineItemValue(sublist, 'itemdescription', i);
+                                    var location = rec.getLineItemValue(sublist, 'location', i);
+                                    rec.setLineItemValue(sublist, 'custcol_invserials', i, serial_string)
                                     if (typeRecord == 'itemfulfillment') {
                                         var serialnumber = '';
                                         if (ordertype == "SalesOrd") {
@@ -56,7 +58,7 @@ function create_serial_detail_information(type) {
                                     }
                                     //nlapiLogExecution('debug', ' serialnumber', serialnumber);
                                     for (var j = 0; j < serials.length; j++) {
-                                        if (typeRecord == 'itemreceipt') {
+                                        if (typeRecord == 'itemreceipt' || typeRecord == 'inventoryadjustment' ) {
                                             create = true;
                                             var pd_id = '';
                                             if (res[serials[j]] != null) {
@@ -65,12 +67,15 @@ function create_serial_detail_information(type) {
                                                     if (resData[t].item == item) {
                                                         create = false;
                                                         pd_id = resData[t].id
-                                                        pdList.push(pd_id);
+                                                        pdList.push(pd_id); 
+                                                        if (typeRecord == 'inventoryadjustment') {
+                                                            var adjustqtyby = rec.getLineItemValue(sublist, 'adjustqtyby', line);
+                                                            if (Number(adjustqtyby) < 0) { setInactive(pd_id); }
+                                                        }
                                                         break;
                                                     }
                                                 }
-
-                                            }
+                                            }                                          
                                             if (create) {
                                                 var getExecutionContext = context.getExecutionContext()
                                                 nlapiLogExecution('debug', 'nlapiGetContext().getExecutionContext()', getExecutionContext)
@@ -179,7 +184,7 @@ function serach_pd() {
     columns[1] = new nlobjSearchColumn('custrecord_sd_serial_number');
 
 
-    var search = nlapiCreateSearch('customrecord_serial_detail_information', filters, columns);
+    var search = nlapiCreateSearch('customrecord_serial_detail_information', null, columns);
     var runSearch = search.runSearch();
 
     var s = [];
@@ -335,8 +340,7 @@ function updatePdRMA(pd_id, serial, item, Recid) {
     var name = buildName(serial, item)
     pdRec.setFieldValue('name', name);
     pdRec.setFieldValue('custrecord_sd_in_rma_process', 'T');
-    pdRec.setFieldValue('custrecord_sd_last_rma', Recid);
-    
+    pdRec.setFieldValue('custrecord_sd_last_rma', Recid);   
     nlapiSubmitRecord(pdRec, null, true);
 }
 function buildName(serial, item) {
@@ -378,4 +382,9 @@ function updatePDApi(Recid, api) {
         nlapiSubmitField('customrecord_serial_detail_information', s[i].id, 'custrecord_sd_api_ref_number', api)
     }
   
+}
+function setInactive (pd_id) {
+    var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', pd_id);
+    pdRec.setFieldValue('isinactive', 'T');
+    nlapiSubmitRecord(pdRec, null, true);        
 }

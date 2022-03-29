@@ -247,7 +247,7 @@ function getCompanyDate() {
     return nlapiDateToString(new Date(companyDateTime));
 }
 function getDateAfterCheck() {
-    var date1 = getCompanyDate().split('/')[0]// jerusalem
+    var date1 = getCompanyDate().split('/')[0]
     nlapiLogExecution('debug', 'date1', date1)
     var date = GetTodayDate();
     nlapiLogExecution('debug', 'date', date)

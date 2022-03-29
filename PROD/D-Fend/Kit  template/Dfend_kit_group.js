@@ -18,8 +18,8 @@ var soRec = null;
 function beforeLoad_addButton(type, form) {
     if (type == 'view' && recType == 'itemfulfillment') {
         form.setScript('customscript_kit_print_client'); // client script id
-        form.addButton('custpage_button_print', 'Kit Print ', 'printButton()');
-        form.addButton('custpage_button_print', 'CI Print ', 'printButtonCI()');
+        form.addButton('custpage_button_print', 'Print ', 'printButton()');
+        //form.addButton('custpage_button_print', 'CI Print ', 'printButtonCI()');
     }
     else if (type == 'view' && recType == 'estimate') {
         var role = nlapiGetContext().role;
@@ -190,6 +190,7 @@ function beforeSubmit(type) {
                 if (count > 0) {
                     var line = 1;
                     var so_type = nlapiGetFieldValue('custbody_so_type');
+                    var ignore_hide_in_print = nlapiGetFieldValue('custbody_ignore_hide_in_print');
                     if (!isNullOrEmpty(so_type)) { so_type = nlapiLookupField('customrecord_so_type_list', so_type, 'custrecord_class_type') }
                     for (var i = 1; i <= count; i++) {
                         var itemreceive = nlapiGetLineItemValue('item', 'itemreceive', i);
@@ -202,29 +203,34 @@ function beforeSubmit(type) {
                             }
                             var itemtype = nlapiGetLineItemValue('item', 'itemtype', i);
                             var item = nlapiGetLineItemValue('item', 'item', i);
+                            //if (!isNullOrEmpty(location)) { location = nlapiLookupField('location', location, 'usebins') }
                             if (itemtype == 'Kit') {
-                                var ItemRec = nlapiLoadRecord('kititem', item);
-                                var ItemCount = ItemRec.getLineItemCount('member');
+                                var location = nlapiGetLineItemValue('item', 'location', i);
+
                                 prodocts_to += parseInt(line) + '^';
-                                prodocts_to += nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '@@' + '^';
+                                prodocts_to += nlapiLookupField('item', item, 'itemid') + '@@' + '^';
                                 prodocts_to += getVal('itemdescription', i).toString().replaceAll('\u0005', '<br>') + '@@' + '^';
                                 var kitQty = getVal('quantity', i);
                                 prodocts_to += kitQty + '@@' + '~~';
                                 line = parseInt(line) + 1;
-                                if (ItemCount > 0) {
-                                    for (var j = 1; j <= ItemCount; j++) {
-                                        var KitItem = ItemRec.getLineItemValue('member', 'item', j);
-                                        if (nlapiLookupField('item', KitItem, 'custitem_hide_in_print') == 'F' && nlapiLookupField('item', KitItem, 'isserialitem') != 'T') {
-                                            prodocts_to += parseInt(line) + '^';
-                                            prodocts_to += nlapiLookupField('item', ItemRec.getLineItemValue('member', 'item', j), 'itemid') + '^';
-                                            prodocts_to += getValItemRec(ItemRec, 'memberdescr', j) + '^';
-                                            prodocts_to += getValItemRec(ItemRec, 'quantity', j) * kitQty + '~~';
-                                            line = parseInt(line) + 1;
+                                if (location == 'F') {
+                                    var ItemRec = nlapiLoadRecord('kititem', item);
+                                    var ItemCount = ItemRec.getLineItemCount('member');
+                                    if (ItemCount > 0) {
+                                        for (var j = 1; j <= ItemCount; j++) {
+                                            var KitItem = ItemRec.getLineItemValue('member', 'item', j);
+                                            if ((ignore_hide_in_print == 'F' && nlapiLookupField('item', KitItem, 'custitem_hide_in_print') == 'F' && nlapiLookupField('item', KitItem, 'isserialitem') != 'T') || ignore_hide_in_print == 'T' ) {
+                                                prodocts_to += parseInt(line) + '^';
+                                                prodocts_to += nlapiLookupField('item', ItemRec.getLineItemValue('member', 'item', j), 'itemid') + '^';
+                                                prodocts_to += getValItemRec(ItemRec, 'memberdescr', j) + '^';
+                                                prodocts_to += getValItemRec(ItemRec, 'quantity', j) * kitQty + '~~';
+                                                line = parseInt(line) + 1;
+                                            }
                                         }
                                     }
                                 }
                             }// if (itemtype == 'Kit')                   
-                            else if (nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'custitem_hide_in_print') == 'F') {
+                            else if ((nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'custitem_hide_in_print') == 'F' && ignore_hide_in_print == 'F') || ignore_hide_in_print == 'T') {
 
                                 prodocts_to += line + '^';
                                 prodocts_to += nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '^';
@@ -390,8 +396,17 @@ function beforeSubmit(type) {
                             prodocts_to += nlapiGetLineItemValue('item', 'custcol_df_quantity_for_delivery', lineCore) + '^';
                             prodocts_to += units + '^';
                             prodocts_to += formatNumber(sumOfRate.toFixed(2)) + '^';
-                            prodocts_to += nlapiLookupField('item', item, 'custitem_coo') + '^';
-                            prodocts_to += nlapiLookupField('item', item, 'custitem_hs_code') + '^';
+
+                            var itemtype = nlapiGetLineItemValue("item", "itemtype", lineCore);
+                            var itemT = getitemType(itemtype);
+                            var itemrec = nlapiLoadRecord(itemT, item);
+                            var coo = itemrec.getFieldText('custitem_coo');
+                            var hs_c = itemrec.getFieldValue('custitem_hs_code');
+
+
+
+                            prodocts_to += swap_null(coo) + '^';
+                            prodocts_to += swap_null(hs_c) + '^';
                             prodocts_to += formatNumber(sumOfAmount.toFixed(2)) + '~~';
                             description = '';
                             lineCore = '';
@@ -425,10 +440,19 @@ function beforeSubmit(type) {
                             //prodocts_to += getVal('description', i).toString().replaceAll('\u0005', '<br>') + '^';
                             prodocts_to += getVal('custcol_df_quantity_for_delivery', i) + '^';
                             prodocts_to += units + '^';
-                            prodocts_to += formatNumber(getLineRate(i)[0]) + '^';
-                            prodocts_to += nlapiLookupField('item', item, 'custitem_coo') + '^';
-                            prodocts_to += nlapiLookupField('item', item, 'custitem_hs_code') + '^';
-                            prodocts_to += formatNumber(getLineRate(i)[1]) + '~~';
+                            prodocts_to += formatNumber(parseFloat(getLineRate(i)[0]).toFixed(2)) + '^';
+
+                            var itemtype = nlapiGetLineItemValue("item", "itemtype", i);
+                            var itemT = getitemType(itemtype);
+                            var itemrec = nlapiLoadRecord(itemT, item);
+                            var coo = itemrec.getFieldText('custitem_coo');
+                            var hs_c = itemrec.getFieldValue('custitem_hs_code');
+
+
+
+                            prodocts_to += swap_null(coo) + '^';
+                            prodocts_to += swap_null(hs_c) + '^';
+                            prodocts_to += formatNumber(parseFloat(getLineRate(i)[1]).toFixed(2)) + '~~';
                             line = line + 1;
                         }
                     }
@@ -671,4 +695,38 @@ function getLineAmount(rate, line) {
 
 
 
+}
+
+function getitemType(itemtype) {
+    nlapiLogExecution('debug', 'itemtype', itemtype)
+    var recordtype = "";
+
+    switch (itemtype) {
+        case 'InvtPart':
+            recordtype = 'inventoryitem';
+            break;
+        case 'NonInvtPart':
+            recordtype = 'noninventoryitem';
+            break;
+        case 'Service':
+            recordtype = 'serviceitem';
+            break;
+        case 'Assembly':
+            recordtype = 'assemblyitem';
+            break;
+        case 'GiftCert':
+            recordtype = 'giftcertificateitem';
+            break;
+        case 'Kit':
+            recordtype = 'kititem';
+            break;
+        default:
+    }
+    return recordtype;
+}
+
+function swap_null(val) {
+    if (val == null)
+        return ''
+    return val;
 }

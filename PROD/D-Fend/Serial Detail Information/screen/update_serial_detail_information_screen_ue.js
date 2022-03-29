@@ -1,7 +1,7 @@
 // JavaScript source code
 
 function beforeLoad_addButton(type, form) {
-    if (type != 'create') {
+    if (type != 'view') {
         var typeRec = nlapiGetRecordType();
         var hideBtn = nlapiLookupField('role', nlapiGetRole(), 'custrecord_hide_buttons_customer_portal')
         if (typeRec != 'supportcase' || (typeRec == 'supportcase' && hideBtn == 'F')) {

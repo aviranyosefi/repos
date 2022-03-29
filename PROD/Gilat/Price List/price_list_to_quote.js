@@ -248,6 +248,8 @@ function gilat_price(itemm) {
     if (gilat_price != '' && gilat_price != null) {
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list_price', gilat_price * exechange);
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list', 'Gilat Price');
+
+        
     }
     return true;
 
@@ -398,17 +400,13 @@ function gilat_price_2(itemm, line) {
         gilat_price_currency = 'USD';
     }
     var exechange = nlapiExchangeRate(gilat_price_currency, currency, trandate);
-    //var exechange = nlapiExchangeRate('USD', currency, trandate);
-    //var gilat_price = getGilatPrice(itemm)
-    //console.log('gilat_price: ' + gilat_price)
-    //nlapiLogExecution('debug', 'exechange', exechange)
-
     if (gilat_price != '' && gilat_price != null) {
         nlapiSelectLineItem('item', line)
         nlapiSetCurrentLineItemValue('item', 'rate', gilat_price * exechange);
         //nlapiSetLineItemValue('item', 'amount', line, 11); 
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list_price', gilat_price * exechange);
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list', 'Gilat Price');
+     
         nlapiCommitLineItem('item')
     }
 
