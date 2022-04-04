@@ -17,7 +17,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
         function getInputData() {
             var script = runtime.getCurrentScript();
             var secondrun = script.getParameter({ name: 'custscript_legal_tracker_secondrun' });
-            logger.debug('secondrun', secondrun);
+            //logger.debug('secondrun', secondrun);
             var data = [];
             if (secondrun) {
                 var data = getSecondRunData();
@@ -28,23 +28,25 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 var date = getDateFormat()
                 logger.debug('date', date);
                 for (var i = 0; i < SummaryName.length; i++) {
-                    var SummaryFileName = SummaryName[i] + '2022-03-09 to 2022-03-09' + '.csv';  
-                    //var SummaryFileName = SummaryName[i] + date + ' to ' + date+ '.csv';  
+                    //var SummaryFileName = SummaryName[i] + '2022-03-22 to 2022-03-22' + '.csv';  
+                    var SummaryFileName = SummaryName[i] + date + ' to ' + date + '.csv';  
+                    //logger.debug('SummaryFileName', SummaryFileName);
                     var SummaryFileObj = hypCore.DownloadFile(connection, SummaryFileName, integId, null);
                     if (!common.isNullOrEmpty(SummaryFileObj)) {
-                        var savedFile = file.create({
-                            name: SummaryFileName,
-                            fileType: file.Type.CSV,
-                            contents: SummaryFileObj.getContents(),
-                            folder: folderNs
-                        });
-                        SummaryFileId = savedFile.save();
+                        //var savedFile = file.create({
+                        //    name: SummaryFileName,
+                        //    fileType: file.Type.CSV,
+                        //    contents: SummaryFileObj.getContents(),
+                        //    folder: folderNs
+                        //});
+                        //SummaryFileId = savedFile.save();
+                        var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())
                         var SummaryFile = file.load({ id: SummaryFileId });
                         SummaryFile = SummaryFile.getContents();
                         var fileLines = SummaryFile.split('\r\n');
                         var line = 1;
-                        var lineFolder = RowName[i] + '2022-03-09 to 2022-03-09';
-                        //var lineFolder = RowName[i] + date + ' to ' + date;
+                        //var lineFolder = RowName[i] + '2022-03-09 to 2022-03-09';
+                        var lineFolder = RowName[i] + date + ' to ' + date;
                         for (var i = 2; i <= fileLines.length; i++) {
                             if (!common.isNullOrEmpty(fileLines[i])) {
                                 var cols = fileLines[i].replace(/\"/g, '').split(',');
@@ -57,7 +59,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                                     lineFolder: lineFolder,
                                     entityName: cols[0], //Vendor Name
                                     entityShortName: cols[1], // Vendor Name (short)
-                                    entity: '864',//cols[2], Vendor ID
+                                    entity: cols[2], //Vendor ID
                                     tranid: cols[3], //Invoice Number
                                     currency: cols[5], //Invoice Currency
                                     trandate: cols[6], //Date of Invoice
@@ -171,22 +173,18 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 var fileObj = hypCore.DownloadFile(connection, LineFileName, integId, lineFolder);
             }
             if (!common.isNullOrEmpty(fileObj)) {
-                var savedFile = file.create({
-                    name: LineFileName,
-                    fileType: file.Type.PLAINTEXT,
-                    contents: fileObj.getContents(),
-                    encoding: file.Encoding.UTF8,
-                    folder: folderNs
-                });
-                linesFieldId = savedFile.save();
+                var listFiles = connection.list({ path: lineFolder });
+                var AttatchmentID = buildAttatchment(listFiles, connection, integId, lineFolder )
+                //logger.debug('list', JSON.stringify(list));
+                var linesFieldId = createFile(LineFileName, file.Type.PLAINTEXT, fileObj.getContents())            
                 if (!common.isNullOrEmpty(linesFieldId)) {
-                    createVendorBill(ObjLine, linesFieldId);
+                    createVendorBill(ObjLine, linesFieldId, AttatchmentID);
                 }
 
             }
 
         }
-        function createVendorBill(ObjLine, lineFile) {
+        function createVendorBill(ObjLine, lineFile, AttatchmentID) {
 
             HeaderFields = ['entity', 'tranid', 'currency', 'trandate', 'custbody_bill_po_reciever', 'custbody_il_bill_creator']
             VendBillRec = record.create({ type: record.Type.VENDOR_BILL, isDynamic: true, defaultValues: { customform: formID } });
@@ -223,7 +221,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                     var rate = amount / qty
                     logger.debug('qty: ' + qty, 'desc: ' + desc + ' ,rate: ' + rate);
                     VendBillRec.selectNewLine({ sublistId: 'item' });
-                    VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'item', value: '' });
+                    VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'item', value: itemID });
                     VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'rate', value: rate });
                     VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'description', value: desc });
                     VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'quantity', value: qty });
@@ -231,6 +229,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 }
             }
             var VendBillID = VendBillRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
+            setAttach(AttatchmentID, VendBillID)
             logger.debug('vendor bill id: ', VendBillID);
             if (secondrun && VendBillID != -1 && common.isNullOrEmpty(VendBillID)) {
                  // todo
@@ -303,8 +302,48 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             return lineFolderPrefix + lineFolder + '.zip'
 
         }
+        function buildAttatchment(listFiles, connection, integId,lineFolder) {
+            for (var i = 0; i < listFiles.length; i++) {
+                var currFileName = listFiles[i].name;              
+                if (currFileName.indexOf('.pdf') != -1) {
+                    logger.debug('buildAttatchment file.name: ', currFileName);
+                    var fileObj = hypCore.DownloadFile(connection, currFileName, integId, lineFolder);
+                    logger.debug('buildAttatchment fileObj: ', fileObj);
+                    if (!common.isNullOrEmpty(fileObj)) {
+                        var linesFieldId = createFile(currFileName, file.Type.PDF, fileObj.getContents())
+                        return linesFieldId
+                    }
+                }
+            }
+            return '';
+        }
+        function createFile(fileName ,fileType , fileBody) {
+            var savedFile = file.create({
+                name: fileName,
+                fileType: fileType,
+                contents: fileBody,
+                encoding: file.Encoding.UTF8,
+                folder: folderNs
+            });
+            linesFieldId = savedFile.save();
+            return linesFieldId
 
-
+        }
+        function setAttach(fileId, recId) {
+            if (!common.isNullOrEmpty(fileId)) {
+                logger.debug('setAttach fileId : ', fileId);
+                record.attach({
+                    record: {
+                        type: 'file',
+                        id: fileId
+                    },
+                    to: {
+                        type: record.Type.VENDOR_BILL,
+                        id: recId,
+                    }
+                });
+            }         
+        }
         function summarize(summary) {
             //handleErrorIfAny(summary);
             logger.debug('SuccessList ' + SuccessList.length, JSON.stringify(SuccessList))

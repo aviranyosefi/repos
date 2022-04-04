@@ -6,6 +6,10 @@ var so_type = '';
 var today = nlapiDateToString(new Date());
 var pdList = [];
 var sublist;
+var setInactiveList = [];
+var createdfromRec = null
+var i;
+
 function create_serial_detail_information(type) {
     try {
         if (type != 'delete') {
@@ -14,7 +18,7 @@ function create_serial_detail_information(type) {
             nlapiLogExecution('debug', ' typeRecord ' + typeRecord, 'Recid ' + Recid);
             var rec = nlapiLoadRecord(typeRecord, Recid);
             sublist = 'item';
-            if (typeRecord == 'inventoryadjustment') { sublist = 'inventory'}
+            if (typeRecord == 'inventoryadjustment') { sublist = 'inventory' }
             var itemCount = rec.getLineItemCount(sublist);
             var data = [];
             var create = true;
@@ -22,14 +26,13 @@ function create_serial_detail_information(type) {
                 var ordertype = rec.getFieldValue('ordertype');
                 var trandate = rec.getFieldValue('trandate');
                 var vendorOrCustomer = rec.getFieldValue('entity');
-                for (var i = 1; i <= itemCount; i++) {                   
+                for ( i = 1; i <= itemCount; i++) {
                     var isserial = rec.getLineItemValue(sublist, 'isserial', i);
                     if (isserial == 'T') {
                         var item = rec.getLineItemValue(sublist, 'item', i);
                         subrecord = "";
                         subrecord = rec.viewLineItemSubrecord(sublist, 'inventorydetail', i);
                         if (subrecord != "" && subrecord != null) {
-                            //nlapiLogExecution('debug', ' subrecord', subrecord.id);
                             var invDetailID = subrecord.id;
                             if (invDetailID != "" && invDetailID != null) {
                                 var serials = getInventoryDetails(invDetailID);
@@ -41,14 +44,15 @@ function create_serial_detail_information(type) {
                                     if (typeRecord == 'itemfulfillment') {
                                         var serialnumber = '';
                                         if (ordertype == "SalesOrd") {
-                                            //nlapiLogExecution('debug', ' ordertype', ordertype);
                                             var createdfrom = rec.getFieldValue('createdfrom');
-                                            var soRec = nlapiLoadRecord('salesorder', createdfrom);
-                                            so_type = soRec.getFieldValue('custbody_so_type');
+                                            if (createdfromRec == null) {
+                                                createdfromRec = nlapiLoadRecord('salesorder', createdfrom);
+                                            }
+                                            so_type = createdfromRec.getFieldValue('custbody_so_type');
                                             if (so_type == '2') { // RMA
-                                                var caseNum = soRec.getFieldValue('custbody_rac_link_to_case');
+                                                var caseNum = createdfromRec.getFieldValue('custbody_rac_link_to_case');
                                                 if (isNullOrEmpty(caseNum)) {
-                                                    caseNum = soRec.getFieldValue('custbody9');
+                                                    caseNum = createdfromRec.getFieldValue('custbody9');
                                                 }
                                                 if (!isNullOrEmpty(caseNum)) {
                                                     serialnumber = nlapiLookupField('supportcase', caseNum, 'serialnumber');
@@ -56,9 +60,8 @@ function create_serial_detail_information(type) {
                                             }
                                         }
                                     }
-                                    //nlapiLogExecution('debug', ' serialnumber', serialnumber);
                                     for (var j = 0; j < serials.length; j++) {
-                                        if (typeRecord == 'itemreceipt' || typeRecord == 'inventoryadjustment' ) {
+                                        if (typeRecord == 'itemreceipt' || typeRecord == 'inventoryadjustment') {
                                             create = true;
                                             var pd_id = '';
                                             if (res[serials[j]] != null) {
@@ -67,18 +70,31 @@ function create_serial_detail_information(type) {
                                                     if (resData[t].item == item) {
                                                         create = false;
                                                         pd_id = resData[t].id
-                                                        pdList.push(pd_id); 
+                                                        pdList.push(pd_id);
                                                         if (typeRecord == 'inventoryadjustment') {
-                                                            var adjustqtyby = rec.getLineItemValue(sublist, 'adjustqtyby', line);
-                                                            if (Number(adjustqtyby) < 0) { setInactive(pd_id); }
+                                                            updateInventoryadjustment(Recid, pd_id)
+                                                            var adjustqtyby = rec.getLineItemValue(sublist, 'adjustqtyby', i);
+                                                            if (Number(adjustqtyby) < 0) { setInactiveList.push(pd_id); }
                                                         }
-                                                        break;
+                                                        else {
+                                                            if (ordertype == "RtnAuth") {
+                                                                var createdfrom = rec.getFieldValue('createdfrom');
+                                                                if (createdfromRec == null) {
+                                                                    createdfromRec = nlapiLoadRecord('returnauthorization', createdfrom);
+                                                                    var replacement = createdfromRec.getFieldValue('custbody_enable_advance_replacement');
+                                                                }
+                                                                if (replacement == 2) {
+                                                                    updateITRFromRma(pd_id);
+                                                                }
+                                                            }
+                                                            break;
+                                                        }
                                                     }
                                                 }
-                                            }                                          
+                                            }
+                                            //nlapiLogExecution('debug', 'create', create);
                                             if (create) {
                                                 var getExecutionContext = context.getExecutionContext()
-                                                nlapiLogExecution('debug', 'nlapiGetContext().getExecutionContext()', getExecutionContext)
                                                 if (getExecutionContext == 'scheduled') { user = ''; }
                                                 data.push({
                                                     pd_item: item,
@@ -133,7 +149,8 @@ function create_serial_detail_information(type) {
                                                     }
                                                 }
                                                 if (pd_id != '') {
-                                                    try { update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCustomer, trandate, type, serials[j], item) } catch (e) { }
+                                                    var df_serial_number = rec.getLineItemValue(sublist, 'custcol_df_serial_number', i);
+                                                    try { update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCustomer, trandate, type, serials[j], item, df_serial_number) } catch (e) { }
                                                 }
                                             }
                                         }
@@ -148,27 +165,28 @@ function create_serial_detail_information(type) {
                                                     }
                                                 }
                                                 if (pd_id != '' && type == 'create') {
-                                                    try { updatePdRMA(pd_id, serials[j], item, Recid ) } catch (e) { }
+                                                    try { updatePdRMA(pd_id, serials[j], item, Recid) } catch (e) { }
                                                 }
-                                            }   
+                                            }
                                         }
-                                    } //   for (var j = 0; j < serials.length; j++) - end
-                                } //     if (serials != null) -end
-                            } // if (invDetailID != "" && invDetailID != null) - end
-                        } //   if (subrecord != "" && subrecord != null) - end
-                    } //     if (isserial == 'T') - end                    
-                } // loop - end
+                                        } //   for (var j = 0; j < serials.length; j++) - end
+                                    } //     if (serials != null) -end
+                                } // if (invDetailID != "" && invDetailID != null) - end
+                            } //   if (subrecord != "" && subrecord != null) - end
+                        } //     if (isserial == 'T') - end                    
+                    } // loop - end
 
-                if (typeRecord == 'itemreceipt') { create_pd(data, Recid) }
-                //nlapiLogExecution('debug', ' pdList ' + pdList.length, pdList);
-                if (pdList.length > 0) {
-                    rec.setFieldValues('custbody_related_sdi', pdList)
-                }            
-                nlapiSubmitRecord(rec);
-            } // if (itemCount > 0) - end   
-
-        }
-
+                    if (data.length > 0) { create_pd(data, Recid, typeRecord) }
+                    //nlapiLogExecution('debug', ' pdList ' + pdList.length, pdList);
+                    if (pdList.length > 0) {
+                        rec.setFieldValues('custbody_related_sdi', pdList)
+                    }
+                    nlapiSubmitRecord(rec);
+                    if (setInactiveList.length > 0) { // only for inventoryadjustment type and qty <0
+                        setInactive(setInactiveList)
+                    }
+                } // if (itemCount > 0) - end   
+        }  //if (type != 'delete')      
     } catch (e) {
         nlapiLogExecution('error', 'create_serial_detail_information  error', e);
     }
@@ -220,7 +238,7 @@ function serach_pd() {
     return results;
 
 }
-function create_pd(data, Recid) {
+function create_pd(data, Recid, typeRecord) {
     nlapiLogExecution('debug', 'create_pd  data', JSON.stringify(data));
     for (var i = 0; i < data.length; i++) {
         try {
@@ -236,7 +254,11 @@ function create_pd(data, Recid) {
             rec.setFieldValue('custrecord_sd_receivind_date', data[i].pd_trandate);
             rec.setFieldValue('custrecord_sd_vendor_name', data[i].pd_vendor);
             rec.setFieldValue('custrecord_sd_location', data[i].pd_location);
-            rec.setFieldValue('custrecord_sd_original_item_receipt', Recid);
+            var field = 'custrecord_sd_original_item_receipt'
+            if (typeRecord == 'inventoryadjustment') {
+                field = 'custrecord_sd_inventory_adjustment_ref'
+            }
+            rec.setFieldValue(field, Recid);
 
             var id = nlapiSubmitRecord(rec, null, true);
             pdList.push(id);
@@ -276,9 +298,9 @@ function isNullOrEmpty(val) {
     }
     return false;
 }
-function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCustomer, trandate, type, serial, item) {
+function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCustomer, trandate, type, serial, item, df_serial_number) {
     try {
-        //nlapiLogExecution('debug', 'pd_id', pd_id);
+        nlapiLogExecution('debug', ' UpdateExpirationDate', UpdateExpirationDate);
         var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', pd_id);
         var name = pdRec.getFieldValue('name')
         if (isNullOrEmpty(name)) {
@@ -294,15 +316,24 @@ function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCus
         if (isNullOrEmpty(sdItf)) {
             pdRec.setFieldValue('custrecord_sd_item_fulfillment', Recid) // ITF      
             pdRec.setFieldValue('custrecord_sd_customer', vendorOrCustomer)//CUSTOMER
+            if (UpdateExpirationDate) { expirationDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i) }
+            else if (!isNullOrEmpty(newDate)) { expirationDate = newDate }
+            pdRec.setFieldValue('custrecord_warranty_expiration_date', expirationDate)   // WARRANTY EXPIRATION DATE 
             if (api_marketing == 'T') {
                 pdRec.setFieldValue('custrecord_sd_end_customer', endCustomer) //END CUSTOMER
             }
             pdRec.setFieldValue('custrecord_sd_sipping_date', trandate)// SIPPING DATE
             if (so_type != '2') { // RMA
-                pdRec.setFieldValue('custrecord_warranty_period_month', rec.getFieldValue('custbody_warranty_period'))// WARRANTY PERIOD(MONTH)
-                if (UpdateExpirationDate) { expirationDate = rec.getFieldValue('custbody_warranty_expiration_date') }
-                else if (!isNullOrEmpty(newDate)) { expirationDate = newDate }
-                pdRec.setFieldValue('custrecord_warranty_expiration_date', expirationDate)   // WARRANTY EXPIRATION DATE 
+                pdRec.setFieldValue('custrecord_warranty_period_month', rec.getFieldValue('custbody_warranty_period'))// WARRANTY PERIOD(MONTH)         
+            }
+            else { // FROM RMA               
+                if (serial == df_serial_number) {
+                    pdRec.setFieldValue('custrecord_sd_in_rma_process', 'F') // IN RMA PROCESS  
+                }
+                else if (!isNullOrEmpty(df_serial_number)) {
+                    nlapiLogExecution('debug', 'df_serial_number', df_serial_number);
+                    getSDI(df_serial_number, item)                
+                }
             }
             pdRec.setFieldValue('custrecord_sd_last_item_fulfillment', Recid)
             pdRec.setFieldValue('custrecord_sd_api_ref_number', rec.getFieldValue('custbody7'))
@@ -311,16 +342,25 @@ function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCus
         if (type == 'create') {
             pdRec.setFieldValue('custrecord_sd_last_item_fulfillment', Recid)
             pdRec.setFieldValue('custrecord_sd_customer', vendorOrCustomer)//CUSTOMER
+            if (UpdateExpirationDate) { expirationDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i) }
+            else if (!isNullOrEmpty(newDate)) { expirationDate = newDate }
+            pdRec.setFieldValue('custrecord_warranty_expiration_date', expirationDate)   // WARRANTY EXPIRATION DATE 
             if (api_marketing == 'T') {
                 pdRec.setFieldValue('custrecord_sd_end_customer', endCustomer) //END CUSTOMER
             }
             if (so_type != '2') { // RMA
                 pdRec.setFieldValue('custrecord_sd_api_ref_number', rec.getFieldValue('custbody7'))
-                pdRec.setFieldValue('custrecord_warranty_period_month', rec.getFieldValue('custbody_warranty_period'))// WARRANTY PERIOD(MONTH)
-                if (UpdateExpirationDate) { expirationDate = rec.getFieldValue('custbody_warranty_expiration_date') }
-                else if (!isNullOrEmpty(newDate)) { expirationDate = newDate }
-                pdRec.setFieldValue('custrecord_warranty_expiration_date', expirationDate)   // WARRANTY EXPIRATION DATE 
+                pdRec.setFieldValue('custrecord_warranty_period_month', rec.getFieldValue('custbody_warranty_period'))// WARRANTY PERIOD(MONTH)              
                 pdRec.setFieldValue('custrecord_sd_sipping_date', trandate)// SIPPING DATE                  
+            }
+            else { // FROM RMA
+                if (serial == df_serial_number) {
+                    pdRec.setFieldValue('custrecord_sd_in_rma_process', 'F') // IN RMA PROCESS  
+                }
+                else if (!isNullOrEmpty(df_serial_number)) {
+                    nlapiLogExecution('debug', 'df_serial_number', df_serial_number);
+                    getSDI(df_serial_number, item)
+                }
             }
         }
             nlapiSubmitRecord(pdRec, null, true);
@@ -383,8 +423,48 @@ function updatePDApi(Recid, api) {
     }
   
 }
-function setInactive (pd_id) {
-    var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', pd_id);
-    pdRec.setFieldValue('isinactive', 'T');
-    nlapiSubmitRecord(pdRec, null, true);        
+function setInactive(setInactiveList) {
+    for (var i = 0; i < setInactiveList.length; i++) {
+        var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', setInactiveList[i]);
+        pdRec.setFieldValue('isinactive', 'T');
+        nlapiSubmitRecord(pdRec, null, true);      
+    }   
 }
+function updateInventoryadjustment(Recid, pd_id) {
+    var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', pd_id);
+    pdRec.setFieldValue('custrecord_sd_inventory_adjustment_ref', Recid);
+    nlapiSubmitRecord(pdRec, null, true);
+}
+function updateITRFromRma(pd_id) {
+    var pdRec = nlapiLoadRecord('customrecord_serial_detail_information', pd_id);
+    pdRec.setFieldValue('custrecord_sd_end_customer', '') //END CUSTOMER   
+    pdRec.setFieldValue('custrecord_sd_customer', '')//CUSTOMER
+    pdRec.setFieldValue('custrecord_sd_in_rma_process', 'F') // IN RMA PROCESS
+    nlapiSubmitRecord(pdRec, null, true);
+}
+function getSDI(df_serial_number, item) {
+    nlapiLogExecution('DEBUG', 'getSDI FUNCATION ', 'df_serial_number: ' + df_serial_number + ' ,item: ' + item);
+    var filters = new Array();
+    filters[0] = new nlobjSearchFilter('isinactive', null, 'is', 'F')
+    filters[1] = new nlobjSearchFilter('custrecord_sd_item', null, 'anyof', item)
+    filters[2] = new nlobjSearchFilter('custrecord_sd_serial_number', null, 'is', df_serial_number)
+
+
+    var search = nlapiCreateSearch('customrecord_serial_detail_information', filters, null);
+    var runSearch = search.runSearch();
+
+    var s = [];
+    var searchid = 0;
+    do {
+        var resultslice = runSearch.getResults(searchid, searchid + 1000);
+        for (var rs in resultslice) {
+            s.push(resultslice[rs]);
+            searchid++;
+        }
+    } while (resultslice != null && resultslice.length >= 1000);
+    if (s.length > 0) {
+        var sdiID = s[0].id;
+        updateITRFromRma(sdiID)
+    }
+}
+

@@ -1,9 +1,10 @@
 // JavaScript source code
 
 function beforeLoad_addButton(type, form) {
-    if (type != 'view') {
+    if (type == 'view' || type == 'edit') {
         var typeRec = nlapiGetRecordType();
         var hideBtn = nlapiLookupField('role', nlapiGetRole(), 'custrecord_hide_buttons_customer_portal')
+        nlapiLogExecution('DEBUG', 'hideBtn', hideBtn)
         if (typeRec != 'supportcase' || (typeRec == 'supportcase' && hideBtn == 'F')) {
             form.setScript('customscript_update_serial_detail_cs'); // client script id
             form.addButton('custpage_button_pmt1', 'Update Version', 'Update()');

@@ -3,9 +3,9 @@
 
 <head>
   
-	<link name="arial" type="font" subtype="truetype"
-		src="https://system.na2.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/arial.ttf"
-		src-bold="https://system.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/arialb.ttf"
+	<link name="arial" type="font" subtype="truetype"		  
+		src="https://4678143.app.netsuite.com/c.4678143/suitebundle46541/Localization-IL/Fonts/arial.ttf"
+		src-bold="https://4678143.app.netsuite.com/c.4678143/suitebundle46541/Localization-IL/Fonts/arialb.ttf"
 		src-italic="https://system.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/ariali.ttf"
 		src-bolditalic="https://system.netsuite.com/c.1568321/suitebundle46541/Localization-IL/Fonts/arialbi.ttf"
 	/>

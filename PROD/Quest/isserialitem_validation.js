@@ -27,11 +27,11 @@ define(['N/search'],
                 }
                 rec.setValue('custevent_is_serialized', isserialitem);
             }
-            else if (name == 'custrecord_sp_serial_number') {
+            else if (name == 'custrecord_sp_serial_number' || name == 'custrecord_spare_part_item' ) {
                 var item = rec.getValue({ fieldId: 'custrecord_spare_part_item' });
                 var serial = rec.getValue({ fieldId: 'custrecord_sp_serial_number' });
                 var location = rec.getValue({ fieldId: 'custrecord_sp_location' });
-                if (!isNullOrEmpty(item) && !isNullOrEmpty(serial) && !isNullOrEmpty(location)) {
+                if (!isNullOrEmpty(item) && !isNullOrEmpty(location)) {
                     var len = searchLoad(item, serial, location);
                     val = false;
                     if (len == 0) {
@@ -51,10 +51,11 @@ define(['N/search'],
             });
             var defaultFilters = objSearch.filters;
             defaultFilters.push(search.createFilter({ name: "item", operator: 'anyof', values: item }));
-            defaultFilters.push(search.createFilter({ name: "inventorynumber", operator: 'anyof', values: serial }));
+            if(!isNullOrEmpty(serial)){
+                defaultFilters.push(search.createFilter({ name: "inventorynumber", operator: 'anyof', values: serial }));
+            }        
             defaultFilters.push(search.createFilter({ name: "location", operator: 'anyof', values: location }));
             objSearch.filters = defaultFilters;
-            var res = [];
             var resultset = objSearch.run();
             var s = [];
             var searchid = 0;

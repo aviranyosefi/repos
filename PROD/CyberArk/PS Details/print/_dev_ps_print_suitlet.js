@@ -187,7 +187,7 @@ function printPSDetails(request, response){
 		 
 	 }
 	 
-			 else if (request.getParameter('custpage_sendmail') == 'send mail') {  //email Invoice
+	 else if (request.getParameter('custpage_sendmail') == 'send mail') {  //email Invoice
 
 				 var endForm = nlapiCreateForm('Email Delivered')
 				 
@@ -343,26 +343,26 @@ var allTemplate = head+dynList+restOfTemplate.toString();
 var pattern = /_invoice_number|_supp_comment|_logo/ig;
 
                                           
-                                    //PS Detail Information Information
-                                    var _invoice_number = invoiceNum;
+//PS Detail Information Information
+var _invoice_number = invoiceNum;
 
                                     
-                                    var mapObj = {
-                                   		 _invoice_number : _invoice_number,
-                                   		 _supp_comment : _supp_comment,
-                                   		 _logo : logoUrl
+var mapObj = {
+        _invoice_number : _invoice_number,
+        _supp_comment : _supp_comment,
+        _logo : logoUrl
 
                                     
-                              };
+};
                                     
 
-                                          var str = allTemplate.replace(/\{\{(.*?)\}\}/g, function(i, match) {
-                                              return mapObj[match];
-                                          });
+        var str = allTemplate.replace(/\{\{(.*?)\}\}/g, function(i, match) {
+            return mapObj[match];
+        });
                         
                             
-                                          //must clean all amps
-                                        var clean = str.replaceAll("&", "&amp;");
+        //must clean all amps
+    var clean = str.replaceAll("&", "&amp;");
 
 	
 	

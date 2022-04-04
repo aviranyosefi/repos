@@ -1,7 +1,17 @@
 function editSave() {
-    var context = nlapiGetContext();
-    var itf_id = context.getSetting('SCRIPT', 'custscript_itf_id');
-    nlapiLogExecution('DEBUG', 'itf_id', itf_id);
+    try {
+        var context = nlapiGetContext();
+        var itf_id = context.getSetting('SCRIPT', 'custscript_itf_id');
+        nlapiLogExecution('DEBUG', 'itf_id', itf_id);
+        doEditSave(itf_id)
+       
+    } catch (e) {
+        nlapiLogExecution('ERROR', 'Error', e);
+        doEditSave(itf_id)
+    }
+}
+
+function doEditSave(itf_id) {
     var rec = nlapiLoadRecord('itemfulfillment', itf_id);
     var ordertype = rec.getFieldValue('ordertype');
     if (ordertype == 'SalesOrd') {

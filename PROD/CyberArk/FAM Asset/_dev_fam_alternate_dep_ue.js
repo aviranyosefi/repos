@@ -3,12 +3,12 @@
  * @NScriptType UserEventScript
  * @NModuleScope SameAccount
  */
-define([ 'N/task'],
-    function ( task) {
+define(['N/task'],
+    function (task) {
         function afterSubmit(context) {
 
             if (context.type != context.UserEventType.DELETE) {
-                try { 
+                try {
                     //var rec = context.newRecord;
                     //var assetID = rec.id
                     //var res = getData(assetID)
@@ -20,7 +20,7 @@ define([ 'N/task'],
                         deploymentId: null,
                     });
                     scriptTask.submit();
-                   
+
                 } catch (e) {
                     log.error(e.message);
                 }
@@ -54,7 +54,7 @@ define([ 'N/task'],
             }
             return res;
         }
-        function createDepreciation(assetID , res) {
+        function createDepreciation(assetID, res) {
             try {
                 var assetRec = record.load({ type: 'customrecord_ncfar_asset', id: assetID, });
                 //log.debug('assetRec.assetRec: ', assetRec);
@@ -70,7 +70,7 @@ define([ 'N/task'],
                 depRec.setValue('custrecord_altdepraltmethod', '10');
                 //log.debug('custrecord_altdepraltmethod: ', 'custrecord_altdepraltmethod');
 
-           
+
                 //log.debug('custrecord_altdeprasset: ', 'custrecord_altdeprasset');
 
 
@@ -93,9 +93,9 @@ define([ 'N/task'],
                 depRec.setValue('custrecord_altdepr_originalcost', cost);
                 depRec.setValue('custrecord_altdepr_currentcost', cost);
                 depRec.setValue('custrecord_altdeprnbv', cost);
-                
+
                 depRec.setValue('custrecord_altdeprcd', '0.00');
-                
+
 
                 depRec.setValue('custrecord_altdepr_assetaccount', assetRec.getValue('custrecord_assetmainacc'));
                 depRec.setValue('custrecord_altdepr_depraccount', assetRec.getValue('custrecord_assetdepracc'));
@@ -106,10 +106,10 @@ define([ 'N/task'],
 
                 var depRecID = depRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
                 log.debug('depRecID: ', depRecID);
-                
-        }catch (e) {
+
+            } catch (e) {
                 log.debug('error createDepreciation ', e.message);
-        }
+            }
 
         }
         function getCost(parent_trn, assetRec) {

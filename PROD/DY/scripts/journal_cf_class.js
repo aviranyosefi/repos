@@ -1,4 +1,3 @@
-
 var msg = '';
 var message = 'Please enter value to CF CLASSIFICATION Field.\n';
 function SaveRecordCf() {
@@ -6,16 +5,16 @@ function SaveRecordCf() {
     var lines = nlapiGetLineItemCount('line');
     for (var i = 1; i <= lines; i++) {
         nlapiGetContext().getRemainingUsage = function () { return 1000; }
-        var account = nlapiGetLineItemValue('line', 'account' , i)
+        var account = nlapiGetLineItemValue('line', 'account', i)
         var accountType = nlapiLookupField('account', account, 'type');
         var custrecord_bank_account_for_cf = nlapiLookupField('account', account, 'custrecord_bank_account_for_cf');
-        if (accountType == 'Bank' && custrecord_bank_account_for_cf =='T') {           
+        if (accountType == 'Bank' && custrecord_bank_account_for_cf == 'T') {
             for (var j = 1; j <= lines; j++) {
                 if (j != i) {
                     var accountLine = nlapiGetLineItemValue('line', 'account', j);
                     var custcol_cf_classification = nlapiGetLineItemValue('line', 'custcol_cf_classification', j);
                     if (isNullOrEmpty(custcol_cf_classification)) {
-                        var cf_classification = nlapiLookupField('account', accountLine, 'custrecord_default_cf_classification');   
+                        var cf_classification = nlapiLookupField('account', accountLine, 'custrecord_default_cf_classification');
                         var accountTypeLine = nlapiLookupField('account', accountLine, 'type');
                         var accountLine_bank_account_for_cf = nlapiLookupField('account', accountLine, 'custrecord_bank_account_for_cf');
                         if (!isNullOrEmpty(cf_classification)) {
@@ -24,16 +23,15 @@ function SaveRecordCf() {
                             nlapiCommitLineItem('line');
 
                         }
-                        else if (accountLine_bank_account_for_cf == 'T' && accountTypeLine == 'Bank' && isNullOrEmpty(cf_classification)) {}
-                        else  {
-                            
+                        else if (accountLine_bank_account_for_cf == 'T' && accountTypeLine == 'Bank' && isNullOrEmpty(cf_classification)) { }
+                        else {
                             var accountLineName = nlapiGetLineItemText('line', 'account', j);
                             nlapiSetLineItemDisabled('line', 'custcol_cf_classification', false, j);
                             addLine(accountLineName, j);
                         }
                     }
                 }
-                
+
             } // for (var j = 1; j <= lines; j++)
 
         } // if (accountType == 'Bank')

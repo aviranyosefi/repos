@@ -21,12 +21,13 @@ function CapacityTool(request, response) {
     }
     selectPeriodFrom.setDefaultValue(periodVal);
 
-    var type = form.addField('custpage_type', 'select', 'Assessment Type', null, 'custpage_search_group').setLayoutType('midrow');
-    var typeVal = request.getParameter('custpage_type');
-    type.addSelectOption('', '');
-    type.addSelectOption(1, 'Actual');
-    type.addSelectOption(2, 'Forecast');
-    type.setDefaultValue(typeVal);
+    var typeVal = 1;
+    //var type = form.addField('custpage_type', 'select', 'Assessment Type', null, 'custpage_search_group').setLayoutType('midrow');
+    //var typeVal = request.getParameter('custpage_type');
+    //type.addSelectOption('', '');
+    //type.addSelectOption(1, 'Actual');
+    //type.addSelectOption(2, 'Forecast');
+    //type.setDefaultValue(typeVal);
 
     var submitted_type = form.addField('custpage_submitted_type', 'select', 'SUBMISSION STATUS', null, 'custpage_search_group').setLayoutType('midrow');
     var submitted_typeVal = request.getParameter('custpage_submitted_type');
@@ -55,6 +56,7 @@ function CapacityTool(request, response) {
         }
         reporters.setDefaultValue(reportersVal);
     }
+    else { selectPeriodFrom.setDisplayType('disabled') }
 
     var product_div = form.addField('custpage_product_div', 'multiselect', 'Product Division', null, 'custpage_search_group').setLayoutType('midrow');
     var getPRODUCTDIVISIONs = getPRODUCTDIVISION()
@@ -88,9 +90,9 @@ function CapacityTool(request, response) {
         var subList = form.addSubList('custpage_sublist', 'INLINEEDITOR', 'Results', 'custpage_recipient_group');
         subList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
         subList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
-        subList.addButton('customscript_submit_all', 'Submit All Valid Forecasts', 'SubmitAll()')
-        subList.addButton('customscript_create_actual_all', 'Create Actuals Based on Submitted Forecasts', 'CreateActualAll()')
-        subList.addButton('customscript_submit_all', 'Submit All Valid Actuals', 'SubmitAllActuals()')
+        //subList.addButton('customscript_submit_all', 'Submit All Valid Forecasts', 'SubmitAll()')
+        //subList.addButton('customscript_create_actual_all', 'Create Actuals Based on Submitted Forecasts', 'CreateActualAll()')
+        subList.addButton('customscript_submit_all', 'Submit All', 'SubmitAllActuals()')
         subList.addField('custpage_result_cb', 'checkbox', 'CB')
         subList.addField('custpage_ct_id', 'text', 'CT ID').setDisplayType('disabled');
         subList.addField('custpage_emp_id', 'text', 'Employee ID').setDisplayType('disabled');
@@ -102,12 +104,10 @@ function CapacityTool(request, response) {
         subList.addField('custpage_ol_name', 'text', 'Office location Name').setDisplayType('disabled');
         subList.addField('custpage_segment', 'select', 'Segment', 'customlist_ct_segment').setDisplayType('disabled');
         subList.addField('custpage_ia', 'select', 'Investment area', 'customrecord_ct_investment_area')
-        subList.addField('custpage_npd', 'integer', 'Improvement')   
+        subList.addField('custpage_npd', 'integer', 'Improvement')
         subList.addField('custpage_maintenance', 'integer', 'KTLO')
         subList.addField('custpage_total', 'text', 'Total').setDisplayType('disabled');
-        var at_field = subList.addField('custpage_at', 'select', 'Assessment Type', null).setDisplayType('disabled');
-        at_field.addSelectOption(1, 'Actual');
-        at_field.addSelectOption(2, 'Forecast');
+        
         subList.addField('custpage_submit_type', 'select', 'Submission Status', 'customlist_submitted_type').setDisplayType('disabled');
         if (empType == '4') {
             subList.addField('custpage_last_mod', 'text', 'Last modified').setDisplayType('disabled');
@@ -115,10 +115,13 @@ function CapacityTool(request, response) {
         }
         subList.addField('custpage_total_aggregated', 'select', 'Validation Status', 'customlist_validation_type').setDisplayType('disabled');
         subList.addField('custpage_submit', 'text', 'submit').setDisplayType('disabled');
-        subList.addField('custpage_create_actual', 'text', 'CREATE ACTUAL').setDisplayType('disabled');
+        //subList.addField('custpage_create_actual', 'text', 'CREATE ACTUAL').setDisplayType('disabled');
         subList.addField('custpage_acual_id', 'text', 'CT ACUAL ID').setDisplayType('hidden');
         subList.addField('custpage_cc', 'integer', 'CC').setDisplayType('hidden');
         subList.addField('custpage_appm', 'integer', 'Existing Func').setDisplayType('hidden');
+        var at_field = subList.addField('custpage_at', 'select', 'Assessment Type', null).setDisplayType('hidden');
+        at_field.addSelectOption(1, 'Actual');
+        at_field.addSelectOption(2, 'Forecast');
         for (var x = 0; x < Lines.length; x++) {
             subList.setLineItemValue('custpage_result_cb', x + 1, 'T');
             subList.setLineItemValue('custpage_emp_id', x + 1, Lines[x].emp_id);
@@ -215,6 +218,7 @@ function getReporterEmp(user) {
 function getLines(empResults, periodVal, employeeVal, typeVal, reportersVal, product_grpVal, product_divVal, submitted_typeVal) {
 
     var search = nlapiLoadSearch(null, 'customsearch_ct_reporting_entity');
+    search.addFilter(new nlobjSearchFilter('isinactive', null, 'is', 'F'));
     if (!isNullOrEmpty(empResults)) { search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', empResults)); }
     search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_period', null, 'anyof', periodVal));
     if (!isNullOrEmpty(employeeVal)) { search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', employeeVal.split("\u0005"))); }
@@ -241,7 +245,7 @@ function getLines(empResults, periodVal, employeeVal, typeVal, reportersVal, pro
     } while (resultslice != null && resultslice.length >= 1000);
     var res = [];
     if (s != null) {
-        var LinesPercentForcast = getLinesPercent(empResults, periodVal, employeeVal, 2, reportersVal, product_grpVal, product_divVal)
+        //var LinesPercentForcast = getLinesPercent(empResults, periodVal, employeeVal, 2, reportersVal, product_grpVal, product_divVal)
         var LinesPercentActual = getLinesPercent(empResults, periodVal, employeeVal, 1, reportersVal, product_grpVal, product_divVal)
         for (var i = 0; i < s.length; i++) {
             nlapiLogExecution('debug', 'i', i)
@@ -257,11 +261,11 @@ function getLines(empResults, periodVal, employeeVal, typeVal, reportersVal, pro
                     var total_aggregated = getPercentType(LinesPercentActual[emp_id].percent)
                 }
             }
-            else {
-                if (LinesPercentForcast[emp_id] != undefined) {
-                    var total_aggregated = getPercentType(LinesPercentForcast[emp_id].percent)
-                }
-            }
+            //else {
+            //    if (LinesPercentForcast[emp_id] != undefined) {
+            //        var total_aggregated = getPercentType(LinesPercentForcast[emp_id].percent)
+            //    }
+            //}
             res.push({
                 id: s[i].id,
                 emp_id: emp_id,
@@ -291,6 +295,7 @@ function getLines(empResults, periodVal, employeeVal, typeVal, reportersVal, pro
 }
 function getLinesPercent(empResults, periodVal, employeeVal, typeVal, reportersVal, product_grpVal, product_divVal, submitted_typeVal) {
     var search = nlapiLoadSearch(null, 'customsearch_ct_reporting_entity_2');
+    search.addFilter(new nlobjSearchFilter('isinactive', null, 'is', 'F'));
     if (!isNullOrEmpty(empResults)) { search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', empResults)); }
     search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_period', null, 'anyof', periodVal));
     if (!isNullOrEmpty(employeeVal)) { search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', employeeVal.split("\u0005"))); }
@@ -356,15 +361,15 @@ function addSettingFields(form, settings, periodVal, empType) {
         if (todayDay < lock_actual && periodVal == previous_period) {
             var actualValidation = false;
         }
-        var today_period = getPeriod(date, 'today');
-        var lock_forcat = settings.custrecord_ct_grace_days_frcast_rep
-        if (today_period < periodVal || (today_period == periodVal && todayDay < lock_forcat)) {
-            var forcatValidation = false;
-        }
+        //var today_period = getPeriod(date, 'today');
+        //var lock_forcat = settings.custrecord_ct_grace_days_frcast_rep
+        //if (today_period < periodVal || (today_period == periodVal && todayDay < lock_forcat)) {
+        //    var forcatValidation = false;
+        //}
     }
     else if (empType == '4') {
         var actualValidation = false;
-        var forcatValidation = false;
+        //var forcatValidation = false;
     }
 
     var periodValName = nlapiLookupField('accountingperiod', periodVal, 'periodname')
@@ -378,28 +383,32 @@ function addSettingFields(form, settings, periodVal, empType) {
     lock_forcastform.setDefaultValue(forcatValidation);
 
 
-    var string = 'Period Status: '
     var period_status_actual = form.addField('custpage_period_status_actual', 'inlinehtml').setLayoutType('outsideabove', 'startrow');
-    var acutalDueDate = '';
+    var acutalDueDateString = '';
     if (!actualValidation && empType == '2') {
         var month = date.getMonth() + 1
-        acutalDueDate = ' Due Date: '
-        acutalDueDate += lock_actual + '/' + month + '/' + date.getFullYear();
-
+        acutalDueDateString = ' Until: '
+        acutalDueDate = lock_actual + '/' + month + '/' + date.getFullYear();
+        acutalDueDateString += nlapiDateToString(nlapiAddDays(nlapiStringToDate(acutalDueDate), 1))
     }
-    period_status_actual.setDefaultValue("<p style='font-size:20px'><b><u>Actual " + string + '</u></b>' + chekTrueOrFalse(actualValidation) + acutalDueDate);
+    period_status_actual.setDefaultValue("<p style='font-size:20px'><b><u>Period Status </u></b>" + chekTrueOrFalse(actualValidation) + acutalDueDateString);
 
-    var forcatDueDate = '';
-    if (!forcatValidation && empType == '2' && today_period == periodVal) {
-        var month = date.getMonth() + 1
-        forcatDueDate = ' Due Date: '
-        forcatDueDate += lock_forcat + '/' + month + '/' + date.getFullYear();
+    //var forcatDueDate = '';
+    //if (!forcatValidation && empType == '2' && today_period == periodVal) {
+    //    var month = date.getMonth() + 1
+    //    forcatDueDate = ' Due Date: '
+    //    forcatDueDate += lock_forcat + '/' + month + '/' + date.getFullYear();
 
-    }
-    var period_status_forcast = form.addField('custpage_period_status_forcast', 'inlinehtml').setLayoutType('outsideabove', 'startrow');
-    period_status_forcast.setDefaultValue("<p style='font-size:20px'><b><u>Forecast " + string + '</u></b>' + chekTrueOrFalse(forcatValidation) + forcatDueDate);
+    //}
+    //var period_status_forcast = form.addField('custpage_period_status_forcast', 'inlinehtml').setLayoutType('outsideabove', 'startrow');
+    //period_status_forcast.setDefaultValue("<p style='font-size:20px'><b><u>Forecast " + string + '</u></b>' + chekTrueOrFalse(forcatValidation) + forcatDueDate);
 
-
+    var divhtml = "<div><b>Processing.....</b></div>";
+    var style = "left: 25%; top: 25%; z-index: 10001; position:absolute;width:620px;height:40px;line-height:1.5em;cursor:pointer;margin:5px;list-style-type: none;font-size:12px; padding:5px; background-color:#FFF; border: 2px solid gray;border-radius:10px;";
+    var stylebg = "position: absolute; z-index: 10000; top: 0px; left: 0px; height: 100%; width: 100%; margin: 5px 0px; background-color: rgb(204, 204, 204); opacity: 0.6;";
+    var function_click = "var bgdiv=document.createElement('div'); bgdiv.id='bgdiv'; bgdiv.onclick=bgdiv.style.display = 'none'; bgdiv.style.cssText='" + stylebg + "';var loadingdiv=document.createElement('div');loadingdiv.id='loadingdiv'; loadingdiv.innerHTML='" + divhtml + "'; loadingdiv.style.cssText='" + style + "'; document.body.appendChild(loadingdiv);document.body.appendChild(bgdiv);";
+    var createDiv = form.addField('custpage_create_div', 'inlinehtml').setLayoutType('outsideabove', 'startrow');
+    createDiv.setDefaultValue('<script>' + function_click +'</script>');
 }
 function sortFields(form) {
     var sort_fname = form.addField('custpage_sort_fname', 'text', 'custpage_ac_id', null, null).setDisplayType('hidden');
@@ -476,7 +485,7 @@ function repoterList() {
     //columns.push(new nlobjSearchColumn('entityid'));
 
     var filters = new Array();
-    filters[0] = new nlobjSearchFilter('custentity_ct_employee_type', null, 'anyof', [2,4])
+    filters[0] = new nlobjSearchFilter('custentity_ct_employee_type', null, 'anyof', [2, 4])
 
     var search = nlapiCreateSearch('employee', filters, columns);
 

@@ -55,14 +55,14 @@ function createRma(data) {
                 rec.setCurrentLineItemValue('item', 'custcol_action_type', itemList[i].action_type)
                 rec.setCurrentLineItemValue('item', 'custcol_inventory_report_id', itemList[i].id)
                 rec.setCurrentLineItemValue('item', 'location', data[0].location)
-                //if (itemList[i].serial != '') {
-                //    var inventorydetailrecord = rec.createCurrentLineItemSubrecord('item', 'inventorydetail');
-                //    inventorydetailrecord.selectNewLineItem('inventoryassignment');
-                //    inventorydetailrecord.setCurrentLineItemValue('inventoryassignment', 'issueinventorynumber', itemList[i].serial);
-                //    inventorydetailrecord.setCurrentLineItemValue('inventoryassignment', 'quantity', '1');
-                //    inventorydetailrecord.commitLineItem('inventoryassignment');
-                //    inventorydetailrecord.commit();
-                //}
+                if (itemList[i].serial != '') {
+                    var inventorydetailrecord = rec.createCurrentLineItemSubrecord('item', 'inventorydetail');
+                    inventorydetailrecord.selectNewLineItem('inventoryassignment');
+                    inventorydetailrecord.setCurrentLineItemValue('inventoryassignment', 'receiptinventorynumber', itemList[i].serial);
+                    inventorydetailrecord.setCurrentLineItemValue('inventoryassignment', 'quantity', '1');
+                    inventorydetailrecord.commitLineItem('inventoryassignment');
+                    inventorydetailrecord.commit();
+                }
                 rec.commitLineItem('item');
             }
         } catch (err) {
@@ -129,3 +129,5 @@ function getSparParts(caseID) {
     return results;
 
 }
+
+

@@ -230,8 +230,7 @@ function beforeSubmit(type) {
                                     }
                                 }
                             }// if (itemtype == 'Kit')                   
-                            else if ((nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'custitem_hide_in_print') == 'F' && ignore_hide_in_print == 'F') || ignore_hide_in_print == 'T') {
-
+                            else if ((nlapiLookupField('item', item, 'custitem_hide_in_print') == 'F' && ignore_hide_in_print == 'F') || ignore_hide_in_print == 'T') {
                                 prodocts_to += line + '^';
                                 prodocts_to += nlapiLookupField('item', nlapiGetLineItemValue('item', 'item', i), 'itemid') + '^';
                                 prodocts_to += getVal('itemdescription', i).toString().replaceAll('\u0005', '<br>') + '^';

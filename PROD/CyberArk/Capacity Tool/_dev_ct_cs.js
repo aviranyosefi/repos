@@ -1,9 +1,9 @@
 empType = nlapiGetFieldValue('custpage_user_type')
 var EmpIdCol = 2 //EMPLOYEE ID
-var TotalCol = 14; // ASSESSMENT TYPE
-var TotalAggCol = clcColumnindex(18, empType); //VALIDATION STATUS
-var SubmitCol = clcColumnindex(19, empType); //SUBMIT
-var CreateAcCol = clcColumnindex(20, empType); // CREATE ACTUAL
+//var TotalCol = 14; // ASSESSMENT TYPE
+var TotalAggCol = clcColumnindex(17, empType); //VALIDATION STATUS
+var SubmitCol = clcColumnindex(18, empType); //SUBMIT
+var CreateAcCol = clcColumnindex(19, empType); // CREATE ACTUAL
 var disabledSubmitCount = 0;
 var prev_ia;
 var at_type_change;
@@ -16,6 +16,8 @@ function SubmitAllActuals() {
         alert('Actual period status is Close')
     }
     else {
+        debugger;
+        openLoadingdiv();
         var notSubmittedCount = 0;
         var linecount = nlapiGetLineItemCount('custpage_sublist');
         for (var i = 1; i <= linecount; i++) {
@@ -152,7 +154,6 @@ function pageInit() {
 
     document.getElementsByClassName("uir-outside-fields-table")[1].align = 'center'
 
-    createDiv();
     addStyleAndColors();
     lock_forcast = nlapiGetFieldValue('custpage_auto_lock_forcast');
     lock_actual = nlapiGetFieldValue('custpage_auto_lock_actual');
@@ -160,6 +161,7 @@ function pageInit() {
     addSortFun()
     dropdownDiv()
     floatDIV();
+    closeLoadingdiv();
     return true;
 }
 function fieldChange(type, name) {
@@ -267,7 +269,7 @@ function validateLine() {
                 } else {
                     flag = nlapiGetFieldValue('custpage_auto_lock_forcast');
                 }
-               
+
             }
         }
         if (flag == "false" && at == 1) {
@@ -283,14 +285,14 @@ function validateLine() {
             createTran(null)
         }
     }
-    if (!res) { addStyleAndColors()}
+    if (!res) { addStyleAndColors() }
     return res;
 }
 function insertLine() {
     var curCustId = nlapiGetCurrentLineItemValue('custpage_sublist', 'custpage_emp_id');
     if (!isNullOrEmpty(curCustId))
         setTimeout(function () {
-            var fieldsArr = ['custpage_emp_id', 'custpage_f_name', 'custpage_l_name', 'custpage_job_titel', 'custpage_pg','custpage_ol_name', 'custpage_pd', "custpage_total_aggregated", "custpage_ia", "custpage_segment", "custpage_npd", "custpage_maintenance", "custpage_appm", "custpage_cc"]
+            var fieldsArr = ['custpage_emp_id', 'custpage_f_name', 'custpage_l_name', 'custpage_job_titel', 'custpage_pg', 'custpage_ol_name', 'custpage_pd', "custpage_total_aggregated", "custpage_ia", "custpage_segment", "custpage_npd", "custpage_maintenance", "custpage_appm", "custpage_cc"]
             var curLine = Number(nlapiGetCurrentLineItemIndex('custpage_sublist'));
             for (var fld in fieldsArr) {
                 var val = fieldsArr[fld]
@@ -412,26 +414,24 @@ function checkType(at, i, cells, total_aggregated) {
     if (at == '2') {
         flag = nlapiGetFieldValue('custpage_auto_lock_forcast');
         var color = 'yellow';
-        var name = 'Forecast'
         var acual_id = nlapiGetLineItemValue('custpage_sublist', 'custpage_acual_id', i);
         var lock_actual = nlapiGetFieldValue('custpage_auto_lock_actual');
     }
     else if (at == '1') {
         var flag = nlapiGetFieldValue('custpage_auto_lock_actual');
         var color = 'green';
-        var name = 'Actual'
     }
-    paintCoulmns(color, TotalCol, cells);
+    //paintCoulmns(color, TotalCol, cells);
     var submit_type = nlapiGetLineItemValue('custpage_sublist', 'custpage_submit_type', i);
     var index = Number(nlapiGetCurrentLineItemIndex('custpage_sublist'));
     if (index != i) {
         var total_aggregated = nlapiGetLineItemValue('custpage_sublist', 'custpage_total_aggregated', i);
     }
     if (checkIfShowSubmitButton(submit_type, total_aggregated, flag)) {
-        addSubmitButton(name, i, cells, null);
+        addSubmitButton(i, cells, null);
     }
     else {
-        addSubmitButton(name, i, cells, 'disabled')
+        addSubmitButton(i, cells, 'disabled')
     }
     if (at == '2' && checkIfShowActualButton(submit_type, total_aggregated, flag, acual_id, lock_actual)) {
         addCreateActualButton(i, cells, null)
@@ -443,7 +443,7 @@ function checkType(at, i, cells, total_aggregated) {
     setLineToNotSubmittet(at, total_aggregated, i, submit_type)
 }
 function setLineToNotSubmittet(at, total_aggregated, i, submit_type, current) {
-   // debugger;
+    // debugger;
     if (at == at_type_change && total_aggregated == '2' && submit_type == '1') {
         if (current == 'current') {
             nlapiSetCurrentLineItemValue('custpage_sublist', 'custpage_submit_type', 2);
@@ -452,7 +452,7 @@ function setLineToNotSubmittet(at, total_aggregated, i, submit_type, current) {
         else {
             nlapiSetLineItemValue('custpage_sublist', 'custpage_submit_type', i, 2);
             ct_id = nlapiGetLineItemValue('custpage_sublist', 'custpage_ct_id', i);
-        }   
+        }
         nlapiSubmitField('customrecord_ct_reporting_entity', ct_id, 'custrecord_ct_rep_ent_submit_checkbox', 2)
     }
     return false;
@@ -471,12 +471,12 @@ function checkIfShowActualButton(submit_type, total_aggregated, flag, acual_id, 
     return false;
 
 }
-function addSubmitButton(name, i, cells, disabled) {
+function addSubmitButton(i, cells, disabled) {
     if (disabled == 'disabled') {
-        cells[SubmitCol].innerHTML = '<button disabled onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit ' + name + '</button ></html >';
+        cells[SubmitCol].innerHTML = '<button disabled onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit</button ></html >';
     }
     else {
-        cells[SubmitCol].innerHTML = '<button onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit ' + name + '</button ></html >';
+        cells[SubmitCol].innerHTML = '<button onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit</button ></html >';
     }
 }
 function addCreateActualButton(i, cells, disabled) {
@@ -639,21 +639,6 @@ function createTran(line) {
         }
     }
     closeLoadingdiv();
-}
-function createDiv() {
-    var divhtml = "<div><b>Processing.....</b></div>";
-    var style = "left: 25%; top: 25%; z-index: 10001; position:absolute;width:620px;height:40px;line-height:1.5em;cursor:pointer;margin:5px;list-style-type: none;font-size:12px; padding:5px; background-color:#FFF; border: 2px solid gray;border-radius:10px;display:none;";
-    var stylebg = "position: absolute; z-index: 10000; top: 0px; left: 0px; height: 100%; width: 100%; margin: 5px 0px; background-color: rgb(204, 204, 204); opacity: 0.6;display:none;";
-    var bgdiv = document.createElement('div')
-    bgdiv.id = 'bgdiv';
-    bgdiv.onclick = bgdiv.style.display = 'none';
-    bgdiv.style.cssText = stylebg;
-    var loadingdiv = document.createElement('div');
-    loadingdiv.id = 'loadingdiv';
-    loadingdiv.innerHTML = divhtml;
-    loadingdiv.style.cssText = style;
-    document.body.appendChild(loadingdiv);
-    document.body.appendChild(bgdiv);
 }
 function openLoadingdiv() {
     var bd = document.getElementById('bgdiv');
@@ -935,7 +920,7 @@ function dropdownDiv() {
 }
 function floatDIV() {
     var divs = document.getElementsByClassName("uir-field-wrapper uir-inline-tag")
-    for (var i = 3; i < 8; i++) {
+    for (var i = 2; i < 7; i++) {
         divs[i].style.float = 'left'
     }
 }
@@ -945,5 +930,5 @@ function setAlignLeft() {
         var div = document.getElementById(alignList[0]);
         div.style.textAlign = 'left'
     }
-    
+
 }
