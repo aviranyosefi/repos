@@ -686,11 +686,10 @@ function addFieldToLine(INVOICErec, id, agr_line, agr, start_date, end_date, mem
     
 }
 
-// search funcation
+//[Script] Creation Invoice Service
 function getBillingPlane(from_date_data, to_date_data, agr_data, agr_line_data, employee_line_data, customer_data) {
 
     var search = nlapiLoadSearch(null, 'customsearch_agreement_service');
-
 
     search.addFilter(new nlobjSearchFilter('custrecord_bill_plan_inv_on', null, 'anyof', ["@NONE@"]));
     if (!isNullOrEmpty(from_date_data)) { search.addFilter(new nlobjSearchFilter('custrecord_bill_plan_billing_on_date', null, 'onorafter', from_date_data)) }

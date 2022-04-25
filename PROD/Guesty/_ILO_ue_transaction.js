@@ -41,16 +41,16 @@ function beforesubmit(type) {
             return;
         var filters = [new nlobjSearchFilter('custrecordilo_tax_period_subsidiary', null, 'is', subsidiary)];
         var cols = [new nlobjSearchColumn("custrecordilo_tax_period_list").setSort(),
-                      new nlobjSearchColumn("custrecordilo_ap_tax_period_status"),
-                       new nlobjSearchColumn("custrecordilo_ar_tax_period_status"),
-                     new nlobjSearchColumn("internalid"),
+        new nlobjSearchColumn("custrecordilo_ap_tax_period_status"),
+        new nlobjSearchColumn("custrecordilo_ar_tax_period_status"),
+        new nlobjSearchColumn("internalid"),
         ];
 
         if (taxperiods == null) {
             taxperiods = nlapiSearchRecord("customrecordilo_tax_period", null, filters, cols);
         }
         cols = [new nlobjSearchColumn("custrecordil_tax_code_for_localization"),
-                                 new nlobjSearchColumn("internalid").setSort(),
+        new nlobjSearchColumn("internalid").setSort(),
         ];
         if (taxcodes == null) {
             taxcodes = nlapiSearchRecord("salestaxitem", null, null, cols);
@@ -124,53 +124,6 @@ function beforesubmit(type) {
     return true;
 }
 
-function get_next_valid_period(selectedperiod) {
-    nlapiLogExecution('debug', 'get_next_valid_period start', 'selectedperiod: ' + selectedperiod + ' ' + (new Date()).toTimeString());
-    if (next_period[selectedperiod])
-        return next_period[selectedperiod];
-
-    var found_open = false;
-    var start_from_this_period = false;
-    var curVatPeriod = nlapiGetFieldValue('custbody_ilo_header_vat_period');
-    var curVatPeriod_selected_index = 0;
-    var NewVatPeriod_selected_index = 0
-    var findnextperiod = false;
-
-    for (var l = 0; l < posting_periods.length; l++) {
-        if (posting_periods[l] == curVatPeriod)
-            curVatPeriod_selected_index = l;
-    }
-
-    var selected_period_index = posting_periods.indexOf(selectedperiod);
-
-    // if the current value is closed - save the value;
-    if (curVatPeriod != '' && !is_period_closed(posting_periods[curVatPeriod_selected_index]))
-        return curVatPeriod;
-    else { // current value is empty or open period
-        // now check if it's open (check the data from the env)
-        for (var i = selected_period_index; i <= selected_period_index + 6; i++) {
-            // access the value using the column objects
-            var periodname = posting_periods[i];
-            if (periodname == selectedperiod)
-                findnextperiod = true;
-            if (findnextperiod && !is_period_closed(posting_periods[i])) {
-                NewVatPeriod_selected_index = i;
-                break;
-            }
-        }
-    }
-
-    if (NewVatPeriod_selected_index > curVatPeriod_selected_index)
-        periodname = posting_periods[NewVatPeriod_selected_index];
-    else
-        periodname = posting_periods[curVatPeriod_selected_index];
-    if (periodname == "Jan 2016")
-        periodname = "";
-
-    next_period[selectedperiod] = periodname;
-    return periodname;
-}
-
 function bg_set_vat_period() { // this is for wf only 
     var recid = nlapiGetContext().getSetting('SCRIPT', 'custscript_recid');
     var rectype = nlapiGetContext().getSetting('SCRIPT', 'custscript_rectype');
@@ -184,8 +137,8 @@ function bg_set_vat_period() { // this is for wf only
 
 function wf_set_vat_period() { // this is for wf only 
     try {
-       // var rec = nlapiGetNewRecord();
-       var rec = nlapiLoadRecord(nlapiGetRecordType(),nlapiGetRecordId())
+        var rec = nlapiGetNewRecord();
+        //var rec = nlapiLoadRecord(nlapiGetRecordType(), nlapiGetRecordId())
         var subsidiary = rec.getFieldValue('subsidiary');
         var cur_vat = rec.getFieldValue('custbody_ilo_header_vat_period');
         if (!isNullOrEmpty(cur_vat))
@@ -194,9 +147,9 @@ function wf_set_vat_period() { // this is for wf only
             return;
         var filters = [new nlobjSearchFilter('custrecordilo_tax_period_subsidiary', null, 'is', subsidiary)];
         var cols = [new nlobjSearchColumn("custrecordilo_tax_period_list").setSort(),
-                      new nlobjSearchColumn("custrecordilo_ap_tax_period_status"),
-                       new nlobjSearchColumn("custrecordilo_ar_tax_period_status"),
-                     new nlobjSearchColumn("internalid"),
+        new nlobjSearchColumn("custrecordilo_ap_tax_period_status"),
+        new nlobjSearchColumn("custrecordilo_ar_tax_period_status"),
+        new nlobjSearchColumn("internalid"),
         ];
         if (taxperiods == null) {
             taxperiods = nlapiSearchRecord("customrecordilo_tax_period", null, filters, cols);
@@ -204,10 +157,10 @@ function wf_set_vat_period() { // this is for wf only
         var PostingPeriodForCurDate = dateToPostingPeriod(rec.getFieldValue('trandate'));
         nlapiLogExecution('debug', 'PostingPeriodForCurDate', PostingPeriodForCurDate);
         var setpostingvalue = '';
-        setpostingvalue = get_next_valid_period(PostingPeriodForCurDate);
+        setpostingvalue = get_next_valid_period_wf(PostingPeriodForCurDate ,rec);
         nlapiLogExecution('debug', 'setpostingvalue', setpostingvalue);
         rec.setFieldValue('custbody_ilo_header_vat_period', setpostingvalue);
-        //nlapiSubmitField(nlapiGetRecordType(), nlapiGetRecordId(), 'custbody_ilo_header_vat_period', setpostingvalue);
+
         //now update the lines
 
         var linetype = 'expense';
@@ -221,10 +174,13 @@ function wf_set_vat_period() { // this is for wf only
             if (rec.getLineItemValue(linetype, 'itemtype', line) != "EndGroup")
                 rec.setLineItemValue(linetype, 'custcol_isr_report_vat', line, setpostingvalue);
         }
-        nlapiSubmitRecord(rec, false, true);
+        //rec.setFieldValue('approvalstatus', 2);
+        //rec.setFieldValue('custbody_draft', 'F');
+        //rec.setFieldValue('nextapprover', '');      
+        //rec.setFieldValue('memo' , 'fasdfdf')
+        //nlapiSubmitRecord(rec , null ,true);
     }
-    catch (e)
-    { }
+    catch (e) { }
 }
 
 function set_il_vat_code() {
@@ -350,6 +306,107 @@ var posting_periods = ['Jan 2016', 'Feb 2016', 'Mar 2016', 'Apr 2016', 'May 2016
 
 
 var next_period = [];
+function get_next_valid_period(selectedperiod) {
+    nlapiLogExecution('debug', 'get_next_valid_period start', 'selectedperiod: ' + selectedperiod + ' ' + (new Date()).toTimeString());
+    if (next_period[selectedperiod])
+        return next_period[selectedperiod];
+
+    var found_open = false;
+    var start_from_this_period = false;
+    var curVatPeriod = nlapiGetFieldValue('custbody_ilo_header_vat_period');
+
+    var curVatPeriod_selected_index = 0;
+    var NewVatPeriod_selected_index = 0
+    var findnextperiod = false;
+    nlapiLogExecution('debug', 'curVatPeriod', curVatPeriod)
+    for (var l = 0; l < posting_periods.length; l++) {
+        if (posting_periods[l] == curVatPeriod)
+            curVatPeriod_selected_index = l;
+    }
+
+    var selected_period_index = posting_periods.indexOf(selectedperiod);
+
+    // if the current value is closed - save the value;
+    if (curVatPeriod != '' && !is_period_closed(posting_periods[curVatPeriod_selected_index]))
+        return curVatPeriod;
+    else { // current value is empty or open period
+        // now check if it's open (check the data from the env)
+        for (var i = selected_period_index; i <= selected_period_index + 6; i++) {
+            // access the value using the column objects
+            var periodname = posting_periods[i];
+            if (periodname == selectedperiod)
+                findnextperiod = true;
+            if (findnextperiod && !is_period_closed(posting_periods[i])) {
+                NewVatPeriod_selected_index = i;
+                break;
+            }
+        }
+    }
+
+    if (NewVatPeriod_selected_index > curVatPeriod_selected_index)
+        periodname = posting_periods[NewVatPeriod_selected_index];
+    else
+        periodname = posting_periods[curVatPeriod_selected_index];
+    if (periodname == "Jan 2016")
+        periodname = "";
+
+    next_period[selectedperiod] = periodname;
+    return periodname;
+}
+
+function get_next_valid_period_wf(selectedperiod , rec) {// this is for wf only 
+    nlapiLogExecution('debug', 'get_next_valid_period start', 'selectedperiod: ' + selectedperiod + ' ' + (new Date()).toTimeString());
+    if (next_period[selectedperiod])
+        return next_period[selectedperiod];
+
+    var found_open = false;
+    var start_from_this_period = false;
+    var curVatPeriod = rec.getFieldValue('custbody_ilo_header_vat_period');
+
+    var curVatPeriod_selected_index = 0;
+    var NewVatPeriod_selected_index = 0
+    var findnextperiod = false;
+    nlapiLogExecution('debug', 'curVatPeriod', curVatPeriod)
+    for (var l = 0; l < posting_periods.length; l++) {
+        if (posting_periods[l] == curVatPeriod)
+            curVatPeriod_selected_index = l;
+    }
+
+    var selected_period_index = posting_periods.indexOf(selectedperiod);
+    nlapiLogExecution('debug', 'selected_period_index', selected_period_index)
+    // if the current value is closed - save the value;
+    if (curVatPeriod != '' && !is_period_closed(posting_periods[curVatPeriod_selected_index]))
+        return curVatPeriod;
+    else { // current value is empty or open period
+        // now check if it's open (check the data from the env)
+        for (var i = selected_period_index; i <= selected_period_index + 6; i++) {
+            // access the value using the column objects
+            var periodname = posting_periods[i];
+            if (periodname == selectedperiod)
+                findnextperiod = true;
+            if (findnextperiod && !is_period_closed(posting_periods[i])) {
+                NewVatPeriod_selected_index = i;
+                break;
+            }
+        }
+    }
+
+    if (NewVatPeriod_selected_index > curVatPeriod_selected_index)
+        periodname = posting_periods[NewVatPeriod_selected_index];
+    else
+        periodname = posting_periods[curVatPeriod_selected_index];
+
+    if (periodname == "Jan 2016")
+        periodname = posting_periods[selected_period_index];
+
+    if (periodname == "Jan 2016")
+        periodname = "";
+
+    next_period[selectedperiod] = periodname;
+    return periodname;
+}
+
+
 
 function dateToPostingPeriod(odate) {
     var date = convertVatDate(odate)

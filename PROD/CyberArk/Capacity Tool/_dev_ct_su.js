@@ -3,7 +3,7 @@ function CapacityTool(request, response) {
     var form = nlapiCreateForm('Capacity Tool - Assessments - Reporting Tool');
     form.setScript('customscript_dev_ct_cs');
     form.addSubmitButton('Refresh');
-    form.addButton('customscript_clean', 'Clean Fillters', 'Clean()')
+    form.addButton('customscript_clean', 'Clear Fillters', 'Clean()')
     form.addButton('customscript_continue', 'Submit', 'Submit()')
     form.addButton('customscript_create', 'Create', 'Create()')
     form.addFieldGroup('custpage_search_group', 'Filters');
@@ -88,23 +88,23 @@ function CapacityTool(request, response) {
     if (Lines.length > 0) {
         form.addButton('customscript_export', 'Export to Excel', 'fnExcelReport()');
         var subList = form.addSubList('custpage_sublist', 'INLINEEDITOR', 'Results', 'custpage_recipient_group');
-        subList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
-        subList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
+        //subList.addButton('customscript_marlk_all', 'Mark All', 'MarkAll()');
+        //subList.addButton('customscript_un_marlk_all', 'Unmark All', 'UnmarkAll()');
         //subList.addButton('customscript_submit_all', 'Submit All Valid Forecasts', 'SubmitAll()')
         //subList.addButton('customscript_create_actual_all', 'Create Actuals Based on Submitted Forecasts', 'CreateActualAll()')
         subList.addButton('customscript_submit_all', 'Submit All', 'SubmitAllActuals()')
-        subList.addField('custpage_result_cb', 'checkbox', 'CB')
+        //subList.addField('custpage_result_cb', 'checkbox', 'CB')
         subList.addField('custpage_ct_id', 'text', 'CT ID').setDisplayType('disabled');
-        subList.addField('custpage_emp_id', 'text', 'Employee ID').setDisplayType('disabled');
+        subList.addField('custpage_emp_sofa_id', 'text', 'Employee ID').setDisplayType('disabled');
         subList.addField('custpage_f_name', 'text', 'First Name').setDisplayType('disabled');
         subList.addField('custpage_l_name', 'text', 'Last Name').setDisplayType('disabled');
         subList.addField('custpage_job_titel', 'text', 'Job Title (Official)').setDisplayType('disabled');
         subList.addField('custpage_pd', 'text', 'Product division').setDisplayType('disabled');
         subList.addField('custpage_pg', 'text', 'Product group').setDisplayType('disabled');
-        subList.addField('custpage_ol_name', 'text', 'Office location Name').setDisplayType('disabled');
+        subList.addField('custpage_ol_name', 'text', 'Office').setDisplayType('disabled');
         subList.addField('custpage_segment', 'select', 'Segment', 'customlist_ct_segment').setDisplayType('disabled');
         subList.addField('custpage_ia', 'select', 'Investment area', 'customrecord_ct_investment_area')
-        subList.addField('custpage_npd', 'integer', 'Improvement')
+        subList.addField('custpage_npd', 'integer', 'Improv.')
         subList.addField('custpage_maintenance', 'integer', 'KTLO')
         subList.addField('custpage_total', 'text', 'Total').setDisplayType('disabled');
         
@@ -119,12 +119,14 @@ function CapacityTool(request, response) {
         subList.addField('custpage_acual_id', 'text', 'CT ACUAL ID').setDisplayType('hidden');
         subList.addField('custpage_cc', 'integer', 'CC').setDisplayType('hidden');
         subList.addField('custpage_appm', 'integer', 'Existing Func').setDisplayType('hidden');
+        subList.addField('custpage_emp_id', 'text', 'Employee ID').setDisplayType('hidden');
         var at_field = subList.addField('custpage_at', 'select', 'Assessment Type', null).setDisplayType('hidden');
         at_field.addSelectOption(1, 'Actual');
         at_field.addSelectOption(2, 'Forecast');
         for (var x = 0; x < Lines.length; x++) {
-            subList.setLineItemValue('custpage_result_cb', x + 1, 'T');
+            //subList.setLineItemValue('custpage_result_cb', x + 1, 'T');
             subList.setLineItemValue('custpage_emp_id', x + 1, Lines[x].emp_id);
+            subList.setLineItemValue('custpage_emp_sofa_id', x + 1, Lines[x].emp_sofa_id);            
             subList.setLineItemValue('custpage_f_name', x + 1, Lines[x].emp_f_name);
             subList.setLineItemValue('custpage_l_name', x + 1, Lines[x].emp_l_name);
             subList.setLineItemValue('custpage_job_titel', x + 1, Lines[x].emp_job_title);
@@ -157,7 +159,7 @@ function CapacityTool(request, response) {
 
     sortFields(form)
     markFields(form)
-    form.addButton('customscript_create_forcast', 'Add Assessment Row', 'CreateForcast()')
+    form.addButton('customscript_create_forcast', 'Add Row', 'CreateForcast()')
     response.writePage(form)
 }
 var accPeriods = getAccountingPeriods();
@@ -269,6 +271,7 @@ function getLines(empResults, periodVal, employeeVal, typeVal, reportersVal, pro
             res.push({
                 id: s[i].id,
                 emp_id: emp_id,
+                emp_sofa_id: s[i].getValue("externalid", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", null),
                 emp_f_name: s[i].getValue("firstname", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", null),
                 emp_l_name: s[i].getValue("lastname", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", null),
                 emp_job_title: s[i].getValue("title", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", null),
@@ -389,9 +392,9 @@ function addSettingFields(form, settings, periodVal, empType) {
         var month = date.getMonth() + 1
         acutalDueDateString = ' Until: '
         acutalDueDate = lock_actual + '/' + month + '/' + date.getFullYear();
-        acutalDueDateString += nlapiDateToString(nlapiAddDays(nlapiStringToDate(acutalDueDate), 1))
+        acutalDueDateString += nlapiDateToString(nlapiAddDays(nlapiStringToDate(acutalDueDate), -1))
     }
-    period_status_actual.setDefaultValue("<p style='font-size:20px'><b><u>Period Status </u></b>" + chekTrueOrFalse(actualValidation) + acutalDueDateString);
+    period_status_actual.setDefaultValue("<p style='font-size:20px'><b><u>Period Status: </u></b>" + chekTrueOrFalse(actualValidation) + acutalDueDateString);
 
     //var forcatDueDate = '';
     //if (!forcatValidation && empType == '2' && today_period == periodVal) {

@@ -1,10 +1,10 @@
 empType = nlapiGetFieldValue('custpage_user_type')
-var EmpIdCol = 2 //EMPLOYEE ID
+var EmpIdCol = 1 //EMPLOYEE ID
 //var TotalCol = 14; // ASSESSMENT TYPE
-var TotalAggCol = clcColumnindex(17, empType); //VALIDATION STATUS
-var SubmitCol = clcColumnindex(18, empType); //SUBMIT
-var CreateAcCol = clcColumnindex(19, empType); // CREATE ACTUAL
-var disabledSubmitCount = 0;
+var TotalAggCol = clcColumnindex(16, empType); //VALIDATION STATUS
+var SubmitCol = clcColumnindex(17, empType); //SUBMIT
+var CreateAcCol = clcColumnindex(18, empType); // CREATE ACTUAL
+//var disabledSubmitCount = 0;
 var prev_ia;
 var at_type_change;
 var ScreenOffset
@@ -78,13 +78,18 @@ function SubmitAll() {
 
 }
 function Submit() {
+    debugger;
     var line = nlapiGetFieldValue('custpage_line_press')
     var ct_id = nlapiGetLineItemValue('custpage_sublist', 'custpage_ct_id', line);
     nlapiSubmitField('customrecord_ct_reporting_entity', ct_id, 'custrecord_ct_rep_ent_submit_checkbox', 1)
     nlapiSetLineItemValue('custpage_sublist', 'custpage_submit_type', line, 1);
+    var index = nlapiGetCurrentLineItemIndex('custpage_sublist');
+    if (index == line)
+        nlapiSetCurrentLineItemValue('custpage_sublist', 'custpage_submit_type', 1);
     setTimeout(function () {
         document.getElementById("custpage_sublist_addedit").click()
         hideBtn("uir-machine-button-row", 'class');
+        hideBtn("uir-machine-row uir-machine-row-even listtextnonedit uir-machine-row-focused", 'class');
     }, 150);
 
 }
@@ -133,6 +138,7 @@ function CreateForcast() {
     window.open(createdPdfUrl, 'win', 'resizable=0,scrollbars=0,width=1750,height=290');
     //window.open(createdPdfUrl);
 }
+
 function pageInit() {
     var periodName = nlapiGetFieldText('custpage_select_periodfrom');
     nlapiSetFieldText('custpage_period_name', periodName);
@@ -209,11 +215,11 @@ function clientScript() {
 function lineInit() {
     var custpage_mark = nlapiGetFieldValue('custpage_mark');
     if (custpage_mark != 'true') {
+        acual_id = '';
         prev_ia = nlapiGetCurrentLineItemValue('custpage_sublist', 'custpage_ia');
         var actionType = 'block'
         var ct_id = nlapiGetCurrentLineItemValue('custpage_sublist', 'custpage_ct_id');
         if (!isNullOrEmpty(ct_id)) {
-            acual_id = '';
             var at = nlapiGetCurrentLineItemValue('custpage_sublist', 'custpage_at');
             if (at == 1) {
                 var flag = nlapiGetFieldValue('custpage_auto_lock_actual');
@@ -240,9 +246,10 @@ function lineInit() {
         for (var fld in fieldsArr) {
             nlapiSetLineItemDisabled('custpage_sublist', fieldsArr[fld], flag, Number(nlapiGetCurrentLineItemIndex('custpage_sublist')))
         }
-        addStyleAndColors();
+       
     }
     setTimeout(function () {
+        addStyleAndColors();
         hideBtn("uir-machine-row uir-machine-row-odd listtextnonedit", 'class');
     }, 150);
     return true;
@@ -332,9 +339,9 @@ function deleteLine() {
     return false
 }
 function deleteTran(id, at) {
-    if (at == 1) {
-        getForcastByActual(id);
-    }
+    //if (at == 1) {
+    //    getForcastByActual(id);
+    //}
     nlapiDeleteRecord('customrecord_ct_reporting_entity', id)
 }
 function reclac() {
@@ -376,8 +383,8 @@ function addStyleAndColors() {
             var at = nlapiGetLineItemValue('custpage_sublist', 'custpage_at', i);
             var row = document.getElementById('custpage_sublist_row_' + i);
             var cells = row.getElementsByTagName('td');
-            checkType(at, i, cells)
             var total_aggregated = nlapiGetLineItemValue('custpage_sublist', 'custpage_total_aggregated', i);
+            checkType(at, i, cells, total_aggregated)        
             paintTotalAggregated(total_aggregated, cells)
             //submitAllStyle(disabledSubmitCount)
         }
@@ -413,13 +420,13 @@ function paintCoulmns(color, coulmn, cells) {
 function checkType(at, i, cells, total_aggregated) {
     if (at == '2') {
         flag = nlapiGetFieldValue('custpage_auto_lock_forcast');
-        var color = 'yellow';
+        //var color = 'yellow';
         var acual_id = nlapiGetLineItemValue('custpage_sublist', 'custpage_acual_id', i);
         var lock_actual = nlapiGetFieldValue('custpage_auto_lock_actual');
     }
     else if (at == '1') {
         var flag = nlapiGetFieldValue('custpage_auto_lock_actual');
-        var color = 'green';
+        //var color = 'green';
     }
     //paintCoulmns(color, TotalCol, cells);
     var submit_type = nlapiGetLineItemValue('custpage_sublist', 'custpage_submit_type', i);
@@ -473,7 +480,7 @@ function checkIfShowActualButton(submit_type, total_aggregated, flag, acual_id, 
 }
 function addSubmitButton(i, cells, disabled) {
     if (disabled == 'disabled') {
-        cells[SubmitCol].innerHTML = '<button disabled onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit</button ></html >';
+        cells[SubmitCol].innerHTML = '<button disabled onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit</button ></html >';       
     }
     else {
         cells[SubmitCol].innerHTML = '<button onclick="nlapiSetFieldValue(' + "'custpage_line_press', " + i + ');document.getElementById(' + "'customscript_continue'" + ').click()"' + ' >Submit</button ></html >';
@@ -653,9 +660,7 @@ function closeLoadingdiv() {
 function paintTotalAggregated(total_aggregated, cells) {
     if (total_aggregated == 2) {
         paintCoulmns('red', TotalAggCol, cells);
-
-        disabledSubmitCount++;
-
+        //disabledSubmitCount++;
     }
     else {
         paintCoulmns('green', TotalAggCol, cells)

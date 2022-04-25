@@ -6,8 +6,8 @@ function CopyActual() {
         var today = new Date(); 
         var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
         nlapiLogExecution('DEBUG', ' today: ' + today, 'lastDay: ' + lastDay);
-        if (today == today) {
-            var prevMonth = nlapiAddMonths(today, '-2');
+        if (today == lastDay) { // TODO lastDay
+            var prevMonth = nlapiAddMonths(today, '-1');
             nlapiLogExecution('DEBUG', ' prevMonth: ' + prevMonth, 'today: ' + today);
             var prevperiod = currentPeriod(prevMonth);
             var nextperiod = currentPeriod(today);

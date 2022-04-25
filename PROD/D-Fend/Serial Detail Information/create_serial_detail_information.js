@@ -76,7 +76,7 @@ function create_serial_detail_information(type) {
                                                             var adjustqtyby = rec.getLineItemValue(sublist, 'adjustqtyby', i);
                                                             if (Number(adjustqtyby) < 0) { setInactiveList.push(pd_id); }
                                                         }
-                                                        else {
+                                                        else { // typeRecord == itemreceipt
                                                             if (ordertype == "RtnAuth") {
                                                                 var createdfrom = rec.getFieldValue('createdfrom');
                                                                 if (createdfromRec == null) {
@@ -86,9 +86,9 @@ function create_serial_detail_information(type) {
                                                                 if (replacement == 2) {
                                                                     updateITRFromRma(pd_id);
                                                                 }
-                                                            }
-                                                            break;
+                                                            }                                                           
                                                         }
+                                                        break;
                                                     }
                                                 }
                                             }

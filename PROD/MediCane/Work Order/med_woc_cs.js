@@ -86,12 +86,10 @@ function field_changed(type, name, line) {
                 $('#inventorydetail_helper_popup').click();
 
                 setTimeout(function () { document.getElementById('childdrecord').style.display = 'none' }, 400);
-                //setTimeout(function () { parent[3].addEventListener('DOMContentLoaded', setinv()) }, 1500);
-                //setTimeout(function () { parent[3].addEventListener('DOMContentLoaded', setinv()) }, 3500);
-                //setTimeout(function () { parent[3].addEventListener('DOMContentLoaded', setinv()) }, 5500);
-                setTimeout(function () { setinv() }, 1500);
-                setTimeout(function () { setinv() }, 3500);
-                setTimeout(function () { setinv() }, 5500);
+                setTimeout(function () { parent.childdrecord_frame.document.addEventListener('DOMContentLoaded', setinv()) }, 1500);
+                setTimeout(function () { parent.childdrecord_frame.document.addEventListener('DOMContentLoaded', setinv()) }, 3500);
+                setTimeout(function () { parent.childdrecord_frame.document.addEventListener('DOMContentLoaded', setinv()) }, 5500);
+
             }
         }
     }
@@ -111,23 +109,23 @@ function fieldchanged(type, name, line) {
 
 function setinv() {
     try {
-        if (trigger_once || document.getElementById('childdrecord') == null || parent[3].document.getElementById('inventoryassignment_addedit') == null)
+        if (trigger_once || document.getElementById('childdrecord') == null || parent.childdrecord_frame.document.getElementById('inventoryassignment_addedit') == null)
             return;
         trigger_once = true;
         document.getElementById('childdrecord').style.display = 'none';
-        //parent[3].document.getElementById("inventoryassignment_row_1").getElementsByTagName("td")[0].click()
-        parent[3].document.getElementById("receiptinventorynumber").value = document.getElementById('custbody_inventory_detail_field').value
+        //parent.childdrecord_frame.document.getElementById("inventoryassignment_row_1").getElementsByTagName("td")[0].click()
+        parent.childdrecord_frame.document.getElementById("receiptinventorynumber").value = document.getElementById('custbody_inventory_detail_field').value
         var qty = document.getElementById('completedquantity').value;
-        parent[3].document.getElementById("quantity").value = qty;
-        parent[3].document.getElementById("quantity").click();
-        parent[3].document.getElementById("quantity_formattedValue").click();
-        parent[3].document.getElementById("quantity_formattedValue").value = qty;
-        parent[3].document.forms['inventoryassignment_form'].elements['quantity'].value = qty;
+        parent.childdrecord_frame.document.getElementById("quantity").value = qty;
+        parent.childdrecord_frame.document.getElementById("quantity").click();
+        parent.childdrecord_frame.document.getElementById("quantity_formattedValue").click();
+        parent.childdrecord_frame.document.getElementById("quantity_formattedValue").value = qty;
+        parent.childdrecord_frame.document.forms['inventoryassignment_form'].elements['quantity'].value = qty;
         var adddays = 0;
         var new_ex_date;
         try {
-            var currentitem = parent[3].document.getElementById("item") != null ? document.getElementById("item").value : null;
-            if (currentitem != null && parent[3].document.getElementById("inventoryassignment_inventorystatus_display") != null) {
+            var currentitem = parent.childdrecord_frame.document.getElementById("item") != null ? document.getElementById("item").value : null;
+            if (currentitem != null && parent.childdrecord_frame.document.getElementById("inventoryassignment_inventorystatus_display") != null) {
                 var status = nlapiLookupField('lotnumberedassemblyitem', currentitem, 'custitemdefault_location_for_manufactu');
 
                 if (status == null || status == "") {
@@ -142,15 +140,15 @@ function setinv() {
                 var res = nlapiSearchRecord('inventorystatus', null, null, [new nlobjSearchColumn('name')]);
                 var inv_statuses = []; res.forEach(function (item) { inv_statuses[item.id] = item.getValue('name') });
 
-                parent[3].document.getElementById("inventoryassignment_inventorystatus_display").click();
-                parent[3].document.getElementById("inventoryassignment_inventorystatus_display").value = inv_statuses[status];
-                parent[3].document.getElementById("inventoryassignment_inventorystatus_display").dispatchEvent(new Event('change'));
+                parent.childdrecord_frame.document.getElementById("inventoryassignment_inventorystatus_display").click();
+                parent.childdrecord_frame.document.getElementById("inventoryassignment_inventorystatus_display").value = inv_statuses[status];
+                parent.childdrecord_frame.document.getElementById("inventoryassignment_inventorystatus_display").dispatchEvent(new Event('change'));
 
             }
             var lot = parent.nlapiGetFieldValue('custbody_medicane_sub_lot');
             var mdbatch = parent.nlapiGetFieldValue('custbody_medicane_lot');
             try {
-                var batchid = nlapiSearchRecord('inventorynumber', null, [new nlobjSearchFilter('inventorynumber', null, 'is', parent.document.getElementById('custbody_inventory_detail_field').value)])[0].id;
+                var batchid = nlapiSearchRecord('inventorynumber', null, [new nlobjSearchFilter('inventorynumber', null, 'is', document.getElementById('custbody_inventory_detail_field').value)])[0].id;
                 var inventorynumber_rec = nlapiLoadRecord('inventorynumber', batchid);
                 inventorynumber_rec.setFieldValue('custitemnumber_medicane_production_lot', lot);
                 inventorynumber_rec.setFieldValue('expirationdate', new_ex_date);
@@ -165,27 +163,24 @@ function setinv() {
             alert('inventory main error:' + e);
         };
         if (new_ex_date != null)
-            parent[3].document.forms['inventoryassignment_form'].elements['expirationdate'].value = new_ex_date;
-        // parent[3].document.forms['inventoryassignment_form'].elements['custitemnumber_md_batch_numbr'].value = document.getElementById('custbody_medicane_sub_lot_display').value;
-        setTimeout(function (elm) { elm.click(); }, 300, parent[3].document.getElementById("inventoryassignment_addedit"));
-        setTimeout(function (elm) { elm.click(); parent[3].saveInventoryDetails(); if (typeof (adjustQuantityOnChange) != 'undefined') { adjustQuantityOnChange(); updateUIType();; qtyFieldChangeinventorydetail(); } }, 700, parent[3].document.getElementById("secondaryok"));
+            parent.childdrecord_frame.document.forms['inventoryassignment_form'].elements['expirationdate'].value = new_ex_date;
+        // parent.childdrecord_frame.document.forms['inventoryassignment_form'].elements['custitemnumber_md_batch_numbr'].value = document.getElementById('custbody_medicane_sub_lot_display').value;
+        setTimeout(function (elm) { elm.click(); }, 300, parent.childdrecord_frame.document.getElementById("inventoryassignment_addedit"));
+        setTimeout(function (elm) { elm.click(); parent.childdrecord_frame.saveInventoryDetails(); if (typeof (adjustQuantityOnChange) != 'undefined') { adjustQuantityOnChange(); updateUIType();; qtyFieldChangeinventorydetail(); } }, 700, parent.childdrecord_frame.document.getElementById("secondaryok"));
         setTimeout(function (type) {
             nlapiCommitLineItem(type);
-            parent.document.getElementById('componentinventorydetail_helper_popup_1').className = "smalltextul i_inventorydetailset"; // TODO ASK MOSHE
+            document.getElementById('inventorydetail_helper_popup_1').className = "smalltextul i_inventorydetailset";
         }, 1000, type);
         setTimeout(function (type) {
-            //parent[3].nlFireEvent(getButton('ok'), 'click'); // TODO ASK MOSHE
+            parent.childdrecord_frame.nlFireEvent(getButton('ok'), 'click');
         }, 1200, type);
 
         if (document.getElementById('custbody_inventory_detail_issue').value != '') {
             setTimeout(function () { $('#componentinventorydetail_helper_popup_1').click() }, 1600);
             setTimeout(function () { document.getElementById('childdrecord').style.display = 'none' }, 1800);
-            //setTimeout(function () { parent.frames['childdrecord_frame'].document.addEventListener('DOMContentLoaded', setinvline()) }, 2900);
-            //setTimeout(function () { parent.frames['childdrecord_frame'].document.addEventListener('DOMContentLoaded', setinvline()) }, 5500);
-            //setTimeout(function () { parent.frames['childdrecord_frame'].document.addEventListener('DOMContentLoaded', setinvline()) }, 8500);
-            setTimeout(function () { setinvline() }, 2900);
-            setTimeout(function () { setinvline() }, 5000);
-            setTimeout(function () { setinvline() }, 8500);
+            setTimeout(function () { parent.frames['childdrecord_frame'].document.addEventListener('DOMContentLoaded', setinvline()) }, 2900);
+            setTimeout(function () { parent.frames['childdrecord_frame'].document.addEventListener('DOMContentLoaded', setinvline()) }, 5500);
+            setTimeout(function () { parent.frames['childdrecord_frame'].document.addEventListener('DOMContentLoaded', setinvline()) }, 8500);
         }
 
     }
@@ -199,67 +194,55 @@ function setinv() {
 var trigger_once_line = false;
 function setinvline() {
     // now update the line:
-    debugger;
     try {
-        if (trigger_once_line || document.getElementById('childdrecord') == null || parent[3].document.getElementById('inventoryassignment_addedit') == null)
+        if (trigger_once_line || document.getElementById('childdrecord') == null || parent.childdrecord_frame.document.getElementById('inventoryassignment_addedit') == null)
             return;
         trigger_once_line = true;
-
+        debugger;
         var mdbatch = parent.nlapiGetFieldValue('custbody_inventory_detail_issue');
         var qty = document.getElementById('completedquantity').value;
-        parent[3].document.getElementById("quantity").value = qty;
-        parent[3].document.getElementById("quantity").click();
-        parent[3].document.getElementById("quantity_formattedValue").click();
-        parent[3].document.getElementById("quantity_formattedValue").value = qty;
-        parent[3].document.forms['inventoryassignment_form'].elements['quantity'].value = qty;
+        parent.childdrecord_frame.document.getElementById("quantity").value = qty;
+        parent.childdrecord_frame.document.getElementById("quantity").click();
+        parent.childdrecord_frame.document.getElementById("quantity_formattedValue").click();
+        parent.childdrecord_frame.document.getElementById("quantity_formattedValue").value = qty;
+        parent.childdrecord_frame.document.forms['inventoryassignment_form'].elements['quantity'].value = qty;
 
-        parent[3].document.getElementById('quantity').value = qty;
-        if (parent[3].document.getElementById("inpt_issueinventorynumber2") != null) {
-           parent[3].document.getElementById("inpt_issueinventorynumber2").click();
-           parent[3].document.getElementById("inpt_issueinventorynumber2").value = mdbatch;
-            var sel = parent[3].getDropdown(parent[3].document.getElementById('inpt_issueinventorynumber2'))
-           parent[3].document.getElementById("hddn_issueinventorynumber2").value = sel.getValueAtIndex(getIndex(sel, mdbatch)); //sel.getValueAtIndex(sel.getIndexForText(mdbatch));
-           parent[3].document.getElementById("hddn_issueinventorynumber2").dispatchEvent(new Event('change'));
+        parent.childdrecord_frame.document.getElementById('quantity').value = qty;
+        if (parent.frames['childdrecord_frame'].document.getElementById("inpt_issueinventorynumber2") != null) {
+            parent.frames['childdrecord_frame'].document.getElementById("inpt_issueinventorynumber2").click();
+            parent.frames['childdrecord_frame'].document.getElementById("inpt_issueinventorynumber2").value = mdbatch;
+            var sel = parent.frames['childdrecord_frame'].getDropdown(parent.frames['childdrecord_frame'].document.getElementById('inpt_issueinventorynumber2'))
+            parent.frames['childdrecord_frame'].document.getElementById("hddn_issueinventorynumber2").value = sel.getValueAtIndex(sel.getIndexForText(mdbatch));
+            parent.frames['childdrecord_frame'].document.getElementById("hddn_issueinventorynumber2").dispatchEvent(new Event('change'));
+
         }
-        else if (parent[3].document.getElementById("inpt_issueinventorynumber1") != null) {
-            debugger;
-           parent[3].document.getElementById("inpt_issueinventorynumber1").click();
-           parent[3].document.getElementById("inpt_issueinventorynumber1").value = mdbatch;         
-            var sel = parent[3].getDropdown(parent[3].document.getElementById('inpt_issueinventorynumber1'))
-            var index1 = getIndex(sel, mdbatch);
-            var indexVal = sel.getValueAtIndex(index1)
-            parent[3].document.getElementById("hddn_issueinventorynumber1").value = indexVal;
-           parent[3].document.getElementById("hddn_issueinventorynumber1").dispatchEvent(new Event('change'));
-             
+        else if (parent.frames['childdrecord_frame'].document.getElementById("inpt_issueinventorynumber1") != null) {
+            parent.frames['childdrecord_frame'].document.getElementById("inpt_issueinventorynumber1").click();
+            parent.frames['childdrecord_frame'].document.getElementById("inpt_issueinventorynumber1").value = mdbatch;
+            var sel = parent.frames['childdrecord_frame'].getDropdown(parent.frames['childdrecord_frame'].document.getElementById('inpt_issueinventorynumber1'))
+            parent.frames['childdrecord_frame'].document.getElementById("hddn_issueinventorynumber1").value = sel.getValueAtIndex(sel.getIndexForText(mdbatch));
+            parent.frames['childdrecord_frame'].document.getElementById("hddn_issueinventorynumber1").dispatchEvent(new Event('change'));
+
         }
         else {
-           parent[3].document.getElementById("inventoryassignment_issueinventorynumber_display").click();
-           parent[3].document.getElementById("inventoryassignment_issueinventorynumber_display").value = mdbatch;
-           parent[3].document.getElementById("inventoryassignment_issueinventorynumber_display").dispatchEvent(new Event('change'));
+            parent.frames['childdrecord_frame'].document.getElementById("inventoryassignment_issueinventorynumber_display").click();
+            parent.frames['childdrecord_frame'].document.getElementById("inventoryassignment_issueinventorynumber_display").value = mdbatch;
+            parent.frames['childdrecord_frame'].document.getElementById("inventoryassignment_issueinventorynumber_display").dispatchEvent(new Event('change'));
 
         }
-        setTimeout(function (elm) { elm.click(); }, 300, parent[3].document.getElementById("inventoryassignment_addedit"));
+        setTimeout(function (elm) { elm.click(); }, 300, parent.childdrecord_frame.document.getElementById("inventoryassignment_addedit"));
         setTimeout(function (type) {
-
-            nlapiCommitLineItem(type); trigger_once = false; 
+            nlapiCommitLineItem(type); trigger_once = false; document.getElementById('inventorydetail_helper_popup_' + line).className = "smalltextul i_inventorydetailset";
         }, 1000, type);
-        setTimeout(function (elm) { updateMachineFieldStyle = function () { }; elm.click(); parent[3].saveInventoryDetails(); if (typeof (adjustQuantityOnChange) != 'undefined') { adjustQuantityOnChange(); updateUIType();; qtyFieldChangeinventorydetail(); } }, 700, parent[3].document.getElementById("secondaryok"));
+        setTimeout(function (elm) { updateMachineFieldStyle = function () { }; elm.click(); parent.childdrecord_frame.saveInventoryDetails(); if (typeof (adjustQuantityOnChange) != 'undefined') { adjustQuantityOnChange(); updateUIType();; qtyFieldChangeinventorydetail(); } }, 700, parent.childdrecord_frame.document.getElementById("secondaryok"));
         setTimeout(function (type) {
-            parent[3].closeInventoryDetails();
+            parent.childdrecord_frame.closeInventoryDetails();
         }, 1200, type);
 
     }
     catch (e) {
-        try { parent[3].closeInventoryDetails(); } catch (e) { };
+        try { parent.frames['childdrecord_frame'].closeInventoryDetails() } catch (e) { };
         alert('inventory line error:' + e);
-    }
-}
-
-function getIndex(sel, mdbatch) {
-    mdbatch = mdbatch.replace('_' , ' ')
-    var count = sel.textArray.length
-    for (var y = 0; y < count; y++) {
-        if (sel.textArray[y].indexOf(mdbatch) != -1) return y
     }
 }
 
@@ -289,8 +272,6 @@ function ReportCompletion() {
     setTimeout(function () { window.open(createdPdfUrl, '_top') }, 1000);
 
 }
-
-
 
 
 

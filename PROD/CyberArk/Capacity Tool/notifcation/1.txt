@@ -1,2 +1,21 @@
-CT_Reporting_Entity wf - update context to suitelet and user interface
+1.CT_Reporting_Entity wf - update context to suitelet and user interface - https://4678143-sb2.app.netsuite.com/app/common/workflow/setup/nextgen/workflowdesktop.nl?id=79&e=T&whence=
 
+2._dev_ct_uncompleted - delete link from deployement https://4678143-sb2.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1957&deploy=1&compid=4678143_SB2&whence=
+
+3. CT_copy_reporting_entity_ss -  set inactive -  https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1962
+
+4. ct_empl_validation_UE - UPDATE SCRIPT. https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1954
+
+5. DELETE REPORT FROM MENU : CUSTOMIZATION -> CENTER AND TABS ->CENTER LINKS -> 
+
+6.DELETE FORCAST SEACHES LINKS https://4678143-sb2.app.netsuite.com/app/common/custom/custcategory.nl?id=138&sec=20&e=T
+https://4678143-sb2.app.netsuite.com/app/common/custom/custcategory.nl?id=139&sec=21&e=T
+
+7. Starting_Review_Cycle_ss - UPDATE THE SCRIPT AND UPDATE DEPLOYMENT TO DAILEY EVENT. https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1961
+
+8. set inactive -  
+Reporter_Alert_Missing_Forecast_Assessment - https://4678143-sb2.app.netsuite.com/app/common/media/mediaitem.nl?id=2760629
+TC_HR_BP_Reporters_M_Missed_Forecast_Asses - https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1977
+
+9. add externid column to search  - CT_Reporting_Entity Search - https://4678143-sb2.app.netsuite.com/app/common/search/search.nl?cu=T&e=T&id=741677
+  

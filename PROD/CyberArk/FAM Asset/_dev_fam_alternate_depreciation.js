@@ -25,6 +25,7 @@ define(['N/record', 'N/runtime', 'N/search', 'N/email', 'N/task'],
 
         }
         //FAM Asset Search AY
+        // FAM Asset Search (FOR SCRIPT)
         function getData() {
 
             var objSearch = search.load({ id: 'customsearch_fam_alternate_dep' });
@@ -142,6 +143,11 @@ define(['N/record', 'N/runtime', 'N/search', 'N/email', 'N/task'],
                         fieldId: 'amount',
                         line: lineNumber
                     });
+                    var quantity = typeRec.getSublistValue({
+                        sublistId: sublistName,
+                        fieldId: 'quantity',
+                        line: lineNumber
+                    });
                     log.debug('sublistName amount ' , amount);
                 }
                 else {
@@ -156,16 +162,22 @@ define(['N/record', 'N/runtime', 'N/search', 'N/email', 'N/task'],
                         fieldId: 'amount',
                         line: lineNumber
                     });
+                    var quantity = typeRec.getSublistValue({
+                        sublistId: secondSublistName,
+                        fieldId: 'quantity',
+                        line: lineNumber
+                    });
                     log.debug('secondSublistName amount: ' + secondSublistName, amount);                   
                 }
-                var cost = exchangerate * amount
+                var ncfar_quantity=  assetRec.getValue('custrecord_ncfar_quantity')
+                var cost = (exchangerate * amount * ncfar_quantity) / quantity
             }
             else {
                 var cost = exchangerate * assetRec.getValue('custrecord_assetcurrentcost')
             }
 
             log.debug('cost', cost);
-            return cost;
+            return cost.toFixed(2);
         }
         function getType(parent_trn) {
             if (parent_trn == 'Journal') {
