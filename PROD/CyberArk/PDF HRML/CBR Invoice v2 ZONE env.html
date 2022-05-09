@@ -283,7 +283,7 @@
     <#list record.accountingbookdetail as abd>
         <#assign SECONDERY_EXCHANGE=abd.exchangerate
                     RECORD_CURRENCY=abd.currency
-                    >
+        >
     </#list>
 </#if>
 
@@ -940,17 +940,14 @@
 
     <!--======= Start Body Fields =========-->
     <table cellpadding="0" class="${ALIGN_DIRECTION_RIGHT} body_fields">
-        <#if ((SHOW_IL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS  && !ZAB_INDEXATION_IND))>
+        <#if (SHOW_IL_CURR_EXCH_FLDS && !ZAB_INDEXATION_IND) || (SHOW_LOCAL_CURR_EXCH_FLDS  && !ZAB_INDEXATION_IND)>
             <tr>
-              <td>${EXCHANGE_RATE_LABEL}: ${LOCALIZATION_EXCHANGE_RATE?string(EXCH_CURR_FORMAT)}</td>
-            <!--    <td>${EXCHANGE_RATE_LABEL}: ${record.exchangerate?string[",##0.0000##"]}</td> -->
-
+              <td>${EXCHANGE_RATE_LABEL}: ${LOCALIZATION_EXCHANGE_RATE?string(EXCH_CURR_FORMAT)}</td>          
             </tr>
         </#if>
 
         <#if SHOW_ORIGINAL_UNIT_PRICE_CURR_EXCH_FLDS && ORIGINAL_UNIT_PRICE_EXCHANGE_RATE?has_content>
             <tr>
-               <!--   <td>${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE_LABEL}: ${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE?string(EXCH_CURR_FORMAT)}</td> -->
               <#if record.subsidiary == '202_CyberArk ISR' && record.currency == 'ILS'>
                  <td>${ORIGINAL_UNIT_PRICE_EXCHANGE_RATE_LABEL}: ${(total / ORIGINAL_UNIT_PRICE_TOTAL)?string[",##0.0000##"]}</td>
                 <#else>

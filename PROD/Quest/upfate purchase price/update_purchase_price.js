@@ -11,7 +11,7 @@ define(['N/search', 'N/record', 'N/log', 'N/currency'],
         function getInputData() {        
             var data = [];           
             var data = getRunData();     
-            logger.debug({ title: 'data ' + data.length, details: JSON.stringify(data) });
+            logger.debug({ title: 'data ' + data.length, details: JSON.stringify(data)});
             return data;
         }
         function getRunData() {
@@ -20,12 +20,12 @@ define(['N/search', 'N/record', 'N/log', 'N/currency'],
                 type: "item",
                 filters:
                     [
-                        ["cost", "isnotempty", ""],
+                        ["custitem_purchase_price_orig_currency", "isnotempty", ""],
                         "AND",
                         ["custitem_purchase_price_currency", "noneof", "@NONE@"],
                     ],
                 columns: [ 
-                    "custitem_purchase_price_currency","cost"
+                    "custitem_purchase_price_currency","custitem_purchase_price_orig_currency"
                 ]
             });
             var res = [];
@@ -45,7 +45,7 @@ define(['N/search', 'N/record', 'N/log', 'N/currency'],
                     res.push({
                         id: s[i].id,
                         type: s[i].recordType,
-                        cost: s[i].getValue('cost'),
+                        price: s[i].getValue('custitem_purchase_price_orig_currency'),
                         currency: s[i].getValue('custitem_purchase_price_currency'),
                     });
                 }
@@ -58,8 +58,8 @@ define(['N/search', 'N/record', 'N/log', 'N/currency'],
                 var ObjLine = JSON.parse(context.value);
                 var purchase_price_currency = ObjLine.currency;
                 var rate = currency.exchangeRate({
-                    source: purchase_price_currency,
-                    target: 'USD',
+                    source: 'USD',
+                    target: purchase_price_currency,
                     date: new Date()
                 });
                 var itemId = ObjLine.id;
@@ -68,9 +68,9 @@ define(['N/search', 'N/record', 'N/log', 'N/currency'],
                     type: itemType,
                     id: itemId
                 });
-                var cost = Number(ObjLine.cost);
-                var purchasePriceClc = (rate * cost).toFixed(2) 
-                itemRec.setValue('custitem_purchase_price_orig_currency', purchasePriceClc);
+                var price = Number(ObjLine.price);
+                var purchasePriceClc = (price/rate) //.toFixed(4) 
+                itemRec.setValue('cost', purchasePriceClc);
                 itemRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
                 //logger.debug('rate', rate);
             } catch (e) {

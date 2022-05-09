@@ -120,6 +120,7 @@ function getdate() {
         day = '0' + day;
 
     var auto_lock_actual = nlapiLookupField('customrecord_ct_notif_time_control', 1, 'custrecord_ct_grace_days_actual_reportin');
+    auto_lock_actual = auto_lock_actual-1
 
     var formatdate = [auto_lock_actual, month, year].join('/')/* + ' ' + d.toTimeString().substring(0, 8)*/
     return formatdate;

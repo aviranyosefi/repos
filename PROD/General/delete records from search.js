@@ -1,5 +1,5 @@
 var context = nlapiGetContext();
-var results = nlapiLoadSearch(null, 'customsearch795');
+var results = nlapiLoadSearch(null, 'customsearch825060');
 var runSearch = results.runSearch();
 var s = [];
 var searchid = 0;
@@ -19,8 +19,9 @@ for (i = 0; i < s.length; i++) {
     try {
         var recId = s[i].id;
         var recType = s[i].type;                          
-        var rec = nlapiLoadRecord (recType,recId)
-        id = nlapiSubmitRecord(rec, null , true);
+        //var rec = nlapiLoadRecord (recType,recId)
+        //id = nlapiSubmitRecord(rec, null , true);
+        nlapiDeleteRecord(recType, recId)
         nlapiGetContext().getRemainingUsage = function () { return 1000; }
         
     } catch (e) {

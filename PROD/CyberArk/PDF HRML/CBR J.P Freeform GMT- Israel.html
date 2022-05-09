@@ -86,6 +86,16 @@
 	    </#if>
 	    <#return value>
     </#function>
+
+    <#function checkInter ebank>
+	    <#assign value=ebank.custrecord_2663_swift_inter>
+	    <#if value?has_content>
+		    <#assign value='SWIFT'>
+	    <#else>
+		    <#assign value=''>
+	    </#if>
+	    <#return value>
+    </#function>
    
     <#-- template building -->
     #OUTPUT START#
@@ -97,7 +107,7 @@ HEADER,${setMaxLength(pfa.custrecord_2663_file_creation_timestamp?date?string("y
     <#if swiftID?has_content && (swiftID?length == 8 || swiftID?length == 11)>
         <#assign countryCode = swiftID?substring(4,6) >
     </#if>
-P,WIRES,0${setMaxLength(cbank.custpage_eft_custrecord_2663_bic?upper_case,11)},${setMaxLength(cbank.custpage_eft_custrecord_2663_acct_num?upper_case,34)},N,${setMaxLength(getCurrencySymbol(payment.currency)?upper_case,3)},${setMaxLength(formatAmount(getAmount(payment),"dec"),20)},,,,,,<#--M-->${setMaxLength(pfa.custrecord_2663_process_date?string("yyyyMMdd"),8)},<#--N-->${checkIBAN(ebank)},${setMaxLength(accountNumber(ebank)?upper_case,34)},${setMaxLength(entity.companyname?replace(",", " " )?upper_case,35)},${encloseString(setMaxLength(buildEntityBillingAddress1(entity)?upper_case,35),35,",","\"")}<#--R-->,,${entity.billzipcode},,${entity.billcountry.internalid},,,<#--X-->${checkSWIFT(ebank)},${setMaxLength(ebank.custrecord_2663_entity_bic?upper_case,34)},${encloseString(setMaxLength(ebank.custrecord_2663_entity_bank_name?replace(",", " " )?upper_case,35),35,",","\"")},${encloseString(setMaxLength(ebank.custrecord_2663_entity_address1?replace(",", " " )?upper_case,34),34,",","\"")},,,${ebank.custrecord_2663_entity_country_code?upper_case},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,${buildBankCharge(ebank)}
+P,WIRES,0${setMaxLength(cbank.custpage_eft_custrecord_2663_bic?upper_case,11)},${setMaxLength(cbank.custpage_eft_custrecord_2663_acct_num?upper_case,34)},N,${setMaxLength(getCurrencySymbol(payment.currency)?upper_case,3)},${setMaxLength(formatAmount(getAmount(payment),"dec"),20)},,,,,,<#--M-->${setMaxLength(pfa.custrecord_2663_process_date?string("yyyyMMdd"),8)},<#--N-->${checkIBAN(ebank)},${setMaxLength(accountNumber(ebank)?upper_case,34)},${setMaxLength(entity.companyname?replace(",", " " )?upper_case,35)},${encloseString(setMaxLength(buildEntityBillingAddress1(entity)?upper_case,35),35,",","\"")}<#--R-->,,${entity.billzipcode},,${entity.billcountry.internalid},,,<#--X-->${checkSWIFT(ebank)},${setMaxLength(ebank.custrecord_2663_entity_bic?upper_case,34)},${encloseString(setMaxLength(ebank.custrecord_2663_entity_bank_name?replace(",", " " )?upper_case,35),35,",","\"")},${encloseString(setMaxLength(ebank.custrecord_2663_entity_address1?replace(",", " " )?upper_case,34),34,",","\"")},,,${ebank.custrecord_2663_entity_country_code?upper_case},,,,,,,,,,<#--AN40-->${checkInter(ebank)},${ebank.custrecord_2663_swift_inter},${ebank.custrecord_2663_bank_name_inter?replace(",", " " )},${ebank.custrecord_2663_address1_inter?replace(",", " " )},${ebank.custrecord_2663_address2_inter?replace(",", " " )},,${ebank.custrecord_2663_country_code_inter},,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,${buildBankCharge(ebank)}
 </#list>
 TRAILER,${setMaxLength(payments?size?c,23)},${setMaxLength(formatAmount(computeTotalAmount(payments),"dec"),17)}
     #OUTPUT END#

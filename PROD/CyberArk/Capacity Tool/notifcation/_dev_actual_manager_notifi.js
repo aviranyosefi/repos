@@ -9,6 +9,46 @@ var periodname = nlapiLookupField('accountingperiod', periodid, 'periodname');
 var fromId = 33;//NetSuite Integration
 var subjectYear = getdate('year')
 var ct_guide_link = nlapiLookupField('customrecord_ct_notif_time_control', 1, 'custrecord_ct_guide_link');
+var mounthList = {
+    "Jan": {
+        "name": "January"
+    },
+    "Feb": {
+        "name": "February"
+    },
+    "Mar": {
+        "name": "March"
+    },
+    "Apr": {
+        "name": "April"
+    },
+    "May": {
+        "name": "May"
+    },
+    "Jun": {
+        "name": "June"
+    },
+    "Jul": {
+        "name": "July"
+    },
+    "Aug": {
+        "name": "August"
+    },
+    "Sep": {
+        "name": "September"
+    },
+    "Oct": {
+        "name": "October"
+    },
+    "Nov": {
+        "name": "November"
+    },
+    "Dec": {
+        "name": "December"
+    }
+
+
+}
 
 function actualManagerNotifi() {
     try { 
@@ -35,11 +75,10 @@ function getReportersAssessmentsStatus(searchId) {
     } while (resultslice != null && resultslice.length >= 1000);
     for (var i = 0; i < s.length; i++) {
         var emp = s[i].getValue("custentity_ct_tool_reporter", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", "GROUP");
-        var reporter=  nlapiLookupField ('employee', emp, 'custentity_ct_tool_reporter')
-        managersList[reporter] = ({
-            manager: reporter
-        });
+        var reporter=  nlapiLookupField ('employee', emp, ['custentity_ct_tool_reporter' , 'altname'])
+        addReportesListName(reporter.custentity_ct_tool_reporter, reporter.altname) 
     }
+    
 }
 //Reporters Own Assessments (not submitted) - manager
 function getReportersOwnAssessments(searchId) {
@@ -56,9 +95,9 @@ function getReportersOwnAssessments(searchId) {
         }
     } while (resultslice != null && resultslice.length >= 1000);
     for (var i = 0; i < s.length; i++) {
-        managersList[s[i].getValue("custentity_ct_tool_reporter", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", "GROUP")] = ({
-            manager: s[i].getValue("custentity_ct_tool_reporter", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", "GROUP")
-        });
+        var reporter = s[i].getValue("custentity_ct_tool_reporter", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", "GROUP");
+        var name = s[i].getValue("altname", "CUSTRECORD_CT_REP_ENT_EMPLOYEE", "GROUP");
+        addReportesListName(reporter, name) 
     }
 }
 
@@ -74,7 +113,8 @@ function sentManagerEmails() {
             if (isNullOrEmpty(emp)) continue;
 
             var manager = managersList[emp].manager;
-            sendManagerEmail(manager)
+            var names = managersList[emp].names;
+            sendManagerEmail(manager, names)
 
         } catch (e) {
             nlapiLogExecution('error', 'emp: ' + emp, e);
@@ -82,7 +122,7 @@ function sentManagerEmails() {
         }
     }
 }
-function sendManagerEmail(manager) {
+function sendManagerEmail(manager, names) {
     try {
         var manager_altname = nlapiLookupField('employee', manager, 'altname');
         var emailMerger = nlapiCreateEmailMerger(managerEmailId);
@@ -94,9 +134,11 @@ function sendManagerEmail(manager) {
         msg = msg.replace('[[Link_2_System]]', '<a href="' + linkToSystem + '"> LINK </a>');
         msg = msg.replace('[[Link_2_Guide]]', '<a href="' + ct_guide_link + '"> LINK </a>');
 
+        msg = msg.replace('[[names]]', names);
+
         var sbj = mergeResult.getSubject();
         sbj = sbj.replace('[[Year]]', subjectYear);
-        sbj = sbj.replace('[[Period]]', periodname.slice(0, 3));
+        sbj = sbj.replace('[[Period]]', getFullMounth(periodname));
         nlapiSendEmail(fromId, manager, sbj, msg);
 
     } catch (e) {
@@ -165,4 +207,23 @@ function currentPeriod(date) {
         return s[0].getValue('internalid')
     }
     return '';
+}
+function getFullMounth(periodname) {
+    periodname = periodname.slice(0, 3);
+    return mounthList[periodname].name
+}
+function addReportesListName(reporter , name) {
+    if (managersList[reporter] != undefined) {
+        var ListName = managersList[reporter].names
+        if (ListName.indexOf(name) == -1) {
+            ListName = ListName + ', ' + name
+        }   
+    }
+    else {
+        ListName =  name
+    }
+    managersList[reporter] = ({
+        manager: reporter,
+        names: ListName
+    });
 }

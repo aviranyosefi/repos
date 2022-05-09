@@ -27,7 +27,8 @@ function save() {
 
 }
 function createTran() {
-    try {    
+    try {
+        debugger;
         type = nlapiGetFieldValue('custpage_type');
         emp_id = nlapiGetFieldValue('custpage_employee');        
         var ct_employee_type = nlapiLookupField('employee', emp_id, 'custentity_ct_employee_type');
@@ -54,14 +55,8 @@ function createTran() {
         var period = nlapiGetFieldValue('custpage_period');
 
         if (CheckIfAlreadyExist(emp_id, period, ia, type) == 0) {
-            var perecentLines = getLinesPercentperiodVal(period, emp_id, type)
-            if (type == 1) {
-                if (Number(perecentLines) + Number(npd) + Number(maintenance) + Number(appm) + Number(cc) != 100) {
-                    alert("First Actual record must be created via 'Create Actual' or 'Create Actuals Based on Submitted Forecasts' Buttons")
-                    return 'fail'
-                }
-            }
-            else if (Number(perecentLines) + Number(npd) + Number(maintenance) + Number(appm) + Number(cc) > 100) {
+            var perecentLines = getLinesPercentperiodVal(period, emp_id, type)        
+            if (Number(perecentLines) + Number(npd) + Number(maintenance) + Number(appm) + Number(cc) > 100) {
                 alert("Employee’s periodical Assessment can't exceed 100 %.")
                 return 'fail'
             }
@@ -77,18 +72,6 @@ function createTran() {
             rec.setFieldValue('custrecord_ct_rep_ent_employee', emp_id)
             if (type == 1) { rec.setFieldValue('custrecord_ct_rep_ent_submit_checkbox', 1)}
             var id = nlapiSubmitRecord(rec, null, true); 
-            if (id != '-1') {
-                var forcastId = getForcastRecord(emp_id, period, ia);
-                if (forcastId != -1) {
-                    nlapiSubmitField('customrecord_ct_reporting_entity', forcastId, 'custrecord_ct_acual_id', id)
-                }
-                else {
-                    var forcastId = getForcastRecord(emp_id, period, null);
-                    if (forcastId != -1) {
-                        nlapiSubmitField('customrecord_ct_reporting_entity', forcastId, 'custrecord_ct_acual_id', id)
-                    }
-                }
-            }
             return id
         }
         else {
@@ -122,6 +105,7 @@ function CheckIfAlreadyExist(employee, period, invest_area, type) {
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_period', null, 'anyof', period))
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_invest_area', null, 'anyof', invest_area))
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_type', null, 'anyof', type))
+    filters.push(new nlobjSearchFilter('isinactive', null, 'is', 'F'))
 
     var search = nlapiCreateSearch('customrecord_ct_reporting_entity', filters, null);
 
@@ -141,6 +125,7 @@ function CheckIfAlreadyExist(employee, period, invest_area, type) {
 function getLinesPercentperiodVal(periodVal, employeeVal, typeVal) {
     var search = nlapiLoadSearch(null, 'customsearch_ct_reporting_entity_2'); 
     search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_period', null, 'anyof', periodVal));
+    search.addFilter(new nlobjSearchFilter('isinactive', null, 'is', 'F'));
     if (!isNullOrEmpty(employeeVal)) { search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', employeeVal.split("\u0005"))); }
     if (!isNullOrEmpty(typeVal)) { search.addFilter(new nlobjSearchFilter('custrecord_ct_rep_ent_type', null, 'anyof', typeVal)); }
    
@@ -169,6 +154,7 @@ function getForcastRecord(employee, period, invest_area) {
     if (invest_area != null) { filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_invest_area', null, 'anyof', invest_area)) }
     else { filters.push(new nlobjSearchFilter('custrecord_ct_acual_id', null, 'anyof', '@NONE@')) }
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_type', null, 'anyof', 2))
+    filters.push(new nlobjSearchFilter('isinactive', null, 'is', 'F'))
 
     var search = nlapiCreateSearch('customrecord_ct_reporting_entity', filters, null);
 

@@ -110,10 +110,10 @@ function FieldChanged_adjustqtyby(type, name, linenum) {
             NLShowChildRecordPopup('inventory', 'inventoryinventorydetail', false, '/app/accounting/transactions/inventory/numbered/inventorydetail.nl', this, -1, { right: 0, width: 700, height: 700 }, 'inventory', 'inventorydetail');
             try { document.getElementById('childdrecord').style.display = 'none'; document.getElementById('ext-gen23').style.display = 'none' } catch (e) { };
             trigger_once = false;
-            setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 150, qty, exp, num, type);
-            setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 1500, qty, exp, num, type);
-            setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 3000, qty, exp, num, type);
-            setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 5000, qty, exp, num, type);
+            setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 8000, qty, exp, num, type);
+            //setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 1500, qty, exp, num, type);
+            //setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 3000, qty, exp, num, type);
+            //setTimeout(function (qty, exp, num, type) { setinv(qty, exp, num, type) }, 8000, qty, exp, num, type);
         }
     }
     catch (e) {
@@ -125,9 +125,10 @@ function FieldChanged_adjustqtyby(type, name, linenum) {
 
 function setinv(qty, exp, num, type) {
     try {
-        if (trigger_once || document.getElementById('childdrecord') == null || parent[4].document.getElementById('inventoryassignment_expressentry') == null)
-            return;
         debugger;
+        if (trigger_once || document.getElementById('childdrecord') == null )
+            return;
+    
         trigger_once = true;
         document.getElementById('childdrecord').style.display = 'none';
         //confirm("You are about to update the inventory. Please confirm");

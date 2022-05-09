@@ -881,6 +881,7 @@ function Reporting_Entity(employee, period, invest_area, type) {
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_period', null, 'anyof', period))
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_invest_area', null, 'anyof', invest_area))
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_type', null, 'anyof', type))
+    filters.push(new nlobjSearchFilter('isinactive', null, 'is', 'F'))
 
     var search = nlapiCreateSearch('customrecord_ct_reporting_entity', filters, null);
 

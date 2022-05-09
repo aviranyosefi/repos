@@ -28,25 +28,17 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 var date = getDateFormat()
                 logger.debug('date', date);
                 for (var i = 0; i < SummaryName.length; i++) {
-                    //var SummaryFileName = SummaryName[i] + '2022-03-22 to 2022-03-22' + '.csv';  
-                    var SummaryFileName = SummaryName[i] + date + ' to ' + date + '.csv';  
-                    //logger.debug('SummaryFileName', SummaryFileName);
+                    var SummaryFileName = SummaryName[i] + '2022-04-29 to 2022-04-29' + '.csv';  
+                    //var SummaryFileName = SummaryName[i] + date + ' to ' + date + '.csv';  
                     var SummaryFileObj = hypCore.DownloadFile(connection, SummaryFileName, integId, null);
                     if (!common.isNullOrEmpty(SummaryFileObj)) {
-                        //var savedFile = file.create({
-                        //    name: SummaryFileName,
-                        //    fileType: file.Type.CSV,
-                        //    contents: SummaryFileObj.getContents(),
-                        //    folder: folderNs
-                        //});
-                        //SummaryFileId = savedFile.save();
                         var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())
                         var SummaryFile = file.load({ id: SummaryFileId });
                         SummaryFile = SummaryFile.getContents();
                         var fileLines = SummaryFile.split('\r\n');
                         var line = 1;
-                        //var lineFolder = RowName[i] + '2022-03-09 to 2022-03-09';
-                        var lineFolder = RowName[i] + date + ' to ' + date;
+                        var lineFolder = RowName[i] + '2022-04-29 to 2022-04-29';
+                        //var lineFolder = RowName[i] + date + ' to ' + date;
                         for (var i = 2; i <= fileLines.length; i++) {
                             if (!common.isNullOrEmpty(fileLines[i])) {
                                 var cols = fileLines[i].replace(/\"/g, '').split(',');
@@ -212,6 +204,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             var txtFile = file.load({ id: lineFile });
             txtFile = txtFile.getContents();
             var allTextLines = txtFile.split(/\r\n|\n/);
+            logger.debug('lines allTextLines: ', allTextLines.length);
             for (var i = 2; i < allTextLines.length; i++) {
                 if (!common.isNullOrEmpty(allTextLines[i])) {
                     var data = allTextLines[i].replace(/\"/g, '').split('|');

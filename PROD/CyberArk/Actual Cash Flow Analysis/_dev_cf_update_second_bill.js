@@ -21,7 +21,7 @@ function start() {
     }
 }
 
-//NR cash flow update Second Bills Data
+//NR cash flow update Second payment
 function SecondBillsData() {
 
     var loadedSearch = nlapiLoadSearch(null, 'customsearch_cf_update_second_bill');

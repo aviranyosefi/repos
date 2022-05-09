@@ -6,14 +6,15 @@
         var rec = nlapiLoadRecord(recTYPE, recID);
         nlapiLogExecution('debug', ' recTYPE: ' + recTYPE, 'recID: ' + recID);
         //var location = context.getSetting('SCRIPT', 'custscript_wf_tech_location');       
-        var assigned = rec.getFieldValue('assigned');
-        var location = nlapiLookupField('employee', assigned, 'location')
+        //var assigned = rec.getFieldValue('assigned');
+        //var location = nlapiLookupField('employee', assigned, 'location')
 
         var entity = rec.getFieldValue('company');
         var product_line = rec.getFieldValue('custevent_dangot_product_line');
         //var replacement_type = rec.getFieldValue('custevent_replacement_type');
         var itemList = [];
-        itemList = getSparParts(recID)
+        itemList = getSparParts(recID);
+        var location = itemList[0].location
         //if (replacement_type == 5) // חלקי חילוף
         //{
         //    itemList = getSparParts(recID)
@@ -114,6 +115,7 @@ function getSparParts(caseID) {
     columns.push(new nlobjSearchColumn('custrecord_spare_part_qty'));
     columns.push(new nlobjSearchColumn('custrecord_sp_serial_number'));
     columns.push(new nlobjSearchColumn('custrecord_sp_action_type'));
+    columns.push(new nlobjSearchColumn('custrecord_sp_location'));
 
     var filters = new Array();
     filters[0] = new nlobjSearchFilter('custrecord_sp_related_case', null, 'anyof', caseID)
@@ -140,7 +142,9 @@ function getSparParts(caseID) {
             item: s[i].getValue('custrecord_issued_item'),
             qty: s[i].getValue('custrecord_spare_part_qty'),
             serial: s[i].getValue('custrecord_sp_serial_number'),
-            action_type: s[i].getValue('custrecord_sp_action_type')
+            action_type: s[i].getValue('custrecord_sp_action_type'),
+            location: s[i].getValue('custrecord_sp_location'),
+
         });
     }
     return results;

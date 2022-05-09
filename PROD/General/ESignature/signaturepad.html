@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://6398307.app.netsuite.com/core/media/media.nl?id=6885&c=6398307&h=sEOOVCZMFNJLQDk3hiA9t7Ij6Zy2S1XVYR_pwp7XU3-xumlp&_xt=.js"></script><!--signature_pad.min.js-->
+<link rel="stylesheet" href="https://6398307.app.netsuite.com/core/media/media.nl?id=6882&c=6398307&h=T_zH8SN0KC6vL7EmPZEGQA9Pg6VgvDfGDkkO5-Mj3ciMEsYK&_xt=.css"><!--signature-pad.css-->
+</head>
+<body>
+<div id="signature-pad" class="signature-pad" style="height:500px">
+    <div class="signature-pad--body">
+        <canvas width="664" height="373" style="touch-action: none; background-image:url(https://preview.ibb.co/jnW4Qz/Grumpy_Cat_920x584.jpg)" ></canvas>
+    </div>
+    <div class="signature-pad--footer">
+      <div class="description">Sign above</div>
+
+      <div class="signature-pad--actions">
+        <div>
+          <button type="button" class="button clear" data-action="clear">Clear</button>
+          <button type="button" class="button" data-action="change-color" style = "display: none">Change color</button>
+          <button type="button" class="button" data-action="undo">Undo</button>
+
+        </div>
+        <div>
+          <button type="button" class="button save" data-action="sign">Save Signiture</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" name="signature" />
+  
+<script>
+    var canvas = document.querySelector("canvas");
+
+    var signaturePad = new SignaturePad(canvas);
+
+    var wrapper = document.getElementById("signature-pad");
+    var sign = wrapper.querySelector("[data-action=sign");
+    var clearButton = wrapper.querySelector("[data-action=clear]");
+    var undoButton = wrapper.querySelector("[data-action=undo]");
+
+    sign.addEventListener("click", function (event) {
+        if (signaturePad.isEmpty()) {
+            alert("Please Sign");
+        }
+        else {
+            debugger
+            var dataURL = signaturePad.toDataURL().split(',')[1];//// REMOVE data:image/jpeg;base64,
+
+            //$("input[name=signature").val(dataURL); //base 64. Not needed, just in case
+
+
+            //Post dataURL to server. It's base64. Return redirect url
+            $.post('/app/site/hosting/scriptlet.nl?script=1094&deploy=1&tranid=' + tranid, dataURL)
+                  .done(function (data) {
+                      console.log(data)
+                      var res = JSON.parse(data);
+                      if (res.status == 'success') {
+                          window.location = res.data;
+                      }
+                      else {
+                          alert("Error occured while signing. Error : " + data.errMessage);
+                          console.log("Error occured while signing", data)
+                      }
+                  })
+               .fail(function (data) {
+                   alert("Error occured while signing");
+                   console.log("Error occured while signing", data)
+               })
+        }
+    });
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+    var tranid = getUrlParameter('id');
+
+    clearButton.addEventListener("click", function (event) {
+        signaturePad.clear();
+    });
+
+    undoButton.addEventListener("click", function (event) {
+        var data = signaturePad.toData();
+
+        if (data) {
+            data.pop(); // remove the last dot or line
+            signaturePad.fromData(data);
+        }
+    });
+
+</script>
+</body>
+</html>

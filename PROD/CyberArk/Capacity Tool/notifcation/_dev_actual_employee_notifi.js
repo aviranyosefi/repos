@@ -9,7 +9,46 @@ var periodname = nlapiLookupField('accountingperiod', periodid, 'periodname');
 var fromId = 33;//NetSuite Integration
 var subjectYear = getdate('year')
 var ct_guide_link = nlapiLookupField('customrecord_ct_notif_time_control', 1, 'custrecord_ct_guide_link');
-
+var mounthList = {
+    "Jan": {
+        "name": "January"
+    },
+    "Feb": {
+        "name": "February"
+    },
+    "Mar": {
+        "name": "March"
+    },
+    "Apr": {
+        "name": "April"
+    },
+    "May": {
+        "name": "May"
+    },
+    "Jun": {
+        "name": "June"
+    },
+    "Jul": {
+        "name": "July"
+    },
+    "Aug": {
+        "name": "August"
+    },
+    "Sep": {
+        "name": "September"
+    },
+    "Oct": {
+        "name": "October"
+    },
+    "Nov": {
+        "name": "November"
+    },
+    "Dec": {
+        "name": "December"
+    }
+   
+  
+}
 function actualNotifi() {
     try { 
         getReportersOwnAssessments('customsearch_actual_notification_2')
@@ -96,7 +135,7 @@ function sendEmpEmail(emp, empName) {
 
         var sbj = mergeResult.getSubject();
         sbj = sbj.replace('[[Year]]', subjectYear);
-        sbj = sbj.replace('[[Period]]', periodname.slice(0, 3));
+        sbj = sbj.replace('[[Period]]', getFullMounth(periodname));
         nlapiSendEmail(fromId, emp, sbj, msg);
 
     } catch (e) {
@@ -168,3 +207,7 @@ function currentPeriod(date) {
     }
     return '';
 }
+function getFullMounth(periodname) {
+    periodname = periodname.slice(0, 3);
+    return mounthList[periodname].name
+} 

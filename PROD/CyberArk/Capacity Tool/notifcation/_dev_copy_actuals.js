@@ -4,13 +4,15 @@ var rec_type = 'customrecord_ct_reporting_entity';
 function CopyActual() {
     try {
         var today = new Date(); 
+        var todayStr = nlapiDateToString(today)
         var lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        nlapiLogExecution('DEBUG', ' today: ' + today, 'lastDay: ' + lastDay);
-        if (today == lastDay) { // TODO lastDay
-            var prevMonth = nlapiAddMonths(today, '-1');
+        var lastDayStr = nlapiDateToString(lastDay)
+        nlapiLogExecution('DEBUG', ' today: ' + todayStr, 'lastDay: ' + lastDayStr);
+        if (todayStr == lastDayStr) { 
+            var prevMonth =  nlapiAddMonths(today, '-1');
             nlapiLogExecution('DEBUG', ' prevMonth: ' + prevMonth, 'today: ' + today);
             var prevperiod = currentPeriod(prevMonth);
-            var nextperiod = currentPeriod(today);
+            var nextperiod =  currentPeriod(today);
             nlapiLogExecution('DEBUG', ' prevperiod: ' + prevperiod, 'nextperiod: ' + nextperiod);
             var result = getActualList(prevperiod);
             makeCopy(result, nextperiod);

@@ -100,7 +100,7 @@ define(['N/ui/serverWidget', 'N/ui/message', 'N/search', 'N/task'],
             var Filters = [];
             if (!isNullOrEmpty(fiber)) {
                 Filters.push("AND");
-                Filters.push(['custrecord_fragment_fiber', 'anyof', fiber]);
+                Filters.push(['custrecord_fragment_site.custrecord_fragment_fiber',  'anyof', fiber]);
             }
             if (!isNullOrEmpty(satellite)) {
                 Filters.push("AND");

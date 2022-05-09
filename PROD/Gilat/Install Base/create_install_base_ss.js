@@ -26,9 +26,7 @@ function createIb_SS() {
                     else if (state.status == 'RESUME') {
                         nlapiLogExecution("AUDIT", 'run', "Resuming script due to: " + state.reason + ",  " + state.size);
                     }
-                }
-
-                nlapiLogExecution('debug', 'i ', i)
+                }               
                 var not_create = true;
                 var item = rec.getLineItemValue('item', 'item', i);
                 var line = rec.getLineItemValue('item', 'custcol_so_line_numberdisp', i);
@@ -505,33 +503,28 @@ function item_type_value(itemType_text) {
     }
     else if (itemType_text == 'NonInvtPart') {
         res = 2;
-
     }
-    else if (type == 'Service') {
+    else if (itemType_text == 'Service') {
         res = 3;
     }
-    else if (type == 'Other Charge') {
+    else if (itemType_text == 'Other Charge') {
         res = 4;
     }
-    else if (type == 'Assembly') {
+    else if (itemType_text == 'Assembly') {
         res = 5;
     }
-    else if (type == 'Kit') {
+    else if (itemType_text == 'Kit') {
         res = 6;
     }
-    else if (type == 'Item Group') {
+    else if (itemType_text == 'Item Group') {
         res = 7;
     }
-    else if (type == 'Discount') {
+    else if (itemType_text == 'Discount') {
         res = 8;
     }
-    else if (type == 'Markup') {
+    else if (itemType_text == 'Markup') {
         res = 9;
     }
-
-
-
-
     return res;
 }
 
@@ -682,7 +675,6 @@ function serachIbToUpdateSubscription(subscription, status) {
 }
 
 function isNullOrEmpty(val) {
-
     if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
         return true;
     }
