@@ -45,9 +45,13 @@ function fieldChange(type, name) {
     if (name == 'custevent_dangot_customer') {
         debugger;
         var val = nlapiGetFieldValue('custevent_dangot_customer');
-        if (val != '') {                
+        if (val != '') {
             setCustomer(val);
         }
+    }
+    else if (name == 'custevent_callbiz_product_line') {
+        var val = nlapiGetFieldValue('custevent_callbiz_product_line');
+        nlapiSetFieldValue('custevent_dangot_product_line', val)
     }
 }
 function setCustomer(val) {

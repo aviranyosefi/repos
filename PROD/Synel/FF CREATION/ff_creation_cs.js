@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @NApiVersion 2.1
  * @NScriptType ClientScript
  * @NModuleScope SameAccount
@@ -17,9 +17,12 @@ define(['N/currentRecord', 'N/ui/dialog', 'N/search'],
                     if (!isNullOrEmpty(item)) {
                         var msg = checkMandatoryFields(item)
                         if (!isNullOrEmpty(msg)) {
+                            var html = '<p style="text-align:right;" dir="rtl">'
+                            html += msg
+                            html += '</p>'
                             let options = {
-                                title: 'Please enter a mandatory fields',
-                                message: msg
+                                title: '<p style="text-align:right;" dir="rtl">חסרים שדות חובה</p>',
+                                message: html
                             };
                             function success() {
                                 rec.setCurrentSublistValue({
@@ -41,15 +44,15 @@ define(['N/currentRecord', 'N/ui/dialog', 'N/search'],
             var msg = '';
             var itemData = search.lookupFields({ type: search.Type.ITEM, id: item, columns: ['custitem_case_indicator'] });
             var case_indicator = itemData.custitem_case_indicator
-            if (!case_indicator) { msg += 'CASE INDICATOR MUST BE CHECKED<br>' }
+            if (!case_indicator) { msg += 'צקבוקס CASE INDICATOR בפריט צריך להיות מסומן<br>' }
             var qty = rec.getCurrentSublistValue('item', 'quantity');
-            if (qty != 1) { msg += 'QUANTITY MUST BE EQUAL TO 1<br>' }
+            if (qty != 1) { msg += 'כמות בשורה צריכה להיות 1<br>' }
             var location = rec.getCurrentSublistValue('item', 'location');
-            if (isNullOrEmpty(location)) { msg += 'LOCATION MUST BE POPULATE<br>' }
+            if (isNullOrEmpty(location)) { msg += 'נדרש להזין מחסן<br>' }
             var isserial = rec.getCurrentSublistValue('item', 'isserial');
             if (isserial == 'T') {
                 var inventorydetail = nlapiViewCurrentLineItemSubrecord('item', 'inventorydetail')
-                if (isNullOrEmpty(inventorydetail)) { msg += 'INVENTORY DETAILS MUST BE POPULATE<br>' }
+                if (isNullOrEmpty(inventorydetail)) { msg += 'נדרש להזין מספר סריאלי<br>' }
             }
 
             return msg;

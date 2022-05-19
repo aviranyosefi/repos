@@ -7,10 +7,10 @@ function ar_rev_rec_je_update() {
     var ar_locked_name = period_ar_closed.getValue(columns[0]);
     var last_date_cr_op_period = period_ar_closed.getValue(columns[7]);
     nlapiLogExecution('audit', 'last_date_cr_op_period ', last_date_cr_op_period);
-  
+
 
     var cols = [new nlobjSearchColumn("periodname"),
-              new nlobjSearchColumn("internalid").setSort()
+    new nlobjSearchColumn("internalid").setSort()
     ];
     var periods_res = nlapiSearchRecord('accountingperiod', null, [['isyear', 'is', 'F'], 'and', ['isquarter', 'is', 'F']], cols);
     var rs;
@@ -30,7 +30,7 @@ function ar_rev_rec_je_update() {
 
     var revrec = nlapiLoadSearch(null, 'customsearch_nr_revrec_entries');
     nlapiLogExecution('audit', 'ar_locked_date ', ar_locked_date);
-    revrec.addFilter(new nlobjSearchFilter('datecreated', null, 'onorafter', ar_locked_date + " 00:00"));
+    revrec.addFilter(new nlobjSearchFilter('datecreated', null, 'after', ar_locked_date/* + " 00:00"*/));
     nlapiLogExecution('audit', 'filter ', JSON.stringify(revrec.getFilterExpression(), null, 2));
     var rs;
     var searchid = 0;
@@ -41,9 +41,9 @@ function ar_rev_rec_je_update() {
         for (rs in resultslice) {
             nlapiLogExecution('audit', 'resultslice ', searchid);
             var jeid = resultslice[rs].getValue(columns[2]);
-          var date = resultslice[rs].getValue(columns[4]);
-              nlapiLogExecution('audit', 'date ', date);
-          
+            var date = resultslice[rs].getValue(columns[4]);
+            nlapiLogExecution('audit', 'date ', date);
+
             nlapiLogExecution('audit', 'jeid ', jeid + ' ' + context.getRemainingUsage());
 
             if (context.getRemainingUsage() < 1200) {
@@ -55,8 +55,8 @@ function ar_rev_rec_je_update() {
                     nlapiLogExecution("AUDIT", 'nightjob_bills', "Resuming script due to: " + state.reason + ",  " + state.size);
                 }
             }
-           if(last_date_cr_op_period<=date)
-              nlapiSubmitField('journalentry', jeid, 'postingperiod', nextPeriod_id);
+            if (last_date_cr_op_period <= date)
+                nlapiSubmitField('journalentry', jeid, 'postingperiod', nextPeriod_id);
             searchid++;
         }
     } while (resultslice.length >= 1000);

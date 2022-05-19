@@ -7,10 +7,10 @@
     <#------------ Start Functions ------------>
         <#function isTrue val>
             <#local stringBoolValue="F">
-                <#if val?has_content && (val?string= ="Yes" || val?string= ="T" )>
+                <#if val?has_content && (val?string=="Yes" || val?string=="T" )>
                     <#local stringBoolValue="T">
                 </#if>
-                <#return stringBoolValue= ="T">
+                <#return stringBoolValue=="T">
         </#function>
 
         <#function toNumber val>
@@ -36,7 +36,7 @@
                     <#local retObj={}>
                         <#list theList as item>
                             <#list columnName as colName>
-                                <#if colName= ="custcol_nc_qtr_quotation_rate" && toNumber(item[colName])= =0>
+                                <#if colName=="custcol_nc_qtr_quotation_rate" && toNumber(item[colName])==0>
                                     <#local retObj=retObj + {colName: (retObj[colName]?? && retObj[colName] || false)}>
                                         <#else>
                                             <#local retObj=retObj + {colName: (retObj[colName]?? && retObj[colName] || item[colName]?has_content)}>
@@ -313,7 +313,22 @@
                                         <#else>
                                             ${companyInformation.addressText}
                                     </#if>
-                                    <#if record.subsidiary.taxidnum?has_content><br /><#if record.subsidiary= ='302_CyberArk USA'>EIN<#else>VAT</#if> # ${record.subsidiary.taxidnum}</#if>
+                                    <#if record.subsidiary!='302_CyberArk USA'>
+                                        <#if record.subsidiary.taxidnum?has_content>
+                                            <br />
+                                            <#if record.subsidiary=='402_CyberArk GBR'>
+                                                Company Reg
+                                                <#else>
+                                                    VAT
+                                            </#if>
+                                            # ${record.subsidiary.taxidnum}
+                                        </#if>
+                                    </#if>
+                                    <#if record.subsidiary=='402_CyberArk GBR'>
+                                        <br />
+                                        VAT # ${record.subsidiary.custrecord_company_reg_num}
+
+                                    </#if>
                                 </td>
 
                                 <td align="center" style="width:33.3%;">
@@ -390,7 +405,7 @@
 
                         <table class="table styled-table">
                             <#list record.item as item>
-                                <#if item_index= =0>
+                                <#if item_index==0>
                                     <thead style="font-size:10.5px;">
                                         <tr class="add-borders">
                                             <th class="center" colspan="1">Line#</th>
@@ -434,7 +449,7 @@
                              SUB_TOTAL=toNumber(record.subtotal)
                              TOTAL=toNumber(record.total)
                              QUOTATION_EXCHANGE_RATE=toNumber(record.custbody_nc_qtr_quote_exchage_rate)>
-                        <#if record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                        <#if record.tax2total?has_content && record.subsidiary=="303_CyberArk CAN">
                             <#assign CAN_TAX_TOTAL=toNumber(record.tax2total)>
                         </#if>
                         <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"] && QUOTATION_EXCHANGE_RATE !=0>
@@ -443,7 +458,7 @@
                             QUOTATION_TOTAL = TOTAL / QUOTATION_EXCHANGE_RATE
                             >
                         </#if>
-                        <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"] && QUOTATION_EXCHANGE_RATE !=0 && record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                        <#if COLUMN_DISPLAY_DATA?? && COLUMN_DISPLAY_DATA["custcol_nc_qtr_quotation_rate"] && QUOTATION_EXCHANGE_RATE !=0 && record.tax2total?has_content && record.subsidiary=="303_CyberArk CAN">
                             <#assign CAN_QUOTATION_TAX_TOTAL=CAN_TAX_TOTAL / QUOTATION_EXCHANGE_RATE>
                         </#if>
                         <#if (SUB_TOTAL>
@@ -451,7 +466,7 @@
                             <#assign TAX_RATE=(TAX_TOTAL / SUB_TOTAL * 100)?string(CURRENCY_FORMAT)
                             >
                         </#if>
-                        <#if record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                        <#if record.tax2total?has_content && record.subsidiary=="303_CyberArk CAN">
                             <#if (SUB_TOTAL>
                                 0  &&  CAN_TAX_TOTAL > 0)>
                                 <#assign CAN_TAX_RATE=(CAN_TAX_TOTAL / SUB_TOTAL * 100)?string(CURRENCY_FORMAT)
@@ -498,7 +513,7 @@
                                                 </tr>
                                             </#if>
                                         </#if>
-                                        <#if record.tax2total?has_content && record.subsidiary= ="303_CyberArk CAN">
+                                        <#if record.tax2total?has_content && record.subsidiary=="303_CyberArk CAN">
                                             <tr class="add-borders valign-middle">
                                                 <td colspan="2" class="right">${record.tax2total@label} (${CAN_TAX_RATE}%)</td>
                                                 <td colspan="2" class="right">${CAN_TAX_TOTAL?string(CURRENCY_FORMAT_SYMBOL)}</td>

@@ -7,6 +7,7 @@
 4. ct_empl_validation_UE - UPDATE SCRIPT. https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1954
 
 5. DELETE REPORT FROM MENU : CUSTOMIZATION -> CENTER AND TABS ->CENTER LINKS -> 
+Prior month - Missing \ Not Submitted - Actual - Reporters Own Assessments
 
 6.DELETE FORCAST SEACHES LINKS https://4678143-sb2.app.netsuite.com/app/common/custom/custcategory.nl?id=138&sec=20&e=T
 https://4678143-sb2.app.netsuite.com/app/common/custom/custcategory.nl?id=139&sec=21&e=T
@@ -14,8 +15,13 @@ https://4678143-sb2.app.netsuite.com/app/common/custom/custcategory.nl?id=139&se
 7. Starting_Review_Cycle_ss - UPDATE THE SCRIPT AND UPDATE DEPLOYMENT TO DAILEY EVENT. https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1961
 
 8. set inactive -  
-Reporter_Alert_Missing_Forecast_Assessment - https://4678143-sb2.app.netsuite.com/app/common/media/mediaitem.nl?id=2760629
+Reporter_Alert_Missing_Forecast_Assessment - https://4678143.app.netsuite.com/app/common/scripting/script.nl?id=1960
 TC_HR_BP_Reporters_M_Missed_Forecast_Asses - https://4678143-sb2.app.netsuite.com/app/common/scripting/script.nl?id=1977
 
 9. add externid column to search  - CT_Reporting_Entity Search - https://4678143-sb2.app.netsuite.com/app/common/search/search.nl?cu=T&e=T&id=741677
+
+10. ENMAIL TEMPLATES UPDATE
+
+
+
   

@@ -14,15 +14,15 @@ var country;
 var mergeData = [];
 var context = nlapiGetContext().getExecutionContext();
 nlapiLogExecution('debug', 'context', context);
-var checkCancelationSoLine =null;
+var checkCancelationSoLine = null;
 if (RecType == 'returnauthorization' && context == 'webservices') {
-     checkCancelationSoLine = checkCancelation(rec.getFieldValue('custbody_cbr_so_cancelation_reason'))
+    checkCancelationSoLine = checkCancelation(rec.getFieldValue('custbody_cbr_so_cancelation_reason'))
 }
 
 function afterSubmit(type) {
     if (type != 'delete') {
         nlapiLogExecution('debug', 'RecType:' + RecType, ' id:' + id);
-        if (RecType == 'salesorder' || (RecType == 'returnauthorization' && isNullOrEmpty(rec.getFieldValue('createdfrom'))) || (context == 'webservices' && RecType == 'returnauthorization' && !isNullOrEmpty(rec.getFieldValue('createdfrom')) && checkCancelationSoLine == 'T')) {
+        if (RecType == 'salesorder' && rec.getFieldValue('custbodyzab_created_by_zone_billing') == 'F' || (RecType == 'returnauthorization' && isNullOrEmpty(rec.getFieldValue('createdfrom'))) || (context == 'webservices' && RecType == 'returnauthorization' && !isNullOrEmpty(rec.getFieldValue('createdfrom')) && checkCancelationSoLine == 'T')) {
             itemCount = rec.getLineItemCount('item');
             if (itemCount > 0) {
                 country = rec.getLineItemValue('item', 'custcol_cseg_cbr_countries', 1);
@@ -65,7 +65,7 @@ function afterSubmit(type) {
             keys = Object.keys(itemsData);
             addItemsToSo();
         }
-              
+
     } // if (type != 'delete') 		
 }
 
@@ -238,7 +238,7 @@ function itemValidation(virtualItemsPerItem, line, item) {
     }
 
     if (((itemsData[virtualItemsPerItem[0].nd] == null || itemsData[virtualItemsPerItem[0].nd] == undefined) && virtualItemsPerItem[0].nd != "" && (alredyExsistItems[virtualItemsPerItem[0].nd] == null || alredyExsistItems[virtualItemsPerItem[0].nd] == undefined)) || (virtualItemsPerItem[0].nd_merge == 'F' && virtualItemsPerItem[0].nd != "")) {
-        if (virtualItemsPerItem[0].nd_merge == 'F'  && virtualItemsPerItem[0].nd != "") {
+        if (virtualItemsPerItem[0].nd_merge == 'F' && virtualItemsPerItem[0].nd != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].nd,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -729,7 +729,7 @@ function addItemsToSo() {
     try {
         var soRec = null;
         nlapiLogExecution('DEBUG', 'RecType', RecType);
-        if (RecType == 'returnauthorization' && context == 'webservices'  && checkCancelationSoLine == 'T') {
+        if (RecType == 'returnauthorization' && context == 'webservices' && checkCancelationSoLine == 'T') {
             createdfrom = rec.getFieldValue('createdfrom');
             if (!isNullOrEmpty(createdfrom)) {
                 soRec = nlapiLoadRecord('salesorder', createdfrom);
@@ -738,7 +738,7 @@ function addItemsToSo() {
         }
         nlapiLogExecution('DEBUG', 'JSON.stringify(itemsData)' + keys.length, JSON.stringify(itemsData));
         for (var i = 0; i < keys.length; i++) {
-            try {               
+            try {
                 rec.selectNewLineItem('item');
                 rec.setCurrentLineItemValue('item', 'item', keys[i])
                 rec.setCurrentLineItemValue('item', 'quantity', itemsData[keys[i]].qty)
@@ -752,7 +752,7 @@ function addItemsToSo() {
                 rec.setCurrentLineItemValue('item', 'custcol_cbr_split_from_custom_line_id', itemsData[keys[i]].line.toString());
                 rec.setCurrentLineItemValue('item', 'location', getRegionLocation(country));
                 rec.setCurrentLineItemValue('item', 'custcol_vi_parent_item', itemsData[keys[i]].ParentItem);
-                rec.setCurrentLineItemValue('item', 'custcol_cbr_price_list_region', itemsData[keys[i]].price_list_region); 
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_price_list_region', itemsData[keys[i]].price_list_region);
                 //rec.setCurrentLineItemValue('item', 'custcol_sf_so_lineid', itemsData[keys[i]].sf_so_lineid); 
                 rec.commitLineItem('item');
 
@@ -811,11 +811,11 @@ function addItemsToSo() {
             }
 
         }
-        
+
         if (RecType == 'returnauthorization' && soRec != null) {
             nlapiSubmitRecord(soRec);
         }
-              
+
         nlapiSubmitRecord(rec);
     } catch (e) {
         nlapiLogExecution('DEBUG', 'error', e);
@@ -929,12 +929,12 @@ function getQty(virtualItemsPerItem, type, line) {
 }
 
 function checkCancelation(cancelationId) {
-    try { 
+    try {
         if (!isNullOrEmpty(cancelationId)) {
             var create_so_line = nlapiLookupField('customrecord_cbr_cancelation_reason', cancelationId, 'custrecord_cbr_cancelatio_create_so_line');
-            return create_so_line         
+            return create_so_line
         }
-    } catch(e){
+    } catch (e) {
         return 'F'
     }
     return 'F'

@@ -9,6 +9,7 @@ var sublist;
 var setInactiveList = [];
 var createdfromRec = null
 var i;
+var KitWarrDate;
 
 function create_serial_detail_information(type) {
     try {
@@ -26,7 +27,10 @@ function create_serial_detail_information(type) {
                 var ordertype = rec.getFieldValue('ordertype');
                 var trandate = rec.getFieldValue('trandate');
                 var vendorOrCustomer = rec.getFieldValue('entity');
-                for ( i = 1; i <= itemCount; i++) {
+                for (i = 1; i <= itemCount; i++) {
+                    var itemtype = rec.getLineItemValue(sublist, 'itemtype', i);
+                    nlapiLogExecution('debug', ' itemtype', itemtype);
+                    if (itemtype == 'Kit') { KitWarrDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i) }       
                     var isserial = rec.getLineItemValue(sublist, 'isserial', i);
                     if (isserial == 'T') {
                         var item = rec.getLineItemValue(sublist, 'item', i);
@@ -111,7 +115,7 @@ function create_serial_detail_information(type) {
                                         else if (typeRecord == 'itemfulfillment') {
                                             if (type == 'edit') {
                                                 updateApi(rec, Recid)
-                                            }
+                                            }                       
                                             var newDate = '';
                                             var UpdateExpirationDate = true;
                                             if (serialnumber != '') { // FROM RMA && CASE
@@ -316,8 +320,17 @@ function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCus
         if (isNullOrEmpty(sdItf)) {
             pdRec.setFieldValue('custrecord_sd_item_fulfillment', Recid) // ITF      
             pdRec.setFieldValue('custrecord_sd_customer', vendorOrCustomer)//CUSTOMER
-            if (UpdateExpirationDate) { expirationDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i) }
+            if (UpdateExpirationDate) {
+                expirationDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i)
+                if (isNullOrEmpty(expirationDate)) {
+                    kitmemberof = rec.getLineItemValue(sublist, 'kitmemberof', i)
+                    if (!isNullOrEmpty(kitmemberof)) {
+                        expirationDate = KitWarrDate
+                    }
+                }
+            }
             else if (!isNullOrEmpty(newDate)) { expirationDate = newDate }
+            nlapiLogExecution('debug', ' expirationDate', expirationDate);
             pdRec.setFieldValue('custrecord_warranty_expiration_date', expirationDate)   // WARRANTY EXPIRATION DATE 
             if (api_marketing == 'T') {
                 pdRec.setFieldValue('custrecord_sd_end_customer', endCustomer) //END CUSTOMER
@@ -342,7 +355,15 @@ function update_pd(pd_id, rec, Recid, UpdateExpirationDate, newDate, vendorOrCus
         if (type == 'create') {
             pdRec.setFieldValue('custrecord_sd_last_item_fulfillment', Recid)
             pdRec.setFieldValue('custrecord_sd_customer', vendorOrCustomer)//CUSTOMER
-            if (UpdateExpirationDate) { expirationDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i) }
+            if (UpdateExpirationDate) {
+                expirationDate = rec.getLineItemValue(sublist, 'custcol_warranty_expiration_date', i)
+                if (isNullOrEmpty(expirationDate)) {
+                    kitmemberof = rec.getLineItemValue(sublist, 'kitmemberof', i)
+                    if (!isNullOrEmpty(kitmemberof)) {
+                        expirationDate = KitWarrDate
+                    }                   
+                }
+            }
             else if (!isNullOrEmpty(newDate)) { expirationDate = newDate }
             pdRec.setFieldValue('custrecord_warranty_expiration_date', expirationDate)   // WARRANTY EXPIRATION DATE 
             if (api_marketing == 'T') {

@@ -4,14 +4,18 @@
  */
 define(["N/task"], function (task) {
     function onRequest(context) {
-        executeScheduled();
+        var errorLodId = context.request.parameters.errorLodId;
+        executeScheduled(errorLodId);
     }
 
-    function executeScheduled() {
+    function executeScheduled(errorLodId) {
         var scriptTask = task.create({
             taskType: task.TaskType.MAP_REDUCE,
             scriptId: "customscript_legaltracker",
-            deploymentId: "customdeploy1"
+            deploymentId: null,
+            params: {
+                'custscript_legal_tracker_errorid': errorLodId
+            }
         });
         var scriptTaskId = scriptTask.submit();
         log.debug("scriptTaskId", scriptTaskId);

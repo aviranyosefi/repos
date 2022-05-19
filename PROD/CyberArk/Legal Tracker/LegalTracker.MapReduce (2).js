@@ -7,22 +7,22 @@ var ErrorList = [];
 var SuccessList = [];
 define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.Lib.Common', './dev_legal_tracker_sftp', 'N/file', 'N/email', 'N/cache', 'N/format'],
     function (search, record, logger, error, runtime, common, hypCore, file, email, cache, formatter) {
-        var lineFolder, LineFileName, linesFieldId, errorLodId, recId;
+        var lineFolder, LineFileName, linesFieldId, errorLodId;
         var SummaryName = ['Tracker Invoice Spreadsheetaccountspayable il', 'Tracker Invoice Spreadsheetaccountspayable apj', 'Tracker Invoice Spreadsheetaccountspayable emea', 'Tracker Invoice Spreadsheetaccounts payable']
         var RowName = ['Tracker Invoices.accountspayable il.', 'Tracker Invoices.accountspayable apj.', 'Tracker Invoices.accountspayable emea.', 'Tracker Invoices.accounts payable.']
-        var FOLDER_NS = '1164026';
-        var ITEM_ID = 2184;
-        var FORM_ID = 199;
+        var folderNs = '1164026';
+        var itemID = 2184;
+        var formID = 199;
         var lineFolderPrefix = 'LegalTracker/New/'
         function getInputData() {
             var script = runtime.getCurrentScript();
-            var errorLodId = script.getParameter({ name: 'custscript_legal_tracker_errorid' });
-            logger.debug('errorLodId', errorLodId);          
+            var errorLodId = script.getParameter({ name: 'custscript_legal_tracker_secondrun' });
+            //logger.debug('secondrun', secondrun);
             var data = [];
             if (!common.isNullOrEmpty(errorLodId) ) {
-                var data = getSecondRunData(errorLodId);
+                var data = getSecondRunData();
             }
-            else {    
+            else {
                 var integId = hypCore.GetIntegrationId('legal_tracker');
                 var connection = hypCore.GetSftpConnection(integId);
                 var date = getDateFormat()
@@ -76,9 +76,9 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 type: "customrecord_legal_tracker_errors",
                 filters:
                     [
-                        ["internalid", "anyof", errorLodId],
-                        "AND",
-                        ["custrecord_lt_bill", "anyof", '@NONE@'],
+                        ["internlid", "anyof", errorLodId],
+                        //"AND",
+                        //["custrecord_lt_second_run", "is", false],
                     ],
                 columns: [
                 ]
@@ -112,41 +112,36 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 errorLodId = ObjLine.errorLodId;
                 if (!common.isNullOrEmpty(errorLodId)) {
                     var logId = ObjLine.logId;
-                    recId = record.load({ type: 'customrecord_legal_tracker_errors', id: logId });                 
-                    SummaryFileName = recId.getValue('custrecord_lt_summary_file')                   
+                    var recId = record.load({ type: 'customrecord_legal_tracker_errors', id: logId });
+                    linesFieldId = recId.getValue('custrecord_lt_lines_file_id');
+                    LineFileName = recId.getValue('custrecord_lt_lines_file');
+                    SummaryFileName = recId.getValue('custrecord_lt_summary_file')
+                    line = recId.getValue('custrecord_lt_line_on_summary');
                     integId = recId.getValue('custrecord_lt_integration_id');
-                    var connection = hypCore.GetSftpConnection(integId);
-                    var SummaryFileObj = hypCore.DownloadFile(connection, SummaryFileName, integId, null);
-                    if (!common.isNullOrEmpty(SummaryFileObj)) {
-                        var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())
-                        //logger.debug('SummaryFileId', SummaryFileId);
-                        var SummaryFile = file.load({ id: SummaryFileId });
-                        SummaryFile = SummaryFile.getContents();
-                        var fileLines = SummaryFile.split('\r\n');
-                        line = recId.getValue('custrecord_lt_line_on_summary');
-                        lineFolder = recId.getValue('custrecord_lt_sftp_line_folder')
-                        lineOnSummaryFile = Number(line) + 1
-                        //logger.debug('lineOnSummaryFile', lineOnSummaryFile);
-                        var cols = fileLines[lineOnSummaryFile].replace(/\"/g, '').split(',');
-                        logger.debug('cols', cols);
-                        var ObjLine = {
-                            errorLodId: errorLodId,
-                            SummaryFileName: SummaryFileName,
-                            SummaryFileId: SummaryFileId,
-                            line: line,
-                            integId: integId,
-                            lineFolder: lineFolder,
-                            entityName: cols[0], //Vendor Name
-                            entityShortName: cols[1], // Vendor Name (short)
-                            entity: cols[2], //Vendor ID
-                            tranid: cols[3], //Invoice Number
-                            currency: cols[5], //Invoice Currency
-                            trandate: cols[6], //Date of Invoice
-                            custbody_bill_po_reciever: cols[10], //Final Approver's Employee ID
-                            custbody_il_bill_creator: cols[10], //Final Approver's Employee ID
-                        }
+                    entityName = recId.getValue('custrecord_lt_vendor_name') //Vendor Name
+                    entityShortName = recId.getValue('custrecordlt_vendor_name_short') // Vendor Name (short)
+                    lineFolder = recId.getValue('custrecord_lt_sftp_line_folder')
+                    var ObjLine = {
+                        logId: logId,
+                        entity: recId.getValue('custrecord_lt_vendor'),//cols[2], Vendor ID
+                        tranid: recId.getValue('custrecord_lt_tranid'), //Invoice Number
+                        currency: recId.getValue('custrecord_lt_currency'), //Invoice Currency
+                        trandate: recId.getValue('custrecordlt_trandate'), //Date of Invoice
+                        custbody_bill_po_reciever: recId.getValue('custrecord_lt_receiver'), //Final Approver's Employee ID
+                        custbody_il_bill_creator: recId.getValue('custrecord_lt_receiver'), //Final Approver's Employee ID
+                        linesFieldId: recId.getValue('custrecord_lt_lines_file_id'),
+                        LineFileName: recId.getValue('custrecord_lt_lines_file'),
+                        SummaryFileName: recId.getValue('custrecord_lt_summary_file'),
+                        line: recId.getValue('custrecord_lt_line_on_summary'),
+                        integId: recId.getValue('custrecord_lt_integration_id'),
+                        entityName: recId.getValue('custrecord_lt_vendor_name'), //Vendor Name
+                        entityShortName: recId.getValue('custrecordlt_vendor_name_short'), // Vendor Name (short)
+                        lineFolder: recId.getValue('custrecord_lt_sftp_line_folder'),
+                    }
+                    if (common.isNullOrEmpty(linesFieldId)) {
                         getLineFile(ObjLine);
                     }
+                    else { createVendorBill(ObjLine, linesFieldId) }
                 }
                 else {
                     getLineFile(ObjLine);
@@ -154,27 +149,21 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 }//else              
             } catch (e) {
                 logger.debug('error map', e);
-                if (common.isNullOrEmpty(errorLodId)) {
-                    addErrorLog(e.message, ObjLine, lineFolder, LineFileName, linesFieldId);
-                }             
+                addErrorLog(e.message, ObjLine, lineFolder, LineFileName, linesFieldId);
+
             }
         }
         function getLineFile(ObjLine) {
-            logger.debug('getLineFile ObjLine', JSON.stringify(ObjLine));
+
             var integId = ObjLine.integId
-            if (!common.isNullOrEmpty(errorLodId)) {
-                lineFolder = ObjLine.lineFolder
-            } else {
-                lineFolder = buildLineFolder(ObjLine.lineFolder)//lineFolderPrefix + ObjLine.lineFolder + '.zip';
-            }
-            var connection = hypCore.GetSftpConnection(integId);      
+            var connection = hypCore.GetSftpConnection(integId);
+            lineFolder = buildLineFolder(ObjLine.lineFolder)//lineFolderPrefix + ObjLine.lineFolder + '.zip';
             LineFileName = ObjLine.entityName + ' - ' + ObjLine.tranid + '.txt'
             var fileObj = hypCore.DownloadFile(connection, LineFileName, integId, lineFolder);
             if (common.isNullOrEmpty(fileObj)) {
                 LineFileName = ObjLine.entityShortName + ' - ' + ObjLine.tranid + '.txt'
                 var fileObj = hypCore.DownloadFile(connection, LineFileName, integId, lineFolder);
             }
-            logger.debug('getLineFile lineFolder', lineFolder);
             if (!common.isNullOrEmpty(fileObj)) {
                 var listFiles = connection.list({ path: lineFolder });
                 var AttatchmentID = buildAttatchment(listFiles, connection, integId, lineFolder )
@@ -183,12 +172,14 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 if (!common.isNullOrEmpty(linesFieldId)) {
                     createVendorBill(ObjLine, linesFieldId, AttatchmentID);
                 }
+
             }
+
         }
         function createVendorBill(ObjLine, lineFile, AttatchmentID) {
-            logger.debug('createVendorBill ObjLine', JSON.stringify(ObjLine));
+
             HeaderFields = ['entity', 'tranid', 'currency', 'trandate', 'custbody_bill_po_reciever', 'custbody_il_bill_creator']
-            VendBillRec = record.create({ type: record.Type.VENDOR_BILL, isDynamic: true, defaultValues: { customform: FORM_ID } });
+            VendBillRec = record.create({ type: record.Type.VENDOR_BILL, isDynamic: true, defaultValues: { customform: formID } });
             for (var key in HeaderFields) {
                 field = HeaderFields[key]
                 if (HeaderFields[key] == 'currency') {
@@ -223,7 +214,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                     var rate = amount / qty
                     logger.debug('qty: ' + qty, 'desc: ' + desc + ' ,rate: ' + rate);
                     VendBillRec.selectNewLine({ sublistId: 'item' });
-                    VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'item', value: ITEM_ID });
+                    VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'item', value: itemID });
                     VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'rate', value: rate });
                     VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'description', value: desc });
                     VendBillRec.setCurrentSublistValue({ sublistId: 'item', fieldId: 'quantity', value: qty });
@@ -233,11 +224,10 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             var VendBillID = VendBillRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
             setAttach(AttatchmentID, VendBillID)
             logger.debug('vendor bill id: ', VendBillID);
-            if (!common.isNullOrEmpty(errorLodId)  && VendBillID != -1 && common.isNullOrEmpty(VendBillID)) {
-                // update
-                recId.setValue({ fieldId: 'custrecord_lt_bill', value: VendBillID });
-                recId.save({ enableSourcing: true, ignoreMandatoryFields: true });
-            }       
+            if (secondrun && VendBillID != -1 && common.isNullOrEmpty(VendBillID)) {
+                 // todo
+            }
+       
             return VendBillID
         }
         function getCurrencyId(currency) {
@@ -326,7 +316,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 fileType: fileType,
                 contents: fileBody,
                 encoding: file.Encoding.UTF8,
-                folder: FOLDER_NS
+                folder: folderNs
             });
             linesFieldId = savedFile.save();
             return linesFieldId

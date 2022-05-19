@@ -6,10 +6,10 @@
 define(['N/search'],
     function (search) {
         function fieldChanged(scriptContext) {
-            debugger;
             var rec = scriptContext.currentRecord;
             var name = scriptContext.fieldId;
             if (name == 'custrecord_issued_item') {
+                debugger;
                 var isserialitem = false;
                 var item = rec.getValue({ fieldId: 'custrecord_issued_item' });
                 if (!isNullOrEmpty(item)) {
@@ -27,8 +27,8 @@ define(['N/search'],
                 }
                 rec.setValue('custevent_is_serialized', isserialitem);
             }
-            else if (name == 'custrecord_sp_serial_number' || name == 'custrecord_spare_part_item' ) {
-                var item = rec.getValue({ fieldId: 'custrecord_spare_part_item' });
+            if (name == 'custrecord_sp_serial_number' || name == 'custrecord_issued_item' ) {
+                var item = rec.getValue({ fieldId: 'custrecord_issued_item' });
                 var serial = rec.getValue({ fieldId: 'custrecord_sp_serial_number' });
                 var location = rec.getValue({ fieldId: 'custrecord_sp_location' });
                 if (!isNullOrEmpty(item) && !isNullOrEmpty(location)) {

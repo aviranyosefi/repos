@@ -694,10 +694,10 @@ function CreatForcastBtnStyle() {
 }
 function fnExcelReport() {
     actual = document.getElementById('custpage_period_status_actual_val')
-    forcast = document.getElementById('custpage_period_status_forcast_val')
+    //forcast = document.getElementById('custpage_period_status_forcast_val')
     period = nlapiGetFieldText('custpage_select_periodfrom')
     var tab_text = '<h3>' + actual.innerHTML + '</h3>';
-    tab_text += '<h3>' + forcast.innerHTML + '</h3>';
+    //tab_text += '<h3>' + forcast.innerHTML + '</h3>';
     tab_text += '<h3>Period: ' + period + '</h3>';
     tab_text += "<table border='2px'><tr bgcolor='#87AFC6'>";
     tab = document.getElementById('custpage_sublist_splits'); // id of table
