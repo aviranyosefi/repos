@@ -1,8 +1,6 @@
 ﻿var context = nlapiGetContext();
-function afterSubmitSS() {
+function afterSubmitSS(recId) {
     try {
-        var recId = context.getSetting('SCRIPT', 'custscript_bp_ss_id');
-        nlapiLogExecution('debug', 'recId', recId);
         var rec = nlapiLoadRecord('invoice', recId)
         var count = rec.getLineItemCount('item');
         for (var i = 1; i <= count; i++) {

@@ -39,7 +39,7 @@ function getAgreemetLinesLoadSearch() {
                 ib_excluded_warranty_month: s[i].getValue('custrecord_ib_excluded_warranty_month'),
                 ib_rate: s[i].getValue('custrecord_ib_rate'),
                 ib_agr: s[i].getValue('custrecord_ib_agr'),   
-                agr_customer: s[i].getValue('custrecord_agr_customer','CUSTRECORD_IB_AGR'),  
+                agr_customer: s[i].getValue('custrecord_agr_customer', 'CUSTRECORD_IB_AGR'),  
                 
             });
         }
@@ -60,7 +60,7 @@ function CreateBillingPlan(createBPdata) {
             rec.setFieldValue('custrecord_bp_service_start_date', createBPdata[i].agr_start_date);
             rec.setFieldValue('custrecord_bp_service_end_date', createBPdata[i].end_date);
             rec.setFieldValue('custrecord_bp_rate', createBPdata[i].ib_rate);    
-            rec.setFieldValue('custrecord_bp_quantity', createBPdata[i].ib_excluded_warranty_month);      
+            rec.setFieldValue('custrecord_bp_quantity', createBPdata[i].ib_excluded_warranty_month);       
             try {
                 var id = nlapiSubmitRecord(rec);
                 nlapiLogExecution('debug', 'Billing Plan id: ', id);

@@ -3,11 +3,12 @@
         //var context = nlapiGetContext();
         var recID = nlapiGetRecordId();
         var recTYPE = nlapiGetRecordType();
-        //var rec = nlapiLoadRecord(recTYPE, recID);
+        var rec = nlapiLoadRecord(recTYPE, recID);
         nlapiLogExecution('debug', ' recTYPE: ' + recTYPE, 'recID: ' + recID);
+        var caseId = rec.getFieldValue('custrecord_sp_related_case')
 
 
-        var res = getSparParts(recID)
+        var res = getSparParts(caseId)
         nlapiLogExecution('debug', 'res ' + res.length, JSON.stringify(res));
         updateIBList(res);
 

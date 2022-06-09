@@ -1,11 +1,13 @@
-var context = nlapiGetContext();
-var defalutLocation  = 41
+﻿var context = nlapiGetContext();
+var GLOBAL_DEFAULT_LOCATION = 37 // Dangot - Vendor Repairs (תיקוני יצרן)
 function createITRSS() {
     try {
         var fulfillment = context.getSetting('SCRIPT', 'custscript_fulfillment_id');
         nlapiLogExecution('debug', 'fulfillment', fulfillment);
         if (isNullOrEmpty(fulfillment)) return
         var rec = nlapiLoadRecord('itemfulfillment', fulfillment);
+        var shipstatus = rec.getFieldValue('shipstatus')
+        if (shipstatus != 'C') return;
         var ordertype = rec.getFieldValue('ordertype')
         if (ordertype == 'TrnfrOrd') {
             var createdfrom  = rec.getFieldValue('createdfrom')
@@ -17,7 +19,10 @@ function createITRSS() {
                 var bin = searchBin(vendor);
                 nlapiLogExecution('debug', 'bin', bin);
                 if (isNullOrEmpty(bin)) return
-                createItr(createdfrom, bin)             
+                createItr(createdfrom, bin)
+            }
+            else if (order_type == '3' && status == 'Pending Receipt') {
+                createItr(createdfrom, null)
             }
         }
 
@@ -44,31 +49,33 @@ function searchBin(vendor) {
 }
 function createBin(vendor) {
     var binRec = nlapiCreateRecord('bin', { recordmode: "dynamic" });
-    binRec.setFieldValue('binnumber', vendor);
-    binRec.setFieldValue('location', defalutLocation);
+    binRec.setFieldValue('binnumber', vendor.substring(0, 20));
+    binRec.setFieldValue('location', GLOBAL_DEFAULT_LOCATION);
     var id = nlapiSubmitRecord(binRec, null, true);
     return id;
 }
 function createItr(createdfrom, bin) {
     var itrRec = nlapiTransformRecord('transferorder', createdfrom, 'itemreceipt');
-    itrRec.setFieldValue('location', defalutLocation)    
-    var itemCount = itrRec.getLineItemCount('item')
-    for (j = 1; j <= itemCount; j++) {
-        itrRec.selectLineItem('item', j);
-        invDetail = itrRec.editCurrentLineItemSubrecord('item', 'inventorydetail');
-        if (!isNullOrEmpty(invDetail)) {
-            var assign_count = invDetail.getLineItemCount('inventoryassignment')
-            nlapiLogExecution('DEBUG', 'inventory count: ' + assign_count);
-            for (var i = 1; i <= assign_count; i++) {
-                invDetail.selectLineItem('inventoryassignment', i);
-                invDetail.setCurrentLineItemValue('inventoryassignment', 'binnumber', bin);
-                invDetail.commitLineItem('inventoryassignment')
-            }
-            invDetail.commit();
-            itrRec.commitLineItem('item'); 
+    itrRec.setFieldValue('location', GLOBAL_DEFAULT_LOCATION)
+    if (!isNullOrEmpty(bin)) {
+        var itemCount = itrRec.getLineItemCount('item')
+        for (j = 1; j <= itemCount; j++) {
+            itrRec.selectLineItem('item', j);
+            invDetail = itrRec.editCurrentLineItemSubrecord('item', 'inventorydetail');
+            if (!isNullOrEmpty(invDetail)) {
+                var assign_count = invDetail.getLineItemCount('inventoryassignment')
+                nlapiLogExecution('DEBUG', 'inventory count: ' + assign_count);
+                for (var i = 1; i <= assign_count; i++) {
+                    invDetail.selectLineItem('inventoryassignment', i);
+                    invDetail.setCurrentLineItemValue('inventoryassignment', 'binnumber', bin);
+                    invDetail.commitLineItem('inventoryassignment')
+                }
+                invDetail.commit();
+                itrRec.commitLineItem('item');
 
-        }          
-    } 
+            }
+        }
+    }    
     var id = nlapiSubmitRecord(itrRec, null, true);
     nlapiLogExecution('debug', 'createItr id', id);
 }

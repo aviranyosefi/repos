@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+<link name="sans-serif" type="font" subtype="truetype" src="https://system.eu2.netsuite.com/c.4511400/suitebundle149431/Fonts/Heb-Regular.ttf"/>
+ <style type="text/css">
+        table {
+            table-layout: fixed;
+            width: 100%;
+            font-family: sans-serif;
+            font-size: 9pt;
+            margin-top: 0px;
+        }
+
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding-bottom: 3px;
+            padding-top: 2px;
+            padding-right: 6px;
+            padding-left: 6px;
+            background-color: #e2e2e2;
+            color: #444;
+        }
+
+        td {
+            padding-right: 6px;
+            padding-left: 6px;
+            padding-bottom: 0px;
+            padding-top: 0px;
+            font-size: 14px;
+        }
+
+        b {
+            font-weight: bold;
+            color: #444;
+        }
+
+        table.body td {
+            padding-top: 2px;
+        }
+
+        table.first td {
+            padding: 0px;
+            font-size: 7pt;
+        }
+
+        table.last td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+
+        table.lines {
+            border: 0px solid;
+            
+        }
+
+            table.lines th {
+                padding-bottom: 10px;
+                padding-top: 2px;
+                background-color: #fff;
+                border: 0px solid;
+            }
+
+            table.lines td {
+                border: 0px solid;
+                padding: 4px;
+            }
+
+        table.summary {
+            page-break-inside: avoid;
+            font-size: 10pt;
+            padding-right: 20px;
+        }
+
+        td.gen {
+            font-size: 9pt;
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        td.header {
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body padding="0.5in 0.5in 0.5in 0.5in" size="A4">
+
+  <table class="lines" style="width:100%; direction:rtl">
+      	<tr>
+	<td colspan="12" align="center"><img src="{{company_logo}}" style="width:265px; height:100px"/></td>
+		</tr>
+    	<tr>
+	<td colspan="12" style="font-size:22px; text-align:center"  align="center">אישור שנתי על ניכוי מס הכנסה מתשלומים המחייבים ניכוי מס במקור</td>
+		</tr>
+		    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+</table>
+
+
+  <table class="lines" style="width:100% ; direction:rtl"  align="right" >
+	<tr>	
+	<td style="font-size:20px;text-align:right" colspan="8"   align="right"> {{selected_dates}} : שנת המס  </td>
+	<td style="font-size:18px;" colspan="8"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="8"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="8"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="8"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="8"></td>
+</tr>
+</table>
+  
+  <table  class="lines" style="width:100% font-size:12px; direction:rtl" align="right"  >
+    	<tr>
+	<td colspan="6" style="font-size:18px;text-align:right" align="right">  פרטי המשלם </td>
+	<td colspan="6" style="font-size:18px;">  </td>
+		</tr>
+            <tr>
+	<td style="font-size:16px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    
+	<tr>
+	<td colspan="6" style="text-align:right" align="right"> : שם </td>
+	<td colspan="6">{{payer_name}}</td>
+</tr>
+	<tr>
+	<td colspan="6" style="text-align:right" align="right">: כתובת </td>
+	<td colspan="6">{{payer_address}}</td>
+</tr>
+    	<tr>
+	<td colspan="6" style="text-align:right" align="right">: מס. תיק ניכויים</td>
+	<td colspan="6">{{payer_tik_nikuim}}</td>
+</tr>
+    	<tr>
+	<td colspan="6" style="text-align:right" align="right">: עוסק מורשה   </td>
+	<td colspan="6">{{payer_tax_id}}</td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+</table>
+    <table class="lines" style="width:100%; font-size:12px;direction:rtl" align="right">
+    	<tr>
+	<td colspan="6"  style="font-size:18px;text-align:right" align="right" >פרטי הספק</td>
+	<td colspan="6" style="font-size:18px;"></td>
+		</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    
+	<tr>
+	<td colspan="6" style="text-align:right" align="right">: שם ספק </td>
+	<td colspan="6">{{payee_name}}</td>
+</tr>
+      	<tr>
+	<td colspan="6" style="text-align:right" align="right">: מס' ספק  </td>
+	<td colspan="6">{{payee_number}}</td>
+</tr>
+	<tr>
+	<td colspan="6" style="text-align:right" align="right">: כתובת ספק </td>
+	<td colspan="6">{{payee_address}}</td>
+</tr>
+    	<tr>
+	<td colspan="6" style="text-align:right" align="right"> : עוסק מורשה  </td>
+	<td colspan="6">{{payee_tax_id}}</td>
+</tr>
+    	<tr>
+    <td colspan="6" style="text-align:right" align="right">: מדווח לצרכי מע"מ באיחוד עוסקים </td>
+	<td colspan="6">{{payee_vat_reg}}</td>
+</tr>
+          	<tr>
+	<td colspan="6" style="text-align:right" align="right">: תיאור עיסוק</td>
+	<td colspan="6">{{payee_occup_description}}</td>
+</tr>
+          	<tr>
+	<td colspan="6" style="text-align:right" align="right">: סוג מטבע</td>
+	<td colspan="6">שקלים</td>
+</tr>
+          	<tr>
+	<td colspan="6" style="text-align:right" align="right">: סוג תשלום</td>
+	<td colspan="6">{{payee_tax_code}}</td>
+</tr>
+                	<tr>
+	<td colspan="6" style="text-align:right" align="right">: סכום לתשלום</td>
+	<td colspan="6">{{payee_payment_amt}}</td>
+</tr>
+                      	<tr>
+	<td colspan="6" style="text-align:right" align="right">: סכום ברוטו</td>
+	<td colspan="6">{{payee_payment_gross}}</td>
+</tr>
+                            	<tr>
+	<td colspan="6" style="text-align:right" align="right">: סכום מס</td>
+	<td colspan="6">{{payee_wht_amt}}</td>
+</tr>
+                                  	<tr>
+	<td colspan="6" style="text-align:right" align="right">  : סכומים מנוכים שהועברו לפקיד מס </td>
+	<td colspan="6">{{payee_tax_officer}}</td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+            <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+          <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+    <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+        <tr>
+	<td style="font-size:18px;" colspan="8"></td>
+	<td style="font-size:18px;" colspan="4"></td>
+</tr>
+
+
+
+
+</table>
+    <table style="width:100%;" align="right" >
+	<tr>
+	<td style="font-size:18px;text-align:right" align="right" colspan="4">חתימה</td>
+	<td style="font-size:18px;text-align:right" align="right" colspan="4">תאריך הדוח</td>
+    <td style="font-size:18px;text-align:right" align="right" colspan="4">שם החברה</td>
+</tr>
+      	<tr>
+	<td style="font-size:18px;text-align:right" align="right" colspan="4"></td>
+	<td style="font-size:18px;text-align:right" align="right" colspan="4">{{report_date}}</td>
+    <td style="font-size:18px;text-align:right" align="right" colspan="4">{{payer_name}}</td>
+</tr>
+
+</table>
+</body>
+</pdf>

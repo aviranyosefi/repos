@@ -46,18 +46,18 @@
                     action_type: spareRec.getFieldValue('custrecord_sp_action_type'),
                     location: spareRec.getFieldValue('custrecord_sp_location'),
                 });
-              
+
                 var id = updateTech(data, related_tech_inventory);
                 if (id != -1) {
                     val = 2// update
                 }
-                
+
             }
             if (val != null) {
                 spareRec.setFieldValue('custrecord_ctl_indication', val)
                 nlapiSubmitRecord(spareRec, false, true);
             }
-  
+
         }
 
     } catch (e) {

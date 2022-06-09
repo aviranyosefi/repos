@@ -6,66 +6,66 @@ var itemsData = [], alredyExsistItems = [];
 var keys;
 var itemCount;
 var virtual_item_to_process = [];
-var dateValidation = new Date('03/16/2020')
 var id = nlapiGetRecordId();
 var RecType = nlapiGetRecordType();
 var rec = nlapiLoadRecord(RecType, id);
 var createdfrom;
 var country;
 var mergeData = [];
+var context = nlapiGetContext().getExecutionContext();
+nlapiLogExecution('debug', 'context', context);
+var checkCancelationSoLine = null;
+if (RecType == 'returnauthorization' && context == 'webservices') {
+    checkCancelationSoLine = checkCancelation(rec.getFieldValue('custbody_cbr_so_cancelation_reason'))
+}
 
 function afterSubmit(type) {
-
     if (type != 'delete') {
         nlapiLogExecution('debug', 'RecType:' + RecType, ' id:' + id);
-        //var trandate = rec.getFieldValue('trandate');	
-        //nlapiLogExecution('debug', 'trandate:', trandate)
-        //trandate = DateFormat(trandate);
-        //nlapiLogExecution('debug', 'trandate:', trandate +' checkValidation(trandate): ' + checkValidation(trandate));
-        //if(checkValidation(trandate)){
-        itemCount = rec.getLineItemCount('item');
-        if (itemCount > 0) {
-            country = rec.getLineItemValue('item', 'custcol_cseg_cbr_countries', 1);
-            for (var i = 1; i <= itemCount; i++) {
-                rec.setLineItemValue('item', 'custcol_cbr_custom_line_id', i, i.toString())
-                var is_virtual_item = rec.getLineItemValue('item', 'custcol_is_virtual_item', i);
-                if (is_virtual_item == 'T') {
-                    var item = rec.getLineItemValue('item', 'item', i);
-                    alredyExsistItems[item] = {
-                        item: item,
-                        from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', i),
-                        to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', i),
-                        line: i,
-                    };
-                }
-                else {
-                    virtual_item_to_process.push(i);
+        if (RecType == 'salesorder' && rec.getFieldValue('custbodyzab_created_by_zone_billing') == 'F' || (RecType == 'returnauthorization' && isNullOrEmpty(rec.getFieldValue('createdfrom'))) || (context == 'webservices' && RecType == 'returnauthorization' && !isNullOrEmpty(rec.getFieldValue('createdfrom')) && checkCancelationSoLine == 'T')) {
+            itemCount = rec.getLineItemCount('item');
+            if (itemCount > 0) {
+                country = rec.getLineItemValue('item', 'custcol_cseg_cbr_countries', 1);
+                for (var i = 1; i <= itemCount; i++) {
+                    rec.setLineItemValue('item', 'custcol_cbr_custom_line_id', i, i.toString())
+                    var is_virtual_item = rec.getLineItemValue('item', 'custcol_is_virtual_item', i);
+                    if (is_virtual_item == 'T') {
+                        var item = rec.getLineItemValue('item', 'item', i);
+                        alredyExsistItems[item] = {
+                            item: item,
+                            from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', i),
+                            to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', i),
+                            line: i,
+                        };
+                    }
+                    else {
+                        virtual_item_to_process.push(i);
+                    }
                 }
             }
-        }
-        nlapiLogExecution('debug', 'virtual_item_to_process.length: ' + virtual_item_to_process.length, JSON.stringify(virtual_item_to_process));
-        if (virtual_item_to_process.length > 0) {
-            for (var i = 0; i < virtual_item_to_process.length; i++) {
-
-                var item = rec.getLineItemValue('item', 'item', virtual_item_to_process[i]);
-                var virtualItemsPerItem = virtualItemsSearch(item, 'T');
-                if (virtualItemsPerItem.length > 0) {
-                    itemValidation(virtualItemsPerItem, virtual_item_to_process[i], item);
-                }
-                else {
-                    var item_category = rec.getLineItemValue('item', 'custcol_cbr_trn_item_category', virtual_item_to_process[i]);
-                    if (!isNullOrEmpty(item_category)) {
-                        var virtualItemsPerItem = virtualItemsSearch(item_category, 'F');
-                        if (virtualItemsPerItem.length > 0) {
-                            itemValidation(virtualItemsPerItem, virtual_item_to_process[i], item);
+            nlapiLogExecution('debug', 'virtual_item_to_process.length: ' + virtual_item_to_process.length, JSON.stringify(virtual_item_to_process));
+            if (virtual_item_to_process.length > 0) {
+                for (var i = 0; i < virtual_item_to_process.length; i++) {
+                    var item = rec.getLineItemValue('item', 'item', virtual_item_to_process[i]);
+                    var virtualItemsPerItem = virtualItemsSearch(item, 'T');
+                    if (virtualItemsPerItem.length > 0) {
+                        itemValidation(virtualItemsPerItem, virtual_item_to_process[i], item);
+                    }
+                    else {
+                        var item_category = rec.getLineItemValue('item', 'custcol_cbr_trn_item_category', virtual_item_to_process[i]);
+                        if (!isNullOrEmpty(item_category)) {
+                            var virtualItemsPerItem = virtualItemsSearch(item_category, 'F');
+                            if (virtualItemsPerItem.length > 0) {
+                                itemValidation(virtualItemsPerItem, virtual_item_to_process[i], item);
+                            }
                         }
                     }
                 }
             }
+            keys = Object.keys(itemsData);
+            addItemsToSo();
         }
-        keys = Object.keys(itemsData);
-        addItemsToSo();
-        //}
+
     } // if (type != 'delete') 		
 }
 
@@ -91,7 +91,15 @@ function virtualItemsSearch(itemOrCategory, type) {
     columns[16] = new nlobjSearchColumn('custrecord_to_merge_vi5');
     columns[17] = new nlobjSearchColumn('custrecord_to_merge_vi6');
     columns[18] = new nlobjSearchColumn('custrecord_qty_calculated_by_period');
-
+    columns[19] = new nlobjSearchColumn('custrecord_7th_virtual_item');
+    columns[20] = new nlobjSearchColumn('custrecord_8th_virtual_item');
+    columns[21] = new nlobjSearchColumn('custrecord_9th_virtual_item');
+    columns[22] = new nlobjSearchColumn('custrecord_vi7_qty');
+    columns[23] = new nlobjSearchColumn('custrecord_vi8_qty');
+    columns[24] = new nlobjSearchColumn('custrecord_vi9_qty');
+    columns[25] = new nlobjSearchColumn('custrecord_to_merge_vi7');
+    columns[26] = new nlobjSearchColumn('custrecord_to_merge_vi8');
+    columns[27] = new nlobjSearchColumn('custrecord_to_merge_vi9');
 
     var filters = new Array();
     if (type == 'T') {
@@ -100,7 +108,6 @@ function virtualItemsSearch(itemOrCategory, type) {
     else {
         filters[0] = new nlobjSearchFilter('custrecord_sf_item_category', null, 'anyof', itemOrCategory)
     }
-
 
     var search = nlapiCreateSearch('customrecord_connect_virtual_items', filters, columns);
     var resultset = search.runSearch();
@@ -123,7 +130,11 @@ function virtualItemsSearch(itemOrCategory, type) {
         fourthItem = s[0].getValue('custrecord_4th_virtual_item');
         fifththItem = s[0].getValue('custrecord_5th_virtual_item');
         sixth6thItem = s[0].getValue('custrecord_6th_virtual_item');
-        if (stItem != "" || ndItem != "" || rdItem != "" || fourthItem != "" || fifththItem != "" || sixth6thItem != "") {
+        sev7thItem = s[0].getValue('custrecord_7th_virtual_item');
+        eig8thItem = s[0].getValue('custrecord_8th_virtual_item');
+        nin9thItem = s[0].getValue('custrecord_9th_virtual_item');
+        if (stItem != "" || ndItem != "" || rdItem != "" || fourthItem != "" || fifththItem != "" || sixth6thItem != ""
+            || sev7thItem != "" || eig8thItem != "" || nin9thItem != "") {
             virtualItemsPerItem.push({
 
                 st: stItem,
@@ -132,18 +143,27 @@ function virtualItemsSearch(itemOrCategory, type) {
                 fourth: fourthItem,
                 fifth: fifththItem,
                 sixth: sixth6thItem,
+                sev: sev7thItem,
+                eig: eig8thItem,
+                nin: nin9thItem,
                 st_qty: s[0].getValue('custrecord_vi1_qty'),
                 nd_qty: s[0].getValue('custrecord_vi2_qty'),
                 rd_qty: s[0].getValue('custrecord_vi3_qty'),
                 fourth_qty: s[0].getValue('custrecord_vi4_qty'),
                 fifth_qty: s[0].getValue('custrecord_vi5_qty'),
                 sixth_qty: s[0].getValue('custrecord_vi6_qty'),
+                sev_qty: s[0].getValue('custrecord_vi7_qty'),
+                eig_qty: s[0].getValue('custrecord_vi8_qty'),
+                nin_qty: s[0].getValue('custrecord_vi9_qty'),
                 st_merge: s[0].getValue('custrecord_to_merge_vi1'),
                 nd_merge: s[0].getValue('custrecord_to_merge_vi2'),
                 rd_merge: s[0].getValue('custrecord_to_merge_vi3'),
                 fourth_merge: s[0].getValue('custrecord_to_merge_vi4'),
                 fifth_merge: s[0].getValue('custrecord_to_merge_vi5'),
                 sixth_merge: s[0].getValue('custrecord_to_merge_vi6'),
+                sev_merge: s[0].getValue('custrecord_to_merge_vi7'),
+                eig_merge: s[0].getValue('custrecord_to_merge_vi8'),
+                nin_merge: s[0].getValue('custrecord_to_merge_vi9'),
                 qty_type: s[0].getValue('custrecord_qty_calculated_by_period'),
             });
         }
@@ -157,8 +177,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
     var item_from_date = rec.getLineItemValue('item', 'custcol_cbr_start_date', line); // item
     var item_to_date = rec.getLineItemValue('item', 'custcol_cbr_end_date', line);	// item		
 
-    if (((itemsData[virtualItemsPerItem[0].st] == null || itemsData[virtualItemsPerItem[0].st] == undefined) && virtualItemsPerItem[0].st != "" && (alredyExsistItems[virtualItemsPerItem[0].st] == null || alredyExsistItems[virtualItemsPerItem[0].st] == undefined)) || (virtualItemsPerItem[0].st_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].st != "")) {
-        if (virtualItemsPerItem[0].st_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].st != "") {
+    if (((itemsData[virtualItemsPerItem[0].st] == null || itemsData[virtualItemsPerItem[0].st] == undefined) && virtualItemsPerItem[0].st != "" && (alredyExsistItems[virtualItemsPerItem[0].st] == null || alredyExsistItems[virtualItemsPerItem[0].st] == undefined)) || (virtualItemsPerItem[0].st_merge == 'F' && virtualItemsPerItem[0].st != "")) {
+        if (virtualItemsPerItem[0].st_merge == 'F' && virtualItemsPerItem[0].st != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].st,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -166,6 +186,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'st', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             })
         }
         else {
@@ -176,6 +198,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'st', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             };
 
         }
@@ -213,8 +237,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
         }
     }
 
-    if (((itemsData[virtualItemsPerItem[0].nd] == null || itemsData[virtualItemsPerItem[0].nd] == undefined) && virtualItemsPerItem[0].nd != "" && (alredyExsistItems[virtualItemsPerItem[0].nd] == null || alredyExsistItems[virtualItemsPerItem[0].nd] == undefined)) || (virtualItemsPerItem[0].nd_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].nd != "")) {
-        if (virtualItemsPerItem[0].nd_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].nd != "") {
+    if (((itemsData[virtualItemsPerItem[0].nd] == null || itemsData[virtualItemsPerItem[0].nd] == undefined) && virtualItemsPerItem[0].nd != "" && (alredyExsistItems[virtualItemsPerItem[0].nd] == null || alredyExsistItems[virtualItemsPerItem[0].nd] == undefined)) || (virtualItemsPerItem[0].nd_merge == 'F' && virtualItemsPerItem[0].nd != "")) {
+        if (virtualItemsPerItem[0].nd_merge == 'F' && virtualItemsPerItem[0].nd != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].nd,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -222,6 +246,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'nd', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             })
         }
         else {
@@ -232,6 +258,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'nd', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
 
             };
         }
@@ -268,8 +296,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
         }
     }
 
-    if (((itemsData[virtualItemsPerItem[0].rd] == null || itemsData[virtualItemsPerItem[0].rd] == undefined) && virtualItemsPerItem[0].rd != "" && (alredyExsistItems[virtualItemsPerItem[0].rd] == null || alredyExsistItems[virtualItemsPerItem[0].rd] == undefined)) || (virtualItemsPerItem[0].rd_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].nd != "")) {
-        if (virtualItemsPerItem[0].rd_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].nd != "") {
+    if (((itemsData[virtualItemsPerItem[0].rd] == null || itemsData[virtualItemsPerItem[0].rd] == undefined) && virtualItemsPerItem[0].rd != "" && (alredyExsistItems[virtualItemsPerItem[0].rd] == null || alredyExsistItems[virtualItemsPerItem[0].rd] == undefined)) || (virtualItemsPerItem[0].rd_merge == 'F' && virtualItemsPerItem[0].rd != "")) {
+        if (virtualItemsPerItem[0].rd_merge == 'F' && virtualItemsPerItem[0].rd != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].rd,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -277,6 +305,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'rd', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             })
         }
         else {
@@ -287,6 +317,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'rd', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
 
             };
         }
@@ -324,8 +356,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
         }
     }
 
-    if (((itemsData[virtualItemsPerItem[0].fourth] == null || itemsData[virtualItemsPerItem[0].fourth] == undefined) && virtualItemsPerItem[0].fourth != "" && (alredyExsistItems[virtualItemsPerItem[0].fourth] == null || alredyExsistItems[virtualItemsPerItem[0].fourth] == undefined)) || (virtualItemsPerItem[0].fourth_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].fourth != "")) {
-        if (virtualItemsPerItem[0].fourth_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].fourth != "") {
+    if (((itemsData[virtualItemsPerItem[0].fourth] == null || itemsData[virtualItemsPerItem[0].fourth] == undefined) && virtualItemsPerItem[0].fourth != "" && (alredyExsistItems[virtualItemsPerItem[0].fourth] == null || alredyExsistItems[virtualItemsPerItem[0].fourth] == undefined)) || (virtualItemsPerItem[0].fourth_merge == 'F' && virtualItemsPerItem[0].fourth != "")) {
+        if (virtualItemsPerItem[0].fourth_merge == 'F' && virtualItemsPerItem[0].fourth != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].fourth,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -333,6 +365,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'fourth', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             })
         }
         else {
@@ -343,6 +377,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'fourth', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
 
             };
         }
@@ -380,8 +416,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
         }
     }
 
-    if (((itemsData[virtualItemsPerItem[0].fifth] == null || itemsData[virtualItemsPerItem[0].fifth] == undefined) && virtualItemsPerItem[0].fifth != "" && (alredyExsistItems[virtualItemsPerItem[0].fifth] == null || alredyExsistItems[virtualItemsPerItem[0].fifth] == undefined)) || (virtualItemsPerItem[0].fifth_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].fifth != "")) {
-        if (virtualItemsPerItem[0].fifth_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].fifth != "") {
+    if (((itemsData[virtualItemsPerItem[0].fifth] == null || itemsData[virtualItemsPerItem[0].fifth] == undefined) && virtualItemsPerItem[0].fifth != "" && (alredyExsistItems[virtualItemsPerItem[0].fifth] == null || alredyExsistItems[virtualItemsPerItem[0].fifth] == undefined)) || (virtualItemsPerItem[0].fifth_merge == 'F' && virtualItemsPerItem[0].fifth != "")) {
+        if (virtualItemsPerItem[0].fifth_merge == 'F' && virtualItemsPerItem[0].fifth != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].fifth,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -389,6 +425,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'fifth', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             })
         }
         else {
@@ -399,6 +437,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'fifth', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
 
             };
         }
@@ -437,8 +477,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
         }
     }
 
-    if (((itemsData[virtualItemsPerItem[0].sixth] == null || itemsData[virtualItemsPerItem[0].sixth] == undefined) && virtualItemsPerItem[0].sixth != "" && (alredyExsistItems[virtualItemsPerItem[0].sixth] == null || alredyExsistItems[virtualItemsPerItem[0].sixth] == undefined)) || (virtualItemsPerItem[0].sixth_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].sixth != "")) {
-        if (virtualItemsPerItem[0].sixth_merge == 'F' && RecType == 'salesorder' && virtualItemsPerItem[0].sixth != "") {
+    if (((itemsData[virtualItemsPerItem[0].sixth] == null || itemsData[virtualItemsPerItem[0].sixth] == undefined) && virtualItemsPerItem[0].sixth != "" && (alredyExsistItems[virtualItemsPerItem[0].sixth] == null || alredyExsistItems[virtualItemsPerItem[0].sixth] == undefined)) || (virtualItemsPerItem[0].sixth_merge == 'F' && virtualItemsPerItem[0].sixth != "")) {
+        if (virtualItemsPerItem[0].sixth_merge == 'F' && virtualItemsPerItem[0].sixth != "") {
             mergeData.push({
                 item: virtualItemsPerItem[0].sixth,
                 from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
@@ -446,6 +486,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'sixth', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
             })
         }
         else {
@@ -456,6 +498,8 @@ function itemValidation(virtualItemsPerItem, line, item) {
                 line: line,
                 ParentItem: item,
                 qty: getQty(virtualItemsPerItem, 'sixth', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
 
             };
         }
@@ -493,24 +537,208 @@ function itemValidation(virtualItemsPerItem, line, item) {
         }
     }
 
+    // 10.03.21
+
+    if (((itemsData[virtualItemsPerItem[0].sev] == null || itemsData[virtualItemsPerItem[0].sev] == undefined) && virtualItemsPerItem[0].sev != "" && (alredyExsistItems[virtualItemsPerItem[0].sev] == null || alredyExsistItems[virtualItemsPerItem[0].sev] == undefined)) || (virtualItemsPerItem[0].sev_merge == 'F' && virtualItemsPerItem[0].sev != "")) {
+        if (virtualItemsPerItem[0].sev_merge == 'F' && virtualItemsPerItem[0].sev != "") {
+            mergeData.push({
+                item: virtualItemsPerItem[0].sev,
+                from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
+                to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', line),
+                line: line,
+                ParentItem: item,
+                qty: getQty(virtualItemsPerItem, 'sev', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
+            })
+        }
+        else {
+            itemsData[virtualItemsPerItem[0].sev] = {
+                item: virtualItemsPerItem[0].sev,
+                from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
+                to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', line),
+                line: line,
+                ParentItem: item,
+                qty: getQty(virtualItemsPerItem, 'sev', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
+
+            };
+        }
+    }
+    else {
+
+        if (alredyExsistItems[virtualItemsPerItem[0].sev] != undefined) {
+
+
+            var curr_from_date = alredyExsistItems[virtualItemsPerItem[0].sev].from_date;
+            var curr_to_date = alredyExsistItems[virtualItemsPerItem[0].sev].to_date;
+
+            if (!checkWhoBigger(item_from_date, curr_from_date)) {
+                alredyExsistItems[virtualItemsPerItem[0].sev].from_date = item_from_date;
+                rec.setLineItemValue('item', 'custcol_cbr_start_date', alredyExsistItems[virtualItemsPerItem[0].sev].line, nlapiStringToDate(item_from_date));
+            }
+            if (checkWhoBigger(item_to_date, curr_to_date)) {
+                alredyExsistItems[virtualItemsPerItem[0].sev].to_date = curr_to_date;
+                rec.setLineItemValue('item', 'custcol_cbr_end_date', alredyExsistItems[virtualItemsPerItem[0].sev].line, nlapiStringToDate(item_to_date));
+            }
+        }
+        else if (virtualItemsPerItem[0].sev != "") {
+
+            var curr_from_date = itemsData[virtualItemsPerItem[0].sev].from_date;
+            var curr_to_date = itemsData[virtualItemsPerItem[0].sev].to_date;
+
+            if (!checkWhoBigger(item_from_date, curr_from_date)) {
+                itemsData[virtualItemsPerItem[0].sev].from_date = item_from_date;
+
+            }
+            if (checkWhoBigger(item_to_date, curr_to_date)) {
+                itemsData[virtualItemsPerItem[0].sev].to_date = item_to_date;
+
+            }
+        }
+    }
+
+    if (((itemsData[virtualItemsPerItem[0].eig] == null || itemsData[virtualItemsPerItem[0].eig] == undefined) && virtualItemsPerItem[0].eig != "" && (alredyExsistItems[virtualItemsPerItem[0].eig] == null || alredyExsistItems[virtualItemsPerItem[0].eig] == undefined)) || (virtualItemsPerItem[0].eig_merge == 'F' && virtualItemsPerItem[0].eig != "")) {
+        if (virtualItemsPerItem[0].eig_merge == 'F' && virtualItemsPerItem[0].eig != "") {
+            mergeData.push({
+                item: virtualItemsPerItem[0].eig,
+                from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
+                to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', line),
+                line: line,
+                ParentItem: item,
+                qty: getQty(virtualItemsPerItem, 'eig', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
+            })
+        }
+        else {
+            itemsData[virtualItemsPerItem[0].eig] = {
+                item: virtualItemsPerItem[0].eig,
+                from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
+                to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', line),
+                line: line,
+                ParentItem: item,
+                qty: getQty(virtualItemsPerItem, 'eig', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
+
+            };
+        }
+
+    }
+    else {
+
+        if (alredyExsistItems[virtualItemsPerItem[0].eig] != undefined) {
+
+
+            var curr_from_date = alredyExsistItems[virtualItemsPerItem[0].eig].from_date;
+            var curr_to_date = alredyExsistItems[virtualItemsPerItem[0].eig].to_date;
+
+            if (!checkWhoBigger(item_from_date, curr_from_date)) {
+                alredyExsistItems[virtualItemsPerItem[0].eig].from_date = item_from_date;
+                rec.setLineItemValue('item', 'custcol_cbr_start_date', alredyExsistItems[virtualItemsPerItem[0].eig].line, nlapiStringToDate(item_from_date));
+            }
+            if (checkWhoBigger(item_to_date, curr_to_date)) {
+                alredyExsistItems[virtualItemsPerItem[0].eig].to_date = curr_to_date;
+                rec.setLineItemValue('item', 'custcol_cbr_end_date', alredyExsistItems[virtualItemsPerItem[0].eig].line, nlapiStringToDate(item_to_date));
+            }
+        }
+        else if (virtualItemsPerItem[0].eig != "") {
+
+            var curr_from_date = itemsData[virtualItemsPerItem[0].eig].from_date;
+            var curr_to_date = itemsData[virtualItemsPerItem[0].eig].to_date;
+
+            if (!checkWhoBigger(item_from_date, curr_from_date)) {
+                itemsData[virtualItemsPerItem[0].eig].from_date = item_from_date;
+
+            }
+            if (checkWhoBigger(item_to_date, curr_to_date)) {
+                itemsData[virtualItemsPerItem[0].eig].to_date = item_to_date;
+
+            }
+        }
+    }
+
+    if (((itemsData[virtualItemsPerItem[0].nin] == null || itemsData[virtualItemsPerItem[0].nin] == undefined) && virtualItemsPerItem[0].nin != "" && (alredyExsistItems[virtualItemsPerItem[0].nin] == null || alredyExsistItems[virtualItemsPerItem[0].nin] == undefined)) || (virtualItemsPerItem[0].nin_merge == 'F' && virtualItemsPerItem[0].nin != "")) {
+        if (virtualItemsPerItem[0].nin_merge == 'F' && virtualItemsPerItem[0].nin != "") {
+            mergeData.push({
+                item: virtualItemsPerItem[0].nin,
+                from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
+                to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', line),
+                line: line,
+                ParentItem: item,
+                qty: getQty(virtualItemsPerItem, 'nin', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
+            })
+        }
+        else {
+            itemsData[virtualItemsPerItem[0].nin] = {
+                item: virtualItemsPerItem[0].nin,
+                from_date: rec.getLineItemValue('item', 'custcol_cbr_start_date', line),
+                to_date: rec.getLineItemValue('item', 'custcol_cbr_end_date', line),
+                line: line,
+                ParentItem: item,
+                qty: getQty(virtualItemsPerItem, 'nin', line),
+                price_list_region: rec.getLineItemValue('item', 'custcol_cbr_price_list_region', line),
+                sf_so_lineid: rec.getLineItemValue('item', 'custcol_sf_so_lineid', line),
+
+            };
+        }
+
+    }
+    else {
+
+        if (alredyExsistItems[virtualItemsPerItem[0].nin] != undefined) {
+
+            var curr_from_date = alredyExsistItems[virtualItemsPerItem[0].nin].from_date;
+            var curr_to_date = alredyExsistItems[virtualItemsPerItem[0].nin].to_date;
+
+            if (!checkWhoBigger(item_from_date, curr_from_date)) {
+                alredyExsistItems[virtualItemsPerItem[0].nin].from_date = item_from_date;
+                rec.setLineItemValue('item', 'custcol_cbr_start_date', alredyExsistItems[virtualItemsPerItem[0].nin].line, nlapiStringToDate(item_from_date));
+            }
+            if (checkWhoBigger(item_to_date, curr_to_date)) {
+                alredyExsistItems[virtualItemsPerItem[0].nin].to_date = curr_to_date;
+                rec.setLineItemValue('item', 'custcol_cbr_end_date', alredyExsistItems[virtualItemsPerItem[0].nin].line, nlapiStringToDate(item_to_date));
+            }
+        }
+        else if (virtualItemsPerItem[0].nin != "") {
+
+            var curr_from_date = itemsData[virtualItemsPerItem[0].nin].from_date;
+            var curr_to_date = itemsData[virtualItemsPerItem[0].nin].to_date;
+
+            if (!checkWhoBigger(item_from_date, curr_from_date)) {
+                itemsData[virtualItemsPerItem[0].nin].from_date = item_from_date;
+
+            }
+            if (checkWhoBigger(item_to_date, curr_to_date)) {
+                itemsData[virtualItemsPerItem[0].nin].to_date = item_to_date;
+
+            }
+        }
+    }
+
+    //
+
 }
 
 function addItemsToSo() {
 
     try {
-        //nlapiLogExecution('DEBUG', 'RecType', RecType);
-        if (RecType == 'returnauthorization') {
+        var soRec = null;
+        nlapiLogExecution('DEBUG', 'RecType', RecType);
+        if (RecType == 'returnauthorization' && context == 'webservices' && checkCancelationSoLine == 'T') {
             createdfrom = rec.getFieldValue('createdfrom');
             if (!isNullOrEmpty(createdfrom)) {
-                var soRec = nlapiLoadRecord('salesorder', createdfrom);
+                soRec = nlapiLoadRecord('salesorder', createdfrom);
                 var SoItemCount = soRec.getLineItemCount('item');
             }
         }
-        nlapiLogExecution('DEBUG', 'JSON.stringify(itemsData)', JSON.stringify(itemsData));
-        nlapiLogExecution('DEBUG', 'keys.length', keys.length);
+        nlapiLogExecution('DEBUG', 'JSON.stringify(itemsData)' + keys.length, JSON.stringify(itemsData));
         for (var i = 0; i < keys.length; i++) {
             try {
-                nlapiLogExecution('DEBUG', 'itemsData[keys[i]]', JSON.stringify(itemsData[keys[i]]));
                 rec.selectNewLineItem('item');
                 rec.setCurrentLineItemValue('item', 'item', keys[i])
                 rec.setCurrentLineItemValue('item', 'quantity', itemsData[keys[i]].qty)
@@ -524,10 +752,11 @@ function addItemsToSo() {
                 rec.setCurrentLineItemValue('item', 'custcol_cbr_split_from_custom_line_id', itemsData[keys[i]].line.toString());
                 rec.setCurrentLineItemValue('item', 'location', getRegionLocation(country));
                 rec.setCurrentLineItemValue('item', 'custcol_vi_parent_item', itemsData[keys[i]].ParentItem);
-
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_price_list_region', itemsData[keys[i]].price_list_region);
+                //rec.setCurrentLineItemValue('item', 'custcol_sf_so_lineid', itemsData[keys[i]].sf_so_lineid); 
                 rec.commitLineItem('item');
 
-                if (RecType == 'returnauthorization') {
+                if (RecType == 'returnauthorization' && context == 'webservices' && soRec != null) {
                     for (var m = 1; m <= SoItemCount; m++) {
 
                         if (keys[i] == soRec.getLineItemValue('item', 'item', m)) {
@@ -550,42 +779,43 @@ function addItemsToSo() {
                     soRec.setCurrentLineItemValue('item', 'custcol_cbr_split_from_custom_line_id', itemsData[keys[i]].line.toString());
                     soRec.setCurrentLineItemValue('item', 'location', getRegionLocation(country));
                     rec.setCurrentLineItemValue('item', 'custcol_vi_parent_item', itemsData[keys[i]].ParentItem);
+                    rec.setCurrentLineItemValue('item', 'custcol_cbr_price_list_region', itemsData[keys[i]].price_list_region);
+                    //rec.setCurrentLineItemValue('item', 'custcol_sf_so_lineid', itemsData[keys[i]].sf_so_lineid); 
                     soRec.commitLineItem('item');
                 }
             } catch (err) {
                 nlapiLogExecution('DEBUG', 'error in add item ', err);
             }
         }
-
-        if (RecType == 'salesorder') {
-            nlapiLogExecution('DEBUG', 'JSON.stringify(mergeData)', JSON.stringify(mergeData));
-            for (var k = 0; k < mergeData.length; k++) {
-                try {
-                    rec.selectNewLineItem('item');
-                    rec.setCurrentLineItemValue('item', 'item', mergeData[k].item)
-                    rec.setCurrentLineItemValue('item', 'quantity', mergeData[k].qty)
-                    rec.setCurrentLineItemValue('item', 'rate', '0.00')
-                    rec.setCurrentLineItemValue('item', 'amount', '0.00');
-                    rec.setCurrentLineItemValue('item', 'custcol_cbr_start_date', mergeData[k].from_date);
-                    rec.setCurrentLineItemValue('item', 'custcol_cbr_end_date', mergeData[k].to_date);
-                    rec.setCurrentLineItemValue('item', 'custcol_cbr_period', getMonthDiff_fractional(nlapiStringToDate(mergeData[k].from_date), nlapiStringToDate(mergeData[k].to_date)));
-                    var line = parseInt(parseInt(itemCount) + k + keys.length) + 1;
-                    rec.setCurrentLineItemValue('item', 'custcol_cbr_custom_line_id', line.toString());
-                    rec.setCurrentLineItemValue('item', 'custcol_cbr_split_from_custom_line_id', mergeData[k].line.toString());
-                    rec.setCurrentLineItemValue('item', 'location', getRegionLocation(country));
-                    rec.setCurrentLineItemValue('item', 'custcol_vi_parent_item', mergeData[k].ParentItem);
-                    rec.commitLineItem('item');
-                } catch (e) {
-                    nlapiLogExecution('DEBUG', 'error in add mergeData item ', e);
-                }
-
+        nlapiLogExecution('DEBUG', 'JSON.stringify(mergeData)' + mergeData.length, JSON.stringify(mergeData));
+        for (var k = 0; k < mergeData.length; k++) {
+            try {
+                rec.selectNewLineItem('item');
+                rec.setCurrentLineItemValue('item', 'item', mergeData[k].item)
+                rec.setCurrentLineItemValue('item', 'quantity', mergeData[k].qty)
+                rec.setCurrentLineItemValue('item', 'rate', '0.00')
+                rec.setCurrentLineItemValue('item', 'amount', '0.00');
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_start_date', mergeData[k].from_date);
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_end_date', mergeData[k].to_date);
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_period', getMonthDiff_fractional(nlapiStringToDate(mergeData[k].from_date), nlapiStringToDate(mergeData[k].to_date)));
+                var line = parseInt(parseInt(itemCount) + k + keys.length) + 1;
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_custom_line_id', line.toString());
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_split_from_custom_line_id', mergeData[k].line.toString());
+                rec.setCurrentLineItemValue('item', 'location', getRegionLocation(country));
+                rec.setCurrentLineItemValue('item', 'custcol_vi_parent_item', mergeData[k].ParentItem);
+                rec.setCurrentLineItemValue('item', 'custcol_cbr_price_list_region', mergeData[k].price_list_region);
+                //rec.setCurrentLineItemValue('item', 'custcol_sf_so_lineid', mergeData[k].sf_so_lineid); 
+                rec.commitLineItem('item');
+            } catch (e) {
+                nlapiLogExecution('DEBUG', 'error in add mergeData item ', e);
             }
+
         }
 
-        if (RecType == 'returnauthorization') {
+        if (RecType == 'returnauthorization' && soRec != null) {
             nlapiSubmitRecord(soRec);
         }
-              
+
         nlapiSubmitRecord(rec);
     } catch (e) {
         nlapiLogExecution('DEBUG', 'error', e);
@@ -597,32 +827,8 @@ function checkWhoBigger(item_from_date, curr_from_date) {
     return Date.parse(item_from_date) > Date.parse(curr_from_date)
 }
 
-function DateFormat(date) {
-
-    var dateArr = date.split('/');
-    var day = ("0" + dateArr[0]).slice(-2);
-    var month = ("0" + dateArr[1]).slice(-2);
-
-    var stringDate = month + '/' + day + '/' + dateArr[2];
-    return stringDate
-
-}
-
-function checkValidation(trandate) {
-
-    var trandateObj = new Date(trandate);
-    if (dateValidation <= trandateObj) {
-        return true;
-    }
-    else {
-        return false;
-    }
-
-}
-
 function getMonthDiff_fractional(startDate, d) {
-    nlapiLogExecution('debug', 'startDate', startDate);
-    nlapiLogExecution('debug', 'endDate', d);
+    //nlapiLogExecution('debug', 'startDate: ' + startDate, 'endDate: ' +d);  
     var fDate = null;
     var tDate = null;
     var thisRoundDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
@@ -715,9 +921,21 @@ function getQty(virtualItemsPerItem, type, line) {
         else {
             qty = Number(virtualItemsPerItem[0][type + '_qty']) * (Number(rec.getLineItemValue('item', 'custcol_cbr_period', line) / 12))
         }
-        return qty.toFixed(2);
+        return Math.ceil(qty);
     } catch (e) {
         nlapiLogExecution('debug', 'getQty error: ', e);
         return 1;
     }
+}
+
+function checkCancelation(cancelationId) {
+    try {
+        if (!isNullOrEmpty(cancelationId)) {
+            var create_so_line = nlapiLookupField('customrecord_cbr_cancelation_reason', cancelationId, 'custrecord_cbr_cancelatio_create_so_line');
+            return create_so_line
+        }
+    } catch (e) {
+        return 'F'
+    }
+    return 'F'
 }

@@ -32,7 +32,11 @@ function create_coffee_machine_equ(type) {
             }// if (trantype == 'supportcase')
             nlapiLogExecution('debug', 'ssRun', ssRun);
             if (ssRun) {
-                try { nlapiScheduleScript('customscript_create_coffee_machine_equ_s', null, { custscript_tran_id: id, custscript_tran_type: trantype }) } catch (e) { }
+                try {
+                    var statusrun = nlapiScheduleScript('customscript_create_coffee_machine_equ_s', null, { custscript_tran_id: id, custscript_tran_type: trantype })
+                    nlapiLogExecution('debug', 'statusrun ', statusrun);
+
+                } catch (e) { }
             }
             if (trantype == 'supportcase' && new_status == '6' && new_status != old_status) {
                 var machine = rec.getFieldValue('custevent_machine');

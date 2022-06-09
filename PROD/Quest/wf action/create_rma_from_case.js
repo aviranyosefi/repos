@@ -1,3 +1,5 @@
+var GLOBAL_FROM = 228 //Dangot Return Authorization
+var GLOBAL_STATUS = 'B'
 function createRmaFromCase() {
     try {
         var context = nlapiGetContext();
@@ -26,8 +28,8 @@ function createRmaFromCase() {
         nlapiLogExecution('DEBUG', 'data: ' + dataFromCase.length, JSON.stringify(dataFromCase));
         var rmaId = createRma(dataFromCase);
         if (rmaId != -1) {
-            rec.setFieldValue('custevent_related_rma', rmaId);
-            nlapiSubmitRecord(rec, false, true); // try to avoid mandatory field
+            nlapiSetFieldValue('custevent_related_rma', rmaId);
+            //nlapiSubmitRecord(rec, false, true); // try to avoid mandatory field
         }
     } catch (e) {
         nlapiLogExecution('error', 'error', e);
@@ -44,6 +46,10 @@ function createRma(data) {
         rec.setFieldValue('custbody_dangot_rma_type', data[0].rmaType);
         rec.setFieldValue('location', data[0].location);
         rec.setFieldValue('department', data[0].department);
+        rec.setFieldValue('customform', GLOBAL_FROM);
+        rec.setFieldValue('orderstatus', GLOBAL_STATUS);
+        
+        
         try {
             var itemList = data[0].itemList
             for (var i = 0; i < itemList.length; i++) {

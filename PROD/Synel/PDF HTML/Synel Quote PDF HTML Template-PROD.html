@@ -1,0 +1,442 @@
+﻿<?xml version="1.0" ?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <head>
+        <link name="sans-serif" type="font" subtype="truetype"
+              src="https://6398307-sb1.app.netsuite.com/c.6398307_SB1/suitebundle43003/lib/Font/arial.ttf"
+              src-bold="https://6398307-sb1.app.netsuite.com/c.6398307_SB1/suitebundle43003/lib/Font/arialb.ttf" />
+
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" style="width: 100%; font-size: 11pt;">
+                    <tr>
+                        <td align="center">
+                            <img src="https://6398307-sb1.app.netsuite.com/core/media/media.nl?id=11883&amp;c=6398307_SB1&amp;h=uiv-FHqKBguc9f5SZQsXsfiJSXPxue8pddd-sanZ7eGWQsq7"
+                                 style="float: left; margin: 7px;width:400px; height:120px;" />
+                        </td>
+                    </tr>
+
+                </table>
+            </macro>
+            <macro id="nlfooter">
+                <table class="header" style="width: 100%; font-size: 11pt;">
+                    <tr>
+                        <td align="center">
+                            <img src="https://6398307-sb1.app.netsuite.com/core/media/media.nl?id=11882&amp;c=6398307_SB1&amp;h=jJn37Bs4vvFaBqMwdMDFZOMTqp-hsjyCUh0V0-BXxNzV-Plf"
+                                 style="float: left; margin: 7px;width:400px; height:75px;" />
+                        </td>
+                    </tr>
+
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                font-family: sans-serif
+            }
+
+            table {
+                font-size: 12pt;
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 12pt;
+                vertical-align: middle;
+                padding: 5px 6px 3px;
+                background-color: #e3e3e3;
+                color: #333333;
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+
+            td {
+                font-size: 12pt;
+            }
+
+            b {
+                font-weight: bold;
+                color: #333333;
+                font-size: 11pt;
+            }
+
+            p {
+                font-size: 12pt;
+            }
+
+            table.pl {
+                border: 1px solid;
+                table-layout: fixed;
+                border-collapse: collapse;
+                font-size: 10pt;
+            }
+
+                table.pl td {
+                    border: 1px solid;
+                    text-overflow: ellipsis;
+                    word-wrap: break-word;
+                }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="10%" footer="nlfooter" footer-height="4%" padding="0.1in 0.5in 0.5in 0.5in"
+          size="Letter">
+        <#assign curr_symbol=record.currencysymbol>
+            <#if record.currencysymbol='USD' || record.currencysymbol='AUD'>
+                <#assign curr_symbol='$'>
+            </#if>
+            <#if record.currencysymbol='GBP'>
+                <#assign curr_symbol='£'>
+            </#if>
+            <#if record.currencysymbol='EUR'>
+                <#assign curr_symbol='€'>
+            </#if>
+            <#if record.currencysymbol='ILS'>
+                <#assign curr_symbol='₪'>
+            </#if>
+            <br />
+            <br />
+            <table style="width:650px;">
+                <tr>
+                    <td>
+                        <table style="width:250px;" align="left">
+                            <tr>
+                                <td align="right">
+                                    <p>${.now?string("dd/MM/yyyy")}</p>
+                                </td>
+                                <td align="right">
+                                    <p>: תאריך חשבונית</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <p>${record.custbody_contact_person}</p>
+                                </td>
+                                <td align="right">
+                                    <p>: הנהח"ש</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">
+                                    <p>
+                                        קריאה 123
+                                    </p>
+                                </td>
+                                <td align="right">
+                                    <p>:קריאה</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table style="width:250px;" align="right">
+                            <tr>
+                                <td align="right">
+                                    <p>${record.entity}</p>
+                                </td>
+                                <td align="right">
+                                    <p>: לכבוד</p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+
+                </tr>
+            </table>
+            <table style="width:650px;">
+                <tr>
+                    <td width="90%" align="right">
+                        <p>
+                            <u>
+                                מגנטי קרבה כולל ביצוע פיילוט להגדרת השעון בתוכנה מרכזית <span>SYNERGY</span> אספקה והתקנת
+                                שעון
+                            </u>
+                        </p>
+                    </td>
+                    <td width="10%" align="right">
+                        <p>: הנדון</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">
+                        <p>
+                            .לקוח נכבד, להלן הצעת מחיר לעיונכם ואישורכם
+                        </p>
+                    </td>
+
+                </tr>
+
+            </table>
+            <br />
+            <table style="width: 100%;">
+                <tr>
+                    <td align="center" style="font-size: 12pt; text-align:right;" dir="rtl">
+                        <b><span>${record.tranid} : הצעת מחיר מספר </span></b>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <br />
+
+            <#assign subwithdicount=record.subtotal - record.discounttotal>
+                <#if subwithdicount==0> <#assign subwithdicount=0.0000000001> </#if>
+
+                <table class="linetb" style="width:650px;">
+                    <!-- start items -->
+                    <#list record.item as item>
+                        <#if item_index==0>
+                            <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        <p style="width: 100%; text-align:center;">לתשלום</p>
+                                    </th>
+                                    <th colspan="6">
+                                        <p style="width: 100%; text-align:center;">כמות</p>
+                                    </th>
+                                    <th colspan="4">
+                                        <p style="width: 100%; text-align:center;">% הנחה</p>
+                                    </th>
+                                    <th colspan="4">
+                                        <p style="width: 100%; text-align:center;">מחיר יח'</p>
+                                    </th>
+                                    <th colspan="4">
+                                        <p style="width: 100%; text-align:center;">מחירון</p>
+                                    </th>
+                                    <th colspan="15">
+                                        <p style="width: 100%; text-align:center;">תאור הפריט / עבודה</p>
+                                    </th>
+                                    <th colspan="2">
+                                        <p style="width: 100%; text-align:center;">שורה</p>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </#if>
+                        <tr>
+                            <td colspan="6">
+                                <p style="width: 100%; text-align:center;">
+                                    ${curr_symbol}${item.amount?string[",##0.00"]}
+                                </p>
+                            </td>
+                            <td colspan="6">
+                                <p style="width: 100%; text-align:center;">
+                                    ${item.quantity} <br />
+                                </p>
+                            </td>
+                            <td colspan="4">
+                                <p style="width: 100%; text-align:center;">${item.discount}</p>
+                            </td>
+                            <td colspan="4" style="text-align:justify; text-justify:none; ">
+                                <p style="width: 100%; text-align:right;">${curr_symbol}${item.rate?string[",##0.00"]}</p>
+                            </td>
+                            <td colspan="4" style="text-align:justify; text-justify:none; ">
+                                <p style="width: 100%; text-align:right;"></p>
+                            </td>
+                            <td colspan="15" style="text-align:justify; text-justify:none; ">
+                                <p style="width: 100%; text-align:right;">${item.item}</p>
+                            </td>
+                            <td colspan="2" style="text-align:justify; text-justify:none;">
+                                <p style="width: 100%; text-align:right;">${item_index +1}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"></td>
+                            <td colspan="6"></td>
+                            <td colspan="4"></td>
+                            <td colspan="4" style="text-align:justify; text-justify:none; "></td>
+                            <td colspan="4" style="text-align:justify; text-justify:none; "></td>
+                            <td colspan="15" style="text-align:justify; text-justify:none; ">
+                                <p style="width: 100%; text-align:right;">${item.description}</p>
+                            </td>
+                            <td colspan="2" style="text-align:justify; text-justify:none;"></td>
+                        </tr>
+                    </#list>
+                </table>
+                <!-- end items -->
+
+                <table class="linetb_Total" style="width:650px;">
+                    <tr>
+                        <td colspan="8" align="center" style="height:25px; vertical-align: middle;">
+                            ${curr_symbol}${(record.subtotal)?string[",##0.00"]}
+                        </td>
+                        <td colspan="8" align="center" style="height:25px; vertical-align: middle;">
+                            : סה"כ לפני מע"מ <br />
+                        </td>
+                        <td rowspan="4" colspan="16" style="background-color:#fff;  padding-right:10px; ">
+                            <br /><br />
+                            <#if record.memo?has_content>
+                                <p align="right" style="font-size:11pt">:הערות</p>
+                                <p style=" text-overflow: ellipsis;word-wrap: break-word; width:200px;  white-space: normal; word-spacing: normal"
+                                   align="right">${record.memo}</p>
+                            </#if>
+                        </td>
+                    </tr>
+                    <#if record.discounttotal?has_content && record.discounttotal !=0>
+                        <tr>
+                            <td colspan="8" align="center" style="height:25px; vertical-align: middle;">
+                                ${curr_symbol}${record.discounttotal?string[",##0.00"]}
+                            </td>
+                            <td colspan="8" align="center" style="height:25px; vertical-align: middle;"> : הנחה<br /></td>
+                        </tr>
+                    </#if>
+                    <tr>
+                        <td colspan="8" align="center" style="height:25px; vertical-align: middle;">
+                            ${curr_symbol}${(record.taxtotal)?string[",##0.00"]}
+                        </td>
+                        <td colspan="8" align="center" style="height:25px; vertical-align: middle;">
+                            : (${(record.taxtotal /
+                            subwithdicount * 100)?round}%) מעמ
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="8" align="center"
+                            style="height:25px; vertical-align: middle;color:#fff; font-size:14pt;font-weight:normal">
+                            ${curr_symbol}${record.total?string[",##0.00"]}
+                        </th>
+                        <th colspan="8" align="center"
+                            style="height:25px; vertical-align: middle;color:#fff; font-size:14pt;font-weight:normal">
+                            :
+                            סה"כ כולל מע"מ <br />
+                        </th>
+                    </tr>
+                </table>
+
+                <br />
+
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>הערות</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>${record.custbody_quote_comments}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>תנאיים כלליים</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>${record.custbodygeneral_conditions}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="90%" align="right">
+                            <p><b><u>הצעת מחיר זו מהווה הזמנה עם חתימת הלקוח עליה</u></b></p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <br />
+                <table class="linetb" style="width:670px; font-size:12pt;">
+                    <tr>
+                        <td  align="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                            <p lign="right" style="font-size: 12pt; text-align:right;" dir="rtl">
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><br /><u>  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp;  </u>:תפקיד &emsp; &emsp; &emsp; &emsp; <u> &emsp; &emsp;&emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : שם<br /><br />
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u>  &emsp; &emsp;  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : חותמת וחתימה<br /><br />
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u>  &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : מס' ח.פ ושם חברה להפקת חשבוניות <br /><br />
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u>  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> :תאריך אישור ההצעה  <br /><br />
+                                <span align="right" style="font-size: 12pt; text-align:right;" dir="rtl"><u>  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; &emsp; &emsp; &emsp;  &ensp;  &ensp;  &emsp; &emsp; </u></span> : כתובת למשלוח חשבונית <br /><br />
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td width="90%" align="right">
+                            <p><b>(Fax To Email) 15397447763 נא לשלוח הצעת מחיר חתומה לפקס</b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p>לאחר אישור ההזמנה מח' השיבוץ יצרו עמכם קשר לתיאום ביצוע העבודה 09-7750400</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="90%" align="right">
+                            <p><b>נשמח לעמוד לרשותכם בכל מידע נוסף שיידרש בכל עת, בטלפון: 09-7750433</b></p>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+
+                <table style="width:650px;" align="right">
+                    <tr>
+                        <td align="right">
+                            <p>,בברכה</p>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td align="right">
+                            ${record.salesrep}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p> ${record.salesrep.phone} :'טל</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <p>${record.salesrep.email} :דוא"ל</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            ${record.salesrep.subsidiary}
+                        </td>
+                    </tr>
+
+
+                </table>
+                <!--
+    <table>
+        <tr>
+            <td align="right"></td>
+            <td align="right">
+                <p>בברכה,</p>
+            </td>
+        </tr>
+        <tr>
+            <td align="right"></td>
+            <td align="right">
+                ${record.salesrep}
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                ${record.salesrep.phone}
+            </td>
+            <td align="right">
+                <p>:'טל</p>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                ${record.salesrep.email}
+            </td>
+            <td align="right">
+                <p>:דוא"ל</p>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                ${record.salesrep.subsidiary}
+            </td>
+        </tr>
+
+
+    </table>-->
+</body>
+</pdf>

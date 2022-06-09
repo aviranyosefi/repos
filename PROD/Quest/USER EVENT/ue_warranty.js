@@ -1,12 +1,15 @@
 function save_warranty_ap() {
     try
     {
-        var rec = nlapiLoadRecord('itemreceipt', nlapiGetRecordId());
+        var recId = nlapiGetRecordId()
+        var rec = nlapiLoadRecord('itemreceipt', recId);
         var count = rec.getLineItemCount('item');
-        nlapiLogExecution('debug', 'save_warranty_ap' + count, ' internalId:' + nlapiGetRecordId());
+        nlapiLogExecution('debug', 'save_warranty_ap count ' + count, ' internalId:' + recId);
         for (var i = 1; i <= count; i++) {
             var subrecord = rec.viewLineItemSubrecord('item', 'inventorydetail', i);
-            var inv = subrecord.id; nlapiLogExecution('debug', 'save_warranty_ap-loop' + i, ' inv:' + inv);
+            if (isNullOrEmpty(subrecord)) continue;
+            var inv = subrecord.id;
+            nlapiLogExecution('debug', 'save_warranty_ap-loop' + i, ' inv:' + inv);
             var war_month = rec.getLineItemValue("item", "custcol_vendor_warranty_months", i);
             var date = rec.getFieldValue('trandate');
             var invarray = getInventoryDetails(inv);
@@ -51,3 +54,9 @@ function getInventoryDetails(invDetailID) {
     }
     return res;
 }
+function isNullOrEmpty(val) {
+    if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
+        return true;
+    }
+    return false;
+} 

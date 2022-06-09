@@ -9,6 +9,7 @@ function start() {
                 rec.setFieldValue('custbody_cf_first_payment', FirstBillsList[m].payment)
                 rec.setFieldValue('custbody_cf_first_payment_date', FirstBillsList[m].date)
                 rec.setFieldValue('custbody_cf_first_payment_percent', FirstBillsList[m].perc)
+                rec.setFieldValue('custbody_cf_first_payment_rate', FirstBillsList[m].exchangeRate)
                 nlapiSubmitRecord(rec, null, true);
             } catch (e) {
                 nlapiLogExecution('error', 'nlapiSubmitField  bill id: ' + FirstBillsList[m].bill, e);
@@ -43,6 +44,7 @@ function FirstBillsData() {
                 payment: s[i].getValue("internalid", 'applyingTransaction', "MIN"),
                 date: s[i].getValue("trandate", 'applyingTransaction', "MIN"),
                 perc: s[i].getValue("formulanumeric", null, "MAX"),
+                exchangeRate: s[i].getValue("exchangerate", "applyingTransaction", "MAX"),
             });
         }
     }

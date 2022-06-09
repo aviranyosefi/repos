@@ -100,8 +100,8 @@ function isNullOrEmpty(val) {
 }
 function checkPL() {
     customer = nlapiGetFieldValue('entity')
-    //customer_price_list = nlapiLookupField('customer', customer, 'custentity_price_list');
-    customer_price_list= checkIndividualPL(customer)
+    customer_price_list = nlapiLookupField('customer', customer, 'custentity_price_list');
+    //customer_price_list= checkIndividualPL(customer)
     currency = nlapiGetFieldValue('currency');
     trandate = nlapiGetFieldValue('trandate');
     exechange = nlapiExchangeRate('USD', currency, trandate);

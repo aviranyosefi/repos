@@ -55,7 +55,9 @@ function check_po(request, response) {
                         if (!isNullOrEmpty(tolerance)) {
                             setResDate('tolerance', logId, '1');
                             var receiver_approval = nlapiLookupField(type, internalid, 'custbody_receiver_approval')
-                            var reciever = nlapiLookupField(type, internalid, 'custbody_nc_pba_tolerance_approver')
+                            //var reciever = nlapiLookupField(type, internalid, 'custbody_nc_pba_tolerance_approver')
+                            var subsidiary = nlapiLookupField(type, internalid, 'subsidiary')
+                            var reciever = getToleranceApprover(subsidiary)
                             if (financial_approval == '1' && receiver_approval == '1' && type != 'vendorcredit') {
                                 nlapiSubmitField(type, internalid, 'paymenthold', 'F');
                             }
@@ -116,7 +118,8 @@ function check_po(request, response) {
         htmlfield.setDefaultValue(html);
         if (field == 'custbody_tolerance_approver') {
             setResDate('tolerance', logId, '2');
-            var reciever = nlapiLookupField(type, internalid, 'custbody_nc_pba_tolerance_approver')
+            var subsidiary = nlapiLookupField(type, internalid, 'subsidiary')
+            var reciever = getToleranceApprover(subsidiary) //nlapiLookupField(type, internalid, 'custbody_nc_pba_tolerance_approver')
         }
         else {
             setResDate('approval', logId, '2');
@@ -196,7 +199,8 @@ function send_approve() {
     var context = nlapiGetContext();
     var company = context.company;
     company = company.replace('_', '-');
-    var SuiteletURL = 'https://' + company +'.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1576&deploy=1&compid=4678143_SB2&h=d50aaf2cfeba9d568d5f'
+    //var SuiteletURL = 'https://' + company +'.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1576&deploy=1&compid=4678143_SB2&h=d50aaf2cfeba9d568d5f'
+    var SuiteletURL = nlapiResolveURL('SUITELET', 'customscriptilo_wf_approve_po_su', 'customdeploy_ilo_wf_approve_po_su', true);   
     nlapiLogExecution('DEBUG', 'Start send_approve');
     try {
         var fromId = nlapiGetFieldValue('custbody_il_bill_creator');   
@@ -213,9 +217,10 @@ function send_approve() {
             var newNumber = recDate[1];
             approvedurl += '&tolerance=tolerance' + '&logId=' + logId + '&newNumber=' + newNumber;
             rejecturl += '&tolerance=tolerance' + '&logId=' + logId + '&newNumber=' + newNumber;
-            var tolerance_approver = nlapiGetFieldValue('custbody_nc_pba_tolerance_approver');      
+            var subsidiary =nlapiGetFieldValue('subsidiary');      
+            var tolerance_approver = getToleranceApprover(subsidiary)//nlapiGetFieldValue('custbody_nc_pba_tolerance_approver');      
             if (!isNullOrEmpty(tolerance_approver)) {
-                var email = tolerance_approver//nlapiLookupField('employee', tolerance_approver, 'email');
+                var email = tolerance_approver
                 var emailMerger = nlapiCreateEmailMerger('5');
             }
         }
@@ -227,7 +232,7 @@ function send_approve() {
             rejecturl += '&logId=' + logId + '&newNumber=' + newNumber;
             var reciever = nlapiGetFieldValue('custbody_bill_po_reciever');
             if (!isNullOrEmpty(reciever)) {
-                var email = reciever //nlapiLookupField('employee', reciever, 'email');
+                var email = reciever
                 if (type == 'vendorbill') {
                     var emailMerger = nlapiCreateEmailMerger('4');
                 }
@@ -281,7 +286,6 @@ function formatNumber(num) {
     else return num
 
 }
-
 function createIloLog(type, tranid) {
 
     try {
@@ -311,7 +315,6 @@ function createIloLog(type, tranid) {
     }
     return recData;
 }
-
 function getLastLogNumber(type, tranid) {
 
 
@@ -359,7 +362,6 @@ function getLastLogNumber(type, tranid) {
     return parseInt(lastNumber) + 1;
 
 }
-
 function getInvoiceAttachments(invID) {
 
     var results = [];
@@ -396,4 +398,11 @@ function getInvoiceAttachments(invID) {
     }
 
     return toReturn;
+}
+function getToleranceApprover(subsidiary) {
+    var tolerance_approver = '';
+    if (!isNullOrEmpty(subsidiary)) {
+         tolerance_approver= nlapiLookupField('subsidiary', subsidiary, 'custrecord_nc_vbtol_tolerance_approver')  
+    }
+    return tolerance_approver
 }

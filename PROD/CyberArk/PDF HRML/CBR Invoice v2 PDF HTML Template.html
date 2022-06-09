@@ -1096,6 +1096,15 @@
         <br/>
     </#if>
 
+    <#assign payment_link=record.custbody_stripe_invoice_payment_link>
+    <#assign cc_limit =  subsidiary.custrecord_cbr_pay_by_cc_limit>
+    <#assign exchangerate=record.exchangerate>
+    <#assign total=record.total>
+    <#assign show= cc_limit <  (total*exchangerate)>
+    <#if payment_link?has_content &&  !show>
+        <p>Pay by Credit Card: ${payment_link}</p>
+    </#if>
+
      <table style="width:100%; margin-top: 15px;" cellpadding="0">
         <tr>
             <td class="${ALIGN_DIRECTION_RIGHT}" valign="bottom">

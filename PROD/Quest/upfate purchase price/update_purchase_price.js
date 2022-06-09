@@ -5,25 +5,37 @@
  */
 var ErrorList = [];
 var SuccessList = [];
-define(['N/search', 'N/record', 'N/log', 'N/currency'],
-    function (search, record, logger, currency) {
+define(['N/search', 'N/record', 'N/log', 'N/currency', 'N/runtime'],
+    function (search, record, logger, currency, runtime) {
       
-        function getInputData() {        
+        function getInputData() {  
+            var script = runtime.getCurrentScript();
+            var itemId = script.getParameter({ name: 'custscript_item_id' });
+            logger.debug('itemId', itemId);   
             var data = [];           
-            var data = getRunData();     
+            var data = getRunData(itemId);     
             logger.debug({ title: 'data ' + data.length, details: JSON.stringify(data)});
             return data;
         }
-        function getRunData() {
+        function getRunData(itemId) {
 
+            var filters = []
+            filters.push(search.createFilter({ name: 'custitem_purchase_price_orig_currency', operator: 'isnotempty', values: "" }))
+            filters.push(search.createFilter({ name: 'custitem_purchase_price_currency', operator: 'noneof', values: "@NONE@" }))
+            if (!isNullOrEmpty(itemId))
+                filters.push(search.createFilter({ name: 'internalid', operator: 'anyof', values: itemId }))
+
+
+            var myFilters = [['custitem_purchase_price_orig_currency', 'isnotempty', ""] ,  "AND"];
+            myFilters.push(['custitem_purchase_price_currency', 'noneof', '@NONE@'])
+            if (!isNullOrEmpty(itemId))
+                myFilters.push( "AND",['internalid', 'anyof', itemId])
             var searchObj = search.create({
                 type: "item",
                 filters:
-                    [
-                        ["custitem_purchase_price_orig_currency", "isnotempty", ""],
-                        "AND",
-                        ["custitem_purchase_price_currency", "noneof", "@NONE@"],
-                    ],
+                    
+                        myFilters                       
+                    ,
                 columns: [ 
                     "custitem_purchase_price_currency","custitem_purchase_price_orig_currency"
                 ]
@@ -52,6 +64,12 @@ define(['N/search', 'N/record', 'N/log', 'N/currency'],
             }
             return res
         }
+        function isNullOrEmpty(val) {
+            if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
+                return true;
+            }
+            return false;
+        }    
         function map(context) {
             try {
                 logger.debug('mapContext', context.value);

@@ -105,8 +105,11 @@ define(['N/record', 'N/ui/serverWidget'],
                     //field.setDisplayType('hidden');
                 field.updateDisplayType({ displayType: serverWidget.FieldDisplayType.HIDDEN });
             }
-            var field = form.getField({
+            form.getField({
                 id: 'category'
+            }).isMandatory = true
+            form.getField({
+                id: 'custentity_related_customer'
             }).isMandatory = true
             //name.isMandatory = true;
             return scriptData

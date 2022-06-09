@@ -9,6 +9,7 @@ function BillingPlan() {
         nlapiLogExecution('error', 'error BillingPlan ', e);
     }
 }
+// BP Creation Recurring [Script]
 function getAgreemetLinesLoadSearch() {
 
     var search = nlapiLoadSearch(null, 'customsearch_bp_creation_recurring');
@@ -33,12 +34,13 @@ function getAgreemetLinesLoadSearch() {
         for (var i = 0; i < s.length; i++) {
           
             AgreemetLinesList.push({
-                ib_id: s[i].getValue("internalid", null, "GROUP"),           
+                ib_id: s[i].getValue("internalid"),           
                 agr_start_date: s[i].getValue(cols[1]),
                 end_date: s[i].getValue(cols[2]),
-                ib_rate: s[i].getValue('custrecord_ib_rate', null, "GROUP"),
-                ib_agr: s[i].getValue('custrecord_ib_agr', null, "GROUP"),   
-                agr_customer: s[i].getValue('custrecord_agr_customer', 'CUSTRECORD_IB_AGR', "GROUP"),  
+                ib_rate: s[i].getValue('custrecord_ib_rate'),
+                ib_agr: s[i].getValue('custrecord_ib_agr'),   
+                agr_customer: s[i].getValue('custrecord_agr_customer', 'CUSTRECORD_IB_AGR'),  
+                ib_qty: s[i].getValue('custrecord_ib_quantity'),
                 
             });
         }
@@ -59,6 +61,7 @@ function CreateBillingPlan(createBPdata) {
             rec.setFieldValue('custrecord_bp_service_start_date', createBPdata[i].agr_start_date);
             rec.setFieldValue('custrecord_bp_service_end_date', createBPdata[i].end_date);
             rec.setFieldValue('custrecord_bp_rate', createBPdata[i].ib_rate); 
+            rec.setFieldValue('custrecord_bp_quantity', createBPdata[i].ib_qty);  
             try {
                 var id = nlapiSubmitRecord(rec);
                 nlapiLogExecution('debug', 'Billing Plan id: ', id);

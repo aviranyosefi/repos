@@ -1,0 +1,57 @@
+<html>
+<script>
+          var trigger_once = false;
+          var mode = '';
+          function checkTabPress(e) {
+              console.log(e.which);
+              if (e.which == 9 || e.which == 1) {
+                  setTimeout(function () { check_added_inv(); }, 100);
+                  setTimeout(function () { check_added_inv(); }, 500);
+                  setTimeout(function () { check_added_inv(); }, 1200);
+                  setTimeout(function () { check_added_inv(); }, 3200);
+              }
+          }
+          var body = document.querySelector('body');   body.addEventListener('keyup', checkTabPress);     body.addEventListener('click', checkTabPress);
+          $("#inventory_splits")[0].onclick = function () { check_added_inv() };
+          function pageInit(type) {
+              mode = type;
+              var cform = nlapiGetFieldText('customform');
+              if (cform == null)
+                  return;
+              if (cform.indexOf('Standard') >= 0)
+                  return;
+              var rowtype = 'inventory';
+          }
+          function check_added_inv() {
+              try {
+                  var btn = 'inventorydetailset';
+                  if (document.getElementsByClassName('smalltextul field_widget i_inventorydetailneeded')[0])
+                      btn = 'inventorydetailneeded'
+                  if (document.getElementsByClassName('smalltextul field_widget i_' + btn)[0])
+                      var spn = document.getElementsByClassName('smalltextul field_widget i_' + btn)[0].parentElement;
+                  else if (document.getElementsByClassName('smalltextul                i_inventorydetailneeded')[0])
+                      var spn = document.getElementsByClassName('smalltextul                i_inventorydetailneeded')[0].parentElement;
+                  else if (document.getElementsByClassName('smalltextul                i_inventorydetailset')[0])
+                      var spn = document.getElementsByClassName('smalltextul                i_inventorydetailset')[0].parentElement;
+                  else if (document.getElementById('inventorydetail_helper_popup_1'))
+                      var spn = document.getElementById('inventorydetail_helper_popup_1').parentElement;
+                 else
+                      var spn = document.getElementById('inventorydetail_helper_popup').parentElement;
+                  var newspan = document.createElement("SPAN");
+                  newspan.innerHTML = '<span class="sp_SummaryField"><span class="always-visible field_widget_boxpos uir-summary-field-helper  "><a id="imulti_popup_2" onclick="open_multi()"  class="smalltextul i_inventorydetailset" href="#" style="background-position:-100px -150px" ></a></span></span>';
+                  if (spn.childElementCount == 1)
+                      spn.appendChild(newspan);
+                  console.log('check_added_inv done');
+              }
+              catch (e)
+              { }
+          }
+          function open_multi() {
+              var item = nlapiGetCurrentLineItemValue('inventory', 'item');
+              var location = nlapiGetFieldValue('location');
+              var status = nlapiGetFieldValue('previousstatus');
+              nlExtOpenWindow('../../../app/site/hosting/scriptlet.nl?script=595&deploy=1&custpage_ilo_check_stage=1&custpage_location=' + location + '&custpage_item=' + item + '&custpage_status=' + status, '', 950, 800, null);
+          }
+          setTimeout(function () { check_added_inv(); }, 500);
+</script>
+</html>

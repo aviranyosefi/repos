@@ -4,15 +4,26 @@
  */
 define(['N/search', 'N/ui/dialog'],
     function (search, dialog) {
-        var DEFUALT_LOCATION = 28;
+        var DEFUALT_LOCATION = 30; // Dangot - Sales (מכירה)
         var rec;
+        var firstEntity = null;
+        function pageInit(scriptContext) {
+            rec = rec || scriptContext.currentRecord;
+            var recType = rec.type;
+            if (recType == 'salesorder' || recType == 'supportcase') {
+                fieldId = 'company'
+                if (recType == 'salesorder') fieldId = 'entity'
+                debugger;
+                checkEntityData(fieldId);
+            }
+        }
         function fieldChanged(scriptContext) {
+            debugger;
             rec = rec || scriptContext.currentRecord;
             var recType = rec.type;
             var sublistId = scriptContext.sublistId;
             var fieldId = scriptContext.fieldId;
-            debugger;
-            if (sublistId == 'item' && fieldId == 'custcol_end_customer' && (recType == 'salesorder' || recType == 'estimae')) {
+            if (sublistId == 'item' && fieldId == 'custcol_end_customer' && (recType == 'salesorder' || recType == 'estimate')) {
                 var end_customer = rec.getCurrentSublistValue('item', 'custcol_end_customer');
                 var ismultishipto = rec.getValue('ismultishipto');
                 if (!isNullOrEmpty(end_customer) && ismultishipto) {
@@ -35,7 +46,8 @@ define(['N/search', 'N/ui/dialog'],
                     }
                 }
             }
-            else if (fieldId == 'custbody_end_customer' && (recType == 'salesorder' || recType == 'estimae')) {
+            else if (fieldId == 'custbody_end_customer' && (recType == 'salesorder' || recType == 'estimate')) {
+              
                 var end_customer = rec.getValue('custbody_end_customer');
                 if (!isNullOrEmpty(end_customer)) {
                     var addrressId = getOtherNameAddress(end_customer)
@@ -44,19 +56,10 @@ define(['N/search', 'N/ui/dialog'],
                     }
                 }
             }
-            else if ((fieldId == 'entity' && (recType == 'salesorder' || recType == 'estimae' )) || (fieldId == 'company' && recType == 'supportcase')) {
-                var entity = rec.getValue(fieldId);
-                if (!isNullOrEmpty(entity)) {
-                    var customer_alerts = search.lookupFields({ type: search.Type.CUSTOMER, id: entity, columns: ['custentity_dangot_customer_alerts'] }).custentity_dangot_customer_alerts;
-                    if (!isNullOrEmpty(customer_alerts)) {
-                        let options = {
-                            title: '<p style="text-align:right;" dir="rtl">הערה ללקוח</p>',
-                            message: '<p style="text-align:right;" dir="rtl">' + customer_alerts+ '</p>'
-                        };
-                        dialog.alert(options)
-                    }
-                }
-            }
+            //else if ((fieldId == 'entity' && (recType == 'salesorder' || recType == 'estimate' )) || (fieldId == 'company' && recType == 'supportcase')) {
+            //    debugger;
+            //    checkEntityData(fieldId);
+            //}
             return true;
         }
         function postSourcing(scriptContext) {
@@ -64,13 +67,16 @@ define(['N/search', 'N/ui/dialog'],
             var recType = rec.type;
             var sublistId = scriptContext.sublistId;
             var fieldId = scriptContext.fieldId;
-            if (sublistId == 'item' && fieldId == 'item' && (recType == 'salesorder' || recType == 'estimae')) {
+            if (sublistId == 'item' && fieldId == 'item' && (recType == 'salesorder' || recType == 'estimate')) {
                 debugger;
                 var sale_type = rec.getValue('custbody_dangot_sale_type')
                 if (sale_type == 1 || sale_type == 2 || sale_type == 3) {
                     rec.setCurrentSublistValue('item', 'inventorylocation', DEFUALT_LOCATION);
-                    rec.setCurrentSublistValue('item', 'description', 'fasdfsdf');
                 }
+            }
+            else if ((fieldId == 'entity' && (recType == 'salesorder' || recType == 'estimate')) || (fieldId == 'company' && recType == 'supportcase')) {
+                debugger;
+                checkEntityData(fieldId);
             }
             return true;
         }
@@ -86,8 +92,22 @@ define(['N/search', 'N/ui/dialog'],
                 return customer_address_id[0].value;
             }
         }
-
+        function checkEntityData(fieldId) {
+            var entity = rec.getValue(fieldId);
+            if (!isNullOrEmpty(entity) && firstEntity != entity) {
+                firstEntity = entity;
+                var customer_alerts = search.lookupFields({ type: search.Type.CUSTOMER, id: entity, columns: ['custentity_dangot_customer_alerts'] }).custentity_dangot_customer_alerts;
+                if (!isNullOrEmpty(customer_alerts)) {
+                    let options = {
+                        title: '<p style="text-align:right;" dir="rtl">הערה ללקוח</p>',
+                        message: '<p style="text-align:right;" dir="rtl">' + customer_alerts + '</p>'
+                    };
+                    dialog.alert(options)
+                }
+            }
+        }
         return {
+            pageInit: pageInit,
             fieldChanged: fieldChanged,
             postSourcing: postSourcing,
         };

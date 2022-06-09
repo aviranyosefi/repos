@@ -3,16 +3,17 @@
  * @NScriptType MapReduceScript
  * @NModuleScope SameAccount
  */
-var ErrorList = [];
-var SuccessList = [];
-define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.Lib.Common', './dev_legal_tracker_sftp', 'N/file', 'N/email', 'N/cache', 'N/format'],
-    function (search, record, logger, error, runtime, common, hypCore, file, email, cache, formatter) {
+define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.Lib.Common', './dev_legal_tracker_sftp', 'N/file', 'N/email', 'N/render'],
+    function (search, record, logger, error, runtime, common, hypCore, file, email, render) {
         var lineFolder, LineFileName, linesFieldId, errorLodId, recId;
         var SummaryName = ['Tracker Invoice Spreadsheetaccountspayable il', 'Tracker Invoice Spreadsheetaccountspayable apj', 'Tracker Invoice Spreadsheetaccountspayable emea', 'Tracker Invoice Spreadsheetaccounts payable']
         var RowName = ['Tracker Invoices.accountspayable il.', 'Tracker Invoices.accountspayable apj.', 'Tracker Invoices.accountspayable emea.', 'Tracker Invoices.accounts payable.']
-        var FOLDER_NS = '1164026';
+        var FOLDER_NS = 1164026;
         var ITEM_ID = 2184;
         var FORM_ID = 199;
+        var GLOBAL_EMAIL_TEMPLATE = 47;
+        var GLOBAL_ERRORS_EMAIL_TEMPLATE = 48;
+        var GLOBAL_ERROR_RECIVER = 208493; // SHAY S
         var lineFolderPrefix = 'LegalTracker/New/'
         function getInputData() {
             var script = runtime.getCurrentScript();
@@ -28,8 +29,8 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 var date = getDateFormat()
                 logger.debug('date', date);
                 for (var i = 0; i < SummaryName.length; i++) {
-                    var SummaryFileName = SummaryName[i] + '2022-04-29 to 2022-04-29' + '.csv';  
-                    //var SummaryFileName = SummaryName[i] + date + ' to ' + date + '.csv';  
+                    //var SummaryFileName = SummaryName[i] + '2022-05-15 to 2022-05-15' + '.csv';  
+                    var SummaryFileName = SummaryName[i] + date + ' to ' + date + '.csv';  
                     var SummaryFileObj = hypCore.DownloadFile(connection, SummaryFileName, integId, null);
                     if (!common.isNullOrEmpty(SummaryFileObj)) {
                         var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())
@@ -37,11 +38,13 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                         SummaryFile = SummaryFile.getContents();
                         var fileLines = SummaryFile.split('\r\n');
                         var line = 1;
-                        var lineFolder = RowName[i] + '2022-04-29 to 2022-04-29';
-                        //var lineFolder = RowName[i] + date + ' to ' + date;
+                        //var lineFolder = RowName[i] + '2022-05-15 to 2022-05-15';
+                        var lineFolder = RowName[i] + date + ' to ' + date;
                         for (var i = 2; i <= fileLines.length; i++) {
                             if (!common.isNullOrEmpty(fileLines[i])) {
-                                var cols = fileLines[i].replace(/\"/g, '').split(',');
+                                logger.debug('fileLines[i]', fileLines[i]);
+                                //var cols = fileLines[i].replace(/\"/g, '').split(','); 
+                                var cols = fileLines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
                                 data.push({
                                     errorLodId: errorLodId,
                                     SummaryFileName: SummaryFileName,
@@ -49,16 +52,14 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                                     line: line,
                                     integId: integId,
                                     lineFolder: lineFolder,
-                                    entityName: cols[0], //Vendor Name
-                                    entityShortName: cols[1], // Vendor Name (short)
-                                    entity: cols[2], //Vendor ID
-                                    tranid: cols[3], //Invoice Number
-                                    currency: cols[5], //Invoice Currency
-                                    trandate: cols[6], //Date of Invoice
-                                    custbody_bill_po_reciever: cols[10], //Final Approver's Employee ID
-                                    custbody_il_bill_creator: cols[10], //Final Approver's Employee ID
-
-
+                                    entityName: fixString(cols[0]), //Vendor Name
+                                    entityShortName: fixString(cols[1]), // Vendor Name (short)
+                                    entity: fixString(cols[2]), //Vendor ID
+                                    tranid: fixString(cols[3]), //Invoice Number
+                                    currency: fixString(cols[5]), //Invoice Currency
+                                    trandate: fixString(cols[6]), //Date of Invoice
+                                    custbody_bill_po_reciever: fixString(cols[9]), //Final Approver's Employee ID
+                                    custbody_il_bill_creator: fixString(cols[9]), //Final Approver's Employee ID
                                 });
                                 line++;
                             }
@@ -105,6 +106,10 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             }
             return res
         }
+        function fixString(str) {
+            if (!common.isNullOrEmpty(str))
+                return str.replace(/\"/g, '')
+        }
         function map(context) {
             try {
                 logger.debug('mapContext', context.value);
@@ -118,17 +123,16 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                     var connection = hypCore.GetSftpConnection(integId);
                     var SummaryFileObj = hypCore.DownloadFile(connection, SummaryFileName, integId, null);
                     if (!common.isNullOrEmpty(SummaryFileObj)) {
-                        var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())
-                        //logger.debug('SummaryFileId', SummaryFileId);
+                        var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())                       
                         var SummaryFile = file.load({ id: SummaryFileId });
                         SummaryFile = SummaryFile.getContents();
                         var fileLines = SummaryFile.split('\r\n');
                         line = recId.getValue('custrecord_lt_line_on_summary');
                         lineFolder = recId.getValue('custrecord_lt_sftp_line_folder')
                         lineOnSummaryFile = Number(line) + 1
-                        //logger.debug('lineOnSummaryFile', lineOnSummaryFile);
-                        var cols = fileLines[lineOnSummaryFile].replace(/\"/g, '').split(',');
-                        logger.debug('cols', cols);
+                        //var cols = fileLines[lineOnSummaryFile].replace(/\"/g, '').split(',');
+                        var cols = fileLines[lineOnSummaryFile].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                        //logger.debug('cols', cols);
                         var ObjLine = {
                             errorLodId: errorLodId,
                             SummaryFileName: SummaryFileName,
@@ -136,14 +140,14 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                             line: line,
                             integId: integId,
                             lineFolder: lineFolder,
-                            entityName: cols[0], //Vendor Name
-                            entityShortName: cols[1], // Vendor Name (short)
-                            entity: cols[2], //Vendor ID
-                            tranid: cols[3], //Invoice Number
-                            currency: cols[5], //Invoice Currency
-                            trandate: cols[6], //Date of Invoice
-                            custbody_bill_po_reciever: cols[10], //Final Approver's Employee ID
-                            custbody_il_bill_creator: cols[10], //Final Approver's Employee ID
+                            entityName: fixString(cols[0]), //Vendor Name
+                            entityShortName: fixString(cols[1]), // Vendor Name (short)
+                            entity: fixString(cols[2]), //Vendor ID
+                            tranid: fixString(cols[3]), //Invoice Number
+                            currency: fixString(cols[5]), //Invoice Currency
+                            trandate: fixString(cols[6]), //Date of Invoice
+                            custbody_bill_po_reciever: fixString(cols[9]), //Final Approver's Employee ID
+                            custbody_il_bill_creator: fixString(cols[9]), //Final Approver's Employee ID
                         }
                         getLineFile(ObjLine);
                     }
@@ -153,10 +157,14 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
 
                 }//else              
             } catch (e) {
-                logger.debug('error map', e);
+                logger.error('error map', e);
                 if (common.isNullOrEmpty(errorLodId)) {
                     addErrorLog(e.message, ObjLine, lineFolder, LineFileName, linesFieldId);
-                }             
+                }
+                else {
+                    recId.setValue('custrecord_lt_error_massage', e.message)
+                    recId.save({enableSourcing: true,ignoreMandatoryFields: true});
+                }
             }
         }
         function getLineFile(ObjLine) {
@@ -168,25 +176,16 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 lineFolder = buildLineFolder(ObjLine.lineFolder)//lineFolderPrefix + ObjLine.lineFolder + '.zip';
             }
             var connection = hypCore.GetSftpConnection(integId);      
-            LineFileName = ObjLine.entityName + ' - ' + ObjLine.tranid + '.txt'
-            var fileObj = hypCore.DownloadFile(connection, LineFileName, integId, lineFolder);
-            if (common.isNullOrEmpty(fileObj)) {
-                LineFileName = ObjLine.entityShortName + ' - ' + ObjLine.tranid + '.txt'
-                var fileObj = hypCore.DownloadFile(connection, LineFileName, integId, lineFolder);
-            }
-            logger.debug('getLineFile lineFolder', lineFolder);
-            if (!common.isNullOrEmpty(fileObj)) {
-                var listFiles = connection.list({ path: lineFolder });
-                var AttatchmentID = buildAttatchment(listFiles, connection, integId, lineFolder )
-                //logger.debug('list', JSON.stringify(list));
-                var linesFieldId = createFile(LineFileName, file.Type.PLAINTEXT, fileObj.getContents())            
-                if (!common.isNullOrEmpty(linesFieldId)) {
-                    createVendorBill(ObjLine, linesFieldId, AttatchmentID);
-                }
+            var listFiles = connection.list({ path: lineFolder });         
+            var AttatchmentID = buildAttatchment(listFiles, connection, integId, lineFolder ) 
+            var linesFieldId = saveLinesFile(listFiles, connection, integId, lineFolder)
+            if (!common.isNullOrEmpty(linesFieldId)) {
+                createVendorBill(ObjLine, linesFieldId, AttatchmentID);
             }
         }
         function createVendorBill(ObjLine, lineFile, AttatchmentID) {
             logger.debug('createVendorBill ObjLine', JSON.stringify(ObjLine));
+            var reciver = ObjLine.custbody_bill_po_reciever
             HeaderFields = ['entity', 'tranid', 'currency', 'trandate', 'custbody_bill_po_reciever', 'custbody_il_bill_creator']
             VendBillRec = record.create({ type: record.Type.VENDOR_BILL, isDynamic: true, defaultValues: { customform: FORM_ID } });
             for (var key in HeaderFields) {
@@ -208,6 +207,8 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             VendBillRec.setValue({ fieldId: 'paymenthold', value: false });
             VendBillRec.setValue({ fieldId: 'custbody_receiver_approval', value: 1 });
             VendBillRec.setValue({ fieldId: 'memo', value: 'Synced from Legal Tracker' });
+            VendBillRec.setValue({ fieldId: 'custbody_source_system', value: 2 }); // Legal Tracker
+            
 
             //logger.debug('lineFile: ', lineFile);
             var txtFile = file.load({ id: lineFile });
@@ -233,12 +234,33 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             var VendBillID = VendBillRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
             setAttach(AttatchmentID, VendBillID)
             logger.debug('vendor bill id: ', VendBillID);
-            if (!common.isNullOrEmpty(errorLodId)  && VendBillID != -1 && common.isNullOrEmpty(VendBillID)) {
+            if (!common.isNullOrEmpty(errorLodId)  && VendBillID != -1 && !common.isNullOrEmpty(VendBillID)) {
                 // update
                 recId.setValue({ fieldId: 'custrecord_lt_bill', value: VendBillID });
+                recId.setValue({ fieldId: 'custrecord_lt_summary_file_id', value: ObjLine.SummaryFileId });
+                recId.setValue({ fieldId: 'custrecord_lt_lines_file_id', value: lineFile });
                 recId.save({ enableSourcing: true, ignoreMandatoryFields: true });
-            }       
+                sendEmail(reciver, VendBillID)
+            } 
+            else if (VendBillID != -1 && !common.isNullOrEmpty(VendBillID)) {
+                sendEmail(reciver, VendBillID)
+            }
             return VendBillID
+        }
+        function saveLinesFile(listFiles, connection, integId, lineFolder) {
+            for (var i = 0; i < listFiles.length; i++) {
+                var currFileName = listFiles[i].name;
+                if (currFileName.indexOf('.txt') != -1) {
+                    logger.debug('buildAttatchment file.name: ', currFileName);
+                    var fileObj = hypCore.DownloadFile(connection, currFileName, integId, lineFolder);
+                    logger.debug('buildAttatchment fileObj: ', fileObj);
+                    if (!common.isNullOrEmpty(fileObj)) {
+                        var linesFieldId = createFile(currFileName, file.Type.PLAINTEXT, fileObj.getContents()) 
+                        return linesFieldId
+                    }
+                }
+            }
+            return '';
         }
         function getCurrencyId(currency) {
             var SearchObj = search.create({
@@ -347,127 +369,113 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                 });
             }         
         }
-        function summarize(summary) {
-            //handleErrorIfAny(summary);
-            logger.debug('SuccessList ' + SuccessList.length, JSON.stringify(SuccessList))
-            logger.debug('ErrorList ' + ErrorList.length, JSON.stringify(ErrorList))
-        }
-
-        function handleErrorIfAny(summary) {
-            var inputSummary = summary.inputSummary;
-            //		var mapSummary = summary.mapSummary;
-            var reduceSummary = summary.reduceSummary;
-
-            if (inputSummary.error) {
-                var e = error.create({
-                    name: 'INPUT_STAGE_FAILED',
-                    message: inputSummary.error
-                });
-                handleErrorInStage('input', inputSummary, e);
-            }
-
-            handleErrorInStage('reduce', reduceSummary);
-            //handleErrorInStage('map', reduceSummary);
-        }
-
-        function handleErrorInStage(stage, summary, e) {
-            logger.debug({
-                title: 'stage',
-                details: stage
+        function sendEmail(reciver, VendBillID ) {
+            var mergeResult = render.mergeEmail({
+                templateId: GLOBAL_EMAIL_TEMPLATE,
+                entity: null,
+                recipient: null,
+                supportCaseId: null,
+                transactionId: VendBillID,
+                customRecord: null
             });
-            var csvFile = null;
-            var new_e = e || null;
-            if (stage == 'reduce') {// &&(!common.isNullOrEmpty(summary.errors)) && (JSON.stringify(summary.errors) != "{}")) {
+            var emailSubject = mergeResult.subject;
+            var emailBody = mergeResult.body;
 
-                // Create the header line of the CSV output file
-                var csvContent = "EmpID|Error Msg\n";
-                var innerContent = "";
-
-                // fill content with the execution errors
-                summary.errors.iterator().each(function (key, value) {
-                    innerContent += key + '|' + JSON.parse(value).message + '\n';
-                    logger.debug({
-                        title: "error saving employee " + key,
-                        details: value
-                    });
-                    return true;
-                });
-                logger.debug({
-                    title: 'innerContent',
-                    details: innerContent
-                });
-
-                if (innerContent != "") {
-                    new_e = error.create({
-                        name: 'REDUCE_STAGE_FAILED',
-                        message: 'REDUCE_STAGE_FAILED'
-                    });
-
-                    csvContent += innerContent
-
-                    // Create file
-                    csvFile = file.create({
-                        name: 'SuccessFactor-Netsuite Employee Sync Errors.csv',
-                        fileType: file.Type.CSV,
-                        contents: csvContent
-                    });
+            email.send({
+                author: reciver,
+                recipients: reciver,
+                subject: emailSubject,
+                body: emailBody,
+                relatedRecords: {
+                    transactionId: VendBillID
                 }
-            }
-            if (!common.isNullOrEmpty(new_e)) {
-                var subject = 'Map/Reduce script ' + runtime.getCurrentScript().id + ' failed for stage: ' + stage;
-                var body = 'An error occurred with the following information:\n' +
-                    'Error msg: ' + new_e.message;
-                var cachedIntegID = hypCore.GetIntegrationId('success_factors');
-
-                // Get Recipients
-                var rcps = search.lookupFields({
-                    type: 'customrecord_nc_ba_integration_types',
-                    id: cachedIntegID,
-                    columns: ['custrecord_nc_ba_int_types_notifyemploye']
-                }).custrecord_nc_ba_int_types_notifyemploye;
-
-                var author = search.lookupFields({
-                    type: 'customrecord_nc_batch_integration_setup',
-                    id: 1,
-                    columns: ['custrecord_nc_ba_int_user']
-                }).custrecord_nc_ba_int_user;
-
-                if (common.isArrayAndNotEmpty(author)) {
-                    author = author[0].value;
-                    var recipients = [author];
-                    if (common.isArrayAndNotEmpty(rcps)) {
-                        var recpList = [];
-                        for (var i = 0; i < rcps.length; i++) {
-                            recpList.push(Number(rcps[i].value));
-                        }
-
-                        // Send email to inform of the process failure 
-                        var recipients = recpList;
+            });           
+        }
+        function summarize(summary) {
+            try { 
+                var errArr = getDodayErrors()
+                logger.debug('errorsList ' + errArr.length, JSON.stringify(errArr))                         
+                if (errArr.length > 0) {
+                    //var htmlbBody = BuildHtml();
+                    //failTbl = htmlbBody
+                    var failTbl = ' <p style= \'font-weight: bold ;color: red; font-size:140%; \'> Total: ' + errArr.length + ' failed</p><br>';
+                    failTbl += "<table class='errtable' style = \"width: 100 %;\" >";
+                    // for th
+                    failTbl += "<tr><th class='errtable' >Vendor</th><th  class='errtable'>Bill#</th><th  class='errtable'>Summary File</th><th  class='errtable'>Line</th><th  class='errtable'>Error</th></tr>";
+                    for (var s in errArr) {
+                        failTbl += "<tr><td class='errtable'>" + errArr[s].vendor + "</td><td  class='errtable'>" + errArr[s].tranid + "</td><td class='errtable'>" + errArr[s].summary_file + "</td><td class='errtable'>" + errArr[s].line + "</td><td class='errtable'>" + errArr[s].error + "</td></tr > ";
                     }
-                    var emailContent = {
-                        author: author,
-                        recipients: recipients,
-                        subject: subject,
-                        body: body,
-                        isInternalOnly: false
-                    };
+                    failTbl += "</table>"
 
-                    if (!common.isNullOrEmpty(csvFile)) {
-                        emailContent.attachments = [csvFile];
-                    }
-
-                    email.send(emailContent);
-                }
+                    var mergeResult = render.mergeEmail({
+                        templateId: GLOBAL_ERRORS_EMAIL_TEMPLATE,
+                        entity: {
+                            type: 'employee',
+                            id: GLOBAL_ERROR_RECIVER
+                        },
+                        recipient: null,
+                        supportCaseId: null,
+                        transactionId: null,
+                        customRecord: null
+                    });
+                    var emailSubject = mergeResult.subject;
+                    var emailBody = mergeResult.body;
+                    emailBody = emailBody.replace('//failTbl//', failTbl);
+                    email.send({
+                        author: GLOBAL_ERROR_RECIVER,
+                        recipients: GLOBAL_ERROR_RECIVER,
+                        subject: emailSubject,
+                        body: emailBody,
+                        relatedRecords: null
+                    }); 
+                } 
+            } catch (e) {
+                logger.error('error summary', e);
             }
         }
+        function getDodayErrors() {
 
+            var searchObj = search.create({
+                type: "customrecord_legal_tracker_errors",
+                filters:
+                    [
+                        ["created", "on", "today"],
+                        "AND",
+                        ["custrecord_lt_bill", "anyof", '@NONE@'],
+                    ],
+                columns: [
+                    "custrecord_lt_tranid", "custrecord_lt_error_massage", "custrecord_lt_summary_file", "custrecord_lt_vendor_name", "custrecord_lt_line_on_summary"
+                ]
+            });
+            var res = [];
+            var resultset = searchObj.run();
+            var s = [];
+            var searchid = 0;
+            do {
+                var resultslice = resultset.getRange(searchid, searchid + 1000);
+                for (var rs in resultslice) {
+                    s.push(resultslice[rs]);
+                    searchid++;
+                }
+            } while (resultslice != null && resultslice.length >= 1000);
 
-
-
+            if (s != null) {
+                for (var i = 0; i < s.length; i++) {
+                    res.push({
+                        tranid: s[i].getValue("custrecord_lt_tranid"),
+                        error: s[i].getValue("custrecord_lt_error_massage"),
+                        summary_file: s[i].getValue("custrecord_lt_summary_file"),
+                        vendor: s[i].getValue("custrecord_lt_vendor_name"),
+                        line: s[i].getValue("custrecord_lt_line_on_summary"),
+                    });
+                }
+            }
+            return res
+        }
+   
         return {
             getInputData: getInputData,
             map: map,
-            //reduce: reduce,
             summarize: summarize
 
         };

@@ -9,6 +9,8 @@
 var whtResults = [];
 var vendorsbank = [];
 var batchrec;
+
+
 function exe_masav_batch(request, response) {
     //Create the form and add fields to it 
     var form = nlapiCreateForm("Approve Payment Batch");
@@ -22,6 +24,7 @@ function exe_masav_batch(request, response) {
         response.writePage(form);
     }
     else {
+
         var action = request.getParameter("action");
         //  form.addField('paymentstatus', 'label', '<b>Pre Approved</b>: Masav');
         var results = nlapiSearchRecord('customrecord_ilo_vendor_bank', null, [new nlobjSearchFilter('isinactive', null, 'is', 'F')], [new nlobjSearchColumn('custrecord_ilo_vendor_bank_vendor'), new nlobjSearchColumn('custrecord_ilo_vendor_bank_bank'), new nlobjSearchColumn('custrecord_ilo_bank_details_account'), new nlobjSearchColumn('custrecord_ilo_default_bank_account', null, null).setSort(true), new nlobjSearchColumn('internalid', null, null).setSort(true)]);
@@ -86,7 +89,7 @@ function exe_masav_batch(request, response) {
                     transaction['internalid'] = results[i].getId();
 
                     // Copy the row values to the transaction object
-                    for (var j = 0; j < columns.length ; j++) {
+                    for (var j = 0; j < columns.length; j++) {
                         if (columns[j].type == 'select')
                             transaction[columns[j].getName()] = results[i].getText(columns[j].getName());
                         else
@@ -212,7 +215,7 @@ function exe_masav_batch(request, response) {
                                 transaction['internalidlink'] = internalIdLink;
 
                                 // Copy the row values to the transaction object
-                                for (var l = 0; l < columns.length ; l++) {
+                                for (var l = 0; l < columns.length; l++) {
                                     var col = columns[l].getName();
                                     if (col == "custpage_whtrate" || col == "custpage_whtamount" || col == "totaltopay")
                                         continue;
@@ -285,33 +288,33 @@ function exe_masav_batch(request, response) {
                 if (sub == null || sub == "")
                     sub = batchrec.getFieldText('custrecord_masav_subsidiary');
                 var head =
-'<tr>' +
-'<td>Report Date</td>' +
-'<td>' + GetTodayDateFormated() + '</td>' +
-'</tr>' +
-'<tr>' +
-'<td>Company</td>' +
-'<td>' + sub + '</td>' +
-'</tr>' +
-'<tr>' +
-'<td>Masav Payment Date</td>' +
-'<td>' + batchrec.getFieldValue('custrecord_ilo_masav_batch_pymdate') + '</td>' +
-'</tr>';
+                    '<tr>' +
+                    '<td>Report Date</td>' +
+                    '<td>' + GetTodayDateFormated() + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Company</td>' +
+                    '<td>' + sub + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Masav Payment Date</td>' +
+                    '<td>' + batchrec.getFieldValue('custrecord_ilo_masav_batch_pymdate') + '</td>' +
+                    '</tr>';
 
                 var total = '<TR  bgcolor=\"#87AFC6\">' +
-        '<TD>TOTAL</Data></Cell>' +
-        '<TD></TD>' +
-        '<TD></TD>' +
-         '<TD></TD>' +
-         '<TD></TD>' +
-         '<TD></TD>' +
-        '<TD></TD>' +
-         '<TD></TD>' +
-         '<TD></TD>' +
-          '<TD></TD>' +
-        '<TD>' + formatMoney(sumwht.toFixed()) + '</TD>' +
-         '<TD> \'+ document.getElementById("custpage_transaction_list_total").innerHTML + \'</TD>' +
-  '</TR>';
+                    '<TD>TOTAL</Data></Cell>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD></TD>' +
+                    '<TD>' + formatMoney(sumwht.toFixed()) + '</TD>' +
+                    '<TD> \'+ document.getElementById("custpage_transaction_list_total").innerHTML + \'</TD>' +
+                    '</TR>';
 
                 //head = escape(head);
                 //in the script you need to replace the 'sublist_internalid' variable with the internal id of the sublist. It's the first variable initialized
@@ -540,7 +543,9 @@ function masav_exec() {
         default_department_value = nlapiLookupField('customrecord_ilo_setup', 1, 'custrecord_ilo_setup_wht_department');
         default_classification_value = nlapiLookupField('customrecord_ilo_setup', 1, 'custrecord_ilo_setup_wht_class');
         var sub = nlapiLookupField('customrecord_ilo_masav_batch', batch_id, 'custrecord_masav_subsidiary');
-
+        var batchaccount = nlapiLookupField('customrecord_ilo_masav_batch', batch_id, 'custrecord_masav_batch_bank');
+        var clearing = nlapiLoadRecord("account", batchaccount).getFieldValue("custrecord_ilo_masav_clearing_account");
+        batchaccount = clearing;
         default_location_value = -1;
         var arrlocations = []; var locations = nlapiSearchRecord('location', null, [new nlobjSearchFilter('subsidiary', null, 'is', sub)], [new nlobjSearchColumn('name', null, null), new nlobjSearchColumn('internalid', null, null)]);
         if (locations != null) {
@@ -614,7 +619,7 @@ function masav_exec() {
         if (savedTransaction == 'F' || status == 3) {
             nlapiSubmitField('vendorbill', internalId, 'custbody_ilo_masav_batch', '');
         }
-            // If it's checked, pay the transaction
+        // If it's checked, pay the transaction
         else if (savedTransaction == 'T') {
             var excelbill = new Object();
             // Get the transaction internal ID
@@ -637,7 +642,7 @@ function masav_exec() {
             // Get the transaction type
             try {
                 nlapiLogExecution('debug', 'search bank details for bank:' + entity);
-                var results = nlapiSearchRecord('customrecord_ilo_vendor_bank', null, null, [new nlobjSearchColumn('custrecord_ilo_vendor_bank_vendor').setSort(true), new nlobjSearchColumn('custrecord_ilo_vendor_bank_bank'), new nlobjSearchColumn('custrecord_ilo_bank_details_account')]);
+                var results = nlapiSearchRecord('customrecord_ilo_vendor_bank', null, new nlobjSearchFilter('custrecord_ilo_vendor_bank_vendor', null, 'anyof', entity), [new nlobjSearchColumn('custrecord_ilo_vendor_bank_vendor').setSort(true), new nlobjSearchColumn('custrecord_ilo_vendor_bank_bank'), new nlobjSearchColumn('custrecord_ilo_bank_details_account')]);
                 // loop over vendor bank to find the right one (we can't filter by vendor due to Netsuite internal bug
                 var vendorbankid = '0';
                 for (var l = 0; l < results.length; l++) {
@@ -694,7 +699,7 @@ function masav_exec() {
                             var netotopay = 0;
                             var total = 0;
                             var wht = 0;
-                            for (var lineNum = 1; lineNum <= vendorpayment.getLineItemCount('apply') ; lineNum++) {
+                            for (var lineNum = 1; lineNum <= vendorpayment.getLineItemCount('apply'); lineNum++) {
                                 if (vendorpayment.getLineItemValue('apply', 'apply', lineNum) == 'T') {
                                     total += parseFloat(vendorpayment.getLineItemValue('apply', 'total', lineNum));
                                     netotopay += parseFloat(vendorpayment.getLineItemValue('apply', 'amount', lineNum));
@@ -756,7 +761,7 @@ function masav_exec() {
                     nlapiLogExecution('debug', 'apacct', vendorpayment.getFieldValue('apacct'));
 
                     vendorpayment.setFieldValue('currency', currencyid);
-                    vendorpayment.setFieldText('account', batchaccount);
+                    vendorpayment.setFieldValue('account', batchaccount);
                     vendorpayment.setFieldValue('autoapply', 'F');
                     vendorpayment.setFieldValue('memo', 'Masav Batch Payment:' + batch_id);
                     /*******mandatory fields for segments****/
@@ -769,8 +774,7 @@ function masav_exec() {
                         if (vendorpayment.getFieldValue('class') == (null || ''))
                             vendorpayment.setFieldValue('class', default_classification_value);
                     }
-                    catch (e)
-                    {
+                    catch (e) {
                         nlapiLogExecution('error', 'mandatory field', e);
 
                     }
@@ -867,7 +871,7 @@ function masav_exec() {
             var netotopay = 0;
             var total = 0;
             var wht = 0;
-            for (var lineNum = 1; lineNum <= vendorpayment.getLineItemCount('apply') ; lineNum++) {
+            for (var lineNum = 1; lineNum <= vendorpayment.getLineItemCount('apply'); lineNum++) {
                 if (vendorpayment.getLineItemValue('apply', 'apply', lineNum) == 'T') {
                     total += parseFloat(vendorpayment.getLineItemValue('apply', 'total', lineNum));
                     netotopay += parseFloat(vendorpayment.getLineItemValue('apply', 'amount', lineNum));
@@ -953,8 +957,7 @@ function setBillCredits() {
             } while (whtCertsearch.length >= 1000);
         }
     }
-    catch (e)
-    { }
+    catch (e) { }
 
 }
 
@@ -967,13 +970,13 @@ function searchWHTbyDate(date) {
         whtCertfilters[1] = new nlobjSearchFilter('custrecord_vendor_cert_enddate', null, 'onorafter', date);
         var whtCertcolumns = new Array();
         whtCertcolumns[0] = new nlobjSearchColumn(
-                                      'custrecord_vendor_cert_fromdate');
+            'custrecord_vendor_cert_fromdate');
         whtCertcolumns[1] = new nlobjSearchColumn(
-                                      'custrecord_vendor_cert_enddate');
+            'custrecord_vendor_cert_enddate');
         whtCertcolumns[2] = new nlobjSearchColumn(
-                                      'custrecord_vendor_cert_percent');
+            'custrecord_vendor_cert_percent');
         whtCertcolumns[3] = new nlobjSearchColumn(
-                                      'custrecord_vendor_cert_vendorid');
+            'custrecord_vendor_cert_vendorid');
         var whtCertsearchobj = nlapiCreateSearch('customrecord_oil_vendor_cert', whtCertfilters, whtCertcolumns);
         var whtCertsearchrun = whtCertsearchobj.runSearch();
 
@@ -991,8 +994,7 @@ function searchWHTbyDate(date) {
             } while (whtCertsearch.length >= 1000);
         };
     }
-    catch (e)
-    { }
+    catch (e) { }
     return whtResults;
 }
 
@@ -1166,7 +1168,7 @@ function GetFolderId(batch) {
     // perform the search and loop through the findings
     var searchResult = nlapiSearchRecord('folder', null, filters, columns);
     if (searchResult) {
-        for (var i = 0 ; i < searchResult.length; i++) {
+        for (var i = 0; i < searchResult.length; i++) {
             var f = searchResult[i];
             folderid = f.id;
         };
@@ -1241,60 +1243,60 @@ function downloadExcel(results, batch, pydate, response, form, beforepay) {
         header = '<Row><Cell ss:StyleID="maintitle" ss:MergeAcross="8"><Data ss:Type="String">דוח חשבוניות מסב לקובץ מספר ' + batch + '</Data></Cell></Row>';
 
     header +=
-'<Row>' +
-'<Cell ss:StyleID="Default"><Data ss:Type="String">תאריך</Data></Cell>' +
-'<Cell ss:StyleID="Default"><Data ss:Type="String">' + GetTodayDateFormated() + '</Data></Cell>' +
-'</Row>' +
-'<Row>' +
-   '<Cell ss:StyleID="Default"><Data ss:Type="String">חברה</Data></Cell>' +
-   '<Cell ss:StyleID="Default"><Data ss:Type="String">' + sub + '</Data></Cell>' +
-'</Row>' +
-'<Row>' +
-'<Cell ss:StyleID="Default"><Data ss:Type="String">תאריך תשלום </Data></Cell>' +
-'<Cell ss:StyleID="Default"><Data ss:Type="String">' + pydate + '</Data></Cell>' +
-'</Row>';
+        '<Row>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">תאריך</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + GetTodayDateFormated() + '</Data></Cell>' +
+        '</Row>' +
+        '<Row>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">חברה</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + sub + '</Data></Cell>' +
+        '</Row>' +
+        '<Row>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">תאריך תשלום </Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + pydate + '</Data></Cell>' +
+        '</Row>';
 
     xmlStr += '<Table>' +
-             '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
- '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
-  '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
-         header +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        header +
         '<Row>' +
-            '<Cell ss:StyleID="header" ><Data ss:Type="String">Vendor</Data></Cell>' +
-            '<Cell ss:StyleID="header"><Data ss:Type="String">Bill</Data></Cell>' +
-            '<Cell ss:StyleID="header"><Data ss:Type="String">Date</Data></Cell>' +
-            '<Cell ss:StyleID="header"><Data ss:Type="String">Due Date</Data></Cell>' +
-            '<Cell ss:StyleID="header"><Data ss:Type="String">Amount Remaining</Data></Cell>' +
-            '<Cell ss:StyleID="header"><Data ss:Type="String">WHT Amount</Data></Cell>' +
-           '<Cell ss:StyleID="header"><Data ss:Type="String">Currency</Data></Cell>' +
- '</Row>';
+        '<Cell ss:StyleID="header" ><Data ss:Type="String">Vendor</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Bill</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Date</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Due Date</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Amount Remaining</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">WHT Amount</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Currency</Data></Cell>' +
+        '</Row>';
     for (var i = 0; i < results.length; i++) {
         xmlStr += '<Row>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["entity"] + '</Data></Cell>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["tranid"] + '</Data></Cell>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["trandate"] + '</Data></Cell>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["duedate"] + '</Data></Cell>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="Number">' + results[i]["totaltopay"] + '</Data></Cell>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="Number">' + results[i]["custpage_whtamount"] + '</Data></Cell>' +
-                '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["currency"] + '</Data></Cell>' +
-          '</Row>';
+            '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["entity"] + '</Data></Cell>' +
+            '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["tranid"] + '</Data></Cell>' +
+            '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["trandate"] + '</Data></Cell>' +
+            '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["duedate"] + '</Data></Cell>' +
+            '<Cell ss:StyleID="Default"><Data ss:Type="Number">' + results[i]["totaltopay"] + '</Data></Cell>' +
+            '<Cell ss:StyleID="Default"><Data ss:Type="Number">' + results[i]["custpage_whtamount"] + '</Data></Cell>' +
+            '<Cell ss:StyleID="Default"><Data ss:Type="String">' + results[i]["currency"] + '</Data></Cell>' +
+            '</Row>';
     }
 
     xmlStr += '<Row>' +
         '<Cell ss:StyleID="error"><Data ss:Type="String">TOTAL</Data></Cell>' +
         '<Cell ss:StyleID="error"><Data ss:Type="String"></Data></Cell>' +
         '<Cell ss:StyleID="error"><Data ss:Type="String"></Data></Cell>' +
-         '<Cell ss:StyleID="error"><Data ss:Type="String"></Data></Cell>' +
+        '<Cell ss:StyleID="error"><Data ss:Type="String"></Data></Cell>' +
         '<Cell ss:StyleID="error" ss:Formula="=SUM(R[-' + (results.length) + ']C:R[-1]C)"><Data ss:Type="Number"></Data></Cell>' +
         '<Cell ss:StyleID="error" ss:Formula="=SUM(R[-' + (results.length) + ']C:R[-1]C)"><Data ss:Type="Number"></Data></Cell>' +
         '<Cell ss:StyleID="error"><Data ss:Type="String"></Data></Cell>' +
-  '</Row>';
+        '</Row>';
     xmlStr += '</Table></Worksheet></Workbook>';
     xmlStr = xmlStr.split('>NaN<').join('>0<');
     //create file

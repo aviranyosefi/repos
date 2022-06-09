@@ -2,18 +2,23 @@ var search_forcast_next_months = 6;
 var type_field_changed = false;
 var supervisor;
 var date = new Date()
-var employeestatus; 
+var employeestatus;
 function ct_empl_validation(type) {
     try {
         if (type != 'create') {
             var oldRec = nlapiGetOldRecord();
             var old_ct_employee_type = oldRec.getFieldValue('custentity_ct_employee_type');
+            var old_ct_emp_product_group = oldRec.getFieldValue('custentity_ct_emp_product_group');
+            var old_ct_emp_product = oldRec.getFieldValue('custentity_ct_emp_product');
         }
         else {
             var old_ct_employee_type = '';
+            var old_ct_emp_product_group = '';
+            var old_ct_emp_product = '';
         }
         if (type != 'delete') {
             var empId = nlapiGetRecordId();
+            nlapiLogExecution("debug", 'empId', empId);
             var rec = nlapiLoadRecord('employee', empId);
             var employeetype = rec.getFieldValue('employeetype')
             if (employeetype == '3' || employeetype == '5') { //"Contractor (HC)" OR "Employee (HC)"
@@ -28,11 +33,7 @@ function ct_empl_validation(type) {
                 var ct_emp_product = rec.getFieldValue('custentity_ct_emp_product');
                 var ct_emp_is_manager = rec.getFieldValue('custentity_ct_emp_is_manager')
 
-                var old_ct_emp_product_group = oldRec.getFieldValue('custentity_ct_emp_product_group');
-                var old_ct_emp_product = oldRec.getFieldValue('custentity_ct_emp_product');
-
                 if (ct_employee_type != 3 && ct_employee_type != 4) {//if NOT :  3 - Capacity Tool Analysts || 4 - Capacity Tool Admins
-
 
                     if ((!isEmpty(ct_emp_product_group) || !isEmpty(ct_emp_product)) && ct_emp_is_manager != 'T') {
                         rec.setFieldValue('custentity_ct_employee_type', 1);//Capacity Tool Employees
@@ -45,10 +46,13 @@ function ct_empl_validation(type) {
                 var isinactive = rec.getFieldValue('isinactive');
                 employeestatus = rec.getFieldValue('employeestatus');
 
-                if (((ct_emp_product_group != old_ct_emp_product_group && isEmpty(old_ct_emp_product_group)) || (ct_emp_product != old_ct_emp_product && isEmpty(old_ct_emp_product)))) {//1 -Capacity Tool Employees
+                if (((ct_emp_product_group != old_ct_emp_product_group && isEmpty(old_ct_emp_product_group) && !isEmpty(ct_emp_product_group)) || (ct_emp_product != old_ct_emp_product && isEmpty(old_ct_emp_product) && !isEmpty(ct_emp_product)))) {//1 -Capacity Tool Employees
                     if (isinactive != 'T' && employeestatus == 1)//1-active
-                        //create_forcast(empId, 'create');
+                    {
+                        nlapiLogExecution("debug", 'create_actuals', 'create_actuals');
                         create_actuals(empId, 'create')
+                    }
+
                 }
                 var termination = rec.getFieldValue('custentity_ct_emp_terminated');
                 nlapiSubmitRecord(rec, null, true);
@@ -57,22 +61,27 @@ function ct_empl_validation(type) {
                     var termination_date = nlapiStringToDate(termination);
                     termination_date = nlapiAddMonths(termination_date, 1);
                     var terminatedPeriod = getPeriod(termination_date, 'today');
+                    nlapiLogExecution("debug", 'delete_actuals', 'delete_actuals');
                     delete_actuals(empId, terminatedPeriod);
-                }  
+                }
             } // if (employeetype == '3' || employeetype == '5') {
-        }       
+        }
     } catch (e) {
         nlapiLogExecution("error", 'error', e);
     }
 }
 //ACTUAL FUNCTIONS
-function create_actuals(empId, action) {
-    var prevPeriod = getPeriod(date, 'previous');
-    getAcualsList(empId, prevPeriod, action)
- 
+function create_actuals(empId, action) {   
+    var nextPeriod = getPeriod(date, 'current');
+    var checkList = getAcualsList(empId, nextPeriod, 'check')
+    if (checkList.length == 0) {
+        var prevPeriod = getPeriod(date, 'previous');
+        getAcualsList(empId, prevPeriod, action)
+    }      
+    else nlapiLogExecution("debug", 'checkList ' + checkList.length, 'actual record not created');
 }
-function create_actual_record( actualID, empId, today_period) {
-    var recCopy = nlapiCopyRecord('customrecord_ct_reporting_entity', actualID );
+function create_actual_record(actualID, empId, today_period) {
+    var recCopy = nlapiCopyRecord('customrecord_ct_reporting_entity', actualID);
     recCopy.setFieldValue('custrecord_ct_rep_ent_employee', empId);
     recCopy.setFieldValue('custrecord_ct_rep_ent_npd', 0);
     recCopy.setFieldValue('custrecord_ct_rep_ent_maint', 0);
@@ -87,34 +96,39 @@ function delete_actuals(empId, terminatedPeriod) {
     getAcualsList(empId, terminatedPeriod, 'delete');
 }
 function getAcualsList(empid, period, action) {
-
+    debugger
     var type = 'customrecord_ct_reporting_entity';
     var filters = new Array();
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_type', null, 'anyof', 1));//actual
     filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_period', null, 'anyof', period));
     if (action == 'create') {
-        filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', supervisor ));      
-    }        
-    else if (action == 'delete') {
-        filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', empid));      
-    }       
+        filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', supervisor));
+    }
+    else if (action == 'delete' || action == 'check') {
+        filters.push(new nlobjSearchFilter('custrecord_ct_rep_ent_employee', null, 'anyof', empid));
+    }
     var columns = new Array();
     columns[0] = new nlobjSearchColumn('internalid');
 
     var s = nlapiSearchRecord(type, null, filters, columns);
-    nlapiLogExecution("DEBUG", 'getAcualsList: s' + s.length , '');
+    //nlapiLogExecution("DEBUG", 'getAcualsList: s' + s.length, '');
 
-    if (s.length > 0 && action == 'create') {
+    if (s != null && s.length > 0 && action == 'create') {
         var today_period = getPeriod(date, 'today');
         for (var i = 0; i < s.length; i++) {
-            create_actual_record(s[i].id, empid,  today_period)
+            create_actual_record(s[i].id, empid, today_period)
         }
     }
-    else if (s.length > 0 && action == 'delete') {
+    else if (s != null && s.length > 0 && action == 'delete') {
         for (var i = 0; i < s.length; i++) {
             nlapiDeleteRecord(type, s[i].getValue('internalid'))
         }
         return 'records deleted'
+    }
+    else if (action == 'check') {
+        if (s != null)
+            return s
+        return []
     }
     return '';
 }

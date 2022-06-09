@@ -279,11 +279,15 @@
 </#if>
 
 
-<#if record.accountingbookdetail?has_content && (record.custbody_cbr_invoice_aud || ZAB_INDEXATION_IND)>
+<#if record.accountingbookdetail?has_content && (record.custbody_cbr_invoice_aud || ZAB_INDEXATION_IND || SHOW_IL_CURR_EXCH_FLDS)>
     <#list record.accountingbookdetail as abd>
-        <#assign SECONDERY_EXCHANGE=abd.exchangerate
+        <#if SHOW_IL_CURR_EXCH_FLDS>
+            <#assign LOCALIZATION_EXCHANGE_RATE=abd.exchangerate >
+        <#else>
+            <#assign SECONDERY_EXCHANGE=abd.exchangerate
                     RECORD_CURRENCY=abd.currency
-        >
+            >
+        </#if>
     </#list>
 </#if>
 
@@ -932,7 +936,7 @@
         </tr>
         <tr>
             <td colspan="${toNumber(totalColspan)?c}" align="${ALIGN_DIRECTION_LEFT}" class="${ALIGN_DIRECTION_LEFT}">
-                <#if IS_RTL>${RECORD_CURRENCY} :</#if>${getTranslatedLabel("label_payment_recive", "Payment must be made in the currency of the purchase order received")}<#if !IS_RTL>: ${RECORD_CURRENCY}</#if>
+                ${getTranslatedLabel("label_payment_recive", "Payment must be made in the currency of the purchase order received")}<#if !IS_RTL>: ${RECORD_CURRENCY}</#if>
             </td>
         </tr>
     </table>

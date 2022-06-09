@@ -1,4 +1,6 @@
-﻿function createTechFromCase() {
+﻿var GLOBAL_DEPARTMENT = 25; // Service Department
+var GLOBAL_STATUS = 'B'
+function createTechFromCase() {
     try {
         //var context = nlapiGetContext();
         var recID = nlapiGetRecordId();
@@ -15,23 +17,7 @@
         var itemList = [];
         itemList = getSparParts(recID);
         var location = itemList[0].location
-        //if (replacement_type == 5) // חלקי חילוף
-        //{
-        //    itemList = getSparParts(recID)
-        //}
-        //else if (replacement_type == 1) {// קבוע
-        //    var replacing_same_item = rec.getFieldValue('custevent_dangot_replacing_same_item');
-        //    if (replacing_same_item == 1) { // YES
-        //        var item = rec.getFieldValue('custevent_dangot_item')
-        //    }
-        //    else if (replacing_same_item == 2) { // NO
-        //        var item = rec.getFieldValue('custevent_replacing_item')
-        //    }
-        //    itemList.push({
-        //        item: item,
-        //        qty: 1,
-        //    });
-        //}
+     
         var data = [];
         data.push({
             entity: entity,
@@ -44,8 +30,8 @@
         nlapiLogExecution('DEBUG', 'data: ' + data.length, JSON.stringify(data));
         var id = createTech(data);
         if (id != -1) {
-            rec.setFieldValue('custevent_related_tech_inventory', id);
-            nlapiSubmitRecord(rec, false, true); // try to avoid mandatory field
+            nlapiSetFieldValue('custevent_related_tech_inventory', id);
+            //nlapiSubmitRecord(rec, false, true); // try to avoid mandatory field
         }
     } catch (e) {
         nlapiLogExecution('error', 'error', e);
@@ -60,7 +46,9 @@ function createTech(data) {
         rec.setFieldValue('custbody_dangot_product_line', data[0].product_line);
         rec.setFieldValue('custbody_related_support_case', data[0].caseID);
         rec.setFieldValue('location', data[0].location);
-        rec.setFieldValue('department', 21);
+        rec.setFieldValue('department', GLOBAL_DEPARTMENT);
+        rec.setFieldValue('transtatus ', GLOBAL_STATUS);
+        
         //rec.setFieldValue('custbody_dangot_replacement_type', data[0].replacement_type);
         try {
             var itemList = data[0].itemList

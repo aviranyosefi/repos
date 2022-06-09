@@ -4,11 +4,14 @@ var errArr = new Array();
 var sList = new Array();
 var agrType;
 var invoice_date = '';
+var memo;
+var GLOBAL_FOLDER = -15;
 function CreateInvoice() {
     try { 
         var manage_inv_log = context.getSetting('SCRIPT', 'custscript_manage_inv_log');    
         manage_inv_log = JSON.parse(manage_inv_log);
-        var agrType = manage_inv_log[0].type
+        agrType = manage_inv_log[0].type
+        memo = manage_inv_log[0].memo
         nlapiLogExecution('DEBUG', 'agrType :' + agrType, 'manage_inv_log: ' + JSON.stringify(manage_inv_log));
         var bpList = getBP(agrType, manage_inv_log[0].fromdate, manage_inv_log[0].todate, manage_inv_log[0].agr, manage_inv_log[0].ib, manage_inv_log[0].employee, manage_inv_log[0].customer, manage_inv_log[0].sub_type)
         nlapiLogExecution('DEBUG', 'bpList : ' + bpList.length, JSON.stringify(bpList));
@@ -21,6 +24,7 @@ function CreateInvoice() {
         nlapiLogExecution('error', 'error CreateInvoice ', e);
     }
 }
+//Billing Plan to INV
 function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, employee_line_data, customer_data, sub_type) {
     try {
         var search = nlapiLoadSearch(null, 'customsearch_bp_to_inv');
@@ -49,6 +53,7 @@ function getBP(type_data, from_date_data, to_date_data, agr_data, ib_data, emplo
                 bpList.push({
                     split_formula: s[i].getValue(cols[0]),
                     bp_id: s[i].id,
+                    item: s[i].getValue(cols[1])
                 });
             }
         }
@@ -66,6 +71,7 @@ function SortDataPerSplit(bpList) {
             if (split == bpList[m].split_formula) {
                 data.push({
                     bp_id: bpList[m].bp_id,
+                    item: bpList[m].item,
                 });
             } else {
                 CreateInvoiceFromBP(data)
@@ -73,6 +79,7 @@ function SortDataPerSplit(bpList) {
                 var data = []; 
                 data.push({
                     bp_id: bpList[m].bp_id,
+                    item: bpList[m].item,
                 });
             }           
         }
@@ -81,22 +88,24 @@ function SortDataPerSplit(bpList) {
         nlapiLogExecution('ERROR', 'CreateSingalInvoice Error:', e);
     }
 }
-function CreateInvoiceFromBP(dataToInvoce) {
+function CreateInvoiceFromBP(dataToInvoice) {
     try {
         Context(context);
-        nlapiLogExecution('DEBUG', 'CreateInvoiceFromBI dataToInvoce:' + dataToInvoce.length, JSON.stringify(dataToInvoce));
-        for (var r = 0; r < dataToInvoce.length; r++) {
+        nlapiLogExecution('DEBUG', 'CreateInvoiceFromBI dataToInvoice:' + dataToInvoice.length, JSON.stringify(dataToInvoice));
+        for (var r = 0; r < dataToInvoice.length; r++) {
             //Context(context);
-            var rec = nlapiLoadRecord('customrecord_bp', dataToInvoce[r].bp_id);
+            var rec = nlapiLoadRecord('customrecord_bp', dataToInvoice[r].bp_id);
             if (r == 0) {
                 var INVOICErec = nlapiCreateRecord('invoice');
                 INVOICErec.setFieldValue('entity', rec.getFieldValue('custrecord_bp_customer'));                              
                 INVOICErec.setFieldValue('custbody_agreement', rec.getFieldValue('custrecord_bp_agr'));  
                 //INVOICErec.setFieldValue('location', 101)
                 INVOICErec.setFieldValue('trandate', invoice_date)
+                INVOICErec.setFieldValue('memo', memo)
             }
-            try {         
-                CreateItem(INVOICErec, rec)    
+            try {   
+                var item = dataToInvoice[r].item
+                CreateItem(INVOICErec, rec , item)    
             } catch (err) {
                 nlapiLogExecution('DEBUG', 'error CreateInvoiceFromBP - lines', err);
             }
@@ -104,11 +113,13 @@ function CreateInvoiceFromBP(dataToInvoce) {
         try {
             var INVOICEid =  nlapiSubmitRecord(INVOICErec, null, true);
             nlapiLogExecution('debug', 'INVOICE id: ', INVOICEid);
-            if (INVOICEid != -1) {                   
+            if (INVOICEid != -1) { 
+                var tranid = nlapiLookupField('invoice', INVOICEid, 'tranid')
+                afterSubmitSS(INVOICEid, tranid)
                 sList.push({
                     agr: nlapiLookupField('customrecord_agr', rec.getFieldValue('custrecord_bp_agr'), 'name'),
                     agr_id: rec.getFieldValue('custrecord_bp_agr'),
-                    invoice: nlapiLookupField('invoice', INVOICEid, 'tranid'),  
+                    invoice: tranid,  
                     invoice_id: INVOICEid
                 });
             }
@@ -116,7 +127,7 @@ function CreateInvoiceFromBP(dataToInvoce) {
             nlapiLogExecution('DEBUG', 'error nlapiSubmitRecord ', e);
             errArr.push({
                 error: e,
-                agr: nlapiLookupField('custrecord_bp_agr', rec.getFieldValue('custrecord_bp_agr'), 'name'),
+                agr: nlapiLookupField('customrecord_agr', rec.getFieldValue('custrecord_bp_agr'), 'name'),
                 agr_id: rec.getFieldValue('custrecord_bp_agr'),
             });          
         }
@@ -125,16 +136,21 @@ function CreateInvoiceFromBP(dataToInvoce) {
         nlapiSendEmail(employeeId, employeeId, 'Invoice create summary', 'An error occurred while trying to create Invoices \n Error description: ' + e);
     }
 }
-function CreateItem(INVOICErec, rec) {
+function CreateItem(INVOICErec, rec, item) {
     try {
         Context(context);     
-        var item = rec.getFieldValue('custrecord_bp_charging_item');        
-        if (isNullOrEmpty(item)) { item = 8545}       
+        var qty = 1;
+        if (agrType == 2) { // חיוב מתחדש
+            qty = rec.getFieldValue('custrecord_bp_quantity');
+        }
+        if (isNullOrEmpty(qty)) { qty = 1;}            
         INVOICErec.selectNewLineItem('item');
         INVOICErec.setCurrentLineItemValue('item', 'item', item);
-        INVOICErec.setCurrentLineItemValue('item', 'quantity', 1)
+        INVOICErec.setCurrentLineItemValue('item', 'quantity', qty)
         INVOICErec.setCurrentLineItemValue('item', 'rate', rec.getFieldValue('custrecord_bp_amount'))
-        addFieldToLine(INVOICErec,rec)                   
+
+        addLineFields(INVOICErec, rec) 
+        
     } catch (e) {
         nlapiLogExecution('ERROR', 'CreateItem Error:', e);
     }
@@ -158,14 +174,26 @@ function Context(context) {
         }
     }
 }
-function addFieldToLine(INVOICErec, rec) {
+function addLineFields(INVOICErec, rec) {
     try {
+        var ibId = rec.getFieldValue('custrecord_bp_ib');       
+        var ibRec = nlapiLoadRecord('customrecord_ib', ibId);
         INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_agr', rec.getFieldValue('custrecord_bp_agr'))
         INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_bp', rec.getId())
-        INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_ib', rec.getFieldValue('custrecord_bp_ib'))
+        INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_ib', ibId )
         INVOICErec.setCurrentLineItemValue('item', 'custcol_service_start_date', rec.getFieldValue('custrecord_bp_service_start_date'))
         INVOICErec.setCurrentLineItemValue('item', 'custcol_service_end_date', rec.getFieldValue('custrecord_bp_service_end_date'))
-        INVOICErec.commitLineItem('item');     
+        INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_billing_cycle', ibRec.getFieldValue('custrecord_ib_billing_cycle'))
+        INVOICErec.setCurrentLineItemValue('item', 'custcol_dangot_recurring_charge_type', ibRec.getFieldValue('custrecord_ib_charge_type'))
+        INVOICErec.setCurrentLineItemValue('item', 'description', ibRec.getFieldValue('custrecord_ib_description'))
+        var serial_number = ibRec.getFieldValue('custrecord_ib_serial_number')
+        if (isNullOrEmpty(serial_number)) serial_number = ibRec.getFieldValue('custrecord_ib_serial_number_s')
+        INVOICErec.setCurrentLineItemValue('item', 'custcol_serial_number', serial_number)      
+        var ib_so = ibRec.getFieldValue('custrecord_ib_so')
+        if (isNullOrEmpty(ib_so)) ib_so = ibRec.getFieldValue('custrecord_ib_old_so')
+        INVOICErec.setCurrentLineItemValue('item', 'custcol_original_sales_order', ib_so)       
+
+        INVOICErec.commitLineItem('item'); 
             
     } catch (e) {
         nlapiLogExecution('ERROR', 'addFieldToLine Error:', e);
@@ -219,7 +247,7 @@ function summaryEmail(employeeId) {
             // for th
             failTbl += "<tr><th>Agreement</th><th>Error</th></tr>";
             for (var s in errArr) {
-                failTbl += "<tr><td>" + GetLink(sList[v].agr, sList[v].agr_id, 'customrecord_agr') + "</td><td>" + errArr[s].error + "</td></tr > ";
+                failTbl += "<tr><td>" + GetLink(errArr[s].agr, errArr[s].agr_id, 'customrecord_agr') + "</td><td>" + errArr[s].error + "</td></tr > ";
             }
             failTbl += "</table>"
         }
@@ -236,5 +264,145 @@ function GetLink(name,id, type) {
     var link = "<a href='https://system.netsuite.com" + nlapiResolveURL('RECORD', type, id) + "'" + ' target="_blank">' + name + "</a>";
     return link;
 }
+function afterSubmitSS(recId, tranid) {
+    try {
+        var HEADER = buildExcelHeader(tranid)
+        var FOOTER = buildExcelFooter()
+        var LINES = '';
+        var invRec = nlapiLoadRecord('invoice', recId)
+        var count = invRec.getLineItemCount('item');
+        for (var i = 1; i <= count; i++) {
+            Context(context);          
+            LINES += buildExcelLines(invRec ,i);
+            var bs_bp = invRec.getLineItemValue('item', 'custcol_bs_bp', i);
+            if (!isNullOrEmpty(bs_bp)) {
+                nlapiSubmitField('customrecord_bp', bs_bp, 'custrecord_bp_invoice_on', recId);
+            }
+        }
+        var xmlStr = HEADER + LINES + FOOTER
+        createCSV(xmlStr, recId, tranid) 
+    } catch (e) {
+        nlapiLogExecution('ERROR', 'error afterSubmitSS', e);
+    }
+}
+function buildExcelHeader(tranid) {
+
+    var xmlStr = '<?xml version="1.0" encoding="utf-8"?><?mso-application progid="Excel.Sheet"?>';
+    xmlStr += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ';
+    xmlStr += 'xmlns:o="urn:schemas-microsoft-com:office:office" ';
+    xmlStr += 'xmlns:x="urn:schemas-microsoft-com:office:excel" ';
+    xmlStr += 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" ';
+    xmlStr += 'xmlns:html="http://www.w3.org/TR/REC-html40">';
+    xmlStr += '<Styles>';
+    xmlStr += '<Style ss:ID="company">';
+    xmlStr += '<Alignment ss:Horizontal="Center"/>';
+    xmlStr += '<Font ss:Bold="1"/>';
+    xmlStr += '</Style> <Style ss:ID="error">';
+    xmlStr += '<Alignment ss:Horizontal="Center"/>';
+    xmlStr += '<Interior ss:Color="#007ACC" ss:Pattern="Solid" />';
+    xmlStr += '<Font ss:Bold="1"/>';
+    xmlStr += '</Style> <Style ss:ID="header">';
+    xmlStr += '<Alignment ss:Horizontal="Center" />';
+    xmlStr += '<Font ss:Size="8"  ss:Color="#fefefe"  ss:Bold="0"/>';
+    xmlStr += '<Interior ss:Color="#007ACC" ss:Pattern="Solid"/>';
+    xmlStr += '</Style> <Style ss:ID="maintitle">';
+    xmlStr += '<Alignment ss:Horizontal="Center"/>';
+    xmlStr += '<Font ss:Size="14" ss:Bold="1"/>';
+    xmlStr += '<Interior ss:Pattern="Solid"/>';
+    xmlStr += '</Style> <Style ss:ID="Default" ss:Name="Normal">';
+    xmlStr += '<Alignment ss:Vertical="Bottom" ss:Horizontal="Center"/>';
+    xmlStr += '<Borders/>';
+    xmlStr += '    <Font ss:FontName="Arial" ss:Size="8"/>';
+    xmlStr += '<Interior/>';
+    xmlStr += '   <NumberFormat ss:Format="&quot;ILS&quot;#,##0.00_);(&quot;ILS&quot;#,##0.00)"/>';
+    xmlStr += '<Protection/>';
+    xmlStr += '</Style>';
+    xmlStr += '<Style ss:ID="s__TIMEOF DAY"><NumberFormat ss:Format="Medium Time"/></Style>';
+    xmlStr += '<Style ss:ID="s__DATETIME"><NumberFormat ss:Format="General Date"/></Style>';
+    xmlStr += '<Style ss:ID="s__DATETIMETZ"><NumberFormat ss:Format="General Date"/></Style>';
+    xmlStr += '<Style ss:ID="s__DATE"><NumberFormat ss:Format="Short Date"/>';
+    xmlStr += '</Style><Style ss:ID="s__text"></Style><Style ss:ID="s__currency"><NumberFormat ss:Format="Currency"/></Style>';
+    xmlStr += '<Style ss:ID="s__percent"><NumberFormat ss:Format="Percent"/></Style>';
+    xmlStr += '<Style ss:ID="s1_b_text"><Alignment ss:Indent="1"/><Font ss:FontName="Verdana" x:Family="Swiss" ss:Size="8" ss:Color="#000000" ss:Bold="1"/></Style>';
+    xmlStr += '<Style ss:ID="s_b_text"><Font ss:FontName="Verdana" x:Family="Swiss" ss:Size="8" ss:Color="#000000" ss:Bold="1"/></Style>';
+    xmlStr += '<Style ss:ID="s2__text"><Alignment ss:Indent="2"/></Style>';
+    xmlStr += '<Style ss:ID="s_b_currency"><Font ss:FontName="Verdana" x:Family="Swiss" ss:Size="8" ss:Color="#000000" ss:Bold="1"/><NumberFormat ss:Format="Currency"/></Style>';
+    xmlStr += '<Style ss:ID="s_currency_nosymbol"><Font ss:FontName="Verdana" x:Family="Swiss" ss:Size="8" ss:Color="#000000" /><NumberFormat ss:Format="#,##0.00_);[Red]\(#,##0.00\)"/></Style>';
+    xmlStr += '<Style ss:ID="s1__text"><Alignment ss:Indent="1"/></Style>';
+    xmlStr += '<Style ss:ID="s_b_currency_X"><Font ss:FontName="Verdana" x:Family="Swiss" ss:Size="8" ss:Color="#000000" ss:Bold="1"/><Interior ss:Color="#f0e0e0" ss:Pattern="Solid"/><NumberFormat ss:Format="Currency"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_he_IL"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;ILS&quot;#,##0.00_);(&quot;ILS&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_en_US"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;$&quot;#,##0.00_);(&quot;$&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_en_CA"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;Can$&quot;#,##0.00_);(&quot;Can$&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_fr_FR_EURO"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;€&quot;#,##0.00_);(&quot;€&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_en_GB"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;£&quot;#,##0.00_);(&quot;£&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_ko_KR"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;KRW&quot;#,##0.00_);(&quot;KRW&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_zh_CN"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;Y&quot;#,##0.00_);(&quot;Y&quot;#,##0.00)"/></Style>';
+    xmlStr += '<Style ss:ID="s__currency_en_NZ"><Alignment ss:Vertical="Center" ss:Horizontal="Right"/><NumberFormat ss:Format="&quot;$NZ&quot;#,##0.00_);(&quot;$NZ&quot;#,##0.00)"/></Style>';
+    xmlStr += '</Styles>';
+
+    xmlStr += '<Worksheet ss:Name="lines">';
+
+    var header = '<Row><Cell ss:StyleID="maintitle" ss:MergeAcross="8"><Data ss:Type="String">פירוט חשבונית מספר ' + tranid + '</Data></Cell></Row>';  
+    xmlStr += '<Table>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        '<ss:Column ss:AutoFitWidth="1" ss:Width="110"/>' +
+        header +
+        '<Row>' +
+        '<Cell ss:StyleID="header" ><Data ss:Type="String">Item</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Description</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Qty</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Rate</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Billing Cycle</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Agreement Start Date</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Agreement End Date</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Original Sales Order</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">End Customer</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Serial Number</Data></Cell>' +
+        '<Cell ss:StyleID="header"><Data ss:Type="String">Dangot Recurring Charge Item</Data></Cell>' +
+        '</Row>';
+
+    return xmlStr
+}
+function buildExcelLines(invRec, i) {  
+    xmlStr = '<Row>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + invRec.getLineItemText('item', 'item', i) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemValue('item', 'description', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + invRec.getLineItemValue('item', 'quantity', i) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemValue('item', 'rate', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemText('item', 'custcol_bs_billing_cycle', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemValue('item', 'custcol_service_start_date', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemValue('item', 'custcol_service_end_date', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemValue('item', 'custcol_original_sales_order', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemText('item', 'custcol_end_customer', i)) + '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemValue('item', 'custcol_serial_number', i))+ '</Data></Cell>' +
+        '<Cell ss:StyleID="Default"><Data ss:Type="String">' + setEmptyString(invRec.getLineItemText('item', 'custcol_dangot_recurring_charge_type', i)) + '</Data></Cell>' +
+    '</Row>';
+    return xmlStr   
+}
+function setEmptyString(val) {
+
+    if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
+        return '';
+    }
+    return val;
+}
+function buildExcelFooter() {
+    return '</Table></Worksheet></Workbook>';
+}
+function createCSV(xmlStr, recId, tranid) {
+    var file = nlapiCreateFile(tranid + " Lines.xls", 'EXCEL', nlapiEncrypt(xmlStr, 'base64'));
+    file.setFolder(GLOBAL_FOLDER);
+    var FileID = nlapiSubmitFile(file);   
+    nlapiSubmitField('invoice', recId, 'custbody_attachments_file', FileID)
+    nlapiAttachRecord("file", FileID, 'invoice', recId);
+}
+
 
 
