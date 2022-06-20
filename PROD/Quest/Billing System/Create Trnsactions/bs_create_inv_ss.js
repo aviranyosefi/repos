@@ -6,6 +6,8 @@ var agrType;
 var invoice_date = '';
 var memo;
 var GLOBAL_FOLDER = -15;
+var GLOBAL_DEPARTMENT = 20; // Dangot
+var GLOBAL_LOCATION = 32	// Dangot - Abir(אביר)
 function CreateInvoice() {
     try { 
         var manage_inv_log = context.getSetting('SCRIPT', 'custscript_manage_inv_log');    
@@ -99,9 +101,10 @@ function CreateInvoiceFromBP(dataToInvoice) {
                 var INVOICErec = nlapiCreateRecord('invoice');
                 INVOICErec.setFieldValue('entity', rec.getFieldValue('custrecord_bp_customer'));                              
                 INVOICErec.setFieldValue('custbody_agreement', rec.getFieldValue('custrecord_bp_agr'));  
-                //INVOICErec.setFieldValue('location', 101)
                 INVOICErec.setFieldValue('trandate', invoice_date)
                 INVOICErec.setFieldValue('memo', memo)
+                INVOICErec.setFieldValue('department', GLOBAL_DEPARTMENT)
+                INVOICErec.setFieldValue('location', GLOBAL_LOCATION)
             }
             try {   
                 var item = dataToInvoice[r].item
@@ -178,6 +181,8 @@ function addLineFields(INVOICErec, rec) {
     try {
         var ibId = rec.getFieldValue('custrecord_bp_ib');       
         var ibRec = nlapiLoadRecord('customrecord_ib', ibId);
+        
+        INVOICErec.setCurrentLineItemValue('item', 'department', GLOBAL_DEPARTMENT)
         INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_agr', rec.getFieldValue('custrecord_bp_agr'))
         INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_bp', rec.getId())
         INVOICErec.setCurrentLineItemValue('item', 'custcol_bs_ib', ibId )

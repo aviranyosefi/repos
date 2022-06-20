@@ -7,7 +7,7 @@ define([],
         var GLOBAL_SUBSIDIARIY = 14
         function beforeSubmit(context) {
             try {
-                if (context.type != context.UserEventType.DELETE) {
+                if (context.type != context.UserEventType.DELETE) { // TODO ADD ONLY IN TYPE CREATE
                     var rec = context.newRecord;
                     var recType = rec.type;
                     if (recType == 'employee') {

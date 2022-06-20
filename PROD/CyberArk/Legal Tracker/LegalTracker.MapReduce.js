@@ -26,11 +26,12 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
             else {    
                 var integId = hypCore.GetIntegrationId('legal_tracker');
                 var connection = hypCore.GetSftpConnection(integId);
-                var date = getDateFormat()
+                var date = getDateFormat() //'2022-06-08'
                 logger.debug('date', date);
-                for (var i = 0; i < SummaryName.length; i++) {
+                for (var z = 0; z < SummaryName.length; z++) {
                     //var SummaryFileName = SummaryName[i] + '2022-05-15 to 2022-05-15' + '.csv';  
-                    var SummaryFileName = SummaryName[i] + date + ' to ' + date + '.csv';  
+                    var SummaryFileName = SummaryName[z] + date + ' to ' + date + '.csv';  
+                    logger.debug('SummaryFileName', SummaryFileName);
                     var SummaryFileObj = hypCore.DownloadFile(connection, SummaryFileName, integId, null);
                     if (!common.isNullOrEmpty(SummaryFileObj)) {
                         var SummaryFileId = createFile(SummaryFileName, file.Type.CSV, SummaryFileObj.getContents())
@@ -39,10 +40,10 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', '../Common/NCS.
                         var fileLines = SummaryFile.split('\r\n');
                         var line = 1;
                         //var lineFolder = RowName[i] + '2022-05-15 to 2022-05-15';
-                        var lineFolder = RowName[i] + date + ' to ' + date;
+                        var lineFolder = RowName[z] + date + ' to ' + date;
                         for (var i = 2; i <= fileLines.length; i++) {
                             if (!common.isNullOrEmpty(fileLines[i])) {
-                                logger.debug('fileLines[i]', fileLines[i]);
+                                //logger.debug('fileLines[i]', fileLines[i]);
                                 //var cols = fileLines[i].replace(/\"/g, '').split(','); 
                                 var cols = fileLines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
                                 data.push({

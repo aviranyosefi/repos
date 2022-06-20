@@ -31,10 +31,15 @@ function check_po(request, response) {
             else {
                 var fieldCheck = nlapiLookupField(type, internalid, field);
                 if (!isNullOrEmpty(fieldCheck)) {
-
+                    if (fieldCheck == 1) { // YES
+                        var html = "<script>showAlertBox('alert_No_relevant', 'Transaction already approved', '', NLAlertDialog.TYPE_LOWEST_PRIORITY)</script>";
+                    }
+                    else {                       
+                        var html = "<script>showAlertBox('alert_No_relevant', 'You have already responded to this Approval request.', '', NLAlertDialog.TYPE_HIGH_PRIORITY)</script>";                     
+                    }
                     var htmlfield = form.addField('g63', 'inlinehtml', '', null, null);
-                    var html = "<script>showAlertBox('alert_No_relevant', 'You have already responded to this Approval request.', '', NLAlertDialog.TYPE_HIGH_PRIORITY)</script>";
                     htmlfield.setDefaultValue(html);
+       
                 }
                 else {
                     if (update == 'rejected') {
@@ -139,6 +144,7 @@ function getLastLogNumberSuitelet(type, tranid) {
     columns[0] = new nlobjSearchColumn('custrecord_ilo_approval_rece_nu');
     columns[1] = new nlobjSearchColumn('custrecord_ilo_tolerance_nu');
     columns[2] = new nlobjSearchColumn('custrecord_ilo_expired');
+    columns[3] = new nlobjSearchColumn('internalid').setSort(false);
     
 
     var filters = new Array();
@@ -322,6 +328,7 @@ function getLastLogNumber(type, tranid) {
     var columns = new Array();
     columns[0] = new nlobjSearchColumn('custrecord_ilo_approval_rece_nu');
     columns[1] = new nlobjSearchColumn('custrecord_ilo_tolerance_nu');
+    columns[2] = new nlobjSearchColumn('internalid').setSort(false);
 
     var filters = new Array();
     filters[0] = new nlobjSearchFilter('custrecord_ilo_approval_transaction', null, 'is', tranid)

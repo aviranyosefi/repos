@@ -4,26 +4,33 @@
  */
 define(['N/query', 'N/runtime', 'N/record', 'N/search'],
     function (query, runtime, record, search) {
-        var GLOBAL_SUBSIDIARIY = 14;
-        var GLOBAL_REASON_FOR_ADJUSTMENT = 9 // 'יצירת סריאלי ל IB'
-        var GLOBAL_ACCOUNT =  219 //'50100 Cost of Goods Sold'
-        var GLOBAL_LOCATION = 43//Dangot IB
+        var GLOBAL_SUBSIDIARIY = 14;//Dangot
+        var GLOBAL_REASON_FOR_ADJUSTMENT = 9; // 'יצירת סריאלי ל IB'
+        var GLOBAL_ACCOUNT = 219; //'50100 Cost of Goods Sold'
+        var GLOBAL_LOCATION = 43;//Dangot IB
+        var GLOBAL_SALES_ROLE = -2;
+
         function beforeLoad(context) {
             var rec = context.newRecord;
             var recType = rec.type;
-            if ((recType == 'salesorder' || recType == 'estimae') && context.type == 'edit') {
-                var sublist = context.form.getSublist("item")
+            var subsidiary = rec.getValue('subsidiary')
+            if (subsidiary != GLOBAL_SUBSIDIARIY && recType != 'customrecord_ib') { return; }
+            if ((recType == 'salesorder' || recType == 'estimate') && context.type == 'edit') {
+                var sublist = context.form.getSublist("item");
                 var rate = sublist.getField({ id: 'rate' });
-                rate.isDisabled = true
+                rate.isDisabled = true;
             }
         }
         function beforeSubmit(context) {
             try {
+                log.debug("beforeSubmit ", 'beforeSubmit ')
                 if (context.type != context.UserEventType.DELETE) {
                     var rec = context.newRecord;
                     var recType = rec.type;
+                    var subsidiary = rec.getValue('subsidiary')
+                    if (subsidiary != GLOBAL_SUBSIDIARIY && recType != 'customrecord_ib') { return; }             
                     var recId = rec.id;
-                    log.debug("recType " + recType, 'recId ' + recId)
+                    log.debug("recType " + recType, 'recId ' + recId);
                     if (recType == 'salesorder') {
                         var ismultishipto = rec.getValue('ismultishipto');
                         if (!ismultishipto) {
@@ -49,27 +56,70 @@ define(['N/query', 'N/runtime', 'N/record', 'N/search'],
                             }
                         }
                     }
-                    else if (recType == 'customrecord_ib' && context.type == context.UserEventType.CREATE && runtime.executionContext === runtime.ContextType.USER_INTERFACE) { // todo create
+                    else if (recType == 'customrecord_ib'&& runtime.executionContext === runtime.ContextType.USER_INTERFACE) { // todo create
                         var ib_item = rec.getValue('custrecord_ib_item');
                         var ib_serial_number = rec.getValue('custrecord_ib_serial_number');
                         if (!isNullOrEmpty(ib_item) && isNullOrEmpty(ib_serial_number)) {
-                            var isserialitem = checkItem(ib_item)
-                            log.debug("isserialitem", isserialitem)
+                            var isserialitem = checkItem(ib_item);
+                            log.debug("isserialitem", isserialitem);
                             if (isserialitem == 'T') {
                                 var serial = rec.getValue('custrecord_ib_serial_number_s');
-                                log.debug("serial", serial)
+                                log.debug("serial", serial);
+                                if (isNullOrEmpty(serial)) return;
                                 var serialId = createInventoryAdj(ib_item, serial);
-                                log.debug("serialId", serialId)
+                                log.debug("serialId", serialId);
                                 rec.setValue('custrecord_ib_serial_number', serialId);
-                            }                           
+                            }
                         }
                     }
                 }
-            } catch (e) { }
+            } catch (e) {
+                log.error("beforeSubmit ", e)
+            }
         }
-        function createInventoryAdj(item, serial ) {
-            try { 
-                log.debug("createInventoryAdj", "createInventoryAdj")
+        function afterSubmit(context) {
+            if (context.type != context.UserEventType.DELETE) {
+                var rec = context.newRecord;
+                var recType = rec.type;
+                var subsidiary = rec.getValue('subsidiary');
+                if (subsidiary != GLOBAL_SUBSIDIARIY && recType != 'customrecord_ib') { return; }               
+                if ((recType == 'salesorder' || recType == 'estimate') && context.type == 'edit') {
+                    var recID = rec.id;
+                    var rec = record.load({ type: recType, id: recID, isDynamic: true });
+                    var oldRec = context.oldRecord;
+                    var newRecSalesRep = rec.getValue('custbody_dangot_sales_rep');
+                    var oldRecSalesRep = oldRec.getValue('custbody_dangot_sales_rep');
+                    if (oldRecSalesRep != newRecSalesRep) {
+                        var checkIfLinesEmpty = rec.getSublistField({
+                            sublistId: 'salesteam',
+                            fieldId: 'employee',
+                            line: 0
+                        });
+                        if (!isNullOrEmpty(checkIfLinesEmpty)) {
+                            var lineCount = rec.getLineCount({ sublistId: 'salesteam' });
+                            for (var j = lineCount - 1; j >= 0; j--) {
+                                rec.removeLine({
+                                    sublistId: 'salesteam',
+                                    line: j,
+                                    ignoreRecalc: true
+                                });
+                            }
+                        }
+                        rec.insertLine({ sublistId: 'salesteam', line: 0 });
+                        //rec.selectNewLine({ sublistId: 'salesteam' });
+                        rec.setCurrentSublistValue({ sublistId: 'salesteam', fieldId: 'employee', value: newRecSalesRep });
+                        rec.setCurrentSublistValue({ sublistId: 'salesteam', fieldId: 'salesrole', value: GLOBAL_SALES_ROLE });
+                        rec.setCurrentSublistValue({ sublistId: 'salesteam', fieldId: 'contribution', value: 100 });
+                        rec.commitLine({ sublistId: 'salesteam' });
+                        var recordId = rec.save({ enableSourcing: true, ignoreMandatoryFields: true });
+                        log.debug("recordId", recordId);
+                    }
+                }
+            }
+        }
+        function createInventoryAdj(item, serial) {
+            try {
+                log.debug("createInventoryAdj", "createInventoryAdj");
                 invAdjRec = record.create({ type: 'inventoryadjustment', isDynamic: true });
                 invAdjRec.setValue({ fieldId: 'subsidiary', value: GLOBAL_SUBSIDIARIY });
                 invAdjRec.setValue({ fieldId: 'custbody_dangot_reason_for_adjustment', value: GLOBAL_REASON_FOR_ADJUSTMENT });
@@ -80,24 +130,24 @@ define(['N/query', 'N/runtime', 'N/record', 'N/search'],
                 var id = invAdjRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
                 log.debug("Inventory Adjustment", id);
                 if (id != -1) {
-                    addNegativLine(id, item, serial)
-                    var serialId = getSerialId(item, serial)
+                    addNegativLine(id, item, serial);
+                    var serialId = getSerialId(item, serial);
                     return serialId;
                 }
             } catch (e) {
-                log.debug("createInventoryAdj error", e)
+                log.debug("createInventoryAdj error", e);
             }
         }
-        function addNegativLine(id , item , serial) {
+        function addNegativLine(id, item, serial) {
             try {
                 var invAdjRec = record.load({ type: 'inventoryadjustment', id: id, isDynamic: true, });
-                addItem(invAdjRec, item, serial, -1)
+                addItem(invAdjRec, item, serial, -1);
                 invAdjRec.save({ enableSourcing: true, ignoreMandatoryFields: true });
             } catch (e) {
-                log.debug("addNegativLine error", e)
+                log.debug("addNegativLine error", e);
             }
         }
-        function addItem(invAdjRec , item , serial ,qty) {
+        function addItem(invAdjRec, item, serial, qty) {
 
             invAdjRec.selectNewLine({ sublistId: 'inventory' });
             invAdjRec.setCurrentSublistValue({ sublistId: 'inventory', fieldId: 'item', value: item });
@@ -113,7 +163,7 @@ define(['N/query', 'N/runtime', 'N/record', 'N/search'],
             invAdjRec.commitLine({ sublistId: 'inventory' });
 
         }
-        function getSerialId(item , serial) {
+        function getSerialId(item, serial) {
 
             var s = search.create({
                 type: "inventorydetail",
@@ -134,7 +184,7 @@ define(['N/query', 'N/runtime', 'N/record', 'N/search'],
             });
             var serialId;
             s.run().each(function (result) {
-                serialId= result.getValue({
+                serialId = result.getValue({
                     name: "internalid",
                     join: "inventoryNumber",
                     label: "Internal ID"
@@ -148,10 +198,10 @@ define(['N/query', 'N/runtime', 'N/record', 'N/search'],
             var query_str = `SELECT isserialitem
                 FROM Item
                 WHERE Item.id=${item}`
-            var query_res = query.runSuiteQL({ query: query_str }).asMappedResults()
-            log.debug("query_res", JSON.stringify(query_res))
+            var query_res = query.runSuiteQL({ query: query_str }).asMappedResults();
+            log.debug("query_res", JSON.stringify(query_res));
             if (query_res.length > 0) {
-                isserialitem = query_res[0].isserialitem
+                isserialitem = query_res[0].isserialitem;
             }
             return isserialitem;
         }
@@ -165,5 +215,6 @@ define(['N/query', 'N/runtime', 'N/record', 'N/search'],
         return {
             beforeLoad: beforeLoad,
             beforeSubmit: beforeSubmit,
+            afterSubmit: afterSubmit
         };
     });

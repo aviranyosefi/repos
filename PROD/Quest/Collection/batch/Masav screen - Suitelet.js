@@ -1,7 +1,4 @@
 var user_name = nlapiGetContext().user
-var wire_id = 8;//wire list value
-var credit_card_id = 10;//credit card id value
-var payment_account = 440
 
 function masav_screen(request, response) {
 
@@ -17,8 +14,8 @@ function masav_screen(request, response) {
             nlapiLogExecution('DEBUG', 'stage one', 'stage one');
 
             var select = form.addField('custpage_selectfield', 'select', 'Payment Method');
-            select.addSelectOption('w', 'Wire');
-            select.addSelectOption('c', 'Credit Guard');
+            select.addSelectOption('2', 'IL Customer Masav');
+            select.addSelectOption('1', 'Credit Guard');
 
             var duedate = form.addField('custpage_duedate', 'date', 'Due Date');
             duedate.setMandatory(true);
@@ -27,31 +24,9 @@ function masav_screen(request, response) {
 
             var batch = form.addField('custpage_batch', 'text', 'Batch');
             batch.setDisplayType('inline');
-
-            //batch.setMandatory(true);
-
             var stage = form.addField('custpage_stage', 'integer', 'Stage');
             stage.setDefaultValue(1);
             stage.setDisplayType('hidden');
-
-
-            /*var fieldSrch = paymentmethodValueSearch();
-            nlapiLogExecution('DEBUG', 'paymentmethodValueSearch - fieldSrch', JSON.stringify(fieldSrch));
-            var coafield = form.addField('custpage_payment_account', 'select', 'Payment Account');
-            coafield.addSelectOption('', '');
-            fieldSrch.forEach(function (opt) {
-                coafield.addSelectOption(opt.id, opt.name);
-            });
-            coafield.setMandatory(true);*/
-
-
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Sublist!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-            /*if (request.getParameter('custid') == null) {
-                throw nlapiCreateError('Value Missing', 'This screen can be opened from the invoice record only', true);
-            }*/
 
             form.addSubmitButton('Present Customers');
             response.writePage(form);
@@ -59,27 +34,17 @@ function masav_screen(request, response) {
         else {
             //****************************************************Second Charge*********************************************************
 
-            //var scust = request.getParameter('custpage_customer');
             var sSelectfield = request.getParameter('custpage_selectfield');
             var sStage = parseInt(request.getParameter('custpage_stage')) + 1;
             var sduedate = request.getParameter('custpage_duedate');
-            //var payment_account = request.getParameter('custpage_payment_account');
-
-
 
             var sbatch = request.getParameter('custpage_batch');
 
             nlapiLogExecution('DEBUG', 'Stage + sSelectfield', sStage + ' + ' + sSelectfield);
 
-
-            //var customer = form.addField('custpage_customer', 'select', 'Customer ', 'customer');
-            //customer.setMandatory(true);
-            //customer.setDefaultValue(scust);
-            //customer.setDisplayType('inline');
-
             var select = form.addField('custpage_selectfield', 'select', 'Payment Method');
-            select.addSelectOption('w', 'Wire');
-            select.addSelectOption('c', 'Credit Guard');
+            select.addSelectOption('2', 'IL Customer Masav');
+            select.addSelectOption('1', 'Credit Guard');
             select.setDefaultValue(sSelectfield);
             select.setDisplayType('inline');
 
@@ -92,26 +57,7 @@ function masav_screen(request, response) {
             duedate.setDisplayType('inline');
 
             nlapiLogExecution('DEBUG', 'sduedate ', sduedate);
-
-            //if (sSelectfield == 'w')
-                //payment_account = 440;// 10050 - Hapoalim Bank ILS (Dangot) 346046
-            //else if (sSelectfield == 'c')
-                //payment_account = 440; // 10050 - Hapoalim Bank ILS (Dangot) 346046
-
-            nlapiLogExecution('DEBUG', 'payment_account', payment_account);
-
-            /*var fieldSrch = paymentmethodValueSearch();
-            nlapiLogExecution('DEBUG', 'paymentmethodValueSearch - fieldSrch', JSON.stringify(fieldSrch));
-            var coafield = form.addField('custpage_payment_account', 'select', 'Payment Account');
-            coafield.addSelectOption('', '');
-            fieldSrch.forEach(function (opt) {
-                coafield.addSelectOption(opt.id, opt.name);
-            });
-            coafield.setDefaultValue(payment_account);
-            coafield.setDisplayType('inline');*/
-
-
-
+         
             if (sStage == 2) {
 
                 //***********************************************SUBLIST********************************************************
@@ -119,43 +65,20 @@ function masav_screen(request, response) {
                 batch.setDefaultValue(sbatch + dateaddition());
                 batch.setDisplayType('inline');
 
-
-
-                //var sublist = form.addSubList('custpage_results_sublist', 'list', 'Customers With Open Invoices');
-                //sublist.addMarkAllButtons();
-                //sublist.addRefreshButton(); // can make use of this method to perform refresh of list
-
                 form.setScript('customscript_cg_extract_to_excel');
-                //sublist.addButton('custpage_excel_button', 'Extract To Excel', 'fnExcelReport()');
-
+               
                 //Collection Batch (Script)
                 var search = nlapiLoadSearch(null, 'customsearch_collection_batch');
-
-                // var formula = "case when decode({type},'invoice',{duedate},{trandate})<='" + sduedate + "' then 1 else 0 end"
-                //nlapiLogExecution('debug', 'formula', formula);
-                //search.addFilter(new nlobjSearchFilter('duedate', null, 'onorbefore', sduedate));
-
-                //var strFormula = "case when {type} = 'Billing Instruction' and {trandate} between {user.custentity_financial_report_from_date} and  {user.custentity_fin_report_to_date} then {custbody_price_change} else null end";
-                //search.addFilter(new nlobjSearchFilter("formulanumeric", null, "equalto", "1").setFormula(formula));
-
-
-                if (sSelectfield == 'w')//wire
-                    search.addFilter(new nlobjSearchFilter('custentity_customer_payment_method', 'customermain', 'anyof', wire_id));//wire - MASAV
-                else if (sSelectfield == 'c')//credit guard
-                    search.addFilter(new nlobjSearchFilter('custentity_customer_payment_method', 'customermain', 'anyof', credit_card_id));//credit guard
-
-
-                var results = search.runSearch().getResults(0, 500);
-
+                 
+               search.addFilter(new nlobjSearchFilter('custentity_recurring_agr_collection_mtd', 'customermain', 'anyof', sSelectfield));
+              
+               var results = search.runSearch().getResults(0, 500);
 
                 if (results.length > 0) {
-                    //sublist.addField('custpage_internalid', 'text', 'Internal ID').setDisplayType('hidden');
+         
                     // Get the the search result columns
                     var columns = results[0].getAllColumns();
-                    // sublist.addField('custpage_linestatus', 'text', 'Status').setDisplayType('disabled');
-                    // sublist.addField('custpage_checkbox', 'checkbox', 'Make Payment');
-
-
+  
                     var subList = form.addSubList('custpage_results_sublist', 'list', 'Number Of Customers: ' + results.length + ' With Open Invoices');
                     subList.addMarkAllButtons()
                     subList.addRefreshButton()
@@ -180,18 +103,13 @@ function masav_screen(request, response) {
                         subList.setLineItemValue('custpage_amount_remaining', i + 1, results[i].getValue(columns[4]));
                         subList.setLineItemValue('custpage_due_to_service', i + 1, results[i].getValue(columns[5]));
                         subList.setLineItemValue('custpage_defference', i + 1, results[i].getValue(columns[6]));
-                        subList.setLineItemValue('custpage_paymentmethod', i + 1, results[i].getText('custentity_customer_payment_method', 'customerMain', 'GROUP'));
+                        subList.setLineItemValue('custpage_paymentmethod', i + 1, results[i].getText('custentity_recurring_agr_collection_mtd', 'customerMain', 'GROUP'));
                         subList.setLineItemValue('custpage_amountcorrection', i + 1, results[i].getValue(columns[5]));
                         subList.setLineItemValue('entity', i + 1, results[i].getValue('internalid', 'customerMain', 'GROUP'));
                     }
 
                 }
-
-
-
                 form.addSubmitButton('Make Batch of Payments');
-
-
             }
             //**********************************************end SUBLIST************************************************************
 
@@ -223,18 +141,11 @@ function masav_screen(request, response) {
 
                         entitiesArr.push(invoicesJSON);
                     }
-                    //entitiesObj = { "batch": sbatch, "payment_account": payment_account, "duedate": sduedate, 'entities': entitiesArr };
+                    
                 }
                 nlapiLogExecution('DEBUG', 'entitiesArr ', JSON.stringify(entitiesArr));
 
-                //**********************************************end of insert SUBLIST fields***************************************
-                //if (sSelectfield == 'w') {//wire
-                //   nlapiLogExecution('DEBUG', 'Wire', '');
-
-
-
-                //insertBatch(sbatch, payment_account, sduedate, entitiesArr);
-
+     
                 if (JSON.stringify(entitiesArr).length >= 100000) {
                     throw nlapiCreateError('Errpr', 'You selected a maximum number of lines, please select less lines');
 
@@ -245,7 +156,6 @@ function masav_screen(request, response) {
                     'custscript_method': sSelectfield,
                     'custscript_user': user_name,
                     'custscript_arr': JSON.stringify(entitiesArr),
-                    'custscript_payment_account': payment_account,
                     'custscript_duedate': sduedate
                 }
 
@@ -253,41 +163,13 @@ function masav_screen(request, response) {
 
                 nlapiLogExecution('DEBUG', 'status', status);
 
-                //}
-                /*else if (sSelectfield == 'c') {//credit guard
-                    nlapiLogExecution('DEBUG', 'Credit Guard', '');
- 
-                    insertBatch(entitiesObj);
- 
-                    var params = {
-                        'custscript_batch': JSON.stringify(entitiesObj),
-                        'custscript_method': sSelectfield,
-                    }
-                    var status = nlapiScheduleScript('customscript_batch_payment_creation', 'customdeploy_creation', params);
- 
-                    nlapiLogExecution('DEBUG', 'status', status);
- 
-                }*/
-            }
-
-            //form.addSubmitButton('Make Batch of Payments');
+            }        
             response.writePage(form);
         }
-
-
     } catch (e) {
         nlapiLogExecution('DEBUG', 'Error', e);
         throw nlapiCreateError('Error', e, true);
-
     }
-
-
-
-
-
-
-
-
 }
 
 
@@ -301,7 +183,6 @@ function masav_screen(request, response) {
 function isEmpty(val) {
     return (val == undefined || val == null || val == '');
 }
-
 function getdate() {
     var d = new Date();
     d.setHours(d.getHours() + 9)
@@ -317,9 +198,6 @@ function getdate() {
     var formatdate = [day, month, year].join('/')/* + ' ' + d.toTimeString().substring(0, 8)*/
     return formatdate;
 }
-
-
-
 function insertBatch(batch, payment_account, duedate, arr) {
 
     nlapiLogExecution('DEBUG', ' W/C- insertBatch', JSON.stringify(arr));
@@ -346,14 +224,7 @@ function insertBatch(batch, payment_account, duedate, arr) {
                 columns[1] = new nlobjSearchColumn('tranid');
                 columns[2] = new nlobjSearchColumn('recordtype');
                 var filters = new Array();
-                /*filters[0] = new nlobjSearchFilter('mainline', null, 'is', 'T');
-                if (method == 'w')//wire - masav
-                    filters[1] = new nlobjSearchFilter('custentity_customer_payment_method', 'customermain', 'anyof', wire_id);
-                if (method == 'c')//credit guard
-                    filters[1] = new nlobjSearchFilter('custentity_customer_payment_method', 'customermain', 'anyof', credit_card_id);
-                filters[2] = new nlobjSearchFilter('status', null, 'anyof', 'CustInvc:A');
-                filters[3] = new nlobjSearchFilter('duedate', null, 'onorbefore', duedate);
-                filters[4] = new nlobjSearchFilter('internalid', 'customermain', 'anyof', valEnt);*/
+      
 
 
                 var search = nlapiCreateSearch('transaction', sfilters, columns);
@@ -415,8 +286,6 @@ function insertBatch(batch, payment_account, duedate, arr) {
 
     }
 }
-
-
 function dateaddition() {
 
     // attaching date
@@ -440,9 +309,6 @@ function dateaddition() {
 
 
 }
-
-
-
 function paymentmethodValueSearch() {
 
     var results = [];

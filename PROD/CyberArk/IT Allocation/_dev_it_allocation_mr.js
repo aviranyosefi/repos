@@ -3,8 +3,8 @@
  * @NScriptType MapReduceScript
  * @NModuleScope SameAccount
  */
-define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/email', 'N/render', 'N/format'],
-    function (search, record, logger, error, runtime, file, email, render, format) {
+define(['N/search', 'N/record', 'N/log', 'N/url', 'N/runtime', 'N/email', 'N/render', 'N/format'],
+    function (search, record, logger, url, runtime, email, render, format) {
         var GLOBAL_DEPARTMENT = 24;
         var TOTAL_AMT;
         var totalDepAmt = 0;
@@ -21,7 +21,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
                 totalDepAmt = 0;
                 logger.debug('mapContext', context.value);
                 var ObjLine = JSON.parse(context.value);
-                var jeRecordID = buildJournalEntry(ObjLine)
+                var jeRecordID = buildJournalEntry(ObjLine);       
                 context.write('1', jeRecordID);
             } catch (e) {
                 logger.error('error map', e);
@@ -30,7 +30,7 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
         function buildJournalEntry(ObjLine) {
             TOTAL_AMT = Math.abs(Number(ObjLine.amount))
             TOTAL_COUNT = getTotal();
-            logger.debug('TOTAL_AMT: ' + TOTAL_AMT, 'TOTAL_COUNT ' + TOTAL_COUNT );
+            logger.debug('TOTAL_AMT: ' + TOTAL_AMT, 'TOTAL_COUNT ' + TOTAL_COUNT);
             jeRecord = record.create({ type: record.Type.JOURNAL_ENTRY, isDynamic: true });
             jeRecord.setValue({ fieldId: 'subsidiary', value: ObjLine.subsidiary });
             jeRecord.setValue({ fieldId: 'trandate', value: StringToDate(ObjLine.trandate) });
@@ -41,15 +41,22 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
             logger.debug('jeRecord id: ', jeRecordID);
             return jeRecordID
         }
-        function addSublistLine(isDebit, ObjLine) {       
-            if (isDebit) {
+        function addSublistLine(isDepLines, ObjLine) {
+            currAmount = Number(ObjLine.amount);
+            if (!isDepLines) {
+                var field = 'credit';
+                if (currAmount < 0) field = 'debit'
+                logger.debug('field: ' + field, 'isDepLines false ' + isDepLines);
                 jeRecord.selectNewLine({ sublistId: 'line' });
                 jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: 'account', value: ObjLine.account });
-                jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: 'credit', value: ObjLine.amount, });
+                jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: field, value: TOTAL_AMT, });
                 jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: 'department', value: GLOBAL_DEPARTMENT, });
                 jeRecord.commitLine({ sublistId: 'line' });
             }
             else {
+                var field = 'debit';
+                if (currAmount < 0) field = 'credit'
+                logger.debug('field: ' + field, 'isDepLines true ' + isDepLines);
                 var departments = getAllDepartments();
                 var lastDep = departments.length - 1
                 for (var i = 0; i < departments.length; i++) {
@@ -57,16 +64,16 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
                         debit = calcDebit(ObjLine, departments[i])
                         totalDepAmt = totalDepAmt + debit
                     }
-                    else {      
-                        debit= TOTAL_AMT - totalDepAmt        
+                    else {
+                        debit = TOTAL_AMT - totalDepAmt
                     }
                     jeRecord.selectNewLine({ sublistId: 'line' });
                     jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: 'account', value: ObjLine.account });
-                    jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: 'debit', value: debit });
+                    jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: field, value: debit });
                     jeRecord.setCurrentSublistValue({ sublistId: 'line', fieldId: 'department', value: departments[i].dep, });
                     jeRecord.commitLine({ sublistId: 'line' });
                 }
-            }                   
+            }
         }
         function StringToDate(date) {
 
@@ -95,11 +102,11 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
             } while (results != null && results.length >= 1000);
 
             for (var i = 0; i < s.length; i++) {
-                var result = s[i];       
+                var result = s[i];
                 res.push({
                     dep: result.getValue(result.columns[0]),
                     count: result.getValue(result.columns[1]),
-                })            
+                })
             }
             logger.debug({ title: 'getAllDepartments ' + res.length, details: JSON.stringify(res) });
             return res
@@ -122,18 +129,18 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
             } while (results != null && results.length >= 1000);
             if (s != null && s.length > 0) {
                 var result = s[0];
-                res = result.getValue(result.columns[0])           
+                res = result.getValue(result.columns[0])
             }
             return res;
         }
         function calcDebit(ObjLine, departmentsData) {
             var amount = 1;
-            if (!isNullOrEmpty(ObjLine.amount) && !isNullOrEmpty(TOTAL_COUNT) && !isNullOrEmpty(departmentsData.count))
-                var amount = (ObjLine.amount / TOTAL_COUNT * departmentsData.count).toFixed(2)
+            if (!isNullOrEmpty(TOTAL_AMT) && !isNullOrEmpty(TOTAL_COUNT) && !isNullOrEmpty(departmentsData.count))
+                var amount = (TOTAL_AMT / TOTAL_COUNT * departmentsData.count).toFixed(2)
 
             return Number(amount);
 
-        }    
+        }
         function isNullOrEmpty(val) {
 
             if (typeof (val) == 'undefined' || val == null || (typeof (val) == 'string' && val.length == 0)) {
@@ -142,69 +149,67 @@ define(['N/search', 'N/record', 'N/log', 'N/error', 'N/runtime', 'N/file', 'N/em
             return false;
         }
         function reduce(context) {
-            //logger.debug('context', context);
-            var key = context.key;
-            //logger.debug('key', key);
             var billList = context.values;
             logger.debug('billList' + billList.length, billList);
 
+            var body = '<html>' +
+                '<head>' +
+                '<style>' +
+                'table, th, td {' +
+                'border: 2px solid black;' +
+                'border-collapse: collapse;' +
+                '}' +
+                'td {' +
+                'padding: 5px;' +
+                'text-align: left;' +
+                '}' +
+                'th {' +
+                'padding: 5px;' +
+                'text-align: center;' +
+                'background-color: #edeaea;' +
+                'font-weight: bold ;' +
+                '}' +
+                '</style>' +
+                '</head>' +
+                "<div>" +
+                "<p style='color: black; font-size:100%;'>Please find below Journal entries that were created from IT allocations:</p></div>";
+
+            var successTbl = '';
+            successTbl += "<table class='errtable' style = \"width: 100 %;\" >";
+            // for th
+            successTbl += "<tr><th>Journal</th></tr>";
+            for (var s in billList) {
+                var tranid = search.lookupFields({
+                    type: search.Type.JOURNAL_ENTRY,
+                    id: billList[s],
+                    columns: ['tranid']
+                }).tranid;
+                successTbl += "<tr><td>" + GetLink(tranid, billList[s], 'journalentry') + "</td></tr > ";
+            }
+            successTbl += "</table>"
+            body += successTbl;
             email.send({
                 author: runtime.getCurrentUser().id,
                 recipients: runtime.getCurrentUser().id,
-                subject: 'IT Allocation',
-                body: 'JOURNAL IDS LIST: ' +JSON.stringify(billList),
+                subject: 'IT allocation sucsefully completed',
+                body: body,
             });
 
         }
-        function summarize(context) {
-            try {
-                //var errArr = getDodayErrors()
-                //logger.debug('errorsList ' + errArr.length, JSON.stringify(errArr))
-                //if (errArr.length > 0) {
-                //    //var htmlbBody = BuildHtml();
-                //    //failTbl = htmlbBody
-                //    var failTbl = ' <p style= \'font-weight: bold ;color: red; font-size:140%; \'> Total: ' + errArr.length + ' failed</p><br>';
-                //    failTbl += "<table class='errtable' style = \"width: 100 %;\" >";
-                //    // for th
-                //    failTbl += "<tr><th class='errtable' >Vendor</th><th  class='errtable'>Bill#</th><th  class='errtable'>Summary File</th><th  class='errtable'>Line</th><th  class='errtable'>Error</th></tr>";
-                //    for (var s in errArr) {
-                //        failTbl += "<tr><td class='errtable'>" + errArr[s].vendor + "</td><td  class='errtable'>" + errArr[s].tranid + "</td><td class='errtable'>" + errArr[s].summary_file + "</td><td class='errtable'>" + errArr[s].line + "</td><td class='errtable'>" + errArr[s].error + "</td></tr > ";
-                //    }
-                //    failTbl += "</table>"
-
-                //    var mergeResult = render.mergeEmail({
-                //        templateId: GLOBAL_ERRORS_EMAIL_TEMPLATE,
-                //        entity: {
-                //            type: 'employee',
-                //            id: GLOBAL_ERROR_RECIVER
-                //        },
-                //        recipient: null,
-                //        supportCaseId: null,
-                //        transactionId: null,
-                //        customRecord: null
-                //    });
-                //    var emailSubject = mergeResult.subject;
-                //    var emailBody = mergeResult.body;
-                //    emailBody = emailBody.replace('//failTbl//', failTbl);
-                //    email.send({
-                //        author: GLOBAL_ERROR_RECIVER,
-                //        recipients: GLOBAL_ERROR_RECIVER,
-                //        subject: emailSubject,
-                //        body: emailBody,
-                //        relatedRecords: null
-                //    });
-                //}
-            } catch (e) {
-                logger.error('error summary', e);
-            }
+        function GetLink(name, id, type) {
+            var output = url.resolveRecord({
+                recordType: type,
+                recordId: id,
+                isEditMode: false
+            });
+            var link = "<a href='https://system.netsuite.com" + output + "'" + ' target="_blank">' + name + "</a>";
+            return link;
         }
-   
+
 
         return {
             getInputData: getInputData,
             map: map,
-            reduce: reduce,
-            summarize: summarize
-
+            reduce: reduce,           
         };
     });

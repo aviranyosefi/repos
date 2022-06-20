@@ -1,20 +1,11 @@
-//var custId;
-//var cardId;
-//var flag = 0;
-var customer_credit_guard_id = 10;
-var payment_credit_guard_id = 464;
-var account_id = 440;
+var GLOBAL_METHOD = 1; //Credit Guard
 var context = nlapiGetContext()
-
-function credit_guard_screen(request, response) {
-
-    //https://6398307-sb1.app.netsuite.com/app/site/hosting/scriptlet.nl?script=203&deploy=1&invid=4&total=140.40&custid=17&cardid=123
+var globalSettings = [];
+function credit_guard_screen(request, response) {   
     nlapiLogExecution('DEBUG', 'SCRIPT', 'RUN');
     try {
-
         var form = nlapiCreateForm('Credit Guard');
         form.addFieldGroup('custpage_searchdetails', 'Details');
-
 
         if (request.getMethod() == 'GET') {
             //****************************************************First Charge*********************************************************
@@ -136,19 +127,6 @@ function credit_guard_screen(request, response) {
                 for (var j = 0; j < results.length; j++) {
                     var transaction = new Object();
 
-                    //// Set the Pay column to False
-                    //transaction['pay'] = 'F';
-                    // Set the hidden internal ID field
-                    //transaction['internalid'] = results[j].getId();
-                    // Set the hidden record type field
-
-                    // Create a link so users can navigate from the list of transactions to a specific transaction
-                    /*var url = nlapiResolveURL('RECORD', results[j].getRecordType(), results[j].getId(), null);
-                    internalIdLink = " " + results[j].getId() + " ";*/
-
-                    // Set the link
-                    //transaction['internalidlink'] = internalIdLink;
-
                     // Copy the row values to the transaction object
                     for (var l = 0; l < columns.length; l++) {
                         var col = columns[l].getName();
@@ -210,7 +188,7 @@ function credit_guard_screen(request, response) {
             nlapiLogExecution('DEBUG', 'visempty_checkbox ', visempty_checkbox);
             var vrectype = request.getParameter('custpage_rectype');
 
-
+            globalSettings = getGlobalSettings(1);
             //**********************************************insert SUBLIST fields************************************************************
 
             var LinesNo = request.getLineItemCount('custpage_results_sublist');
@@ -218,7 +196,7 @@ function credit_guard_screen(request, response) {
             //var batchArr = '';
             var invoicesObj = {};
             var invoicesArr = [];
-            nlapiLogExecution('DEBUG', 'LinesNo ', LinesNo);
+            //nlapiLogExecution('DEBUG', 'LinesNo ', LinesNo);
             for (var i = 1; i <= LinesNo; i++) {
                 checkBox = request.getLineItemValue('custpage_results_sublist', 'custpage_checkbox', i);
                 if (checkBox == 'T') {
@@ -248,9 +226,6 @@ function credit_guard_screen(request, response) {
             }
 
             nlapiLogExecution('DEBUG', 'SumOfOnHand + invoicesArr ', SumOfAmount + ' + ' + JSON.stringify(invoicesObj));
-
-
-
 
             //**********************************************end of insert SUBLIST fields************************************************************
             nlapiLogExecution('DEBUG', 'Second Charge - vrectype ', vrectype);
@@ -318,22 +293,10 @@ function credit_guard_screen(request, response) {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
 //*************************************************************functions********************************************************************************************************************************
-
 function xml_request(standing_order, cust, total, cardId, numpay, id, expdate, cvv) {
     try {
-        nlapiLogExecution('DEBUG', 'xml_request function : ', 'xml_request');
+        //nlapiLogExecution('DEBUG', 'xml_request function : ', 'xml_request');
         //var response =200;
 
         total = parseFloat((total * 100).toFixed(0));//parseFloat
@@ -413,16 +376,18 @@ function xml_request(standing_order, cust, total, cardId, numpay, id, expdate, c
         nlapiLogExecution('debug', 'standing_order', standing_order);
         nlapiLogExecution('debug', 'isEmpty(standing_order)', isEmpty(standing_order));
 
-        if (/*isEmpty(rec.getFieldValue('custentity_card_id')) &&*/ isEmpty(standing_order))
+        if (isEmpty(standing_order))
             xml += '<validation>AutoComm</validation>';
-        else if (/*(!isEmpty(rec.getFieldValue('custentity_card_id'))) ||*/ !isEmpty(standing_order))
+        else if (standing_order == 'F')
             xml += '<validation>Verify</validation>';// בדיקת אשראי
+        else if (standing_order == 'T')
+            xml += '<validation>Token</validation>';// הצפנה
 
         xml += '</doDeal>';
         xml += '</request>';
         xml += '</ashrait>';
 
-        nlapiLogExecution('DEBUG', 'xml', xml);
+        //nlapiLogExecution('DEBUG', 'xml', xml);
 
 
         //xml = nlapiStringToXML(xml);
@@ -435,20 +400,20 @@ function xml_request(standing_order, cust, total, cardId, numpay, id, expdate, c
         nlapiLogExecution('DEBUG', 'environment', environment);
 
         if (environment == 'SANDBOX') {
-            var sUrl = 'https://cguat2.creditguard.co.il/xpo/Relay';
+            var sUrl = globalSettings[0].sandbox_url//'https://cguat2.creditguard.co.il/xpo/Relay';
 
             var xmltosend = {
-                'user': 'dangot',
-                'password': 'dGN2@z31',
+                'user': globalSettings[0].sandbox_user_name,
+                'password': globalSettings[0].sandbox_password,
                 'int_in': xml
             }
         }
         else {
-            var sUrl = 'https://cguat2.creditguard.co.il/xpo/Relay';
+            var sUrl = globalSettings[0].prod_url // 'https://cguat2.creditguard.co.il/xpo/Relay';
 
             var xmltosend = {
-                'user': 'dangot',
-                'password': '',
+                'user': globalSettings[0].prod_user_name,
+                'password': globalSettings[0].prod_password,
                 'int_in': xml
             }
         }
@@ -462,7 +427,7 @@ function xml_request(standing_order, cust, total, cardId, numpay, id, expdate, c
         nlapiLogExecution('DEBUG', 'usermessage', usermessage);
 
         var xmlDataResponse = nlapiStringToXML(response.body);
-        nlapiLogExecution('DEBUG', 'xmlDataResponse', xmlDataResponse);
+        //nlapiLogExecution('DEBUG', 'xmlDataResponse', xmlDataResponse);
         var cardID = nlapiSelectValue(xmlDataResponse, '//cardId');
         nlapiLogExecution('DEBUG', 'cardID', cardID);
         var message = nlapiSelectValue(xmlDataResponse, '//message');
@@ -471,41 +436,27 @@ function xml_request(standing_order, cust, total, cardId, numpay, id, expdate, c
         nlapiLogExecution('DEBUG', 'status', status);
         var cardNum = nlapiSelectValue(xmlDataResponse, '//cardNo');
         nlapiLogExecution('DEBUG', 'cardNum', cardNum);
+        //var cardName = nlapiSelectValue(xmlDataResponse, '//cardName');
+        cardName = getVal(response.body, '<cardName>', '</cardName>')
+        nlapiLogExecution('DEBUG', 'cardName', cardName);
 
-
-        //nlapiLogExecution('DEBUG', 'message.getEncoding()', message.getEncoding());
-        //nlapiLogExecution('DEBUG', 'message.setEncoding(UTF-8)', message.setEncoding('UTF-8'));
-        nlapiLogExecution('DEBUG', 'isEmpty(standing_order)', isEmpty(standing_order));
-
-
+   
         if (!isEmpty(standing_order) && isEmpty(rec.getFieldValue('custentity_card_id')) && status == '000') {
             rec.setFieldValue('custentity_card_id', cardID);
             rec.setFieldValue('custentity_expiration_date', expdate);
             rec.setFieldValue('custentity_credit_card_number', cardNum);
-            rec.setFieldValue('custentity_customer_payment_method', customer_credit_guard_id);//Credit Guard
+            rec.setFieldValue('custentity_credit_card_type', cardName);
+            rec.setFieldValue('custentity_recurring_agr_collection_mtd', GLOBAL_METHOD);//Credit Guard
             nlapiSubmitRecord(rec, true, true);
         }
-
-
-
-
-
-
-
         return usermessage;
-
-
     } catch (e) {
         return e.message;
     }
 }
-
-
-
 function isEmpty(val) {
     return (val == undefined || val == null || val == '');
 }
-
 function getdate() {
     var d = new Date();
     d.setHours(d.getHours() + 9)
@@ -521,8 +472,6 @@ function getdate() {
     var formatdate = [year, month, day].join('-') + ' ' + d.toTimeString().substring(0, 8)
     return formatdate;
 }
-
-
 function billCreation(CC_Advanced, SumOfAmount, invoicesObj, numofpaym) {
 
     try {
@@ -531,13 +480,7 @@ function billCreation(CC_Advanced, SumOfAmount, invoicesObj, numofpaym) {
 
         var rec = nlapiCreateRecord('customerpayment', { recordmode: 'dynamic' });
         rec.setFieldValue('custbody_number_of_payments', numofpaym);
-        rec.setFieldValue('paymentoption', payment_credit_guard_id);//Credit Guard
-
-
-        //nlapiLogExecution('DEBUG', 'rec', JSON.stringify(rec));
-
-        //rec.setFieldValue('customer', invoicesObj.vcust);
-        //var linecount = rec.getLineItemCount('apply');
+       
 
         for (var fld in invoicesObj) {
             var val = invoicesObj[fld];
@@ -545,18 +488,9 @@ function billCreation(CC_Advanced, SumOfAmount, invoicesObj, numofpaym) {
                 rec.setFieldValue('customer', val);
                 var linecount = rec.getLineItemCount('apply');
                 nlapiLogExecution('DEBUG', 'linecount', linecount);
-
                 rec.setFieldValue('undepfunds', 'F');
-                rec.setFieldValue('account', account_id);
-
+                rec.setFieldValue('account', globalSettings[0].acc_customer_button);
             }
-
-
-
-
-            //rec.setFieldValue('payment', SumOfAmount);
-
-
             if (fld == 'invoices' && CC_Advanced == false) {
                 var invoices = val;
                 for (var i = 0; i < invoices.length; i++) {
@@ -593,53 +527,75 @@ function billCreation(CC_Advanced, SumOfAmount, invoicesObj, numofpaym) {
                     rec.setFieldValue('autoapply', 'T');
                 rec.setFieldValue('payment', SumOfAmount);
 
-                //StatusChange(invoicesObj.invoices);
-
             }
-
         }
-
-
-
+        rec.setFieldValue('paymentoption', globalSettings[0].payment_option);//Credit Guard
         var recid = nlapiSubmitRecord(rec, true, true);
         nlapiLogExecution('DEBUG', 'billCreation recid', recid);
-
-
         return true;
     } catch (e) {
         nlapiLogExecution('DEBUG', ' Error - billCreation ', e);
         return e;
     }
 }
+function getGlobalSettings(method) {
 
-/*function StatusChange(recordsArr) {
-    nlapiLogExecution('DEBUG', ' inside StatusChange', JSON.stringify(recordsArr));
+    var columns = new Array();
+    columns.push(new nlobjSearchColumn('custrecord_bank_acc_cg_batch_screen'));
+    columns.push(new nlobjSearchColumn('custrecord_bank_acc_cg_customer_button'));
+    columns.push(new nlobjSearchColumn('custrecord_code_mosad'));
+    columns.push(new nlobjSearchColumn('custrecord_mosad_sender'));
+    columns.push(new nlobjSearchColumn('custrecord_prod_user_name'));
+    columns.push(new nlobjSearchColumn('custrecord_prod_password'));
+    columns.push(new nlobjSearchColumn('custrecord_sandbox_user_name'));
+    columns.push(new nlobjSearchColumn('custrecord_sandbox_password'));
+    columns.push(new nlobjSearchColumn('custrecord_prod_url'));
+    columns.push(new nlobjSearchColumn('custrecord_sandbox_url'));
+    columns.push(new nlobjSearchColumn('custrecord_subsidiary'));
+    columns.push(new nlobjSearchColumn('custrecord_payment_option'));
+    
 
+    var filters = new Array();
+    filters[0] = new nlobjSearchFilter('custrecord_recurring_agr_collection_mtd', null, 'anyof', method)
 
-    for (var i = 0; i < recordsArr.length; i++) {
-        var recordArr = recordsArr[i];
-        for (var fld in recordArr) {
-            var val = recordArr[fld];
+    var search = nlapiCreateSearch('customrecord_collection_settings', filters, columns);
 
-            if (fld == 'internalid') {
-
-                var rec = nlapiLoadRecord('customtransaction_credit_card_advanced', val);
-                rec.setFieldValue('transtatus', 'B');
-                var recid = nlapiSubmitRecord(rec, true, true);
-
-                nlapiLogExecution('DEBUG', 'StatusChange record saved', recid);
-
-                continue;
-
-            }
-
+    var resultset = search.runSearch();
+    var s = [];
+    var searchid = 0;
+    var results = [];
+    do {
+        var resultslice = resultset.getResults(searchid, searchid + 1000);
+        for (var rs in resultslice) {
+            s.push(resultslice[rs]);
+            searchid++;
         }
+    } while (resultslice != null && resultslice.length >= 1000);
+
+    if (s != null) {
+        for (var i = 0; i < s.length; i++) {
+            results.push({
+                acc_batch_screen: s[i].getValue('custrecord_bank_acc_cg_batch_screen'),
+                acc_customer_button: s[i].getValue('custrecord_bank_acc_cg_customer_button'),
+                code_mosad: s[i].getValue('custrecord_code_mosad'),
+                mosad_sender: s[i].getValue('custrecord_mosad_sender'),
+                prod_user_name: s[i].getValue('custrecord_prod_user_name'),
+                prod_password: s[i].getValue('custrecord_prod_password'),
+                sandbox_user_name: s[i].getValue('custrecord_sandbox_user_name'),
+                sandbox_password: s[i].getValue('custrecord_sandbox_password'),
+                prod_url: s[i].getValue('custrecord_prod_url'),
+                sandbox_url: s[i].getValue('custrecord_sandbox_url'),
+                subsidiary: s[i].getValue('custrecord_subsidiary'),
+                payment_option: s[i].getValue('custrecord_payment_option'),
+            });
+        }
+        nlapiLogExecution('DEBUG', 'getGlobalSettings results', JSON.stringify(results));
+        return results;
     }
+}
+function getVal(str, startIndex, endIndex) {
 
+    return str.substring(str.indexOf(startIndex)+10, str.indexOf(endIndex))
 
-
-
-    return true;
-}*/
-
+}
 

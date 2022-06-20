@@ -1,35 +1,27 @@
 var context = nlapiGetContext();
-var wire_id = 8;//wire list value
-var credit_card_id = 10;//credit card id value
-
+var globalSettings = [];
+var invId = [];
 
 function creation() {
     try {
         nlapiLogExecution('DEBUG', 'SCRIPT', 'RUN');
 
+        var arr = context.getSetting('SCRIPT', 'custscript_arr');
+        var method = context.getSetting('SCRIPT', 'custscript_method');
+        var userid = context.getSetting('SCRIPT', 'custscript_user');
+        var batch = context.getSetting('SCRIPT', 'custscript_batch');
+        
+        var duedate = context.getSetting('SCRIPT', 'custscript_duedate');
 
-        var arr = nlapiGetContext().getSetting('SCRIPT', 'custscript_arr');
-        var method = nlapiGetContext().getSetting('SCRIPT', 'custscript_method');
-        var userid = nlapiGetContext().getSetting('SCRIPT', 'custscript_user');
-        var batch = nlapiGetContext().getSetting('SCRIPT', 'custscript_batch');
-        var payment_account = nlapiGetContext().getSetting('SCRIPT', 'custscript_payment_account');
-        var duedate = nlapiGetContext().getSetting('SCRIPT', 'custscript_duedate');
-
-        //var entityobj = '{"batch":"147test20210420234922","duedate":"19/4/2021","entities":[{"entity":"92","amount":499975},{"entity":"17","amount":20592}]}'
-        //var method = 'c';
-
-
+        globalSettings = getGlobalSettings(method);
+        var payment_account = globalSettings[0].acc_batch_screen
+       
         nlapiLogExecution('DEBUG', 'method : ' + method, 'userid : ' + userid + ' | batch : ' + batch + ' | payment_account : ' + payment_account + ' | duedate : ' + duedate);
         nlapiLogExecution('DEBUG', 'arr', arr);
-
 
         arr = JSON.parse(arr)
 
         insertBatch(batch, payment_account, duedate, arr);
-        nlapiLogExecution('DEBUG', 'insertBatch - out', '');
-
-
-
         for (var fld in arr) {
             var val = arr[fld];
             nlapiLogExecution('debug', fld, JSON.stringify(val));
@@ -40,81 +32,22 @@ function creation() {
                 nlapiLogExecution('debug', fldEnt, valEnt);
 
                 if (fldEnt == 'entity') {
-
                     var amountcorrection = val['amountcorrection'];
                     nlapiLogExecution('DEBUG', 'amountcorrection', amountcorrection);
-
                     var custSum = 0;
-                    var results = [];
-                    /*if (amountcorrection <= 0) {
-                        var columns = new Array();
-                        columns[0] = new nlobjSearchColumn('internalid');
-                        columns[1] = new nlobjSearchColumn('tranid');
-                        columns[2] = new nlobjSearchColumn('amountremaining');
-                        var filters = new Array();
-                        filters[0] = new nlobjSearchFilter('mainline', null, 'is', 'T');
-                        filters[1] = new nlobjSearchFilter('custbody_batch', null, 'is', batch);
-                        filters[2] = new nlobjSearchFilter('name', null, 'anyof', valEnt);
-
-
-                        var search = nlapiCreateSearch('invoice', filters, columns);
-
-                        var resultset = search.runSearch();
-                        var s = [];
-                        var searchid = 0;
-                        do {
-                            var resultslice = resultset.getResults(searchid, searchid + 1000);
-
-                            for (var rs in resultslice) {
-                                s.push(resultslice[rs]);
-                                searchid++;
-                            }
-                        } while (resultslice != null && resultslice.length >= 1000);
-
-
-                        if (s != null) {
-                            for (var i = 0; i < s.length; i++) {
-                                if (context.getRemainingUsage() < 400) {
-                                    nlapiLogExecution('debug', 'rem usage', context.getRemainingUsage());
-                                    var state = nlapiYieldScript();
-                                    if (state.status == 'FAILURE') {
-                                        nlapiLogExecution('ERROR', 'Error', ' Failed to yeild script');
-                                    }
-                                    else if (state.status == 'RESUME') {
-                                        nlapiLogExecution("AUDIT", 'run', "Resuming script due to: " + state.reason + ",  " + state.size);
-                                    }
-                                }
-
-                                custSum += parseFloat(s[i].getValue('amountremaining'));//discamount
-                                results.push({
-                                    id: s[i].id,
-                                    tranid: s[i].getValue('tranid'),
-                                    amount: s[i].getValue('amountremaining')
-                                });
-
-
-                            }
-                            //return results;
-                        }
-                    }*/
+                    var results = [];             
                     if (amountcorrection > 0) {
-                        if (method == 'w')
+                        if (method == '2')
                             paymentcreation(valEnt, batch, results, amountcorrection, payment_account, method);
-                        if (method == 'c')
+                        if (method == '1')
                             creditguard(valEnt, batch, results, custSum, amountcorrection, payment_account, method);
                     }
                 }
-
-
             }
-
-
         }
-
-
-        if (method == 'w')
+        if (method == '2')
             filecreation(batch, userid);
-        if (method == 'c')
+        if (method == '1')
             var newEmail = nlapiSendEmail(userid, userid, 'Credit Guard Email Notification', 'Please note that payment credit guard with batch #: ' + batch + ' - finished', null, null, null, null);
 
 
@@ -123,16 +56,9 @@ function creation() {
         nlapiLogExecution('DEBUG', 'error', e);
     }
 }
-
 function insertBatch(batch, payment_account, duedate, arr) {
 
     nlapiLogExecution('DEBUG', ' W/C- insertBatch', JSON.stringify(arr));
-
-
-    //var search = nlapiLoadSearch(null, 'customsearch_collection_batch');
-    //var sfilters = search.getFilters();
-
-
     for (var fld in arr) {
         var val = arr[fld];
         scriptcheck();
@@ -147,18 +73,9 @@ function insertBatch(batch, payment_account, duedate, arr) {
                 columns[0] = new nlobjSearchColumn('internalid');
                 columns[1] = new nlobjSearchColumn('tranid');
                 columns[2] = new nlobjSearchColumn('recordtype');
-                var filters = new Array();
-                /*filters[0] = new nlobjSearchFilter('mainline', null, 'is', 'T');
-                if (method == 'w')//wire - masav
-                    filters[1] = new nlobjSearchFilter('custentity_customer_payment_method', 'customermain', 'anyof', wire_id);
-                if (method == 'c')//credit guard
-                    filters[1] = new nlobjSearchFilter('custentity_customer_payment_method', 'customermain', 'anyof', credit_card_id);
-                filters[2] = new nlobjSearchFilter('status', null, 'anyof', 'CustInvc:A');
-                filters[3] = new nlobjSearchFilter('duedate', null, 'onorbefore', duedate);
-                filters[4] = new nlobjSearchFilter('internalid', 'customermain', 'anyof', valEnt);*/
+         
 
-
-                //var search = nlapiCreateSearch('transaction', sfilters, columns);
+                //Collection Batch (Script) without group
                 var search = nlapiLoadSearch(null, 'customsearch_without_group');
                 search.addFilter(new nlobjSearchFilter('internalid', 'customermain', 'anyof', valEnt));
                 search.addFilter(new nlobjSearchFilter('trandate', null, 'onorbefore', duedate));
@@ -168,102 +85,60 @@ function insertBatch(batch, payment_account, duedate, arr) {
                 var resultset = search.runSearch();
                 var s = [];
                 var searchid = 0;
-                var results = [];
                 do {
                     var resultslice = resultset.getResults(searchid, searchid + 1000);
-
                     for (var rs in resultslice) {
                         s.push(resultslice[rs]);
                         searchid++;
                     }
                 } while (resultslice != null && resultslice.length >= 1000);
-
-                nlapiLogExecution('DEBUG', 's: ', JSON.stringify(s));
-
-
+                nlapiLogExecution('DEBUG', 'transaction list: ', JSON.stringify(s));
                 if (s != null) {
                     for (var i = 0; i < s.length; i++) {
                         scriptcheck();
-                        try {
-                            //var rec = nlapiLoadRecord('invoice',s[i].id);
-                            // rec.setFieldValue( 'custbody_batch', batch);
-                            nlapiLogExecution('DEBUG', 'type: ' + s[i].getValue('recordtype'), 'id: ' + s[i].id);
+                        try {    
+                            invId.push(s[i].id);
                             nlapiSubmitField(s[i].getValue('recordtype'), s[i].id, 'custbody_batch', batch);
-                            //nlapiSubmitRecord(rec, true,true);
-                            //nlapiLogExecution('DEBUG', 'invoice saved', rec.id);
-
-                            /* results.push({
-                                 id: s[i].id,
-                                 tranid: s[i].getValue('tranid')
-                             });*/
+                            
                         } catch (e) {
                             continue;
                         }
-
                     }
-                    //return results;
                 }
-
-                // nlapiLogExecution('DEBUG', 'entity: ' + valEnt + ' results', JSON.stringify(results));
-
-
             }
         }
 
 
     }
 }
-
 function paymentcreation(entity, batch_number, arr, amountcorrection, payment_account, method) {
     try {
         nlapiLogExecution('DEBUG', 'paymentcreation', 'START');
-        nlapiLogExecution('DEBUG', 'entity : ' + entity + ' + arr: ', JSON.stringify(arr));
 
         var rec = nlapiCreateRecord('customerpayment', { recordmode: 'dynamic' });
         rec.setFieldValue('customer', entity);
 
-        rec.setFieldValue('custbody_batch', batch_number);
-        var linecount = rec.getLineItemCount('apply');
-        nlapiLogExecution('DEBUG', 'linecount', linecount);
-        /*if (arr.length > 0) {
-            for (var fld in arr) {
-                var val = arr[fld];
-                var tranid = val["tranid"]
-
-                for (var k = 1; k < linecount + 1; k++) {
-                    var refnum = rec.getLineItemValue('apply', 'refnum', k);
-
-                    if (refnum == tranid) {
-                        rec.selectLineItem('apply', k);
-                        rec.setCurrentLineItemValue("apply", "apply", 'T');
-                        rec.commitLineItem("apply");
-
-                        continue;
-
-                    }
-
-                }
-
-            }
-        }
-        else {*/
+        rec.setFieldValue('custbody_batch', batch_number);    
         nlapiLogExecution('DEBUG', 'arr==null', amountcorrection);
-        rec.setFieldValue('payment', amountcorrection);
-        if (linecount < 2)
-            rec.setFieldValue('autoapply', 'T');
-        //}
-
-        /*if (method == 'c')
-            rec.setFieldValue('paymentoption', credit_card_id);//credit guard
-        if (method == 'w')
-            rec.setFieldValue('paymentoption', wire_id);//wire
-            */
-
+        rec.setFieldValue('payment', amountcorrection);   
+        rec.setFieldValue('paymentoption', globalSettings[0].payment_option);
         rec.setFieldValue('undepfunds', 'F');
+        rec.setFieldValue('autoapply', 'F');
         rec.setFieldValue('account', payment_account);
 
+        var linecount = rec.getLineItemCount('apply');
+        for (var k = 1; k <= linecount; k++) {
+            internalid = rec.getLineItemValue('apply', 'internalid', k);
+            nlapiLogExecution('DEBUG', 'internalid ' + internalid, invId + '-' + invId.indexOf(internalid));
+            rec.selectLineItem('apply', k);            
+            if (invId.indexOf(internalid) != -1) {
+                rec.setCurrentLineItemValue("apply", "apply", 'T');
+            }              
+            //else rec.setLineItemValue("apply", "apply", k, 'F');
+            rec.commitLineItem("apply");
+        }
         var recid = nlapiSubmitRecord(rec, true, true);
-        nlapiLogExecution('DEBUG', 'billCreation recid', recid);
+        nlapiLogExecution('DEBUG', 'paymentcreation recid', recid);
 
         return true;
 
@@ -273,29 +148,18 @@ function paymentcreation(entity, batch_number, arr, amountcorrection, payment_ac
     }
 
 }
-
-
-
-
-
-
 function filecreation(batch, userid) {
     try {
         nlapiLogExecution('DEBUG', 'filecreation', 'batch: ' + batch + ' , userid: ' + userid);
 
-        var rec = nlapiLoadRecord('subsidiary', 2);//Synel Mll Payway Ltd.
-
-
+        var rec = nlapiLoadRecord('subsidiary', globalSettings[0].subsidiary)
 
         var strFirst = ''
         var strRows = ''
         var strLast = ''
 
-
-
-
-        var mosad = '59426700';
-        var mosad_sender = '59426';
+        var mosad = globalSettings[0].code_mosad;
+        var mosad_sender = globalSettings[0].mosad_sender;
         var mosadname = rec.getFieldValue('name');
         var currency = '00';
         var date = dateconverter();
@@ -413,12 +277,7 @@ function filecreation(batch, userid) {
         strLast += '\r\n99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999';
 
         var data = strFirst + "\r\n" + strRows + strLast + "\r\n";
-
         nlapiLogExecution('DEBUG', 'data', data);
-
-
-
-
         var file = nlapiCreateFile('Masav.txt', 'PLAINTEXT', data);
         var newEmail = nlapiSendEmail(userid, userid, 'MASAV email and attachment', 'Please see the attached file', null, null, null, file);
         nlapiLogExecution('DEBUG', 'newEmail', newEmail);
@@ -427,11 +286,7 @@ function filecreation(batch, userid) {
         nlapiLogExecution('DEBUG', 'error - filecreation', e);
         return e
     }
-
-
 }
-
-
 function creditguard(entity, batch_number, invoices, custSum, amountcorrection, payment_account, method) {
 
     nlapiLogExecution('DEBUG', 'creditguard', 'START');
@@ -469,7 +324,7 @@ function creditguard(entity, batch_number, invoices, custSum, amountcorrection, 
     xml += '</request>';
     xml += '</ashrait>';
 
-    nlapiLogExecution('DEBUG', 'xml', xml);
+    //nlapiLogExecution('DEBUG', 'xml', xml);
 
     var headers = {
         'Content-Type': "application/x-www-form-urlencoded"
@@ -479,46 +334,34 @@ function creditguard(entity, batch_number, invoices, custSum, amountcorrection, 
     nlapiLogExecution('DEBUG', 'environment', environment);
 
     if (environment == 'SANDBOX') {
-        var sUrl = 'https://cguat2.creditguard.co.il/xpo/Relay';
+        var sUrl = globalSettings[0].sandbox_url
 
         var xmltosend = {
-            'user': 'dangot',
-            'password': 'dGN2@z31',
+            'user': globalSettings[0].sandbox_user_name,
+            'password': globalSettings[0].sandbox_password,
             'int_in': xml
         }
     }
     else {
-        var sUrl = 'https://kupot1.creditguard.co.il/xpo/Relay';
+        var sUrl = globalSettings[0].prod_url
 
         var xmltosend = {
-            'user': '',
-            'password': '',
+            'user': globalSettings[0].prod_user_name,
+            'password': globalSettings[0].prod_password,
             'int_in': xml
         }
     }
 
-    //var xml1 = 'user:cgdemo password:C!kd2nc3a int_in:<ashrait><request><version>2000</version><language>HEB</language><dateTime>2021-03-17 10:33:27</dateTime><command>doDeal</command><requestId>1517472867-17050</requestId><doDeal><terminalNumber>0882810010</terminalNumber><cardId>4444333322221111</cardId><cardExpiration>0330</cardExpiration><cvv>123</cvv><total>100</total><transactionType>Debit</transactionType><creditType>RegularCredit</creditType><currency>ILS</currency><transactionCode>Phone</transactionCode><validation>AutoComm</validation><customerData /></doDeal></request></ashrait>';
-
-
-    //var xmlfile = nlapiStringToXML(xml);
     var response = nlapiRequestURL(sUrl, xmltosend, headers);
     nlapiLogExecution('DEBUG', 'response', JSON.stringify(response));
     var mestr = 'userMessage';
     var usermessage = response.body.slice(response.body.indexOf(mestr) + mestr.length + 1, response.body.lastIndexOf(mestr) - 2);
     nlapiLogExecution('DEBUG', 'usermessage', usermessage);
     var xmlDataResponse = nlapiStringToXML(response.body);
-    //nlapiLogExecution('DEBUG', 'xmlDataResponse', xmlDataResponse);
     var status = nlapiSelectValue(xmlDataResponse, '//status');
     nlapiLogExecution('DEBUG', 'status', status);
     var additionalInfo = nlapiSelectValue(xmlDataResponse, '//additionalInfo');
     nlapiLogExecution('DEBUG', 'additionalInfo', additionalInfo);
-
-
-
-
-
-
-
 
     if (status == '000') {
         nlapiLogExecution('DEBUG', 'in if status', '== 000');
@@ -554,13 +397,6 @@ function creditguard(entity, batch_number, invoices, custSum, amountcorrection, 
     }
     return true;
 }
-
-
-
-
-
-
-
 function pad(n, width, z) {
     if (n == null)
         n = '0';
@@ -568,8 +404,6 @@ function pad(n, width, z) {
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
-
-
 function dateconverter() {
 
     var d = new Date();
@@ -588,8 +422,6 @@ function dateconverter() {
     return formatdate
 
 }
-
-
 function getdate() {
     var d = new Date();
     d.setHours(d.getHours() + 9)
@@ -605,7 +437,6 @@ function getdate() {
     var formatdate = [year, month, day].join('-') + ' ' + d.toTimeString().substring(0, 8)
     return formatdate;
 }
-
 function scriptcheck() {
     if (context.getRemainingUsage() < 400) {
         nlapiLogExecution('debug', 'rem usage', context.getRemainingUsage());
@@ -618,4 +449,58 @@ function scriptcheck() {
         }
     }
     return true
+}
+function getGlobalSettings(method) {
+
+    var columns = new Array();
+    columns.push(new nlobjSearchColumn('custrecord_bank_acc_cg_batch_screen'));
+    columns.push(new nlobjSearchColumn('custrecord_bank_acc_cg_customer_button'));
+    columns.push(new nlobjSearchColumn('custrecord_code_mosad'));
+    columns.push(new nlobjSearchColumn('custrecord_mosad_sender'));
+    columns.push(new nlobjSearchColumn('custrecord_prod_user_name'));
+    columns.push(new nlobjSearchColumn('custrecord_prod_password'));
+    columns.push(new nlobjSearchColumn('custrecord_sandbox_user_name'));
+    columns.push(new nlobjSearchColumn('custrecord_sandbox_password'));
+    columns.push(new nlobjSearchColumn('custrecord_prod_url'));
+    columns.push(new nlobjSearchColumn('custrecord_sandbox_url'));
+    columns.push(new nlobjSearchColumn('custrecord_subsidiary'));
+    columns.push(new nlobjSearchColumn('custrecord_payment_option'));
+
+    var filters = new Array();
+    filters[0] = new nlobjSearchFilter('custrecord_recurring_agr_collection_mtd', null, 'anyof', method)
+
+    var search = nlapiCreateSearch('customrecord_collection_settings', filters, columns);
+
+    var resultset = search.runSearch();
+    var s = [];
+    var searchid = 0;
+    var results = [];
+    do {
+        var resultslice = resultset.getResults(searchid, searchid + 1000);
+        for (var rs in resultslice) {
+            s.push(resultslice[rs]);
+            searchid++;
+        }
+    } while (resultslice != null && resultslice.length >= 1000);
+
+    if (s != null) {
+        for (var i = 0; i < s.length; i++) {
+            results.push({
+                acc_batch_screen: s[i].getValue('custrecord_bank_acc_cg_batch_screen'),
+                acc_customer_button: s[i].getValue('custrecord_bank_acc_cg_customer_button'),
+                code_mosad: s[i].getValue('custrecord_code_mosad'),
+                mosad_sender: s[i].getValue('custrecord_mosad_sender'),
+                prod_user_name: s[i].getValue('custrecord_prod_user_name'),
+                prod_password: s[i].getValue('custrecord_prod_password'),
+                sandbox_user_name: s[i].getValue('custrecord_sandbox_user_name'),
+                sandbox_password: s[i].getValue('custrecord_sandbox_password'),
+                prod_url: s[i].getValue('custrecord_prod_url'),
+                sandbox_url: s[i].getValue('custrecord_sandbox_url'),
+                subsidiary: s[i].getValue('custrecord_subsidiary'),
+                payment_option: s[i].getValue('custrecord_payment_option'),
+            });
+        }
+        nlapiLogExecution('DEBUG', 'getGlobalSettings results', JSON.stringify(results));
+        return results;
+    }
 }

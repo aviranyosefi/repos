@@ -29,7 +29,6 @@ if (customer_price_list != '' && customer_price_list != undefined && customer_pr
         if (plRec_status != 'D') { isCheck = true; }
     } catch (e) { }
 
-
 }
 
 
@@ -80,9 +79,9 @@ function getType(type) {
 
 function validateLine(type, name) {
 
-    if (name == 'entity' || name == 'currency'  ) {
+    if (name == 'entity' || name == 'currency') {
 
-
+        debugger;
         isCheck = false;
         generic_isCheck = false;
 
@@ -236,7 +235,7 @@ function gilat_price(itemm) {
     var currency = nlapiGetFieldValue('currency');
     var trandate = nlapiGetFieldValue('trandate');
     //var exechange = nlapiExchangeRate('USD', currency, trandate);
-    var itemData = nlapiLookupField('item', itemm, ['custitem_gilat_price','custitem_gilat_price_currency']);
+    var itemData = nlapiLookupField('item', itemm, ['custitem_gilat_price', 'custitem_gilat_price_currency']);
     var gilat_price_currency = itemData.custitem_gilat_price_currency
     var gilat_price = itemData.custitem_gilat_price
     if (isNullOrEmpty(gilat_price_currency)) {
@@ -249,7 +248,7 @@ function gilat_price(itemm) {
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list_price', gilat_price * exechange);
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list', 'Gilat Price');
 
-        
+
     }
     return true;
 
@@ -295,9 +294,9 @@ function saveRecord() {
             var item = nlapiGetLineItemValue('item', 'item', i);
             var price = nlapiGetLineItemValue('item', 'custcol_price_list_price', i);
             var price_list = nlapiGetLineItemValue('item', 'custcol_price_list', i);
-            var itemtype = nlapiGetLineItemValue('item', 'itemtype', i);            
+            var itemtype = nlapiGetLineItemValue('item', 'itemtype', i);
             //var rate = nlapiGetLineItemValue('item', 'rate', i);
-            if (isNullOrEmpty(price) && isNullOrEmpty(price_list) && itemtype !='EndGroup' ) {
+            if (isNullOrEmpty(price) && isNullOrEmpty(price_list) && itemtype != 'EndGroup') {
 
                 if (isCheck) {
                     get_individual_price_2(item, i)
@@ -406,7 +405,7 @@ function gilat_price_2(itemm, line) {
         //nlapiSetLineItemValue('item', 'amount', line, 11); 
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list_price', gilat_price * exechange);
         nlapiSetCurrentLineItemValue('item', 'custcol_price_list', 'Gilat Price');
-     
+
         nlapiCommitLineItem('item')
     }
 

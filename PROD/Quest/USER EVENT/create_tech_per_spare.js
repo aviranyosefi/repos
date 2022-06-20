@@ -1,4 +1,6 @@
-﻿function createTechFromCase() {
+﻿var GLOBAL_STATUS = 'B' //	Approved (Posting)
+var GLOBAL_DEPARTMENT = 25; // Service Department
+function createTechFromCase() {
     try {
         //var context = nlapiGetContext();
         var recID = nlapiGetRecordId();
@@ -73,7 +75,8 @@ function createTech(data) {
         rec.setFieldValue('custbody_dangot_product_line', data[0].product_line);
         rec.setFieldValue('custbody_related_support_case', data[0].caseID);
         rec.setFieldValue('location', data[0].location);
-        rec.setFieldValue('department', 21);
+        rec.setFieldValue('department', GLOBAL_DEPARTMENT);
+        rec.setFieldValue('transtatus', GLOBAL_STATUS);
         //rec.setFieldValue('custbody_dangot_replacement_type', data[0].replacement_type);
         try {
             // Lines Fields
